@@ -125,6 +125,8 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 	timestamp: string
 	revokedAt?: null | string
 	worldEventTrackId?: null | string
@@ -177,6 +179,8 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 	timestamp: string
 	revokedAt?: null | string
 	worldEventTrackId?: null | string
@@ -216,6 +220,8 @@ export type RevokeWorldEventApiResponse = /** status 200  */ {
 	color: string
 	descriptionRich: string
 	descriptionYjs?: null | string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 	timestamp: string
 	revokedAt?: null | string
 	worldEventTrackId?: null | string
@@ -240,6 +246,8 @@ export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	color: string
 	descriptionRich: string
 	descriptionYjs?: null | string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 	timestamp: string
 	revokedAt?: null | string
 	worldEventTrackId?: null | string

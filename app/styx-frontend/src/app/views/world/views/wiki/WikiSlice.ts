@@ -1,9 +1,10 @@
-import { WikiArticle } from '@api/types/worldWikiTypes'
+import { WikiArticle, WikiFolder } from '@api/types/worldWikiTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 export const initialState = {
 	articles: [] as WikiArticle[],
+	folders: [] as WikiFolder[],
 	lastCheckedArticle: null as string | null,
 	isBulkSelecting: false as boolean,
 	bulkActionArticles: [] as string[],
@@ -15,6 +16,10 @@ export const wikiSlice = createSlice({
 	reducers: {
 		loadArticles: (state, { payload }: PayloadAction<{ articles: WikiArticle[] }>) => {
 			state.articles = payload.articles
+		},
+
+		loadFolders: (state, { payload }: PayloadAction<{ folders: WikiFolder[] }>) => {
+			state.folders = payload.folders
 		},
 
 		setLastCheckedArticle: (state, { payload }: PayloadAction<{ article: string | null }>) => {

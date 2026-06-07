@@ -1,17 +1,17 @@
 import { useParams } from '@tanstack/react-router'
 import { useMemo } from 'react'
 
-import { useListArticles } from '@/app/views/world/api/useListArticles'
+import { useBoxedWikiContent } from './useBoxedWikiContent'
 
-export const useCurrentArticle = () => {
+export function useCurrentArticle() {
 	const state = useParams({ from: '/world/$worldId/_world/wiki/_wiki/$articleId' })
 
 	const id = state.articleId
-	const { data: articles } = useListArticles()
+	const entities = useBoxedWikiContent()
 
 	const article = useMemo(() => {
-		return articles?.find((a) => a.id === id)
-	}, [articles, id])
+		return entities?.find((a) => a.id === id)
+	}, [entities, id])
 
 	return {
 		id,

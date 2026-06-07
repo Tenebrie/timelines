@@ -54,6 +54,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		icon: string
 		color: string
 		descriptionRich: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
 	}[]
 	articles: {
 		pages: {
@@ -79,6 +81,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		name: string
 		icon: string
 		color: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
 		position: number
 		contentRich: string
 		parentId?: null | string
@@ -115,6 +119,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		icon: string
 		color: string
 		descriptionRich: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
 		timestamp: string
 		revokedAt?: null | string
 		worldEventTrackId?: null | string
@@ -134,6 +140,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
 	}[]
 }
 export type SearchWorldApiArg = {

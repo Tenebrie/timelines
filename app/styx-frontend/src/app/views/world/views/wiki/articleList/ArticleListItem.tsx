@@ -1,5 +1,3 @@
-import Article from '@mui/icons-material/Article'
-import Folder from '@mui/icons-material/Folder'
 import Menu from '@mui/icons-material/Menu'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -9,21 +7,22 @@ import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import { useMatches } from '@tanstack/react-router'
 import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
-import { memo, useCallback, useMemo } from 'react'
+import { memo, useCallback } from 'react'
 
-import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { useArticleBulkActions } from '@/app/views/world/views/wiki/hooks/useArticleBulkActions'
 import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticleDragDrop'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
+import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
 import { ArticleContextMenu } from '../components/ArticleContextMenu'
+import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 import { ArticleList } from './ArticleList'
 import { ArticleListItemCollapse } from './ArticleListItemCollapse'
 import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
 
 type Props = {
-	article: WikiArticle
+	article: BoxedWikiEntity
 	depth: number
 }
 
@@ -80,19 +79,13 @@ function ArticleListItemInnerComponent({
 	const popupState = usePopupState({ variant: 'popover', popupId: 'articleListItem' })
 	const { checkboxVisible, checked, onChange } = useArticleBulkActions({ article })
 
-	const isFolder = !!article.children?.length
-	const icon = useMemo(() => (isFolder ? <Folder /> : <Article />), [isFolder])
-
 	return (
-		<Box
-			data-testid={`ArticleListItem/${article.name}/${depth}`}
-			data-item-type={isFolder ? 'folder' : 'article'}
-		>
+		<Box data-testid={`ArticleListItem/${article.name}/${depth}`} data-item-type={article.type}>
 			<Stack ref={ref} direction="row" position={'relative'}>
 				{checkboxVisible && <Checkbox size="small" checked={checked} onChange={onChange}></Checkbox>}
 				<Button
 					role="button"
-					startIcon={icon}
+					startIcon={<EntityIcon variant={article.type} />}
 					variant={highlighted ? 'contained' : 'text'}
 					color="secondary"
 					sx={{ justifyContent: 'start', paddingLeft: 1.5 }}
@@ -111,11 +104,11 @@ function ArticleListItemInnerComponent({
 						<Menu />
 					</IconButton>
 				)}
-				<ArticleListItemCollapse article={article} />
+				<ArticleListItemCollapse entity={article} />
 				<ArticleContextMenu article={article} popupState={popupState} />
 				{ghostElement}
 			</Stack>
-			{article.children && article.children.length > 0 && (
+			{article.type === 'folder' && (
 				<Collapse in={expanded}>
 					<ArticleList parentId={article.id} depth={depth + 1} />
 				</Collapse>

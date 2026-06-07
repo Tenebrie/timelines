@@ -4,7 +4,7 @@ import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
 import { ValidationService } from '@src/services/ValidationService.js'
-import { WikiService } from '@src/services/WikiService.js'
+import { WikiArticleService } from '@src/services/WikiArticleService.js'
 import {
 	BadRequestError,
 	BooleanValidator,
@@ -48,7 +48,7 @@ router.get('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 
-	const article = await WikiService.findArticleByIdWithContentDeltas({ id: articleId, worldId })
+	const article = await WikiArticleService.findArticleByIdWithContentDeltas({ id: articleId, worldId })
 	if (!article) {
 		throw new BadRequestError('Article not found')
 	}
@@ -91,7 +91,7 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 		return
 	}
 
-	const { article, updatedMentions } = await WikiService.updateWikiArticle({
+	const { article, updatedMentions } = await WikiArticleService.updateWikiArticle({
 		id: articleId,
 		worldId,
 		contentRich: parsed.contentRich,

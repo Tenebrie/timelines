@@ -12,7 +12,7 @@ import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { TimelineTracksMenu } from '@/app/views/world/views/timeline/tracks/track/TimelineTracksMenu'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 import Modal, { ModalHeader } from '@/ui-lib/components/Modal'
-import { CreatePopoverButton } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
+import { CreatePopoverIconButton } from '@/ui-lib/components/PopoverButton/CreatePopoverIconButton'
 
 export function EventTracksModal() {
 	const worldId = useSelector(getWorldIdState)
@@ -55,7 +55,7 @@ export function EventTracksModal() {
 		<Modal visible={isOpen} onClose={close} closeOnBackdropClick>
 			<ModalHeader
 				action={
-					<CreatePopoverButton
+					<CreatePopoverIconButton
 						tooltip="Create new track"
 						onConfirm={onConfirm}
 						onEnterKey={async ({ close }) => {

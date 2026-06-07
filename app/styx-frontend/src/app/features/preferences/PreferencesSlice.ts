@@ -1,7 +1,8 @@
 import { Actor, WorldEvent, WorldTag } from '@api/types/worldTypes'
-import { WikiArticle } from '@api/types/worldWikiTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
+
+import { BoxedWikiEntity } from '@/app/views/world/views/wiki/hooks/useBoxedWikiContent'
 
 import { ScaleLevel } from '../../schema/ScaleLevel'
 import { CalendarUnitEditorTab } from '../time/calendar/types'
@@ -170,11 +171,11 @@ export const preferencesSlice = createSlice({
 		},
 
 		/* Wiki */
-		collapseWikiFolder: (state, { payload }: PayloadAction<WikiArticle>) => {
+		collapseWikiFolder: (state, { payload }: PayloadAction<BoxedWikiEntity>) => {
 			state.wiki.expandedFolders = state.wiki.expandedFolders.filter((id) => id !== payload.id)
 			saveToLocalStorage(state)
 		},
-		uncollapseWikiFolder: (state, { payload }: PayloadAction<WikiArticle>) => {
+		uncollapseWikiFolder: (state, { payload }: PayloadAction<BoxedWikiEntity>) => {
 			state.wiki.expandedFolders = [...new Set([...state.wiki.expandedFolders, payload.id])]
 			saveToLocalStorage(state)
 		},

@@ -1,10 +1,11 @@
 import Article from '@mui/icons-material/ArticleOutlined'
 import Event from '@mui/icons-material/Event'
+import Folder from '@mui/icons-material/Folder'
 import LabelIcon from '@mui/icons-material/LocalOfferOutlined'
 import Person from '@mui/icons-material/Person'
 
 type Props = {
-	variant: 'actor' | 'event' | 'article' | 'tag' | 'Actor' | 'Event' | 'Article' | 'Tag'
+	variant: 'actor' | 'event' | 'article' | 'tag' | 'folder' | 'Actor' | 'Event' | 'Article' | 'Tag' | 'Folder'
 	height?: number
 }
 
@@ -22,6 +23,9 @@ export function EntityIcon({ variant, height }: Props) {
 		case 'tag':
 		case 'Tag':
 			return <LabelIcon sx={{ height: height ?? 'unset' }} />
+		case 'folder':
+		case 'Folder':
+			return <Folder sx={{ height: height ?? 'unset' }} />
 		default:
 			return null
 	}
@@ -41,4 +45,8 @@ export function ArticleIcon({ height }: { height?: number }) {
 
 export function TagIcon({ height }: { height?: number }) {
 	return <LabelIcon sx={{ height: height ?? 'unset' }} />
+}
+
+export function FolderIcon({ height }: { height?: number }) {
+	return <Folder sx={{ height: height ?? 'unset' }} />
 }

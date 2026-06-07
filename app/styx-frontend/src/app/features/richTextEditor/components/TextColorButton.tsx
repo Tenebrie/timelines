@@ -32,7 +32,7 @@ export function TextColorButton({ editor }: Props) {
 
 	return (
 		<PopoverButton
-			icon={
+			content={
 				<Stack alignItems="center" justifyContent="center">
 					<Box sx={{ fontSize: 13 }}>A</Box>
 					<Box
@@ -51,7 +51,7 @@ export function TextColorButton({ editor }: Props) {
 			tooltip="Text color"
 			color="secondary"
 			size="medium"
-			rippleVariant="button"
+			buttonVariant="text"
 			buttonSx={{ minWidth: '40px', height: 1 }}
 			popoverBody={({ close }) => (
 				<TextColorPickerBody editor={editor} currentColor={currentColor} onClose={close} />

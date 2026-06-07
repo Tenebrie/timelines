@@ -22,6 +22,7 @@ model World {
   actors      Actor[]
   events      WorldEvent[]
   articles    WikiArticle[]
+  folders     WikiFolder[]
   tags        Tag[]
   calendar    WorldCalendarType?
   timeOrigin  BigInt             @default(0)
@@ -53,9 +54,9 @@ model WorldEvent {
   descriptionRich String  @default("")
   descriptionYjs  String?
 
-  pages       ContentPage[] @relation("EventContentPage")
-  mentions    Mention[]     @relation("EventMentionSource")
-  mentionedIn Mention[]     @relation("EventMentionTarget")
+  pages       ContentPage[]    @relation("EventContentPage")
+  mentions    Mention[]        @relation("EventMentionSource")
+  mentionedIn Mention[]        @relation("EventMentionTarget")
   assetRefs   AssetReference[] @relation("EventAssetReference")
 
   deltaStates WorldEventDelta[]
@@ -64,6 +65,10 @@ model WorldEvent {
   track             WorldEventTrack? @relation(fields: [worldEventTrackId], references: [id], onDelete: Cascade)
   worldId           String
   worldEventTrackId String?
+
+  parentFolder         WikiFolder? @relation("FolderEvent", fields: [parentFolderId], references: [id], onDelete: Cascade)
+  parentFolderId       String?
+  parentFolderPosition Int         @default(0)
 }
 
 model WorldEventDelta {
@@ -100,7 +105,7 @@ model WorldShareLink {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  slug       String   @unique
+  slug       String             @unique
   label      String?
   expiresAt  DateTime?
   accessMode CollaboratorAccess

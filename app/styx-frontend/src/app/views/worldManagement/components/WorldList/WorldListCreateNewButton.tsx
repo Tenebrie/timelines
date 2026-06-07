@@ -9,7 +9,7 @@ import {
 } from '@/app/features/time/calendar/components/CalendarSelector'
 import { isEntityNameValid } from '@/app/utils/isEntityNameValid'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { CreatePopoverButton } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
+import { CreatePopoverIconButton } from '@/ui-lib/components/PopoverButton/CreatePopoverIconButton'
 
 export function WorldListCreateNewButton() {
 	const [name, setName] = useState('')
@@ -55,7 +55,7 @@ export function WorldListCreateNewButton() {
 	}, [name, description, createWorld, calendars, calendarTemplates])
 
 	return (
-		<CreatePopoverButton
+		<CreatePopoverIconButton
 			tooltip="Create new world"
 			onConfirm={handleCreateWorld}
 			confirmDisabled={!name.trim() || isCreating}

@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import { ReactNode } from 'react'
 
-import { PopoverButton } from './PopoverButton'
+import { PopoverButton, PopoverButtonSlotProps } from './PopoverButton'
 
 type Props = {
 	size?: 'small' | 'medium' | 'large'
@@ -16,6 +16,7 @@ type Props = {
 	confirmDisabled?: boolean
 	buttonSx?: Parameters<typeof IconButton>['0']['sx']
 	popoverSx?: Parameters<typeof Stack>['0']['sx']
+	slotProps?: PopoverButtonSlotProps
 }
 
 export function CreatePopoverButton({
@@ -28,28 +29,25 @@ export function CreatePopoverButton({
 	confirmDisabled,
 	buttonSx,
 	popoverSx,
+	slotProps,
 }: Props) {
-	const icon = <AddIcon fontSize={size} />
-
 	return (
 		<PopoverButton
 			tooltip={tooltip}
 			size={size}
-			icon={icon}
+			content={<>Create new...</>}
+			startIcon={<AddIcon fontSize={size} />}
+			buttonVariant="contained"
 			onEnterKey={onEnterKey}
 			onCleanup={onCleanup}
-			buttonSx={{
-				opacity: 1,
-				bgcolor: 'action.hover',
-				'&:hover': {
-					opacity: 1,
-					bgcolor: 'action.selected',
-				},
-				...buttonSx,
-			}}
 			popoverSx={{ gap: 1.5, p: 2, ...popoverSx }}
 			popoverBody={popoverBody}
+			buttonSx={{
+				fontSize: '0.875rem',
+				...buttonSx,
+			}}
 			autofocus
+			slotProps={slotProps}
 			popoverAction={({ close }) => (
 				<Button
 					variant="contained"
@@ -62,7 +60,7 @@ export function CreatePopoverButton({
 					}}
 					disabled={confirmDisabled}
 					fullWidth
-					startIcon={icon}
+					startIcon={<AddIcon fontSize={size} />}
 				>
 					Create
 				</Button>

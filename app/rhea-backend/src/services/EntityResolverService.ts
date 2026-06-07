@@ -1,6 +1,6 @@
 import { ActorService } from './ActorService.js'
 import { TagService } from './TagService.js'
-import { WikiService } from './WikiService.js'
+import { WikiArticleService } from './WikiArticleService.js'
 import { WorldEventService } from './WorldEventService.js'
 
 export const EntityResolverService = {
@@ -20,7 +20,7 @@ export const EntityResolverService = {
 			const event = await WorldEventService.findEventById({ id: entityId, worldId })
 			return event?.name ?? ''
 		} else if (entityType === 'article') {
-			const article = await WikiService.findArticleById({ id: entityId, worldId })
+			const article = await WikiArticleService.findArticleById({ id: entityId, worldId })
 			return article?.name ?? ''
 		} else if (entityType === 'tag') {
 			const tag = await TagService.findTag({ worldId, tagId: entityId })
@@ -49,7 +49,7 @@ export const EntityResolverService = {
 				contentRich: event?.descriptionRich ?? '',
 			}
 		} else if (entityType === 'article') {
-			const article = await WikiService.findArticleByIdWithContentDeltas({ id: entityId, worldId })
+			const article = await WikiArticleService.findArticleByIdWithContentDeltas({ id: entityId, worldId })
 			return {
 				contentRich: article?.contentRich ?? '',
 			}

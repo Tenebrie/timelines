@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useGetWorldInfoQuery } from '@/api/worldDetailsApi'
 
 import { useListArticles } from '../api/useListArticles'
+import { useListFolders } from '../api/useListFolders'
 import { wikiSlice } from '../views/wiki/WikiSlice'
 import { worldSlice } from '../WorldSlice'
 import { getWorldStateLoaded } from '../WorldSliceSelectors'
@@ -19,11 +20,13 @@ export const useLoadWorldInfo = (worldId: string) => {
 		},
 	)
 	const { data: articles } = useListArticles()
+	const { data: folders } = useListFolders()
+	console.log(folders)
 
 	const isLoaded = useSelector(getWorldStateLoaded)
 
 	const { loadWorld, unloadWorld, setUnauthorized } = worldSlice.actions
-	const { loadArticles } = wikiSlice.actions
+	const { loadArticles, loadFolders } = wikiSlice.actions
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -55,6 +58,10 @@ export const useLoadWorldInfo = (worldId: string) => {
 	useEffect(() => {
 		dispatch(loadArticles({ articles: articles ?? [] }))
 	}, [articles, dispatch, loadArticles])
+
+	useEffect(() => {
+		dispatch(loadFolders({ folders: folders ?? [] }))
+	}, [folders, dispatch, loadFolders])
 
 	return {
 		isLoaded,

@@ -1,7 +1,9 @@
 import { MentionedEntity } from '@prisma/client'
 
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
+import { BulkActionService } from './WorldBulkActionService.js'
 
 export type MentionedByEntry = {
 	type: MentionedEntity
@@ -121,19 +123,32 @@ export const TagService = {
 		}
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
-			const tag = await getPrismaClient(prisma).tag.create({
+			const entityCount = await BulkActionService.countWikiEntities({ worldId, prisma })
+
+			const baseTag = await getPrismaClient(prisma).tag.create({
 				data: {
 					worldId,
 					name: params.name,
 					description: params.description ?? '',
+					parentFolderPosition: entityCount * 2,
+				},
+				select: {
+					id: true,
+				},
+			})
+
+			const world = await makeTouchWorldQuery(worldId, prisma)
+			await makeSortWikiArticlesQuery(worldId, prisma)
+
+			const tag = await getPrismaClient(prisma).tag.findFirst({
+				where: {
+					id: baseTag.id,
 				},
 				include: {
 					mentions: { distinct: ['targetId'] },
 					mentionedIn: { distinct: ['sourceId'] },
 				},
-			})
-
-			const world = await makeTouchWorldQuery(worldId, prisma)
+			})!
 
 			return {
 				world,

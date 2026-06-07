@@ -7,7 +7,10 @@ import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import { Outlet } from '@tanstack/react-router'
 
+import { ActorDetails } from '@/app/features/entityEditor/actor/details/ActorDetails'
 import { ArticleDetails } from '@/app/features/entityEditor/article/details/ArticleDetails'
+import { EventDetails } from '@/app/features/entityEditor/event/details/EventDetails'
+import { TagDetails } from '@/app/features/entityEditor/tag/details/TagDetails'
 import { useMobileLayout } from '@/app/hooks/useMobileLayout'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -121,5 +124,15 @@ export function CurrentArticleDetails() {
 		</Stack>
 	) : undefined
 
-	return <ArticleDetails article={article} isWikiTab titleProps={{ startAdornment }} />
+	switch (article.type) {
+		case 'article':
+			return <ArticleDetails article={article.entity} isWikiTab titleProps={{ startAdornment }} />
+		case 'actor':
+			return <ActorDetails editedActor={article.entity} />
+		case 'event':
+			return <EventDetails editedEvent={article.entity} />
+		case 'tag':
+			return <TagDetails editedTag={article.entity} />
+	}
+	return null
 }

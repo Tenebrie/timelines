@@ -20,8 +20,18 @@ export type ActorModel = runtime.Types.Result.DefaultSelection<Prisma.$ActorPayl
 
 export type AggregateActor = {
   _count: ActorCountAggregateOutputType | null
+  _avg: ActorAvgAggregateOutputType | null
+  _sum: ActorSumAggregateOutputType | null
   _min: ActorMinAggregateOutputType | null
   _max: ActorMaxAggregateOutputType | null
+}
+
+export type ActorAvgAggregateOutputType = {
+  parentFolderPosition: number | null
+}
+
+export type ActorSumAggregateOutputType = {
+  parentFolderPosition: number | null
 }
 
 export type ActorMinAggregateOutputType = {
@@ -36,6 +46,8 @@ export type ActorMinAggregateOutputType = {
   descriptionRich: string | null
   descriptionYjs: string | null
   worldId: string | null
+  parentFolderId: string | null
+  parentFolderPosition: number | null
 }
 
 export type ActorMaxAggregateOutputType = {
@@ -50,6 +62,8 @@ export type ActorMaxAggregateOutputType = {
   descriptionRich: string | null
   descriptionYjs: string | null
   worldId: string | null
+  parentFolderId: string | null
+  parentFolderPosition: number | null
 }
 
 export type ActorCountAggregateOutputType = {
@@ -64,9 +78,19 @@ export type ActorCountAggregateOutputType = {
   descriptionRich: number
   descriptionYjs: number
   worldId: number
+  parentFolderId: number
+  parentFolderPosition: number
   _all: number
 }
 
+
+export type ActorAvgAggregateInputType = {
+  parentFolderPosition?: true
+}
+
+export type ActorSumAggregateInputType = {
+  parentFolderPosition?: true
+}
 
 export type ActorMinAggregateInputType = {
   id?: true
@@ -80,6 +104,8 @@ export type ActorMinAggregateInputType = {
   descriptionRich?: true
   descriptionYjs?: true
   worldId?: true
+  parentFolderId?: true
+  parentFolderPosition?: true
 }
 
 export type ActorMaxAggregateInputType = {
@@ -94,6 +120,8 @@ export type ActorMaxAggregateInputType = {
   descriptionRich?: true
   descriptionYjs?: true
   worldId?: true
+  parentFolderId?: true
+  parentFolderPosition?: true
 }
 
 export type ActorCountAggregateInputType = {
@@ -108,6 +136,8 @@ export type ActorCountAggregateInputType = {
   descriptionRich?: true
   descriptionYjs?: true
   worldId?: true
+  parentFolderId?: true
+  parentFolderPosition?: true
   _all?: true
 }
 
@@ -149,6 +179,18 @@ export type ActorAggregateArgs<ExtArgs extends runtime.Types.Extensions.Internal
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: ActorAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: ActorSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: ActorMinAggregateInputType
@@ -179,6 +221,8 @@ export type ActorGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   _count?: ActorCountAggregateInputType | true
+  _avg?: ActorAvgAggregateInputType
+  _sum?: ActorSumAggregateInputType
   _min?: ActorMinAggregateInputType
   _max?: ActorMaxAggregateInputType
 }
@@ -195,7 +239,11 @@ export type ActorGroupByOutputType = {
   descriptionRich: string
   descriptionYjs: string | null
   worldId: string
+  parentFolderId: string | null
+  parentFolderPosition: number
   _count: ActorCountAggregateOutputType | null
+  _avg: ActorAvgAggregateOutputType | null
+  _sum: ActorSumAggregateOutputType | null
   _min: ActorMinAggregateOutputType | null
   _max: ActorMaxAggregateOutputType | null
 }
@@ -230,12 +278,15 @@ export type ActorWhereInput = {
   descriptionRich?: Prisma.StringFilter<"Actor"> | string
   descriptionYjs?: Prisma.StringNullableFilter<"Actor"> | string | null
   worldId?: Prisma.StringFilter<"Actor"> | string
+  parentFolderId?: Prisma.StringNullableFilter<"Actor"> | string | null
+  parentFolderPosition?: Prisma.IntFilter<"Actor"> | number
   pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
   assetRefs?: Prisma.AssetReferenceListRelationFilter
   nodes?: Prisma.MindmapNodeListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
+  parentFolder?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
 }
 
 export type ActorOrderByWithRelationInput = {
@@ -250,12 +301,15 @@ export type ActorOrderByWithRelationInput = {
   descriptionRich?: Prisma.SortOrder
   descriptionYjs?: Prisma.SortOrderInput | Prisma.SortOrder
   worldId?: Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentFolderPosition?: Prisma.SortOrder
   pages?: Prisma.ContentPageOrderByRelationAggregateInput
   mentions?: Prisma.MentionOrderByRelationAggregateInput
   mentionedIn?: Prisma.MentionOrderByRelationAggregateInput
   assetRefs?: Prisma.AssetReferenceOrderByRelationAggregateInput
   nodes?: Prisma.MindmapNodeOrderByRelationAggregateInput
   world?: Prisma.WorldOrderByWithRelationInput
+  parentFolder?: Prisma.WikiFolderOrderByWithRelationInput
 }
 
 export type ActorWhereUniqueInput = Prisma.AtLeast<{
@@ -273,12 +327,15 @@ export type ActorWhereUniqueInput = Prisma.AtLeast<{
   descriptionRich?: Prisma.StringFilter<"Actor"> | string
   descriptionYjs?: Prisma.StringNullableFilter<"Actor"> | string | null
   worldId?: Prisma.StringFilter<"Actor"> | string
+  parentFolderId?: Prisma.StringNullableFilter<"Actor"> | string | null
+  parentFolderPosition?: Prisma.IntFilter<"Actor"> | number
   pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
   assetRefs?: Prisma.AssetReferenceListRelationFilter
   nodes?: Prisma.MindmapNodeListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
+  parentFolder?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
 }, "id" | "id">
 
 export type ActorOrderByWithAggregationInput = {
@@ -293,9 +350,13 @@ export type ActorOrderByWithAggregationInput = {
   descriptionRich?: Prisma.SortOrder
   descriptionYjs?: Prisma.SortOrderInput | Prisma.SortOrder
   worldId?: Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentFolderPosition?: Prisma.SortOrder
   _count?: Prisma.ActorCountOrderByAggregateInput
+  _avg?: Prisma.ActorAvgOrderByAggregateInput
   _max?: Prisma.ActorMaxOrderByAggregateInput
   _min?: Prisma.ActorMinOrderByAggregateInput
+  _sum?: Prisma.ActorSumOrderByAggregateInput
 }
 
 export type ActorScalarWhereWithAggregatesInput = {
@@ -313,6 +374,8 @@ export type ActorScalarWhereWithAggregatesInput = {
   descriptionRich?: Prisma.StringWithAggregatesFilter<"Actor"> | string
   descriptionYjs?: Prisma.StringNullableWithAggregatesFilter<"Actor"> | string | null
   worldId?: Prisma.StringWithAggregatesFilter<"Actor"> | string
+  parentFolderId?: Prisma.StringNullableWithAggregatesFilter<"Actor"> | string | null
+  parentFolderPosition?: Prisma.IntWithAggregatesFilter<"Actor"> | number
 }
 
 export type ActorCreateInput = {
@@ -326,12 +389,14 @@ export type ActorCreateInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutActorsInput
 }
 
 export type ActorUncheckedCreateInput = {
@@ -346,6 +411,8 @@ export type ActorUncheckedCreateInput = {
   descriptionRich?: string
   descriptionYjs?: string | null
   worldId: string
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
@@ -364,12 +431,14 @@ export type ActorUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutActorsNestedInput
 }
 
 export type ActorUncheckedUpdateInput = {
@@ -384,6 +453,8 @@ export type ActorUncheckedUpdateInput = {
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
@@ -403,6 +474,8 @@ export type ActorCreateManyInput = {
   descriptionRich?: string
   descriptionYjs?: string | null
   worldId: string
+  parentFolderId?: string | null
+  parentFolderPosition?: number
 }
 
 export type ActorUpdateManyMutationInput = {
@@ -416,6 +489,7 @@ export type ActorUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ActorUncheckedUpdateManyInput = {
@@ -430,6 +504,8 @@ export type ActorUncheckedUpdateManyInput = {
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ActorCountOrderByAggregateInput = {
@@ -444,6 +520,12 @@ export type ActorCountOrderByAggregateInput = {
   descriptionRich?: Prisma.SortOrder
   descriptionYjs?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrder
+  parentFolderPosition?: Prisma.SortOrder
+}
+
+export type ActorAvgOrderByAggregateInput = {
+  parentFolderPosition?: Prisma.SortOrder
 }
 
 export type ActorMaxOrderByAggregateInput = {
@@ -458,6 +540,8 @@ export type ActorMaxOrderByAggregateInput = {
   descriptionRich?: Prisma.SortOrder
   descriptionYjs?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrder
+  parentFolderPosition?: Prisma.SortOrder
 }
 
 export type ActorMinOrderByAggregateInput = {
@@ -472,6 +556,12 @@ export type ActorMinOrderByAggregateInput = {
   descriptionRich?: Prisma.SortOrder
   descriptionYjs?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrder
+  parentFolderPosition?: Prisma.SortOrder
+}
+
+export type ActorSumOrderByAggregateInput = {
+  parentFolderPosition?: Prisma.SortOrder
 }
 
 export type ActorNullableScalarRelationFilter = {
@@ -499,6 +589,14 @@ export type DateTimeFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type ActorCreateNestedOneWithoutAssetRefsInput = {
@@ -581,6 +679,48 @@ export type ActorUpdateOneWithoutNodesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ActorUpdateToOneWithWhereWithoutNodesInput, Prisma.ActorUpdateWithoutNodesInput>, Prisma.ActorUncheckedUpdateWithoutNodesInput>
 }
 
+export type ActorCreateNestedManyWithoutParentFolderInput = {
+  create?: Prisma.XOR<Prisma.ActorCreateWithoutParentFolderInput, Prisma.ActorUncheckedCreateWithoutParentFolderInput> | Prisma.ActorCreateWithoutParentFolderInput[] | Prisma.ActorUncheckedCreateWithoutParentFolderInput[]
+  connectOrCreate?: Prisma.ActorCreateOrConnectWithoutParentFolderInput | Prisma.ActorCreateOrConnectWithoutParentFolderInput[]
+  createMany?: Prisma.ActorCreateManyParentFolderInputEnvelope
+  connect?: Prisma.ActorWhereUniqueInput | Prisma.ActorWhereUniqueInput[]
+}
+
+export type ActorUncheckedCreateNestedManyWithoutParentFolderInput = {
+  create?: Prisma.XOR<Prisma.ActorCreateWithoutParentFolderInput, Prisma.ActorUncheckedCreateWithoutParentFolderInput> | Prisma.ActorCreateWithoutParentFolderInput[] | Prisma.ActorUncheckedCreateWithoutParentFolderInput[]
+  connectOrCreate?: Prisma.ActorCreateOrConnectWithoutParentFolderInput | Prisma.ActorCreateOrConnectWithoutParentFolderInput[]
+  createMany?: Prisma.ActorCreateManyParentFolderInputEnvelope
+  connect?: Prisma.ActorWhereUniqueInput | Prisma.ActorWhereUniqueInput[]
+}
+
+export type ActorUpdateManyWithoutParentFolderNestedInput = {
+  create?: Prisma.XOR<Prisma.ActorCreateWithoutParentFolderInput, Prisma.ActorUncheckedCreateWithoutParentFolderInput> | Prisma.ActorCreateWithoutParentFolderInput[] | Prisma.ActorUncheckedCreateWithoutParentFolderInput[]
+  connectOrCreate?: Prisma.ActorCreateOrConnectWithoutParentFolderInput | Prisma.ActorCreateOrConnectWithoutParentFolderInput[]
+  upsert?: Prisma.ActorUpsertWithWhereUniqueWithoutParentFolderInput | Prisma.ActorUpsertWithWhereUniqueWithoutParentFolderInput[]
+  createMany?: Prisma.ActorCreateManyParentFolderInputEnvelope
+  set?: Prisma.ActorWhereUniqueInput | Prisma.ActorWhereUniqueInput[]
+  disconnect?: Prisma.ActorWhereUniqueInput | Prisma.ActorWhereUniqueInput[]
+  delete?: Prisma.ActorWhereUniqueInput | Prisma.ActorWhereUniqueInput[]
+  connect?: Prisma.ActorWhereUniqueInput | Prisma.ActorWhereUniqueInput[]
+  update?: Prisma.ActorUpdateWithWhereUniqueWithoutParentFolderInput | Prisma.ActorUpdateWithWhereUniqueWithoutParentFolderInput[]
+  updateMany?: Prisma.ActorUpdateManyWithWhereWithoutParentFolderInput | Prisma.ActorUpdateManyWithWhereWithoutParentFolderInput[]
+  deleteMany?: Prisma.ActorScalarWhereInput | Prisma.ActorScalarWhereInput[]
+}
+
+export type ActorUncheckedUpdateManyWithoutParentFolderNestedInput = {
+  create?: Prisma.XOR<Prisma.ActorCreateWithoutParentFolderInput, Prisma.ActorUncheckedCreateWithoutParentFolderInput> | Prisma.ActorCreateWithoutParentFolderInput[] | Prisma.ActorUncheckedCreateWithoutParentFolderInput[]
+  connectOrCreate?: Prisma.ActorCreateOrConnectWithoutParentFolderInput | Prisma.ActorCreateOrConnectWithoutParentFolderInput[]
+  upsert?: Prisma.ActorUpsertWithWhereUniqueWithoutParentFolderInput | Prisma.ActorUpsertWithWhereUniqueWithoutParentFolderInput[]
+  createMany?: Prisma.ActorCreateManyParentFolderInputEnvelope
+  set?: Prisma.ActorWhereUniqueInput | Prisma.ActorWhereUniqueInput[]
+  disconnect?: Prisma.ActorWhereUniqueInput | Prisma.ActorWhereUniqueInput[]
+  delete?: Prisma.ActorWhereUniqueInput | Prisma.ActorWhereUniqueInput[]
+  connect?: Prisma.ActorWhereUniqueInput | Prisma.ActorWhereUniqueInput[]
+  update?: Prisma.ActorUpdateWithWhereUniqueWithoutParentFolderInput | Prisma.ActorUpdateWithWhereUniqueWithoutParentFolderInput[]
+  updateMany?: Prisma.ActorUpdateManyWithWhereWithoutParentFolderInput | Prisma.ActorUpdateManyWithWhereWithoutParentFolderInput[]
+  deleteMany?: Prisma.ActorScalarWhereInput | Prisma.ActorScalarWhereInput[]
+}
+
 export type ActorCreateNestedManyWithoutWorldInput = {
   create?: Prisma.XOR<Prisma.ActorCreateWithoutWorldInput, Prisma.ActorUncheckedCreateWithoutWorldInput> | Prisma.ActorCreateWithoutWorldInput[] | Prisma.ActorUncheckedCreateWithoutWorldInput[]
   connectOrCreate?: Prisma.ActorCreateOrConnectWithoutWorldInput | Prisma.ActorCreateOrConnectWithoutWorldInput[]
@@ -634,11 +774,13 @@ export type ActorCreateWithoutAssetRefsInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
   nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutActorsInput
 }
 
 export type ActorUncheckedCreateWithoutAssetRefsInput = {
@@ -653,6 +795,8 @@ export type ActorUncheckedCreateWithoutAssetRefsInput = {
   descriptionRich?: string
   descriptionYjs?: string | null
   worldId: string
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
@@ -686,11 +830,13 @@ export type ActorUpdateWithoutAssetRefsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
   nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutActorsNestedInput
 }
 
 export type ActorUncheckedUpdateWithoutAssetRefsInput = {
@@ -705,6 +851,8 @@ export type ActorUncheckedUpdateWithoutAssetRefsInput = {
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
@@ -722,11 +870,13 @@ export type ActorCreateWithoutPagesInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
+  parentFolderPosition?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutActorsInput
 }
 
 export type ActorUncheckedCreateWithoutPagesInput = {
@@ -741,6 +891,8 @@ export type ActorUncheckedCreateWithoutPagesInput = {
   descriptionRich?: string
   descriptionYjs?: string | null
   worldId: string
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
   assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderActorInput
@@ -774,11 +926,13 @@ export type ActorUpdateWithoutPagesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutActorsNestedInput
 }
 
 export type ActorUncheckedUpdateWithoutPagesInput = {
@@ -793,6 +947,8 @@ export type ActorUncheckedUpdateWithoutPagesInput = {
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderActorNestedInput
@@ -810,11 +966,13 @@ export type ActorCreateWithoutMentionsInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutActorsInput
 }
 
 export type ActorUncheckedCreateWithoutMentionsInput = {
@@ -829,6 +987,8 @@ export type ActorUncheckedCreateWithoutMentionsInput = {
   descriptionRich?: string
   descriptionYjs?: string | null
   worldId: string
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
   assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderActorInput
@@ -851,11 +1011,13 @@ export type ActorCreateWithoutMentionedInInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutActorsInput
 }
 
 export type ActorUncheckedCreateWithoutMentionedInInput = {
@@ -870,6 +1032,8 @@ export type ActorUncheckedCreateWithoutMentionedInInput = {
   descriptionRich?: string
   descriptionYjs?: string | null
   worldId: string
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderActorInput
@@ -903,11 +1067,13 @@ export type ActorUpdateWithoutMentionsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutActorsNestedInput
 }
 
 export type ActorUncheckedUpdateWithoutMentionsInput = {
@@ -922,6 +1088,8 @@ export type ActorUncheckedUpdateWithoutMentionsInput = {
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderActorNestedInput
@@ -950,11 +1118,13 @@ export type ActorUpdateWithoutMentionedInInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutActorsNestedInput
 }
 
 export type ActorUncheckedUpdateWithoutMentionedInInput = {
@@ -969,6 +1139,8 @@ export type ActorUncheckedUpdateWithoutMentionedInInput = {
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderActorNestedInput
@@ -986,11 +1158,13 @@ export type ActorCreateWithoutNodesInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutActorsInput
 }
 
 export type ActorUncheckedCreateWithoutNodesInput = {
@@ -1005,6 +1179,8 @@ export type ActorUncheckedCreateWithoutNodesInput = {
   descriptionRich?: string
   descriptionYjs?: string | null
   worldId: string
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
@@ -1038,11 +1214,13 @@ export type ActorUpdateWithoutNodesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutActorsNestedInput
 }
 
 export type ActorUncheckedUpdateWithoutNodesInput = {
@@ -1057,10 +1235,97 @@ export type ActorUncheckedUpdateWithoutNodesInput = {
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderActorNestedInput
+}
+
+export type ActorCreateWithoutParentFolderInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  title?: string
+  icon?: string
+  color?: string
+  description?: string
+  descriptionRich?: string
+  descriptionYjs?: string | null
+  parentFolderPosition?: number
+  pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
+  mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
+  mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
+  world: Prisma.WorldCreateNestedOneWithoutActorsInput
+}
+
+export type ActorUncheckedCreateWithoutParentFolderInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  title?: string
+  icon?: string
+  color?: string
+  description?: string
+  descriptionRich?: string
+  descriptionYjs?: string | null
+  worldId: string
+  parentFolderPosition?: number
+  pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
+  mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
+  mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderActorInput
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentActorInput
+}
+
+export type ActorCreateOrConnectWithoutParentFolderInput = {
+  where: Prisma.ActorWhereUniqueInput
+  create: Prisma.XOR<Prisma.ActorCreateWithoutParentFolderInput, Prisma.ActorUncheckedCreateWithoutParentFolderInput>
+}
+
+export type ActorCreateManyParentFolderInputEnvelope = {
+  data: Prisma.ActorCreateManyParentFolderInput | Prisma.ActorCreateManyParentFolderInput[]
+  skipDuplicates?: boolean
+}
+
+export type ActorUpsertWithWhereUniqueWithoutParentFolderInput = {
+  where: Prisma.ActorWhereUniqueInput
+  update: Prisma.XOR<Prisma.ActorUpdateWithoutParentFolderInput, Prisma.ActorUncheckedUpdateWithoutParentFolderInput>
+  create: Prisma.XOR<Prisma.ActorCreateWithoutParentFolderInput, Prisma.ActorUncheckedCreateWithoutParentFolderInput>
+}
+
+export type ActorUpdateWithWhereUniqueWithoutParentFolderInput = {
+  where: Prisma.ActorWhereUniqueInput
+  data: Prisma.XOR<Prisma.ActorUpdateWithoutParentFolderInput, Prisma.ActorUncheckedUpdateWithoutParentFolderInput>
+}
+
+export type ActorUpdateManyWithWhereWithoutParentFolderInput = {
+  where: Prisma.ActorScalarWhereInput
+  data: Prisma.XOR<Prisma.ActorUpdateManyMutationInput, Prisma.ActorUncheckedUpdateManyWithoutParentFolderInput>
+}
+
+export type ActorScalarWhereInput = {
+  AND?: Prisma.ActorScalarWhereInput | Prisma.ActorScalarWhereInput[]
+  OR?: Prisma.ActorScalarWhereInput[]
+  NOT?: Prisma.ActorScalarWhereInput | Prisma.ActorScalarWhereInput[]
+  id?: Prisma.StringFilter<"Actor"> | string
+  createdAt?: Prisma.DateTimeFilter<"Actor"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Actor"> | Date | string
+  name?: Prisma.StringFilter<"Actor"> | string
+  title?: Prisma.StringFilter<"Actor"> | string
+  icon?: Prisma.StringFilter<"Actor"> | string
+  color?: Prisma.StringFilter<"Actor"> | string
+  description?: Prisma.StringFilter<"Actor"> | string
+  descriptionRich?: Prisma.StringFilter<"Actor"> | string
+  descriptionYjs?: Prisma.StringNullableFilter<"Actor"> | string | null
+  worldId?: Prisma.StringFilter<"Actor"> | string
+  parentFolderId?: Prisma.StringNullableFilter<"Actor"> | string | null
+  parentFolderPosition?: Prisma.IntFilter<"Actor"> | number
 }
 
 export type ActorCreateWithoutWorldInput = {
@@ -1074,11 +1339,13 @@ export type ActorCreateWithoutWorldInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutActorsInput
 }
 
 export type ActorUncheckedCreateWithoutWorldInput = {
@@ -1092,6 +1359,8 @@ export type ActorUncheckedCreateWithoutWorldInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
@@ -1125,21 +1394,74 @@ export type ActorUpdateManyWithWhereWithoutWorldInput = {
   data: Prisma.XOR<Prisma.ActorUpdateManyMutationInput, Prisma.ActorUncheckedUpdateManyWithoutWorldInput>
 }
 
-export type ActorScalarWhereInput = {
-  AND?: Prisma.ActorScalarWhereInput | Prisma.ActorScalarWhereInput[]
-  OR?: Prisma.ActorScalarWhereInput[]
-  NOT?: Prisma.ActorScalarWhereInput | Prisma.ActorScalarWhereInput[]
-  id?: Prisma.StringFilter<"Actor"> | string
-  createdAt?: Prisma.DateTimeFilter<"Actor"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Actor"> | Date | string
-  name?: Prisma.StringFilter<"Actor"> | string
-  title?: Prisma.StringFilter<"Actor"> | string
-  icon?: Prisma.StringFilter<"Actor"> | string
-  color?: Prisma.StringFilter<"Actor"> | string
-  description?: Prisma.StringFilter<"Actor"> | string
-  descriptionRich?: Prisma.StringFilter<"Actor"> | string
-  descriptionYjs?: Prisma.StringNullableFilter<"Actor"> | string | null
-  worldId?: Prisma.StringFilter<"Actor"> | string
+export type ActorCreateManyParentFolderInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  title?: string
+  icon?: string
+  color?: string
+  description?: string
+  descriptionRich?: string
+  descriptionYjs?: string | null
+  worldId: string
+  parentFolderPosition?: number
+}
+
+export type ActorUpdateWithoutParentFolderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
+  mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
+  mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
+  world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
+}
+
+export type ActorUncheckedUpdateWithoutParentFolderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
+  mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
+  mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderActorNestedInput
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentActorNestedInput
+}
+
+export type ActorUncheckedUpdateManyWithoutParentFolderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ActorCreateManyWorldInput = {
@@ -1153,6 +1475,8 @@ export type ActorCreateManyWorldInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
+  parentFolderId?: string | null
+  parentFolderPosition?: number
 }
 
 export type ActorUpdateWithoutWorldInput = {
@@ -1166,11 +1490,13 @@ export type ActorUpdateWithoutWorldInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutActorsNestedInput
 }
 
 export type ActorUncheckedUpdateWithoutWorldInput = {
@@ -1184,6 +1510,8 @@ export type ActorUncheckedUpdateWithoutWorldInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
@@ -1202,6 +1530,8 @@ export type ActorUncheckedUpdateManyWithoutWorldInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 
@@ -1283,12 +1613,15 @@ export type ActorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   descriptionRich?: boolean
   descriptionYjs?: boolean
   worldId?: boolean
+  parentFolderId?: boolean
+  parentFolderPosition?: boolean
   pages?: boolean | Prisma.Actor$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.Actor$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.Actor$mentionedInArgs<ExtArgs>
   assetRefs?: boolean | Prisma.Actor$assetRefsArgs<ExtArgs>
   nodes?: boolean | Prisma.Actor$nodesArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.Actor$parentFolderArgs<ExtArgs>
   _count?: boolean | Prisma.ActorCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["actor"]>
 
@@ -1304,7 +1637,10 @@ export type ActorSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   descriptionRich?: boolean
   descriptionYjs?: boolean
   worldId?: boolean
+  parentFolderId?: boolean
+  parentFolderPosition?: boolean
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.Actor$parentFolderArgs<ExtArgs>
 }, ExtArgs["result"]["actor"]>
 
 export type ActorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1319,7 +1655,10 @@ export type ActorSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   descriptionRich?: boolean
   descriptionYjs?: boolean
   worldId?: boolean
+  parentFolderId?: boolean
+  parentFolderPosition?: boolean
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.Actor$parentFolderArgs<ExtArgs>
 }, ExtArgs["result"]["actor"]>
 
 export type ActorSelectScalar = {
@@ -1334,9 +1673,11 @@ export type ActorSelectScalar = {
   descriptionRich?: boolean
   descriptionYjs?: boolean
   worldId?: boolean
+  parentFolderId?: boolean
+  parentFolderPosition?: boolean
 }
 
-export type ActorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "title" | "icon" | "color" | "description" | "descriptionRich" | "descriptionYjs" | "worldId", ExtArgs["result"]["actor"]>
+export type ActorOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "title" | "icon" | "color" | "description" | "descriptionRich" | "descriptionYjs" | "worldId" | "parentFolderId" | "parentFolderPosition", ExtArgs["result"]["actor"]>
 export type ActorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pages?: boolean | Prisma.Actor$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.Actor$mentionsArgs<ExtArgs>
@@ -1344,13 +1685,16 @@ export type ActorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   assetRefs?: boolean | Prisma.Actor$assetRefsArgs<ExtArgs>
   nodes?: boolean | Prisma.Actor$nodesArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.Actor$parentFolderArgs<ExtArgs>
   _count?: boolean | Prisma.ActorCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ActorIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.Actor$parentFolderArgs<ExtArgs>
 }
 export type ActorIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.Actor$parentFolderArgs<ExtArgs>
 }
 
 export type $ActorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1362,6 +1706,7 @@ export type $ActorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     assetRefs: Prisma.$AssetReferencePayload<ExtArgs>[]
     nodes: Prisma.$MindmapNodePayload<ExtArgs>[]
     world: Prisma.$WorldPayload<ExtArgs>
+    parentFolder: Prisma.$WikiFolderPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1375,6 +1720,8 @@ export type $ActorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     descriptionRich: string
     descriptionYjs: string | null
     worldId: string
+    parentFolderId: string | null
+    parentFolderPosition: number
   }, ExtArgs["result"]["actor"]>
   composites: {}
 }
@@ -1775,6 +2122,7 @@ export interface Prisma__ActorClient<T, Null = never, ExtArgs extends runtime.Ty
   assetRefs<T extends Prisma.Actor$assetRefsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$assetRefsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssetReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   nodes<T extends Prisma.Actor$nodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$nodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MindmapNodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   world<T extends Prisma.WorldDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldDefaultArgs<ExtArgs>>): Prisma.Prisma__WorldClient<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  parentFolder<T extends Prisma.Actor$parentFolderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$parentFolderArgs<ExtArgs>>): Prisma.Prisma__WikiFolderClient<runtime.Types.Result.GetResult<Prisma.$WikiFolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1815,6 +2163,8 @@ export interface ActorFieldRefs {
   readonly descriptionRich: Prisma.FieldRef<"Actor", 'String'>
   readonly descriptionYjs: Prisma.FieldRef<"Actor", 'String'>
   readonly worldId: Prisma.FieldRef<"Actor", 'String'>
+  readonly parentFolderId: Prisma.FieldRef<"Actor", 'String'>
+  readonly parentFolderPosition: Prisma.FieldRef<"Actor", 'Int'>
 }
     
 
@@ -2333,6 +2683,25 @@ export type Actor$nodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.MindmapNodeScalarFieldEnum | Prisma.MindmapNodeScalarFieldEnum[]
+}
+
+/**
+ * Actor.parentFolder
+ */
+export type Actor$parentFolderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WikiFolder
+   */
+  select?: Prisma.WikiFolderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WikiFolder
+   */
+  omit?: Prisma.WikiFolderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WikiFolderInclude<ExtArgs> | null
+  where?: Prisma.WikiFolderWhereInput
 }
 
 /**

@@ -28,7 +28,8 @@ export function ArticleDropHandle({ position, parentId, marginLeft }: Props) {
 		onDrop: ({ params }, event) => {
 			event.markHandled()
 			moveArticle({
-				articleId: params.article.id,
+				entityId: params.article.id,
+				entityType: params.article.type,
 				parentId,
 				position: position - 1,
 			})

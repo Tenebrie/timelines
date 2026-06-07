@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { CreatePopoverButton } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
+import { CreatePopoverIconButton } from '@/ui-lib/components/PopoverButton/CreatePopoverIconButton'
 
 import { getCalendarEditorState } from '../CalendarSliceSelectors'
 import { CalendarUnitListItem } from './CalendarUnitListItem'
@@ -62,7 +62,7 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit }: Props) {
 				<Typography variant="body2" color="text.secondary" fontWeight="medium">
 					Time Units
 				</Typography>
-				<CreatePopoverButton
+				<CreatePopoverIconButton
 					size="small"
 					tooltip="Add time unit"
 					onConfirm={onCreateUnit}

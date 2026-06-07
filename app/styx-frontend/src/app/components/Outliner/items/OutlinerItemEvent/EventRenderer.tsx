@@ -53,7 +53,7 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 				return (
 					<PopoverButton
 						key={'menu'}
-						icon={<MenuIcon />}
+						content={<MenuIcon />}
 						aria-label="Menu"
 						size="small"
 						tooltip="Show actions"

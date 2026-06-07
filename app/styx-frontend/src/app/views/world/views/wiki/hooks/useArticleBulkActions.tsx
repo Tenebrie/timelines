@@ -1,4 +1,3 @@
-import { WikiArticle } from '@api/types/worldWikiTypes'
 import { ChangeEvent, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -6,8 +5,10 @@ import { useListArticles } from '@/app/views/world/api/useListArticles'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
 import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 
+import { BoxedWikiEntity } from './useBoxedWikiContent'
+
 type Props = {
-	article: WikiArticle
+	article: BoxedWikiEntity
 }
 
 export const useArticleBulkActions = ({ article }: Props) => {

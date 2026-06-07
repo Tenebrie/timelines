@@ -9,6 +9,7 @@ import { worldEventTracksApi } from '@api/worldEventTracksApi'
 import { worldListApi } from '@api/worldListApi'
 import { worldTagApi } from '@api/worldTagApi'
 import { worldWikiApi } from '@api/worldWikiApi'
+import { worldWikiFolderApi } from '@api/worldWikiFolderApi'
 import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -47,11 +48,16 @@ export const useLiveMessageHandlers = () => {
 		[CalliopeToClientMessageType.IMAGE_GENERATION_UPDATED]: () => {
 			dispatch(imageGenerationApi.util.invalidateTags(['imageGeneration']))
 		},
+
 		[CalliopeToClientMessageType.WORLD_UPDATED]: (data) => {
 			if (new Date(updatedAtRef.current) < new Date(data.timestamp)) {
 				dispatch(worldDetailsApi.util.invalidateTags(['worldDetails']))
 			}
 		},
+		[CalliopeToClientMessageType.WORLD_EVENTS_DELETED]: () => {
+			dispatch(worldDetailsApi.util.invalidateTags(['worldDetails']))
+		},
+
 		[CalliopeToClientMessageType.WORLD_TRACKS_UPDATED]: () => {
 			dispatch(worldEventTracksApi.util.invalidateTags(['worldEventTracks']))
 		},
@@ -74,20 +80,19 @@ export const useLiveMessageHandlers = () => {
 				),
 			)
 		},
+
 		[CalliopeToClientMessageType.ACTOR_UPDATED]: (data) => {
 			const actor = ingestActor(JSON.parse(data.actor) as GetWorldInfoApiResponse['actors'][number])
 			dispatch(updateActor(actor))
 		},
+		[CalliopeToClientMessageType.ACTORS_DELETED]: () => {
+			dispatch(worldDetailsApi.util.invalidateTags(['worldDetails']))
+		},
+
 		[CalliopeToClientMessageType.CALENDAR_UPDATED]: () => {
 			dispatch(calendarApi.util.invalidateTags(['calendar']))
 		},
-		[CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED]: (data) => {
-			const article = JSON.parse(data.article) as WikiArticle
-			upsertCachedArticle(article)
-		},
-		[CalliopeToClientMessageType.WIKI_ARTICLE_DELETED]: () => {
-			dispatch(worldWikiApi.util.invalidateTags(['worldWiki']))
-		},
+
 		[CalliopeToClientMessageType.MINDMAP_NODES_UPDATED]: (_) => {
 			dispatch(mindmapApi.util.invalidateTags(['mindmapNode']))
 		},
@@ -103,10 +108,35 @@ export const useLiveMessageHandlers = () => {
 		[CalliopeToClientMessageType.MINDMAP_WIRES_DELETED]: (_) => {
 			dispatch(mindmapApi.util.invalidateTags(['mindmapWire']))
 		},
+
 		[CalliopeToClientMessageType.TAG_UPDATED]: (data) => {
 			dispatch(updateTag(JSON.parse(data.tag) as WorldTag))
 			dispatch(worldTagApi.util.invalidateTags(['worldTag']))
 		},
+		[CalliopeToClientMessageType.TAGS_DELETED]: () => {
+			dispatch(worldTagApi.util.invalidateTags(['worldTag']))
+		},
+
+		[CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED]: (data) => {
+			const article = JSON.parse(data.article) as WikiArticle
+			upsertCachedArticle(article)
+		},
+		[CalliopeToClientMessageType.WIKI_ARTICLE_DELETED]: () => {
+			dispatch(worldWikiApi.util.invalidateTags(['worldWiki']))
+		},
+
+		[CalliopeToClientMessageType.WIKI_FOLDER_UPDATED]: () => {
+			dispatch(worldWikiFolderApi.util.invalidateTags(['worldWikiFolder']))
+		},
+		[CalliopeToClientMessageType.WIKI_FOLDER_DELETED]: () => {
+			dispatch(worldWikiFolderApi.util.invalidateTags(['worldWikiFolder']))
+		},
+
+		[CalliopeToClientMessageType.WIKI_ORDER_CHANGED]: (data) => {
+			// TODO: Implement
+			console.log(data)
+		},
+
 		[CalliopeToClientMessageType.DOCUMENT_RESET]: (data) => {
 			notifyAboutDocumentReset(data)
 		},

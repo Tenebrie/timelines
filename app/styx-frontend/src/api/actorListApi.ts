@@ -219,6 +219,8 @@ export type CreateActorApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }
 export type CreateActorApiArg = {
 	/** Any string value */
@@ -278,6 +280,8 @@ export type UpdateActorApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }
 export type UpdateActorApiArg = {
 	/** Any string value */
@@ -303,6 +307,8 @@ export type DeleteActorApiResponse = /** status 200  */ {
 	color: string
 	descriptionRich: string
 	descriptionYjs?: null | string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }
 export type DeleteActorApiArg = {
 	/** Any string value */

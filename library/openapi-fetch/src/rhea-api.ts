@@ -1239,6 +1239,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/world/{worldId}/bulk/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Deletes a number of entities from the world. */
+        post: operations["bulkDeleteEntities"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/worlds/{worldId}/colors": {
         parameters: {
             query?: never;
@@ -1407,6 +1424,92 @@ export interface paths {
         get: operations["getWorldEventBacklinks"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-tracks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Lists all world event tracks. */
+        get: operations["getWorldEventTracks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-track": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates a new world event track. */
+        post: operations["createWorldEventTrack"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-track/{trackId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Deletes the given world event track. */
+        delete: operations["deleteWorldEventTrack"];
+        options?: never;
+        head?: never;
+        /** @description Updates the given world event track. */
+        patch: operations["updateWorldEventTrack"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-track/swap": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Swaps the position of two given tracks. */
+        post: operations["swapWorldEventTracks"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-track/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Moves the track to a new position. */
+        post: operations["moveWorldEventTrack"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1722,6 +1825,59 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/world/{worldId}/wiki/folders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns a list of folders in the wiki without content. */
+        get: operations["getFolders"];
+        put?: never;
+        /** @description Creates a new folder in the wiki. */
+        post: operations["createFolder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/wiki/folder/{folderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Deletes a folder from the wiki. */
+        delete: operations["deleteFolder"];
+        options?: never;
+        head?: never;
+        /** @description Updates a folder in the wiki. */
+        patch: operations["updateFolder"];
+        trace?: never;
+    };
+    "/api/internal/auth/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns the user's access level for a specific world. */
+        get: operations["getUserWorldAccessLevel"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/world/{worldId}/wiki/articles": {
         parameters: {
             query?: never;
@@ -1758,7 +1914,7 @@ export interface paths {
         patch: operations["updateArticle"];
         trace?: never;
     };
-    "/api/world/{worldId}/wiki/article/move": {
+    "/api/world/{worldId}/wiki/move": {
         parameters: {
             query?: never;
             header?: never;
@@ -1767,25 +1923,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Moves an article to a new position. */
-        post: operations["moveArticle"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/wiki/articles/delete": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Deletes a number of articles from the wiki. */
-        post: operations["bulkDeleteArticles"];
+        /** @description Moves an entity to a new wiki position. */
+        post: operations["moveWikiEntity"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1803,109 +1942,6 @@ export interface paths {
         get: operations["getArticleBacklinks"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/internal/auth/{userId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns the user's access level for a specific world. */
-        get: operations["getUserWorldAccessLevel"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-tracks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Lists all world event tracks. */
-        get: operations["getWorldEventTracks"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-track": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Creates a new world event track. */
-        post: operations["createWorldEventTrack"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-track/{trackId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** @description Deletes the given world event track. */
-        delete: operations["deleteWorldEventTrack"];
-        options?: never;
-        head?: never;
-        /** @description Updates the given world event track. */
-        patch: operations["updateWorldEventTrack"];
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-track/swap": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Swaps the position of two given tracks. */
-        post: operations["swapWorldEventTracks"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-track/move": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Moves the track to a new position. */
-        post: operations["moveWorldEventTrack"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2209,6 +2245,8 @@ export interface operations {
                         icon: string;
                         color: string;
                         descriptionRich: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                     };
                 };
             };
@@ -2247,6 +2285,8 @@ export interface operations {
                         color: string;
                         descriptionRich: string;
                         descriptionYjs?: null | string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                     };
                 };
             };
@@ -2335,6 +2375,8 @@ export interface operations {
                         icon: string;
                         color: string;
                         descriptionRich: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                     };
                 };
             };
@@ -3226,9 +3268,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 ownerId: string;
-                                size: number;
                                 expiresAt?: null | string;
                                 bucketKey: string;
+                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
@@ -4522,6 +4564,8 @@ export interface operations {
                                     icon: string;
                                     color: string;
                                     descriptionRich: string;
+                                    parentFolderId?: null | string;
+                                    parentFolderPosition: number;
                                     /** Format: bigint */
                                     timestamp: string;
                                     revokedAt?: null | string;
@@ -4666,6 +4710,8 @@ export interface operations {
                                     icon: string;
                                     color: string;
                                     descriptionRich: string;
+                                    parentFolderId?: null | string;
+                                    parentFolderPosition: number;
                                 }[];
                                 articles: {
                                     pages: {
@@ -4706,6 +4752,8 @@ export interface operations {
                                     name: string;
                                     icon: string;
                                     color: string;
+                                    parentFolderId?: null | string;
+                                    parentFolderPosition: number;
                                     position: number;
                                     contentRich: string;
                                     parentId?: null | string;
@@ -4735,6 +4783,8 @@ export interface operations {
                                     /** Format: date-time */
                                     updatedAt: string;
                                     name: string;
+                                    parentFolderId?: null | string;
+                                    parentFolderPosition: number;
                                 }[];
                                 mindmapNodes: {
                                     links: {
@@ -5099,9 +5149,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             content: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
                             sourceNodeId: string;
                             targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
                         }[];
                     };
                 };
@@ -5305,9 +5355,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             content: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
                             sourceNodeId: string;
                             targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
                         }[];
                         updated: {
                             id: string;
@@ -5316,9 +5366,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             content: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
                             sourceNodeId: string;
                             targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
                         }[];
                     };
                 };
@@ -5383,9 +5433,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         content: string;
-                        direction: "Normal" | "Reversed" | "TwoWay";
                         sourceNodeId: string;
                         targetNodeId: string;
+                        direction: "Normal" | "Reversed" | "TwoWay";
                     };
                 };
             };
@@ -5642,8 +5692,16 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                     };
                 };
+            };
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -5696,6 +5754,8 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                     };
                 };
             };
@@ -5729,6 +5789,8 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                     };
                 };
             };
@@ -5781,6 +5843,8 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                     };
                 };
             };
@@ -5838,6 +5902,35 @@ export interface operations {
                 "application/x-www-form-urlencoded": {
                     content: string;
                     reloadClients?: boolean;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    bulkDeleteEntities: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    entities: string[];
+                };
+                "application/x-www-form-urlencoded": {
+                    entities: string[];
                 };
             };
         };
@@ -6092,6 +6185,8 @@ export interface operations {
                         icon: string;
                         color: string;
                         descriptionRich: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                         /** Format: bigint */
                         timestamp: string;
                         revokedAt?: null | string;
@@ -6206,6 +6301,8 @@ export interface operations {
                         icon: string;
                         color: string;
                         descriptionRich: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                         /** Format: bigint */
                         timestamp: string;
                         revokedAt?: null | string;
@@ -6258,6 +6355,8 @@ export interface operations {
                         color: string;
                         descriptionRich: string;
                         descriptionYjs?: null | string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                         /** Format: bigint */
                         timestamp: string;
                         revokedAt?: null | string;
@@ -6299,6 +6398,8 @@ export interface operations {
                         color: string;
                         descriptionRich: string;
                         descriptionYjs?: null | string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                         /** Format: bigint */
                         timestamp: string;
                         revokedAt?: null | string;
@@ -6469,6 +6570,198 @@ export interface operations {
                         name: string;
                     }[];
                 };
+            };
+        };
+    };
+    getWorldEventTracks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        position: number;
+                        visible: boolean;
+                    }[];
+                };
+            };
+        };
+    };
+    createWorldEventTrack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name: string;
+                    position?: number;
+                    assignOrphans: boolean;
+                };
+                "application/x-www-form-urlencoded": {
+                    name: string;
+                    position?: number;
+                    assignOrphans: boolean;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                    };
+                };
+            };
+        };
+    };
+    deleteWorldEventTrack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                trackId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateWorldEventTrack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                trackId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    position?: number;
+                    visible?: boolean;
+                };
+                "application/x-www-form-urlencoded": {
+                    name?: string;
+                    position?: number;
+                    visible?: boolean;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                    };
+                };
+            };
+        };
+    };
+    swapWorldEventTracks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    trackA: string;
+                    trackB: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    trackA: string;
+                    trackB: string;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    moveWorldEventTrack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    trackId: string;
+                    position: number;
+                };
+                "application/x-www-form-urlencoded": {
+                    trackId: string;
+                    position: number;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -6754,6 +7047,8 @@ export interface operations {
                             icon: string;
                             color: string;
                             descriptionRich: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
                         }[];
                         events: {
                             pages: {
@@ -6792,6 +7087,8 @@ export interface operations {
                             icon: string;
                             color: string;
                             descriptionRich: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
                             /** Format: bigint */
                             timestamp: string;
                             revokedAt?: null | string;
@@ -6814,6 +7111,8 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
                         }[];
                         description: string;
                         id: string;
@@ -7141,6 +7440,8 @@ export interface operations {
                             icon: string;
                             color: string;
                             descriptionRich: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
                         }[];
                         articles: {
                             pages: {
@@ -7168,6 +7469,8 @@ export interface operations {
                             name: string;
                             icon: string;
                             color: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
                             position: number;
                             contentRich: string;
                             parentId?: null | string;
@@ -7209,6 +7512,8 @@ export interface operations {
                             icon: string;
                             color: string;
                             descriptionRich: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
                             /** Format: bigint */
                             timestamp: string;
                             revokedAt?: null | string;
@@ -7231,6 +7536,8 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
                         }[];
                     };
                 };
@@ -7518,6 +7825,228 @@ export interface operations {
             };
         };
     };
+    getFolders: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        children: {
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            icon: string;
+                            color: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        icon: string;
+                        color: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    }[];
+                };
+            };
+        };
+    };
+    createFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name: string;
+                    icon?: string;
+                    color?: string;
+                    parentId?: null | string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name: string;
+                    icon?: string;
+                    color?: string;
+                    parentId?: null | string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        children: {
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            icon: string;
+                            color: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        icon: string;
+                        color: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+        };
+    };
+    deleteFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                folderId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateFolder: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                folderId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    icon?: string;
+                    color?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name?: string;
+                    icon?: string;
+                    color?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        children: {
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            icon: string;
+                            color: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        icon: string;
+                        color: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+        };
+    };
+    getUserWorldAccessLevel: {
+        parameters: {
+            query: {
+                /** @description Any string value with at least one character */
+                worldId: string;
+            };
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        owner: boolean;
+                        write: boolean;
+                        read: boolean;
+                    };
+                };
+            };
+        };
+    };
     getArticles: {
         parameters: {
             query?: never;
@@ -7554,16 +8083,18 @@ export interface operations {
                         }[];
                         worldId: string;
                         id: string;
+                        name: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
                         icon: string;
                         color: string;
-                        position: number;
                         contentRich: string;
+                        position: number;
                         parentId?: null | string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                     }[];
                 };
             };
@@ -7608,16 +8139,18 @@ export interface operations {
                         }[];
                         worldId: string;
                         id: string;
+                        name: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
                         icon: string;
                         color: string;
-                        position: number;
                         contentRich: string;
+                        position: number;
                         parentId?: null | string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                     };
                 };
             };
@@ -7684,22 +8217,24 @@ export interface operations {
                         }[];
                         worldId: string;
                         id: string;
+                        name: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
                         icon: string;
                         color: string;
-                        position: number;
                         contentRich: string;
+                        position: number;
                         parentId?: null | string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
                     };
                 };
             };
         };
     };
-    moveArticle: {
+    moveWikiEntity: {
         parameters: {
             query?: never;
             header?: never;
@@ -7712,52 +8247,33 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    articleId: string;
+                    entityId: string;
+                    entityType: "actor" | "article" | "folder" | "event" | "tag";
                     parentId?: null | string;
                     position: number;
                 };
                 "application/x-www-form-urlencoded": {
-                    articleId: string;
+                    entityId: string;
+                    entityType: "actor" | "article" | "folder" | "event" | "tag";
                     parentId?: null | string;
                     position: number;
                 };
             };
         };
         responses: {
-            204: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
-            };
-        };
-    };
-    bulkDeleteArticles: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    articles: string[];
+                content: {
+                    "application/json": {
+                        updates: {
+                            entityId: string;
+                            entityType: "actor" | "article" | "folder" | "event" | "tag";
+                            position: number;
+                        }[];
+                    };
                 };
-                "application/x-www-form-urlencoded": {
-                    articles: string[];
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };
@@ -7786,227 +8302,6 @@ export interface operations {
                         name: string;
                     }[];
                 };
-            };
-        };
-    };
-    getUserWorldAccessLevel: {
-        parameters: {
-            query: {
-                /** @description Any string value with at least one character */
-                worldId: string;
-            };
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        owner: boolean;
-                        write: boolean;
-                        read: boolean;
-                    };
-                };
-            };
-        };
-    };
-    getWorldEventTracks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        worldId: string;
-                        name: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        position: number;
-                        visible: boolean;
-                    }[];
-                };
-            };
-        };
-    };
-    createWorldEventTrack: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name: string;
-                    position?: number;
-                    assignOrphans: boolean;
-                };
-                "application/x-www-form-urlencoded": {
-                    name: string;
-                    position?: number;
-                    assignOrphans: boolean;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                    };
-                };
-            };
-        };
-    };
-    deleteWorldEventTrack: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                trackId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateWorldEventTrack: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                trackId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name?: string;
-                    position?: number;
-                    visible?: boolean;
-                };
-                "application/x-www-form-urlencoded": {
-                    name?: string;
-                    position?: number;
-                    visible?: boolean;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                    };
-                };
-            };
-        };
-    };
-    swapWorldEventTracks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    trackA: string;
-                    trackB: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    trackA: string;
-                    trackB: string;
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    moveWorldEventTrack: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    trackId: string;
-                    position: number;
-                };
-                "application/x-www-form-urlencoded": {
-                    trackId: string;
-                    position: number;
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };

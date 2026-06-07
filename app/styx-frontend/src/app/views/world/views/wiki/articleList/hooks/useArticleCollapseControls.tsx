@@ -1,11 +1,12 @@
-import { WikiArticle } from '@api/types/worldWikiTypes'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { getWikiPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 
-export function useArticleCollapseControls(article: WikiArticle) {
+import { BoxedWikiEntity } from '../../hooks/useBoxedWikiContent'
+
+export function useArticleCollapseControls(article: BoxedWikiEntity) {
 	const { expandedFolders } = useSelector(
 		getWikiPreferences,
 		(a, b) => a.expandedFolders === b.expandedFolders,

@@ -1,5 +1,12 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['worldWiki'] as const
+export const addTagTypes = [
+	'worldWiki',
+	'worldWikiArticle',
+	'worldWikiFolder',
+	'actorList',
+	'worldTag',
+	'worldDetails',
+] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -25,21 +32,20 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldWiki'],
 			}),
-			moveArticle: build.mutation<MoveArticleApiResponse, MoveArticleApiArg>({
+			moveWikiEntity: build.mutation<MoveWikiEntityApiResponse, MoveWikiEntityApiArg>({
 				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/wiki/article/move`,
+					url: `/api/world/${queryArg.worldId}/wiki/move`,
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['worldWiki'],
-			}),
-			bulkDeleteArticles: build.mutation<BulkDeleteArticlesApiResponse, BulkDeleteArticlesApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/wiki/articles/delete`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['worldWiki'],
+				invalidatesTags: [
+					'worldWiki',
+					'worldWikiArticle',
+					'worldWikiFolder',
+					'actorList',
+					'worldTag',
+					'worldDetails',
+				],
 			}),
 		}),
 		overrideExisting: false,
@@ -64,14 +70,16 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	}[]
 	worldId: string
 	id: string
+	name: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	icon: string
 	color: string
-	position: number
 	contentRich: string
+	position: number
 	parentId?: null | string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }[]
 export type GetArticlesApiArg = {
 	/** Any string value */
@@ -84,14 +92,16 @@ export type CreateArticleApiResponse = /** status 200  */ {
 	}[]
 	worldId: string
 	id: string
+	name: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	icon: string
 	color: string
-	position: number
 	contentRich: string
+	position: number
 	parentId?: null | string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }
 export type CreateArticleApiArg = {
 	/** Any string value */
@@ -110,22 +120,21 @@ export type DeleteArticleApiArg = {
 	/** Any string value */
 	articleId: string
 }
-export type MoveArticleApiResponse = unknown
-export type MoveArticleApiArg = {
+export type MoveWikiEntityApiResponse = /** status 200  */ {
+	updates: {
+		entityId: string
+		entityType: 'actor' | 'article' | 'folder' | 'event' | 'tag'
+		position: number
+	}[]
+}
+export type MoveWikiEntityApiArg = {
 	/** Any string value */
 	worldId: string
 	body: {
-		articleId: string
+		entityId: string
+		entityType: 'actor' | 'article' | 'folder' | 'event' | 'tag'
 		parentId?: null | string
 		position: number
-	}
-}
-export type BulkDeleteArticlesApiResponse = unknown
-export type BulkDeleteArticlesApiArg = {
-	/** Any string value */
-	worldId: string
-	body: {
-		articles: string[]
 	}
 }
 export const {
@@ -133,6 +142,5 @@ export const {
 	useLazyGetArticlesQuery,
 	useCreateArticleMutation,
 	useDeleteArticleMutation,
-	useMoveArticleMutation,
-	useBulkDeleteArticlesMutation,
+	useMoveWikiEntityMutation,
 } = injectedRtkApi

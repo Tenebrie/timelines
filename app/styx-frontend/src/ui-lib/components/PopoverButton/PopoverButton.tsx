@@ -9,7 +9,8 @@ import { useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import Tooltip from '@/ui-lib/components/Tooltip'
 
 type Props = {
-	icon: ReactNode
+	content: ReactNode
+	startIcon?: ReactNode
 	tooltip: string
 	disabled?: boolean
 	color?: Parameters<typeof IconButton>['0']['color']
@@ -21,12 +22,20 @@ type Props = {
 	autofocus?: boolean
 	onCleanup?: () => void
 	onEnterKey?: (props: { close: () => void }) => void
-	rippleVariant?: 'icon' | 'button'
+	buttonVariant?: 'icon' | Parameters<typeof Button>['0']['variant']
 	popoverAlign?: Parameters<typeof Popover>['0']['anchorOrigin']
+	children?: ReactNode
+	slotProps?: PopoverButtonSlotProps
+}
+
+export type PopoverButtonSlotProps = {
+	primaryButton?: Partial<Parameters<typeof Button>[0]>
+	popover?: Partial<Parameters<typeof Popover>[0]>
 }
 
 export function PopoverButton({
-	icon,
+	content,
+	startIcon,
 	tooltip,
 	disabled,
 	size,
@@ -38,8 +47,9 @@ export function PopoverButton({
 	autofocus,
 	onCleanup,
 	onEnterKey,
-	rippleVariant = 'icon',
+	buttonVariant = 'icon',
 	popoverAlign = { vertical: 'bottom', horizontal: 'right' },
+	slotProps,
 }: Props) {
 	const popupState = usePopupState({ variant: 'popover', popupId: tooltip })
 
@@ -61,32 +71,42 @@ export function PopoverButton({
 		['Enter', 'Ctrl+Enter'],
 		() => {
 			onEnterKey?.({ close: popupState.close })
+			requestAnimationFrame(() => {
+				if (document.activeElement instanceof HTMLElement) {
+					document.activeElement.blur()
+				}
+			})
 		},
 		popupState.isOpen,
 	)
 
 	return (
 		<>
-			<Tooltip title={tooltip} disableInteractive enterDelay={500}>
-				{rippleVariant === 'button' ? (
-					<Button
-						color={color === 'default' ? undefined : color}
-						{...sharedButtonProps}
-						disabled={disabled}
-						sx={{ minWidth: 0, padding: 0, ...buttonSx }}
-					>
-						{icon}
-					</Button>
-				) : (
+			<Tooltip title={tooltip} disableInteractive enterDelay={700}>
+				{buttonVariant === 'icon' ? (
 					<IconButton
 						color={color}
 						size={size}
 						sx={{ opacity: 0.7, '&:hover': { opacity: 1 }, ...buttonSx }}
 						disabled={disabled}
 						{...sharedButtonProps}
+						{...slotProps?.primaryButton}
 					>
-						{icon}
+						{content}
 					</IconButton>
+				) : (
+					<Button
+						size={size}
+						color={color === 'default' ? undefined : color}
+						variant={buttonVariant}
+						{...sharedButtonProps}
+						disabled={disabled}
+						startIcon={startIcon}
+						sx={buttonSx}
+						{...slotProps?.primaryButton}
+					>
+						{content}
+					</Button>
 				)}
 			</Tooltip>
 			<Popover
@@ -110,6 +130,7 @@ export function PopoverButton({
 						},
 					},
 				}}
+				{...slotProps?.popover}
 			>
 				<Stack sx={{ ...popoverSx, gap: 2 }}>
 					{popoverBody({ close: popupState.close })}

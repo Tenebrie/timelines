@@ -1,18 +1,17 @@
-import { WikiArticle } from '@api/types/worldWikiTypes'
-import Article from '@mui/icons-material/Article'
-import Folder from '@mui/icons-material/Folder'
 import Button from '@mui/material/Button'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
+import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
 import { useMoveArticle } from '../api/useMoveArticle'
+import { BoxedWikiEntity } from './useBoxedWikiContent'
 
 type Props = {
-	article: WikiArticle
+	article: BoxedWikiEntity
 }
 
 export const useArticleDragDrop = ({ article }: Props) => {
@@ -24,13 +23,11 @@ export const useArticleDragDrop = ({ article }: Props) => {
 		dispatch(uncollapseWikiFolder(article))
 	}, [dispatch, uncollapseWikiFolder, article])
 
-	const icon = useMemo(() => (article.children?.length ? <Folder /> : <Article />), [article.children])
-
 	const { ref, ghostElement } = useDragDrop({
 		type: 'articleListItem',
 		ghostFactory: () => (
 			<Button
-				startIcon={icon}
+				startIcon={<EntityIcon variant={article.type} />}
 				color="secondary"
 				variant="contained"
 				sx={{ justifyContent: 'start', opacity: 0.5, width: '200px' }}
@@ -50,7 +47,8 @@ export const useArticleDragDrop = ({ article }: Props) => {
 				return
 			}
 			moveArticle({
-				articleId: params.article.id,
+				entityId: params.article.id,
+				entityType: params.article.type,
 				parentId: article.id,
 				// Always the last position
 				position: 9999,

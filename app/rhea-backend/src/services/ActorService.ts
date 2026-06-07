@@ -3,10 +3,12 @@ import { MentionedEntity, Prisma, ReferenceHoldingEntity } from '@prisma/client'
 import { ContentPageUpdateWithoutParentActorInput } from '../../prisma/client/models.js'
 import { AssetRefService } from './AssetRefService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { makeUpdateActorQuery, UpdateActorQueryParams } from './dbQueries/makeUpdateActorQuery.js'
 import { MentionData, MentionsService } from './MentionsService.js'
 import { MentionedByEntry } from './TagService.js'
+import { BulkActionService } from './WorldBulkActionService.js'
 
 export const ActorService = {
 	findActor: async ({ worldId, actorId }: { worldId: string; actorId: string | null | undefined }) => {
@@ -138,16 +140,21 @@ export const ActorService = {
 		updateData: UpdateActorQueryParams
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
+			const entityCount = await BulkActionService.countWikiEntities({ worldId, prisma })
+
 			const baseActor = await getPrismaClient(prisma).actor.create({
 				data: {
 					worldId,
+					parentFolderPosition: entityCount * 2,
 					...createData,
 				},
-				include: {
-					mentions: { distinct: ['targetId'] },
-					mentionedIn: { distinct: ['sourceId'] },
+				select: {
+					id: true,
 				},
 			})
+
+			const world = await makeTouchWorldQuery(worldId, prisma)
+			await makeSortWikiArticlesQuery(worldId, prisma)
 
 			const { actor } = await makeUpdateActorQuery({
 				worldId,
@@ -155,8 +162,6 @@ export const ActorService = {
 				params: updateData,
 				prisma,
 			})
-
-			const world = await makeTouchWorldQuery(worldId)
 
 			return {
 				world,

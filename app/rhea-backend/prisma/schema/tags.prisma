@@ -12,4 +12,8 @@ model Tag {
 
     world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
     worldId String
+
+    parentFolder         WikiFolder? @relation("FolderTag", fields: [parentFolderId], references: [id], onDelete: Cascade)
+    parentFolderId       String?
+    parentFolderPosition Int         @default(2147483647)
 }

@@ -4,7 +4,7 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { ReactNode } from 'react'
 
-import { PopoverButton } from './PopoverButton'
+import { PopoverButton, PopoverButtonSlotProps } from './PopoverButton'
 
 type Props = {
 	type: 'expire' | 'delete'
@@ -14,6 +14,7 @@ type Props = {
 	disabled?: boolean
 	confirmDisabled?: boolean
 	onConfirm: () => void | boolean | Promise<void | boolean>
+	slotProps?: PopoverButtonSlotProps
 }
 
 export function ConfirmPopoverButton({
@@ -24,6 +25,7 @@ export function ConfirmPopoverButton({
 	disabled,
 	confirmDisabled,
 	onConfirm,
+	slotProps,
 }: Props) {
 	const icon = type === 'delete' ? <DeleteIcon fontSize="small" /> : <TimelapseIcon fontSize="small" />
 
@@ -31,12 +33,13 @@ export function ConfirmPopoverButton({
 		<PopoverButton
 			tooltip={tooltip}
 			size="small"
-			icon={icon}
+			content={icon}
 			disabled={disabled}
 			onEnterKey={async ({ close }) => {
 				await onConfirm()
 				close()
 			}}
+			slotProps={slotProps}
 			popoverSx={{ gap: 1.5, p: 2, maxWidth: 280 }}
 			popoverBody={() => <Typography variant="body2">{prompt}</Typography>}
 			popoverAction={({ close }) => (

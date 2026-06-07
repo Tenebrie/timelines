@@ -1,21 +1,18 @@
-import { MoveArticleApiArg, useMoveArticleMutation, worldWikiApi } from '@api/worldWikiApi'
+import { MoveWikiEntityApiArg, useMoveWikiEntityMutation, worldWikiApi } from '@api/worldWikiApi'
 import { useSelector } from 'react-redux'
 
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-import { useArticleApiCache } from './useArticleApiCache'
-
-export const useMoveArticle = () => {
+export function useMoveArticle() {
 	const worldId = useSelector(getWorldIdState)
-	const [moveArticle, params] = useMoveArticleMutation()
-	const { updateCachedArticlePosition } = useArticleApiCache()
+	const [moveEntity, params] = useMoveWikiEntityMutation()
 
-	const commit = async (data: MoveArticleApiArg['body']) => {
-		updateCachedArticlePosition(data)
-
+	// const { updateCachedArticlePosition } = useArticleApiCache()
+	const commit = async (data: MoveWikiEntityApiArg['body']) => {
+		// updateCachedArticlePosition(data)
 		const { response, error } = parseApiResponse(
-			await moveArticle({
+			await moveEntity({
 				worldId,
 				body: data,
 			}),

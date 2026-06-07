@@ -1,9 +1,10 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { WikiEntityTypeSchema } from '@src/schema/EntityType.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { MentionData } from '@src/services/MentionsService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
-import { WikiService } from '@src/services/WikiService.js'
+import { WikiArticleService } from '@src/services/WikiArticleService.js'
 import {
 	BadRequestError,
 	NumberValidator,
@@ -21,10 +22,16 @@ import {
 import z from 'zod'
 
 import { SessionMiddleware } from '../middleware/SessionMiddleware.js'
-import { worldWikiArticleTag, worldWikiTag } from './utils/tags.js'
+import {
+	actorListTag,
+	tagEntityTag,
+	worldDetailsTag,
+	worldWikiArticleTag,
+	worldWikiFolderTag,
+	worldWikiTag,
+} from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'
 import { NullableStringValidator } from './validators/NullableStringValidator.js'
-import { StringArrayValidator } from './validators/StringArrayValidator.js'
 
 const router = new Router().with(SessionMiddleware)
 
@@ -43,7 +50,7 @@ router.get('/api/world/:worldId/wiki/articles', async (ctx) => {
 
 	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
-	return await WikiService.listWikiArticles({ worldId })
+	return await WikiArticleService.listWikiArticles({ worldId })
 })
 
 router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
@@ -79,15 +86,12 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 		mentions = parsed.mentions
 	}
 
-	const articleCount = await WikiService.getArticleCount({ worldId })
-
-	const article = await WikiService.createWikiArticle({
+	const article = await WikiArticleService.createWikiArticle({
 		worldId,
 		name,
 		icon,
 		color,
 		contentRich: parsedContentRich ?? '',
-		position: articleCount,
 		mentions,
 	})
 
@@ -118,7 +122,7 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 		color: OptionalParam(StringValidator),
 	})
 
-	const { article } = await WikiService.updateWikiArticle({
+	const { article } = await WikiArticleService.updateWikiArticle({
 		id: articleId,
 		worldId,
 		name,
@@ -130,11 +134,18 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 	return article
 })
 
-router.post('/api/world/:worldId/wiki/article/move', async (ctx) => {
+router.post('/api/world/:worldId/wiki/move', async (ctx) => {
 	useApiEndpoint({
-		name: 'moveArticle',
-		description: 'Moves an article to a new position.',
-		tags: [worldWikiTag],
+		name: 'moveWikiEntity',
+		description: 'Moves an entity to a new wiki position.',
+		tags: [
+			worldWikiTag,
+			worldWikiArticleTag,
+			worldWikiFolderTag,
+			actorListTag,
+			tagEntityTag,
+			worldDetailsTag,
+		],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -145,20 +156,25 @@ router.post('/api/world/:worldId/wiki/article/move', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
-	const params = useRequestBody(ctx, {
-		articleId: RequiredParam(StringValidator),
+	const { entityId, entityType, parentId, position } = useRequestBody(ctx, {
+		entityId: RequiredParam(StringValidator),
+		entityType: WikiEntityTypeSchema,
 		parentId: OptionalParam(NullableStringValidator),
 		position: RequiredParam(NumberValidator),
 	})
 
-	const { article } = await WikiService.moveWikiArticle({
+	const { updates } = await WikiArticleService.moveWikiArticle({
 		worldId,
-		articleId: params.articleId,
-		toPosition: params.position,
-		toParentId: params.parentId,
+		entityId,
+		entityType,
+		toPosition: position,
+		toParentId: parentId,
 	})
 
-	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
+	RedisService.notifyAboutWikiReorder(ctx, { worldId, updates })
+	return {
+		updates,
+	}
 })
 
 router.delete('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
@@ -177,34 +193,10 @@ router.delete('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
-	const { updatedMentions } = await WikiService.deleteWikiArticle({ worldId, articleId })
+	const { updatedMentions } = await WikiArticleService.deleteWikiArticle({ worldId, articleId })
 
-	RedisService.notifyAboutWikiArticleDeletion(ctx, { worldId })
+	RedisService.notifyAboutWikiArticlesDelete(ctx, { worldId })
 	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
-})
-
-router.post('/api/world/:worldId/wiki/articles/delete', async (ctx) => {
-	useApiEndpoint({
-		name: 'bulkDeleteArticles',
-		description: 'Deletes a number of articles from the wiki.',
-		tags: [worldWikiTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { worldId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-	})
-
-	const { articles } = useRequestBody(ctx, {
-		articles: RequiredParam(StringArrayValidator),
-	})
-
-	await AuthorizationService.checkUserWriteAccessById(user, worldId)
-
-	await WikiService.bulkDeleteWikiArticles({ worldId, articles })
-
-	RedisService.notifyAboutWikiArticleDeletion(ctx, { worldId })
 })
 
 router.get('/api/world/:worldId/wiki/article/:articleId/backlinks', async (ctx) => {
@@ -223,7 +215,7 @@ router.get('/api/world/:worldId/wiki/article/:articleId/backlinks', async (ctx) 
 
 	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
-	const backlinks = await WikiService.findArticleBacklinks({ worldId, articleId })
+	const backlinks = await WikiArticleService.findArticleBacklinks({ worldId, articleId })
 	if (!backlinks) {
 		throw new BadRequestError('Article not found')
 	}
@@ -231,4 +223,4 @@ router.get('/api/world/:worldId/wiki/article/:articleId/backlinks', async (ctx) 
 	return backlinks
 })
 
-export const WorldWikiRouter = router
+export const WorldWikiArticleRouter = router
