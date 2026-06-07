@@ -52,7 +52,7 @@ export function TextColorButton({ editor }: Props) {
 			color="secondary"
 			size="medium"
 			rippleVariant="button"
-			buttonSx={{ minWidth: '40px' }}
+			buttonSx={{ minWidth: '40px', height: 1 }}
 			popoverBody={({ close }) => (
 				<TextColorPickerBody editor={editor} currentColor={currentColor} onClose={close} />
 			)}
