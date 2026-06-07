@@ -13,7 +13,7 @@
 	},
 	"dependencies": {
 		"@astrojs/rss": "^4.0.18",
-		"@astrojs/sitemap": "^3.7.2",
+		"@astrojs/sitemap": "^3.7.3",
 		"@astrolib/analytics": "^0.6.1",
 		"@astrolib/seo": "^1.0.0-beta.8",
 		"@fontsource-variable/inter": "^5.2.6",
@@ -36,15 +36,15 @@
 		"@tailwindcss/typography": "^0.5.16",
 		"@types/js-yaml": "^4.0.9",
 		"@types/lodash.merge": "^4.6.9",
-		"@types/mdx": "^2.0.13",
-		"@typescript-eslint/eslint-plugin": "^8.59.4",
-		"@typescript-eslint/parser": "^8.59.4",
+		"@types/mdx": "^2.0.14",
+		"@typescript-eslint/eslint-plugin": "^8.60.1",
+		"@typescript-eslint/parser": "^8.60.1",
 		"astro-compress": "2.4.1",
 		"astro-eslint-parser": "^1.4.0",
-		"eslint": "^10.3.0",
+		"eslint": "^10.4.1",
 		"eslint-plugin-astro": "^1.7.0",
 		"globals": "^17.6.0",
-		"js-yaml": "^4.1.0",
+		"js-yaml": "^4.2.0",
 		"mdast-util-to-string": "^4.0.0",
 		"prettier": "^3.8.3",
 		"reading-time": "^1.5.0",
@@ -52,7 +52,7 @@
 		"tailwind-merge": "^3.6.0",
 		"tailwindcss": "^3.4.17",
 		"typescript": "^6.0.3",
-		"typescript-eslint": "^8.59.4",
+		"typescript-eslint": "^8.60.1",
 		"unist-util-visit": "^5.0.0"
 	}
 }
