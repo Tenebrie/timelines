@@ -66,9 +66,6 @@ const injectedRtkApi = api
 			getWikiArticleContent: build.query<GetWikiArticleContentApiResponse, GetWikiArticleContentApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/article/${queryArg.articleId}/content`,
-					params: {
-						acceptDeltas: queryArg.acceptDeltas,
-					},
 				}),
 				providesTags: ['worldWikiArticle'],
 			}),
@@ -235,17 +232,13 @@ export type RequestImageConversionApiArg = {
 	}
 }
 export type GetWikiArticleContentApiResponse = /** status 200  */ {
-	hasDeltas: boolean
-	contentHtml?: string
-	contentDeltas?: null | string
+	contentHtml: string
 }
 export type GetWikiArticleContentApiArg = {
 	/** Any string value */
 	worldId: string
 	/** Any string value */
 	articleId: string
-	/** Any boolean value */
-	acceptDeltas?: boolean
 }
 export type PutWikiArticleContentApiResponse = unknown
 export type PutWikiArticleContentApiArg = {
@@ -356,10 +349,6 @@ export type GetUserWorldAccessLevelApiArg = {
 	worldId: string
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
-	children: {
-		id: string
-		name: string
-	}[]
 	worldId: string
 	id: string
 	name: string
@@ -368,8 +357,6 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	contentRich: string
-	position: number
-	parentId?: null | string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 }

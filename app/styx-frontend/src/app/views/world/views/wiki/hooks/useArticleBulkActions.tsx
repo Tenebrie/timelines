@@ -1,18 +1,17 @@
-import { ChangeEvent, useCallback, useMemo } from 'react'
+import { ChangeEvent, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import useEvent from 'react-use-event-hook'
 
-import { useListArticles } from '@/app/views/world/api/useListArticles'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
 import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 
 import { BoxedWikiEntity } from './useBoxedWikiContent'
 
 type Props = {
-	article: BoxedWikiEntity
+	articles: BoxedWikiEntity[]
 }
 
-export const useArticleBulkActions = ({ article }: Props) => {
-	const { data: articles } = useListArticles()
+export const useArticleBulkActions = ({ articles }: Props) => {
 	const { isBulkSelecting, lastCheckedArticle, bulkActionArticles } = useSelector(
 		getWikiState,
 		(a, b) =>
@@ -24,57 +23,43 @@ export const useArticleBulkActions = ({ article }: Props) => {
 	const { setLastCheckedArticle, addToBulkSelection, removeFromBulkSelection } = wikiSlice.actions
 	const dispatch = useDispatch()
 
-	const checked = useMemo(() => bulkActionArticles.includes(article.id), [bulkActionArticles, article.id])
-
-	const onChange = useCallback(
-		(event: ChangeEvent, checked: boolean) => {
-			if (!articles) {
-				return
-			}
-
-			const isBulk =
-				event.nativeEvent instanceof MouseEvent && event.nativeEvent.shiftKey && lastCheckedArticle
-
-			if (checked) {
-				dispatch(addToBulkSelection({ articles: [article.id] }))
-			} else {
-				dispatch(removeFromBulkSelection({ articles: [article.id] }))
-			}
-
-			const sortedArticles = [...articles].sort((a, b) => a.position - b.position)
-
-			if (isBulk) {
-				const lastCheckedIndex = sortedArticles.indexOf(
-					sortedArticles.find((a) => a.id === lastCheckedArticle)!,
-				)
-				const currentIndex = sortedArticles.indexOf(sortedArticles.find((a) => a.id === article.id)!)
-
-				const [start, end] =
-					lastCheckedIndex < currentIndex
-						? [lastCheckedIndex, currentIndex]
-						: [currentIndex, lastCheckedIndex]
-
-				const adjustSelection = checked ? addToBulkSelection : removeFromBulkSelection
-
-				dispatch(adjustSelection({ articles: sortedArticles.slice(start, end + 1).map((a) => a.id) }))
-			} else {
-				dispatch(setLastCheckedArticle({ article: article.id }))
-			}
-		},
-		[
-			addToBulkSelection,
-			article.id,
-			articles,
-			dispatch,
-			lastCheckedArticle,
-			removeFromBulkSelection,
-			setLastCheckedArticle,
-		],
+	const isChecked = useCallback(
+		(article: BoxedWikiEntity) => bulkActionArticles.includes(article.id),
+		[bulkActionArticles],
 	)
+
+	const onChange = useEvent((article: BoxedWikiEntity, event: ChangeEvent<HTMLInputElement>) => {
+		if (!articles) {
+			return
+		}
+		const checked = event.target.checked
+
+		const isBulk = event.nativeEvent instanceof MouseEvent && event.nativeEvent.shiftKey && lastCheckedArticle
+
+		if (checked) {
+			dispatch(addToBulkSelection({ articles: [article.id] }))
+		} else {
+			dispatch(removeFromBulkSelection({ articles: [article.id] }))
+		}
+
+		if (isBulk) {
+			const lastCheckedIndex = articles.indexOf(articles.find((a) => a.id === lastCheckedArticle)!)
+			const currentIndex = articles.indexOf(articles.find((a) => a.id === article.id)!)
+
+			const [start, end] =
+				lastCheckedIndex < currentIndex ? [lastCheckedIndex, currentIndex] : [currentIndex, lastCheckedIndex]
+
+			const adjustSelection = checked ? addToBulkSelection : removeFromBulkSelection
+
+			dispatch(adjustSelection({ articles: articles.slice(start, end + 1).map((a) => a.id) }))
+		} else {
+			dispatch(setLastCheckedArticle({ article: article.id }))
+		}
+	})
 
 	return {
 		checkboxVisible: isBulkSelecting,
-		checked,
+		isChecked,
 		onChange,
 	}
 }

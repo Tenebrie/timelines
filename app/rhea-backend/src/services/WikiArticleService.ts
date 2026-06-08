@@ -290,6 +290,15 @@ export const WikiArticleService = {
 			const updates = await makeSortWikiArticlesQuery(params.worldId, prisma)
 			const world = await makeTouchWorldQuery(params.worldId, prisma)
 
+			if (params.toParentId !== undefined) {
+				updates.unshift({
+					entityId: params.entityId,
+					entityType: params.entityType,
+					position: params.toPosition,
+					folderId: params.toParentId,
+				})
+			}
+
 			return { world, updates }
 		})
 	},

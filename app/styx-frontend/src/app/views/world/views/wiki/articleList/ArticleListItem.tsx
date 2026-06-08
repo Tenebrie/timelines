@@ -6,16 +6,13 @@ import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import { useMatches } from '@tanstack/react-router'
-import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { memo, useCallback } from 'react'
 
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
-import { useArticleBulkActions } from '@/app/views/world/views/wiki/hooks/useArticleBulkActions'
 import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticleDragDrop'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
-import { ArticleContextMenu } from '../components/ArticleContextMenu'
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 import { ArticleList } from './ArticleList'
 import { ArticleListItemCollapse } from './ArticleListItemCollapse'
@@ -24,11 +21,15 @@ import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
 type Props = {
 	article: BoxedWikiEntity
 	depth: number
+	checkboxVisible: boolean
+	checked: boolean
+	onCheckboxChange: (article: BoxedWikiEntity, event: React.ChangeEvent<HTMLInputElement>) => void
+	onContextMenu: (article: BoxedWikiEntity, event: React.MouseEvent) => void
 }
 
 export const ArticleListItem = memo(ArticleListItemComponent)
 
-function ArticleListItemComponent({ article, depth }: Props) {
+function ArticleListItemComponent({ article, ...props }: Props) {
 	const { toggleOpen, collapsed } = useArticleCollapseControls(article)
 
 	const matches = useMatches()
@@ -41,10 +42,10 @@ function ArticleListItemComponent({ article, depth }: Props) {
 	return (
 		<ArticleListItemInner
 			article={article}
-			depth={depth}
 			expanded={!collapsed}
 			toggleOpen={toggleOpen}
 			highlighted={highlighted}
+			{...props}
 		/>
 	)
 }
@@ -55,15 +56,19 @@ function ArticleListItemInnerComponent({
 	article,
 	depth,
 	expanded,
+	checkboxVisible,
+	checked,
+	onCheckboxChange,
 	toggleOpen,
 	highlighted,
+	onContextMenu,
 }: Props & { expanded: boolean; toggleOpen: () => void; highlighted: boolean }) {
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	const { isReadOnly } = useIsReadOnly()
 
 	const onNavigate = useCallback(() => {
-		if (highlighted) {
+		if (highlighted || article.type === 'folder') {
 			toggleOpen()
 		} else {
 			navigate({
@@ -72,17 +77,20 @@ function ArticleListItemInnerComponent({
 				search: true,
 			})
 		}
-	}, [article.id, highlighted, toggleOpen, navigate])
+	}, [highlighted, article.type, article.id, toggleOpen, navigate])
 
 	const { ref, ghostElement } = useArticleDragDrop({ article })
-
-	const popupState = usePopupState({ variant: 'popover', popupId: 'articleListItem' })
-	const { checkboxVisible, checked, onChange } = useArticleBulkActions({ article })
 
 	return (
 		<Box data-testid={`ArticleListItem/${article.name}/${depth}`} data-item-type={article.type}>
 			<Stack ref={ref} direction="row" position={'relative'}>
-				{checkboxVisible && <Checkbox size="small" checked={checked} onChange={onChange}></Checkbox>}
+				{checkboxVisible && (
+					<Checkbox
+						size="small"
+						checked={checked}
+						onChange={(event) => onCheckboxChange(article, event)}
+					></Checkbox>
+				)}
 				<Button
 					role="button"
 					startIcon={<EntityIcon variant={article.type} />}
@@ -98,14 +106,13 @@ function ArticleListItemInnerComponent({
 					<IconButton
 						aria-label="Article context menu"
 						color="secondary"
-						{...bindTrigger(popupState)}
+						onClick={(event) => onContextMenu(article, event)}
 						sx={{ flexShrink: 0 }}
 					>
 						<Menu />
 					</IconButton>
 				)}
-				<ArticleListItemCollapse entity={article} />
-				<ArticleContextMenu article={article} popupState={popupState} />
+				{article.type === 'folder' && <ArticleListItemCollapse entity={article} />}
 				{ghostElement}
 			</Stack>
 			{article.type === 'folder' && (

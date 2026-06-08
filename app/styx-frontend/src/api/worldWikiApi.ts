@@ -1,12 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = [
-	'worldWiki',
-	'worldWikiArticle',
-	'worldWikiFolder',
-	'actorList',
-	'worldTag',
-	'worldDetails',
-] as const
+export const addTagTypes = ['worldWiki'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -38,14 +31,7 @@ const injectedRtkApi = api
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: [
-					'worldWiki',
-					'worldWikiArticle',
-					'worldWikiFolder',
-					'actorList',
-					'worldTag',
-					'worldDetails',
-				],
+				invalidatesTags: [],
 			}),
 		}),
 		overrideExisting: false,
@@ -64,10 +50,6 @@ export type GetArticlesApiResponse = /** status 200  */ {
 		sourceId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
-	children: {
-		id: string
-		name: string
-	}[]
 	worldId: string
 	id: string
 	name: string
@@ -76,8 +58,6 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	contentRich: string
-	position: number
-	parentId?: null | string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 }[]
@@ -86,10 +66,6 @@ export type GetArticlesApiArg = {
 	worldId: string
 }
 export type CreateArticleApiResponse = /** status 200  */ {
-	children: {
-		id: string
-		name: string
-	}[]
 	worldId: string
 	id: string
 	name: string
@@ -98,8 +74,6 @@ export type CreateArticleApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	contentRich: string
-	position: number
-	parentId?: null | string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 }
@@ -125,6 +99,7 @@ export type MoveWikiEntityApiResponse = /** status 200  */ {
 		entityId: string
 		entityType: 'actor' | 'article' | 'folder' | 'event' | 'tag'
 		position: number
+		folderId?: null | string
 	}[]
 }
 export type MoveWikiEntityApiArg = {

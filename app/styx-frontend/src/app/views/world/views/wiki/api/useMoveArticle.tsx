@@ -1,3 +1,5 @@
+import { useWikiApiCache } from '@api/hooks/useWikiApiCache'
+import { worldDetailsApi } from '@api/worldDetailsApi'
 import { MoveWikiEntityApiArg, useMoveWikiEntityMutation, worldWikiApi } from '@api/worldWikiApi'
 import { useSelector } from 'react-redux'
 
@@ -8,9 +10,18 @@ export function useMoveArticle() {
 	const worldId = useSelector(getWorldIdState)
 	const [moveEntity, params] = useMoveWikiEntityMutation()
 
-	// const { updateCachedArticlePosition } = useArticleApiCache()
+	const { applyPositionUpdates } = useWikiApiCache()
+
 	const commit = async (data: MoveWikiEntityApiArg['body']) => {
-		// updateCachedArticlePosition(data)
+		applyPositionUpdates([
+			{
+				entityId: data.entityId,
+				entityType: data.entityType,
+				position: data.position,
+				folderId: data.parentId,
+			},
+		])
+
 		const { response, error } = parseApiResponse(
 			await moveEntity({
 				worldId,
@@ -18,10 +29,12 @@ export function useMoveArticle() {
 			}),
 		)
 		if (error) {
+			worldDetailsApi.util.invalidateTags(['worldDetails'])
 			worldWikiApi.util.invalidateTags(['worldWiki'])
 			return
 		}
 
+		applyPositionUpdates(response.updates)
 		return response
 	}
 

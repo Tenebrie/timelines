@@ -70,10 +70,6 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
-		children: {
-			id: string
-			name: string
-		}[]
 		worldId: string
 		id: string
 		createdAt: string
@@ -83,9 +79,7 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		color: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
-		position: number
 		contentRich: string
-		parentId?: null | string
 	}[]
 	events: {
 		pages: {

@@ -41,22 +41,20 @@ export const useArticleDragDrop = ({ article }: Props) => {
 	useDragDropReceiver({
 		type: 'articleListItem',
 		receiverRef: ref,
-		onDrop: ({ params }, event) => {
+		onDrop: async ({ params }, event) => {
 			event.markHandled()
-			if (params.article.id === article.id) {
+			if (params.article.id === article.id || article.type !== 'folder') {
 				return
 			}
-			moveArticle({
+			await moveArticle({
 				entityId: params.article.id,
 				entityType: params.article.type,
 				parentId: article.id,
 				// Always the last position
-				position: 9999,
+				position: 999999,
 			})
 
-			setTimeout(() => {
-				forceOpen()
-			}, 1)
+			requestIdleCallback(forceOpen, { timeout: 250 })
 		},
 	})
 

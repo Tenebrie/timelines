@@ -22,14 +22,7 @@ import {
 import z from 'zod'
 
 import { SessionMiddleware } from '../middleware/SessionMiddleware.js'
-import {
-	actorListTag,
-	tagEntityTag,
-	worldDetailsTag,
-	worldWikiArticleTag,
-	worldWikiFolderTag,
-	worldWikiTag,
-} from './utils/tags.js'
+import { worldWikiArticleTag, worldWikiTag } from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'
 import { NullableStringValidator } from './validators/NullableStringValidator.js'
 
@@ -138,14 +131,7 @@ router.post('/api/world/:worldId/wiki/move', async (ctx) => {
 	useApiEndpoint({
 		name: 'moveWikiEntity',
 		description: 'Moves an entity to a new wiki position.',
-		tags: [
-			worldWikiTag,
-			worldWikiArticleTag,
-			worldWikiFolderTag,
-			actorListTag,
-			tagEntityTag,
-			worldDetailsTag,
-		],
+		tags: [worldWikiTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)

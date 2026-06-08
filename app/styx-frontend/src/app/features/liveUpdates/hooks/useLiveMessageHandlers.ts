@@ -1,5 +1,6 @@
 import { announcementListApi } from '@api/announcementListApi'
 import { calendarApi } from '@api/calendarApi'
+import { useWikiApiCache } from '@api/hooks/useWikiApiCache'
 import { imageGenerationApi } from '@api/imageGenerationApi'
 import { mindmapApi } from '@api/mindmapApi'
 import { FeatureFlag } from '@api/types/otherTypes'
@@ -13,10 +14,9 @@ import { worldWikiFolderApi } from '@api/worldWikiFolderApi'
 import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { WikiArticle } from '@/api/types/worldWikiTypes'
+import { WikiArticle, WikiPositionUpdate } from '@/api/types/worldWikiTypes'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { ingestActor, ingestEvent, ingestEventDelta } from '@/app/utils/ingestEntity'
-import { useArticleApiCache } from '@/app/views/world/views/wiki/api/useArticleApiCache'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import {
@@ -33,7 +33,7 @@ export const useLiveMessageHandlers = () => {
 	const { updateEvent, updateEventDelta, updateActor, updateTag } = worldSlice.actions
 	const dispatch = useDispatch()
 
-	const { upsertCachedArticle } = useArticleApiCache()
+	const { upsertCachedArticle, applyPositionUpdates } = useWikiApiCache()
 
 	const updatedAtRef = useAutoRef(currentUpdatedAt)
 
@@ -133,8 +133,7 @@ export const useLiveMessageHandlers = () => {
 		},
 
 		[CalliopeToClientMessageType.WIKI_ORDER_CHANGED]: (data) => {
-			// TODO: Implement
-			console.log(data)
+			applyPositionUpdates(JSON.parse(data.updates) as WikiPositionUpdate[])
 		},
 
 		[CalliopeToClientMessageType.DOCUMENT_RESET]: (data) => {

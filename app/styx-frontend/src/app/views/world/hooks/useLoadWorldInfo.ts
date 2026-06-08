@@ -21,7 +21,6 @@ export const useLoadWorldInfo = (worldId: string) => {
 	)
 	const { data: articles } = useListArticles()
 	const { data: folders } = useListFolders()
-	console.log(folders)
 
 	const isLoaded = useSelector(getWorldStateLoaded)
 

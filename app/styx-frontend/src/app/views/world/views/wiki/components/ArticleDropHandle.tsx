@@ -42,19 +42,24 @@ export function ArticleDropHandle({ position, parentId, marginLeft }: Props) {
 			data-testid={`ArticleDropHandle/${position}`}
 			sx={{
 				width: 'calc(100% - 16px)',
-				height: '8px',
-				padding: '0 8px',
-				zIndex: 2,
+				height: '32px',
+				padding: '0 0px',
+				margin: '-12px 0',
+				position: 'relative',
+				zIndex: 200,
 				marginLeft,
 				alignItems: 'center',
 				justifyContent: 'center',
+				pointerEvents: isDragging ? 'auto' : 'none',
 				...(isDragging && {
-					'& > *': { backgroundColor: theme.custom.palette.background.softer },
-					'&:hover > *': { backgroundColor: theme.custom.palette.background.soft },
+					'& > *': { backgroundColor: theme.custom.palette.background.soft },
+					'&:hover > *': { backgroundColor: theme.custom.palette.background.hardest },
 				}),
 			}}
 		>
-			<Box sx={{ width: '100%', height: '4px', transition: 'background-color 0.3s' }}></Box>
+			<Box
+				sx={{ width: '100%', height: '8px', transition: 'background-color 0.3s', borderRadius: '4px' }}
+			></Box>
 		</Stack>
 	)
 }

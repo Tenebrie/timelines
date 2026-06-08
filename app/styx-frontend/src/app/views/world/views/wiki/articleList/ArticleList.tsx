@@ -1,13 +1,16 @@
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { memo, useRef } from 'react'
+import { usePopupState } from 'material-ui-popup-state/hooks'
+import { memo, useCallback, useRef, useState } from 'react'
 
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
 import { useMoveArticle } from '../api/useMoveArticle'
+import { ArticleContextMenu } from '../components/ArticleContextMenu'
 import { ArticleDropHandle } from '../components/ArticleDropHandle'
-import { useBoxedWikiContent } from '../hooks/useBoxedWikiContent'
+import { useArticleBulkActions } from '../hooks/useArticleBulkActions'
+import { BoxedWikiEntity, useBoxedWikiContent } from '../hooks/useBoxedWikiContent'
 import { ArticleListItem } from './ArticleListItem'
 
 type Props = {
@@ -19,9 +22,10 @@ export const ArticleList = memo(ArticleListComponent)
 
 export function ArticleListComponent({ parentId, depth }: Props) {
 	const [moveArticle] = useMoveArticle()
+	const [contextMenuArticle, setContextMenuArticle] = useState<BoxedWikiEntity | null>(null)
 
-	// const { articles } = useSelector(getWikiState, (a, b) => a.articles === b.articles)
 	const sortedArticles = useBoxedWikiContent({ filterFolderId: parentId })
+	const { checkboxVisible, isChecked, onChange } = useArticleBulkActions({ articles: sortedArticles })
 
 	const ref = useRef<HTMLDivElement>(null)
 	useDragDropReceiver({
@@ -32,10 +36,19 @@ export function ArticleListComponent({ parentId, depth }: Props) {
 				entityId: params.article.id,
 				entityType: params.article.type,
 				parentId: null,
-				position: 9999,
+				position: 99999,
 			})
 		},
 	})
+
+	const contextMenuState = usePopupState({ variant: 'popover', popupId: 'articleListItem' })
+	const contextMenuStateRef = useRef(contextMenuState)
+	contextMenuStateRef.current = contextMenuState
+
+	const openContextMenu = useCallback((article: BoxedWikiEntity, event: React.MouseEvent) => {
+		setContextMenuArticle(article)
+		contextMenuStateRef.current.open(event)
+	}, [])
 
 	return (
 		<Stack
@@ -61,9 +74,19 @@ export function ArticleListComponent({ parentId, depth }: Props) {
 			{sortedArticles.map((article) => (
 				<span key={article.id}>
 					<ArticleDropHandle position={article.position} parentId={parentId} />
-					<ArticleListItem article={article} depth={depth} />
+					<ArticleListItem
+						article={article}
+						depth={depth}
+						onContextMenu={openContextMenu}
+						checkboxVisible={checkboxVisible}
+						checked={isChecked(article)}
+						onCheckboxChange={onChange}
+					/>
 				</span>
 			))}
+			{contextMenuArticle && (
+				<ArticleContextMenu article={contextMenuArticle} popupState={contextMenuState} />
+			)}
 		</Stack>
 	)
 }

@@ -3,7 +3,12 @@ import { WikiEntityType } from '@src/schema/EntityType.js'
 
 import { getPrismaClient } from '../dbClients/DatabaseClient.js'
 
-export type WikiPositionUpdate = { entityId: string; entityType: WikiEntityType; position: number }
+export type WikiPositionUpdate = {
+	entityId: string
+	entityType: WikiEntityType
+	position: number
+	folderId?: string | null
+}
 
 export async function makeSortWikiArticlesQuery(worldId: string, prisma?: Prisma.TransactionClient) {
 	const prismaClient = getPrismaClient(prisma)
@@ -49,7 +54,9 @@ export async function makeSortWikiArticlesQuery(worldId: string, prisma?: Prisma
 		entities.sort((a, b) => a.parentFolderPosition - b.parentFolderPosition)
 		for (const [index, entity] of entities.entries()) {
 			const newPosition = index * 2
-			if (entity.parentFolderPosition === newPosition) continue
+			if (entity.parentFolderPosition === newPosition) {
+				continue
+			}
 			updates.push({ entityId: entity.id, entityType: entity.type, position: newPosition })
 		}
 	}
