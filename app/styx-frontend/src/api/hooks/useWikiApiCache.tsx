@@ -28,6 +28,23 @@ export function useWikiApiCache() {
 		[dispatch, worldId],
 	)
 
+	const updateCachedArticle = useCallback(
+		(article: Partial<WikiArticle>) => {
+			dispatch(
+				worldWikiApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
+					const index = draft.findIndex((a) => a.id === article.id)
+					if (index >= 0) {
+						draft[index] = {
+							...draft[index],
+							...article,
+						}
+					}
+				}),
+			)
+		},
+		[dispatch, worldId],
+	)
+
 	const applyPositionUpdates = useCallback(
 		(updates: WikiPositionUpdate[]) => {
 			function applyToEntity(
@@ -106,5 +123,5 @@ export function useWikiApiCache() {
 		[dispatch, worldId],
 	)
 
-	return { upsertCachedArticle, applyPositionUpdates }
+	return { upsertCachedArticle, updateCachedArticle, applyPositionUpdates }
 }
