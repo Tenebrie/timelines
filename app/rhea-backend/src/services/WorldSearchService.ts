@@ -131,12 +131,6 @@ export const WorldSearchService = {
 				],
 			},
 			include: {
-				children: {
-					select: {
-						id: true,
-						name: true,
-					},
-				},
 				mentions: {
 					distinct: ['targetId'],
 					select: {
@@ -157,9 +151,6 @@ export const WorldSearchService = {
 						name: true,
 					},
 				},
-			},
-			omit: {
-				contentYjs: true,
 			},
 		})
 	},

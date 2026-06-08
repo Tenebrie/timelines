@@ -61,9 +61,6 @@ export const DataMigrationService = {
 								},
 							},
 							articles: {
-								omit: {
-									contentYjs: true,
-								},
 								include: {
 									mentions: true,
 									pages: {

@@ -19,12 +19,6 @@ export const WikiArticleService = {
 				worldId,
 			},
 			include: {
-				children: {
-					select: {
-						id: true,
-						name: true,
-					},
-				},
 				mentions: {
 					distinct: ['targetId'],
 					select: {
@@ -45,9 +39,6 @@ export const WikiArticleService = {
 						name: true,
 					},
 				},
-			},
-			omit: {
-				contentYjs: true,
 			},
 		})
 	},
@@ -75,12 +66,6 @@ export const WikiArticleService = {
 				worldId: params.worldId,
 			},
 			include: {
-				children: {
-					select: {
-						id: true,
-						name: true,
-					},
-				},
 				pages: {
 					select: {
 						id: true,
@@ -102,11 +87,8 @@ export const WikiArticleService = {
 					},
 				},
 			},
-			omit: {
-				contentYjs: true,
-			},
 			orderBy: {
-				position: 'asc',
+				parentFolderPosition: 'asc',
 			},
 		})
 
@@ -138,7 +120,7 @@ export const WikiArticleService = {
 					icon: params.icon,
 					color: params.color,
 					contentRich: params.contentRich,
-					position: entityCount * 2,
+					parentFolderPosition: entityCount * 2,
 				},
 				select: {
 					id: true,
@@ -160,17 +142,6 @@ export const WikiArticleService = {
 				where: {
 					id: baseArticle.id,
 				},
-				include: {
-					children: {
-						select: {
-							id: true,
-							name: true,
-						},
-					},
-				},
-				omit: {
-					contentYjs: true,
-				},
 			})
 
 			return article!
@@ -178,7 +149,7 @@ export const WikiArticleService = {
 	},
 
 	updateWikiArticle: async (
-		params: Partial<Pick<WikiArticle, 'name' | 'contentRich' | 'contentYjs'>> & {
+		params: Partial<Pick<WikiArticle, 'name' | 'contentRich'>> & {
 			id: string
 			color?: string
 			worldId: string
@@ -218,18 +189,6 @@ export const WikiArticleService = {
 					name: params.name,
 					color: params.color,
 					contentRich: params.contentRich,
-					contentYjs: params.contentYjs,
-				},
-				include: {
-					children: {
-						select: {
-							id: true,
-							name: true,
-						},
-					},
-				},
-				omit: {
-					contentYjs: true,
 				},
 			})
 

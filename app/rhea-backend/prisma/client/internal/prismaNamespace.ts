@@ -3116,10 +3116,7 @@ export const WikiArticleScalarFieldEnum = {
   icon: 'icon',
   color: 'color',
   contentRich: 'contentRich',
-  contentYjs: 'contentYjs',
-  position: 'position',
   worldId: 'worldId',
-  parentId: 'parentId',
   parentFolderId: 'parentFolderId',
   parentFolderPosition: 'parentFolderPosition'
 } as const

@@ -52,6 +52,8 @@ export const mockActor = (data?: Partial<BaselineActor>): BaselineActor => ({
 	description: 'Test Actor Description',
 	descriptionRich: '<p>Test Actor Description</p>',
 	mentionedIn: [],
+	parentFolderId: null,
+	parentFolderPosition: 0,
 	...data,
 })
 
@@ -63,13 +65,12 @@ export const mockWikiArticle = (data?: Partial<BaselineArticle>): BaselineArticl
 	name: 'Test Article',
 	icon: 'mui:leaf',
 	color: '#000',
-	position: 0,
-	parentId: null,
 	contentRich: 'Test Article Content',
 	mentions: [],
 	mentionedIn: [],
 	pages: [],
-	children: [],
+	parentFolderId: null,
+	parentFolderPosition: 0,
 	...data,
 })
 
@@ -90,6 +91,8 @@ export const mockWorldEvent = (data?: Partial<BaselineWorldEvent>): BaselineWorl
 	mentions: [],
 	mentionedIn: [],
 	deltaStates: [],
+	parentFolderId: null,
+	parentFolderPosition: 0,
 	...data,
 })
 
@@ -102,6 +105,8 @@ export const mockTag = (data?: Partial<BaselineTag>): BaselineTag => ({
 	description: 'Tag description',
 	mentions: [],
 	mentionedIn: [],
+	parentFolderId: null,
+	parentFolderPosition: 0,
 	...data,
 })
 

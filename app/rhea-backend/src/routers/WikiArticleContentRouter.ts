@@ -7,8 +7,6 @@ import { ValidationService } from '@src/services/ValidationService.js'
 import { WikiArticleService } from '@src/services/WikiArticleService.js'
 import {
 	BadRequestError,
-	BooleanValidator,
-	OptionalParam,
 	PathParam,
 	RequiredParam,
 	Router,
@@ -16,7 +14,6 @@ import {
 	useApiEndpoint,
 	useAuth,
 	usePathParams,
-	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
 import z from 'zod'
@@ -42,10 +39,6 @@ router.get('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 		articleId: PathParam(StringValidator),
 	})
 
-	const { acceptDeltas } = useQueryParams(ctx, {
-		acceptDeltas: OptionalParam(BooleanValidator),
-	})
-
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 
 	const article = await WikiArticleService.findArticleByIdWithContentDeltas({ id: articleId, worldId })
@@ -54,9 +47,7 @@ router.get('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	}
 
 	return {
-		hasDeltas: article.contentYjs ? true : false,
-		contentHtml: acceptDeltas && article.contentYjs ? undefined : article.contentRich,
-		contentDeltas: acceptDeltas ? article.contentYjs : undefined,
+		contentHtml: article.contentRich,
 	}
 })
 
