@@ -25,7 +25,7 @@ export const makeUpdateWorldEventQuery = async ({
 }) => {
 	const { referencedAssetIds, mentions, ...eventData } = params
 
-	await MentionsService.createMentions(eventId, MentionedEntity.Event, mentions, null, prisma)
+	await MentionsService.createMentions(worldId, eventId, MentionedEntity.Event, mentions, null, prisma)
 	await AssetRefService.createReferences({
 		worldId,
 		holderId: eventId,

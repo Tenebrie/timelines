@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto'
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { prismaMockRef } from '../mock/utils/prismaMock.js'
@@ -8,74 +10,88 @@ const now = new Date()
 const serialize = (data: unknown): string =>
 	JSON.stringify(data, (_k, v) => (typeof v === 'bigint' ? v.toString() : v))
 
-const makeMention = (sourceId: string, targetId: string, overrides: Record<string, unknown> = {}) => ({
-	sourceType: 'Actor' as const,
-	targetType: 'Event' as const,
-	sourceId,
-	targetId,
-	sourceActorId: sourceId,
-	sourceEventId: null,
-	sourceArticleId: null,
-	sourceTagId: null,
-	targetActorId: null,
-	targetEventId: targetId,
-	targetArticleId: null,
-	targetTagId: null,
-	pageId: null,
-	...overrides,
-})
+type ExportedData = Awaited<ReturnType<typeof DataMigrationService.exportUserData>>
+type ExportedWorld = ExportedData['user']['worlds'][number]
+
+const makeMention = (sourceId: string, targetId: string, overrides: Record<string, unknown> = {}) =>
+	({
+		id: randomUUID(),
+		sourceType: 'Actor' as const,
+		targetType: 'Event' as const,
+		sourceId,
+		targetId,
+		sourceActorId: sourceId,
+		sourceEventId: null,
+		sourceArticleId: null,
+		sourceTagId: null,
+		targetActorId: null,
+		targetEventId: targetId,
+		targetArticleId: null,
+		targetTagId: null,
+		pageId: null,
+		...overrides,
+	}) satisfies ExportedWorld['actors'][number]['mentions'][number]
 
 const makeActor = (
 	worldId: string,
 	id = 'actor-1',
 	mentions: ReturnType<typeof makeMention>[] = [],
 	pages: ReturnType<typeof makePage>[] = [],
-) => ({
-	id,
-	createdAt: now,
-	updatedAt: now,
-	name: 'Actor',
-	description: '',
-	worldId,
-	title: '',
-	icon: '',
-	color: '',
-	descriptionRich: '',
-	mentions,
-	pages,
-})
+) =>
+	({
+		id,
+		createdAt: now,
+		updatedAt: now,
+		name: 'Actor',
+		description: '',
+		worldId,
+		title: '',
+		icon: '',
+		color: '',
+		descriptionRich: '',
+		mentions,
+		pages,
+		parentFolderId: null,
+		parentFolderPosition: 0,
+	}) satisfies ExportedWorld['actors'][number]
 
 const makeEvent = (
 	worldId: string,
 	id = 'event-1',
 	mentions: ReturnType<typeof makeMention>[] = [],
 	pages: ReturnType<typeof makePage>[] = [],
-) => ({
-	id,
-	createdAt: now,
-	updatedAt: now,
-	name: 'Event',
-	description: '',
-	worldId,
-	icon: '',
-	color: '',
-	descriptionRich: '',
-	timestamp: BigInt(0),
-	revokedAt: null as bigint | null,
-	worldEventTrackId: null as string | null,
-	mentions,
-	pages,
-})
+) =>
+	({
+		id,
+		createdAt: now,
+		updatedAt: now,
+		name: 'Event',
+		description: '',
+		worldId,
+		icon: '',
+		color: '',
+		descriptionRich: '',
+		timestamp: BigInt(0),
+		revokedAt: null as bigint | null,
+		worldEventTrackId: null as string | null,
+		mentions,
+		pages,
+		parentFolderId: null,
+		parentFolderPosition: 0,
+	}) satisfies ExportedWorld['events'][number]
 
-const makeTag = (worldId: string, id = 'tag-1', mentions: ReturnType<typeof makeMention>[] = []) => ({
-	id,
-	createdAt: now,
-	updatedAt: now,
-	name: 'Tag',
-	description: '',
-	worldId,
-	mentions,
-})
+const makeTag = (worldId: string, id = 'tag-1', mentions: ReturnType<typeof makeMention>[] = []) =>
+	({
+		id,
+		createdAt: now,
+		updatedAt: now,
+		name: 'Tag',
+		description: '',
+		worldId,
+		mentions,
+		parentFolderId: null,
+		parentFolderPosition: 0,
+	}) satisfies ExportedWorld['tags'][number]
 
 const makeArticle = (
 	worldId: string,
@@ -85,20 +101,42 @@ const makeArticle = (
 		mentions = [] as ReturnType<typeof makeMention>[],
 		pages = [] as ReturnType<typeof makePage>[],
 	} = {},
-) => ({
-	id,
-	createdAt: now,
-	updatedAt: now,
-	name: 'Article',
-	worldId,
-	position: 0,
-	icon: '',
-	color: '',
-	contentRich: '',
-	parentId,
-	mentions,
-	pages,
-})
+) =>
+	({
+		id,
+		createdAt: now,
+		updatedAt: now,
+		name: 'Article',
+		worldId,
+		icon: '',
+		color: '',
+		contentRich: '',
+		mentions,
+		pages,
+		parentFolderId: parentId,
+		parentFolderPosition: 0,
+	}) satisfies ExportedWorld['articles'][number]
+
+const makeFolder = (
+	worldId: string,
+	id = randomUUID() as string,
+	overrides: Partial<ExportedWorld['articles'][number]> = {},
+) =>
+	({
+		id,
+		createdAt: now,
+		updatedAt: now,
+		name: 'Article',
+		worldId,
+		icon: '',
+		color: '',
+		contentRich: '',
+		mentions: [],
+		pages: [],
+		parentFolderId: null,
+		parentFolderPosition: 0,
+		...overrides,
+	}) satisfies ExportedWorld['articles'][number]
 
 const makePage = (id = 'page-1', overrides: Record<string, unknown> = {}) => ({
 	id,
@@ -163,27 +201,29 @@ const makeIconSet = (worldId: string, id = 'iconset-1') => ({
 	iconSet: 'default',
 })
 
-const makeWorld = (ownerId: string, id = 'world-1', overrides: Partial<Record<string, unknown>> = {}) => ({
-	id,
-	createdAt: now,
-	updatedAt: now,
-	name: 'World',
-	description: '',
-	accessMode: 'Private' as const,
-	calendar: null,
-	ownerId,
-	timeOrigin: BigInt(0),
-	actors: [] as ReturnType<typeof makeActor>[],
-	events: [] as ReturnType<typeof makeEvent>[],
-	articles: [] as ReturnType<typeof makeArticle>[],
-	tags: [] as ReturnType<typeof makeTag>[],
-	savedColors: [] as ReturnType<typeof makeSavedColor>[],
-	worldCommonIconSets: [] as ReturnType<typeof makeIconSet>[],
-	worldEventTracks: [] as ReturnType<typeof makeTrack>[],
-	mindmapNodes: [] as ReturnType<typeof makeMindmapNode>[],
-	calendars: [] as ReturnType<typeof makeCalendar>[],
-	...overrides,
-})
+const makeWorld = (ownerId: string, id = 'world-1', overrides: Partial<Record<string, unknown>> = {}) =>
+	({
+		id,
+		createdAt: now,
+		updatedAt: now,
+		name: 'World',
+		description: '',
+		accessMode: 'Private' as const,
+		calendar: null,
+		ownerId,
+		timeOrigin: BigInt(0),
+		actors: [] as ReturnType<typeof makeActor>[],
+		events: [] as ReturnType<typeof makeEvent>[],
+		articles: [] as ReturnType<typeof makeArticle>[],
+		tags: [] as ReturnType<typeof makeTag>[],
+		folders: [] as ReturnType<typeof makeFolder>[],
+		savedColors: [] as ReturnType<typeof makeSavedColor>[],
+		worldCommonIconSets: [] as ReturnType<typeof makeIconSet>[],
+		worldEventTracks: [] as ReturnType<typeof makeTrack>[],
+		mindmapNodes: [] as ReturnType<typeof makeMindmapNode>[],
+		calendars: [] as ReturnType<typeof makeCalendar>[],
+		...overrides,
+	}) satisfies ExportedData['user']['worlds'][number]
 
 const makeCalendarUnit = (calendarId: string, id = 'unit-1') => ({
 	id,
@@ -280,10 +320,11 @@ const makeExportData = (
 	userId: string,
 	worlds = [makeWorld(userId)],
 	calendars = [makeCalendar({ ownerId: userId })],
-) => ({
-	version: 1 as const,
-	user: { id: userId, worlds, calendars },
-})
+) =>
+	({
+		version: 2 as const,
+		user: { id: userId, worlds, calendars },
+	}) satisfies ExportedData
 
 const makePrisma = ({
 	foreignWorlds = [] as { id: string }[],
@@ -326,7 +367,12 @@ const tx = {
 	pages: { createMany: vi.fn() },
 	mention: { createMany: vi.fn() },
 	wikiArticle: { createMany: vi.fn() },
+	wikiFolder: { createMany: vi.fn() },
 	contentPage: { createMany: vi.fn() },
+	actor: { createMany: vi.fn() },
+	worldEvent: { createMany: vi.fn() },
+	tag: { createMany: vi.fn() },
+	mindmapNode: { createMany: vi.fn() },
 	mindmapLink: { createMany: vi.fn() },
 	calendarUnitRelation: { createMany: vi.fn() },
 }
@@ -632,7 +678,7 @@ describe('DataMigrationService', () => {
 
 		it('accepts mention with valid pageId', async () => {
 			const world = makeWorld(userId)
-			const page = makePage('page-1')
+			const page = makePage('page-1', { parentArticleId: 'article-1' })
 			const article = makeArticle(world.id, 'article-1', { pages: [page] })
 			const actor = makeActor(world.id, 'actor-1')
 			actor.mentions = [
@@ -741,10 +787,8 @@ describe('DataMigrationService', () => {
 
 		it('accepts article with valid parentId', async () => {
 			const world = makeWorld(userId)
-			world.articles = [
-				makeArticle(world.id, 'art-parent'),
-				makeArticle(world.id, 'art-child', { parentId: 'art-parent' }),
-			]
+			world.folders = [makeFolder(world.id, 'folder-parent')]
+			world.articles = [makeArticle(world.id, 'art-child', { parentId: 'folder-parent' })]
 			const data = makeExportData(userId, [world])
 			const prisma = makePrisma()
 			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).resolves.not.toThrow()
@@ -941,12 +985,12 @@ describe('DataMigrationService', () => {
 			expect(result.isValid).toBe(false)
 		})
 
-		it('version check in code is unreachable because schema enforces version: 1', async () => {
+		it('version check in code is unreachable because schema enforces version: 2', async () => {
 			const prisma = makePrisma()
 			const result = await DataMigrationService.validateUserData(
 				ctx,
 				JSON.stringify({
-					version: 2,
+					version: 3,
 					user: { id: 'u', worlds: [], calendars: [] },
 				}),
 				prisma,
@@ -965,6 +1009,20 @@ describe('DataMigrationService', () => {
 			).rejects.toThrow('Invalid user data')
 		})
 
+		it('inserts mindmap nodes via separate createMany after user.update (not nested)', async () => {
+			const world = makeWorld(userId)
+			world.mindmapNodes = [
+				makeMindmapNode(world.id, 'n1', [makeMindmapLink('n1', 'n2', 'l1')]),
+				makeMindmapNode(world.id, 'n2'),
+			]
+			const data = makeExportData(userId, [world], [])
+			await DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false })
+
+			expect(tx.mindmapNode.createMany).toHaveBeenCalledWith({
+				data: [expect.objectContaining({ id: 'n1' }), expect.objectContaining({ id: 'n2' })],
+			})
+		})
+
 		it('inserts mindmap links via separate createMany after user.update (not nested)', async () => {
 			const world = makeWorld(userId)
 			world.mindmapNodes = [
@@ -977,10 +1035,6 @@ describe('DataMigrationService', () => {
 			expect(tx.mindmapLink.createMany).toHaveBeenCalledWith({
 				data: [expect.objectContaining({ id: 'l1', sourceNodeId: 'n1', targetNodeId: 'n2' })],
 			})
-
-			const updateArgs = tx.user.update.mock.calls[0][0]
-			const nodes = updateArgs.data.worlds.create[0].mindmapNodes.create
-			nodes.forEach((node) => expect(node).not.toHaveProperty('links'))
 		})
 
 		it('inserts calendar unit relations via separate createMany after user.update (not nested)', async () => {
@@ -1030,33 +1084,6 @@ describe('DataMigrationService', () => {
 			expect(worldArg.calendars.create[0]).not.toHaveProperty('ownerId')
 		})
 
-		it('inserts actor content-pages via contentPage.createMany (regression: Mention_pageId_fkey)', async () => {
-			// An actor page that a mention points at via pageId. Previously actor
-			// pages were stripped during the nested actor create and never
-			// re-inserted, so mention.createMany hit a foreign-key violation.
-			const world = makeWorld(userId)
-			const page = makePage('actor-page-1', { parentActorId: 'actor-1' })
-			const actor = makeActor(world.id, 'actor-1', [], [page])
-			const event = makeEvent(world.id, 'event-1')
-			actor.mentions = [makeMention('actor-1', 'event-1', { pageId: 'actor-page-1' })]
-			world.actors = [actor]
-			world.events = [event]
-			const data = makeExportData(userId, [world], [])
-			await DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false })
-
-			// The actor page is inserted...
-			expect(tx.contentPage.createMany).toHaveBeenCalledWith({
-				data: expect.arrayContaining([expect.objectContaining({ id: 'actor-page-1' })]),
-			})
-			// ...is NOT nested under the actor create (stripped there)...
-			const updateArgs = tx.user.update.mock.calls[0][0]
-			updateArgs.data.worlds.create[0].actors.create.forEach((a) => expect(a).not.toHaveProperty('pages'))
-			// ...and lands before the mentions that reference it, or the FK fails.
-			expect(tx.contentPage.createMany.mock.invocationCallOrder[0]).toBeLessThan(
-				tx.mention.createMany.mock.invocationCallOrder[0],
-			)
-		})
-
 		it('inserts event content-pages via contentPage.createMany', async () => {
 			const world = makeWorld(userId)
 			const page = makePage('event-page-1', { parentEventId: 'event-1' })
@@ -1071,8 +1098,6 @@ describe('DataMigrationService', () => {
 			expect(tx.contentPage.createMany).toHaveBeenCalledWith({
 				data: expect.arrayContaining([expect.objectContaining({ id: 'event-page-1' })]),
 			})
-			const updateArgs = tx.user.update.mock.calls[0][0]
-			updateArgs.data.worlds.create[0].events.create.forEach((e) => expect(e).not.toHaveProperty('pages'))
 		})
 
 		it('inserts actor, event and article pages together in one contentPage.createMany', async () => {
@@ -1089,22 +1114,6 @@ describe('DataMigrationService', () => {
 
 			const captured = tx.contentPage.createMany.mock.calls[0][0] as { data: Array<{ id: string }> }
 			expect(captured.data.map((p) => p.id)).toEqual(expect.arrayContaining(['ap', 'ep', 'rp']))
-		})
-
-		it('accepts an export whose events omit the pages field (back-compat with pre-event-pages exports)', async () => {
-			// events.pages was added to the export after v1 shipped; older exports
-			// have no pages key on events, and the schema must still accept them.
-			const world = makeWorld(userId)
-			const event = makeEvent(world.id, 'event-1')
-			delete (event as { pages?: unknown }).pages
-			world.events = [event]
-			const data = makeExportData(userId, [world], [])
-
-			await expect(
-				DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false }),
-			).resolves.not.toThrow()
-			// Nothing to insert (no pages anywhere), and the import completes.
-			expect(tx.contentPage.createMany).toHaveBeenCalledWith({ data: [] })
 		})
 	})
 

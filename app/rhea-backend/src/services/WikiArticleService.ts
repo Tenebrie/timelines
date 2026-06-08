@@ -128,6 +128,7 @@ export const WikiArticleService = {
 			})
 
 			await MentionsService.createMentions(
+				params.worldId,
 				baseArticle.id,
 				MentionedEntity.Article,
 				params.mentions,
@@ -165,6 +166,7 @@ export const WikiArticleService = {
 			})
 
 			const mentionedEntities = await MentionsService.createMentions(
+				params.worldId,
 				params.id,
 				MentionedEntity.Article,
 				params.mentions,

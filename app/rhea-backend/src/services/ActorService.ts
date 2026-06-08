@@ -252,6 +252,7 @@ export const ActorService = {
 			})
 
 			const mentionedEntities = await MentionsService.createMentions(
+				worldId,
 				actorId,
 				MentionedEntity.Actor,
 				mentions,

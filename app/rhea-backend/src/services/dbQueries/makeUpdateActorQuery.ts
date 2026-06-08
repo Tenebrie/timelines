@@ -32,6 +32,7 @@ export const makeUpdateActorQuery = async ({
 	const { referencedAssetIds, mentions, ...actorData } = params
 
 	const mentionedEntities = await MentionsService.createMentions(
+		worldId,
 		actorId,
 		MentionedEntity.Actor,
 		mentions,
