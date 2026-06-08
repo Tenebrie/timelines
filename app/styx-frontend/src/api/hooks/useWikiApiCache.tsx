@@ -47,8 +47,10 @@ export function useWikiApiCache() {
 				(u) => u.entityType === 'actor' || u.entityType === 'event' || u.entityType === 'tag',
 			)
 
+			const undoTransactions: (() => void)[] = []
+
 			if (articleUpdates.length > 0) {
-				dispatch(
+				const articleDispatch = dispatch(
 					worldWikiApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
 						articleUpdates.forEach((update) => {
 							applyToEntity(
@@ -58,10 +60,11 @@ export function useWikiApiCache() {
 						})
 					}),
 				)
+				undoTransactions.push(articleDispatch.undo)
 			}
 
 			if (folderUpdates.length > 0) {
-				dispatch(
+				const folderDispatch = dispatch(
 					worldWikiFolderApi.util.updateQueryData('getFolders', { worldId }, (draft) => {
 						folderUpdates.forEach((update) => {
 							const folder =
@@ -71,10 +74,11 @@ export function useWikiApiCache() {
 						})
 					}),
 				)
+				undoTransactions.push(folderDispatch.undo)
 			}
 
 			if (worldEntityUpdates.length > 0) {
-				dispatch(
+				const worldTransaction = dispatch(
 					worldDetailsApi.util.updateQueryData('getWorldInfo', { worldId }, (draft) => {
 						const collections = {
 							actor: draft.actors,
@@ -90,6 +94,13 @@ export function useWikiApiCache() {
 						})
 					}),
 				)
+				undoTransactions.push(worldTransaction.undo)
+			}
+
+			return {
+				undo: () => {
+					undoTransactions.forEach((undo) => undo())
+				},
 			}
 		},
 		[dispatch, worldId],

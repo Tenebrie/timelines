@@ -25,12 +25,16 @@ export const useArticleDragDrop = ({ article }: Props) => {
 
 	const { ref, ghostElement } = useDragDrop({
 		type: 'articleListItem',
+		ghostAlign: {
+			top: 'center',
+			left: 'center',
+		},
 		ghostFactory: () => (
 			<Button
 				startIcon={<EntityIcon variant={article.type} />}
 				color="secondary"
 				variant="contained"
-				sx={{ justifyContent: 'start', opacity: 0.5, width: '200px' }}
+				sx={{ justifyContent: 'start', opacity: 0.3, width: '300px', filter: 'grayscale(100%)' }}
 			>
 				{article.name}
 			</Button>

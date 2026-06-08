@@ -16,6 +16,7 @@ import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { ArticleList } from './articleList/ArticleList'
+import { ArticleListEntityGroupButton } from './articleList/ArticleListEntityGroupButton'
 import { ArticleListHeader } from './articleList/ArticleListHeader'
 import { useCurrentArticle } from './hooks/useCurrentArticle'
 
@@ -69,6 +70,7 @@ export const Wiki = () => {
 								<Stack gap={1}>
 									<ArticleListHeader />
 									<Divider />
+									<ArticleListEntityGroupButton />
 								</Stack>
 								<ArticleList parentId={null} depth={0} />
 							</Stack>

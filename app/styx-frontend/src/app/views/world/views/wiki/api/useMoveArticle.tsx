@@ -13,7 +13,7 @@ export function useMoveArticle() {
 	const { applyPositionUpdates } = useWikiApiCache()
 
 	const commit = async (data: MoveWikiEntityApiArg['body']) => {
-		applyPositionUpdates([
+		const transaction = applyPositionUpdates([
 			{
 				entityId: data.entityId,
 				entityType: data.entityType,
@@ -29,6 +29,7 @@ export function useMoveArticle() {
 			}),
 		)
 		if (error) {
+			transaction.undo()
 			worldDetailsApi.util.invalidateTags(['worldDetails'])
 			worldWikiApi.util.invalidateTags(['worldWiki'])
 			return

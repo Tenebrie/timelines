@@ -3,6 +3,7 @@ import { WikiArticle, WikiFolder } from '@api/types/worldWikiTypes'
 import { useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
+import { getWikiPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { getWikiState } from '../WikiSliceSelectors'
@@ -48,6 +49,10 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 		getWorldState,
 		(a, b) => a.actors === b.actors && a.events === b.events && a.tags === b.tags,
 	)
+	const { visibleEntities } = useSelector(
+		getWikiPreferences,
+		(a, b) => a.visibleEntities === b.visibleEntities,
+	)
 
 	const wrapperCache = useRef(new Map<string, BoxedWikiEntity>())
 
@@ -90,6 +95,9 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 			)
 		}
 		for (const article of articles) {
+			if (!visibleEntities.includes('article')) {
+				continue
+			}
 			if (filterFolderId !== undefined && article.parentFolderId !== filterFolderId) {
 				continue
 			}
@@ -104,6 +112,9 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 			)
 		}
 		for (const actor of actors) {
+			if (!visibleEntities.includes('actor')) {
+				continue
+			}
 			if (filterFolderId !== undefined && actor.parentFolderId !== filterFolderId) {
 				continue
 			}
@@ -118,6 +129,9 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 			)
 		}
 		for (const event of events) {
+			if (!visibleEntities.includes('event')) {
+				continue
+			}
 			if (filterFolderId !== undefined && event.parentFolderId !== filterFolderId) {
 				continue
 			}
@@ -132,6 +146,9 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 			)
 		}
 		for (const tag of tags) {
+			if (!visibleEntities.includes('tag')) {
+				continue
+			}
 			if (filterFolderId !== undefined && tag.parentFolderId !== filterFolderId) {
 				continue
 			}
@@ -148,7 +165,7 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 
 		wrapperCache.current = nextCache
 		return result.sort((a, b) => a.position - b.position)
-	}, [actors, articles, events, filterFolderId, folders, tags])
+	}, [actors, articles, events, filterFolderId, folders, tags, visibleEntities])
 
 	return combinedList
 }

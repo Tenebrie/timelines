@@ -31,6 +31,7 @@ const saveToLocalStorage = (state: PreferencesState) => {
 			},
 		}),
 	)
+	window.sessionStorage.setItem(PreferencesKey, JSON.stringify(state))
 }
 
 export const preferencesSlice = createSlice({
@@ -177,6 +178,13 @@ export const preferencesSlice = createSlice({
 		},
 		uncollapseWikiFolder: (state, { payload }: PayloadAction<BoxedWikiEntity>) => {
 			state.wiki.expandedFolders = [...new Set([...state.wiki.expandedFolders, payload.id])]
+			saveToLocalStorage(state)
+		},
+		setVisibleWikiEntities: (
+			state,
+			{ payload }: PayloadAction<PreferencesState['wiki']['visibleEntities']>,
+		) => {
+			state.wiki.visibleEntities = payload
 			saveToLocalStorage(state)
 		},
 
