@@ -15,9 +15,6 @@ const baseThemeOptions = ({ reduceAnimations }: Props): ThemeOptions => ({
 			styleOverrides: {
 				root: {
 					textTransform: 'none',
-					'&:hover': {
-						transition: 'none !important',
-					},
 				},
 				contained: {
 					boxShadow: 'none',
@@ -188,6 +185,25 @@ export const darkTheme = (props: Props): Theme => {
 					},
 				},
 			},
+			MuiButton: {
+				styleOverrides: {
+					...(base.components?.MuiButton?.styleOverrides ?? {}),
+					containedPrimary: {
+						backgroundColor: 'hsl(258, 50%, 38%)',
+						color: '#f0ecff',
+						'&:hover': {
+							backgroundColor: 'hsl(258, 52%, 46%)',
+						},
+					},
+					containedSecondary: {
+						backgroundColor: 'hsl(200, 55%, 25%)',
+						color: '#f0ecff',
+						'&:hover': {
+							backgroundColor: 'hsl(200, 55%, 30%)',
+						},
+					},
+				},
+			},
 		},
 		palette: {
 			mode: 'dark',
@@ -196,7 +212,7 @@ export const darkTheme = (props: Props): Theme => {
 				paper: 'hsl(252, 25%, 14%)',
 			},
 			primary: {
-				main: 'hsl(258, 55%, 65%)',
+				main: 'hsla(258, 75%, 71%, 1.00)',
 				contrastText: '#f0ecff',
 				// TODO: Explore orange primary
 				// main: 'hsla(31, 100%, 50%, 1.00)',
@@ -223,6 +239,17 @@ export const customLightTheme = {
 		},
 		outline: 'rgb(60 40 120 / 18%)',
 		outlineStrong: 'rgb(60 40 120 / 40%)',
+		hintText: 'rgb(0 0 0 / 60%)',
+		neutralBackground: {
+			contrastText: 'rgb(0 0 0 / 38%)',
+			normal: 'rgb(0 0 0 / 20%)',
+			hard: 'rgb(0 0 0  / 50%)',
+			harder: 'rgb(0 0 0 / 65%)',
+			hardest: 'rgb(0 0 0  / 80%)',
+			soft: 'rgb(0 0 0  / 8%)',
+			softer: 'rgb(0 0 0 / 4%)',
+			softest: 'rgb(0 0 0 / 2%)',
+		},
 		background: {
 			hard: 'rgb(60 40 120 / 30%)',
 			harder: 'rgb(60 40 120 / 40%)',
@@ -247,6 +274,17 @@ export const customDarkTheme: typeof customLightTheme = {
 		},
 		outline: 'rgb(180 170 220 / 18%)',
 		outlineStrong: 'rgb(180 170 220 / 40%)',
+		hintText: 'rgb(255 255 255 / 50%)',
+		neutralBackground: {
+			contrastText: 'rgb(255, 255, 255, 38%)',
+			normal: 'rgb(255 255 255 / 10%)',
+			hard: 'rgb(255 255 255 / 30%)',
+			harder: 'rgb(255 255 255 / 40%)',
+			hardest: 'rgb(255 255 255 / 60%)',
+			soft: 'rgb(255 255 255 / 8%)',
+			softer: 'rgb(255 255 255 / 4%)',
+			softest: 'rgb(255 255 255 / 2%)',
+		},
 		background: {
 			hard: 'rgb(180 170 220 / 30%)',
 			harder: 'rgb(180 170 220 / 40%)',

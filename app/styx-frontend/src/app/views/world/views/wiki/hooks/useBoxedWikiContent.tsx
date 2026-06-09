@@ -34,6 +34,7 @@ export type BoxedWikiEntity = EntityWrapper & {
 	id: string
 	name: string
 	position: number
+	color: string | undefined
 }
 
 type Props = {
@@ -54,28 +55,29 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 		(a, b) => a.visibleEntities === b.visibleEntities,
 	)
 
-	const wrapperCache = useRef(new Map<string, BoxedWikiEntity>())
+	const wrapperCache = useRef(new Map<object, BoxedWikiEntity>())
 
 	return useMemo(() => {
 		const prevCache = wrapperCache.current
-		const nextCache = new Map<string, BoxedWikiEntity>()
+		const nextCache = new Map<object, BoxedWikiEntity>()
 
 		function stable(
-			id: string,
+			// id: string,
+			identity: object,
 			name: string,
 			position: number,
 			make: () => BoxedWikiEntity,
 		): BoxedWikiEntity {
-			const cached = prevCache.get(id)
+			const cached = prevCache.get(identity)
 			if (cached && cached.name === name) {
 				// Only position (or nothing) changed — update in place to keep position current
 				// without creating a new object reference that would trigger rerenders.
 				cached.position = position
-				nextCache.set(id, cached)
+				nextCache.set(identity, cached)
 				return cached
 			}
 			const item = make()
-			nextCache.set(id, item)
+			nextCache.set(identity, item)
 			return item
 		}
 
@@ -86,12 +88,13 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 				continue
 			}
 			result.push(
-				stable(folder.id, folder.name, folder.parentFolderPosition, () => ({
+				stable(folder, folder.name, folder.parentFolderPosition, () => ({
 					id: folder.id,
 					type: 'folder',
 					entity: folder,
 					name: folder.name,
 					position: folder.parentFolderPosition,
+					color: folder.color,
 				})),
 			)
 		}
@@ -104,12 +107,13 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 				continue
 			}
 			result.push(
-				stable(article.id, article.name, article.parentFolderPosition, () => ({
+				stable(article, article.name, article.parentFolderPosition, () => ({
 					id: article.id,
 					type: 'article',
 					entity: article,
 					name: article.name,
 					position: article.parentFolderPosition,
+					color: article.color,
 				})),
 			)
 		}
@@ -122,12 +126,13 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 				continue
 			}
 			result.push(
-				stable(actor.id, actor.name, actor.parentFolderPosition, () => ({
+				stable(actor, actor.name, actor.parentFolderPosition, () => ({
 					id: actor.id,
 					type: 'actor',
 					entity: actor,
 					name: actor.name,
 					position: actor.parentFolderPosition,
+					color: actor.color,
 				})),
 			)
 		}
@@ -140,12 +145,13 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 				continue
 			}
 			result.push(
-				stable(event.id, event.name, event.parentFolderPosition, () => ({
+				stable(event, event.name, event.parentFolderPosition, () => ({
 					id: event.id,
 					type: 'event',
 					entity: event,
 					name: event.name,
 					position: event.parentFolderPosition,
+					color: event.color,
 				})),
 			)
 		}
@@ -158,12 +164,13 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 				continue
 			}
 			result.push(
-				stable(tag.id, tag.name, tag.parentFolderPosition, () => ({
+				stable(tag, tag.name, tag.parentFolderPosition, () => ({
 					id: tag.id,
 					type: 'tag',
 					entity: tag,
 					name: tag.name,
 					position: tag.parentFolderPosition,
+					color: undefined,
 				})),
 			)
 		}

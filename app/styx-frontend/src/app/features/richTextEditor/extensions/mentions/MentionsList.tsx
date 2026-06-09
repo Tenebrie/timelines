@@ -23,16 +23,60 @@ type Props = {
 	editor: Editor | null
 }
 
+type Pos = { top: number; bottom: number; left: number }
+
 export const MentionsList = memo(MentionsListComponent)
 
 export function MentionsListComponent({ editor }: Props) {
 	const [visible, setVisible] = useState(false)
-	const [pos, setPos] = useState<{ top: number; bottom: number; left: number }>({
-		top: 0,
-		bottom: 0,
-		left: 0,
-	})
+	const [pos, setPos] = useState<Pos>({ top: 0, bottom: 0, left: 0 })
 	const [query, setQuery] = useState('')
+
+	useShortcut(
+		Shortcut.Escape,
+		() => {
+			setVisible(false)
+		},
+		visible && ShortcutPriorities.Mentions,
+	)
+
+	useEventBusSubscribe['richEditor/requestOpenMentions']({
+		callback: ({ query, screenPosTop, screenPosBottom, screenPosLeft }) => {
+			if (!editor) {
+				return
+			}
+			setVisible(true)
+			setQuery(query)
+			setPos({ top: screenPosTop, bottom: screenPosBottom, left: screenPosLeft })
+		},
+	})
+	useEventBusSubscribe['richEditor/requestUpdateMentions']({
+		callback: ({ query, screenPosTop, screenPosBottom, screenPosLeft }) => {
+			setQuery(query)
+			setPos({ top: screenPosTop, bottom: screenPosBottom, left: screenPosLeft })
+		},
+	})
+	useEventBusSubscribe['richEditor/requestCloseMentions']({
+		callback: () => {
+			setVisible(false)
+		},
+	})
+
+	if (!visible) {
+		return null
+	}
+
+	return <MentionsListContent editor={editor} pos={pos} query={query} onClose={() => setVisible(false)} />
+}
+
+type ContentProps = {
+	editor: Editor | null
+	pos: Pos
+	query: string
+	onClose: () => void
+}
+
+function MentionsListContent({ editor, pos, query, onClose }: ContentProps) {
 	const [selectedIndex, setSelectedIndex] = useState(0)
 
 	const { mentions, actorCount, eventCount, articleCount, tagCount } = useDisplayedMentions({ query })
@@ -45,48 +89,14 @@ export function MentionsListComponent({ editor }: Props) {
 	const quickCreateVisible = query.length > 0
 	const lastItemIndex = quickCreateVisible ? mentions.length + 3 : mentions.length - 1
 
-	// Handle closing through global shortcut system to avoid modal closing
 	useShortcut(
 		Shortcut.Escape,
 		() => {
-			if (visible) {
-				setVisible(false)
-				setSelectedIndex(0)
-			}
-		},
-		visible && ShortcutPriorities.Mentions,
-	)
-
-	useEventBusSubscribe['richEditor/requestOpenMentions']({
-		callback: ({ query, screenPosTop, screenPosBottom, screenPosLeft }) => {
-			if (!editor) {
-				return
-			}
-			setVisible(true)
-			setQuery(query)
-			setPos({
-				top: screenPosTop,
-				bottom: screenPosBottom,
-				left: screenPosLeft,
-			})
-		},
-	})
-	useEventBusSubscribe['richEditor/requestUpdateMentions']({
-		callback: ({ query, screenPosTop, screenPosBottom, screenPosLeft }) => {
-			setQuery(query)
-			setPos({
-				top: screenPosTop,
-				bottom: screenPosBottom,
-				left: screenPosLeft,
-			})
-		},
-	})
-	useEventBusSubscribe['richEditor/requestCloseMentions']({
-		callback: () => {
-			setVisible(false)
+			onClose()
 			setSelectedIndex(0)
 		},
-	})
+		ShortcutPriorities.Mentions,
+	)
 
 	const selectEntity = async (editor: Editor | null, index: number) => {
 		const selectedMention = mentions[index]
@@ -114,7 +124,6 @@ export function MentionsListComponent({ editor }: Props) {
 			return
 		}
 
-		// Determine the entity name for the mention
 		const entityId = createdEntityId ?? selectedMention.id
 
 		editor
@@ -168,7 +177,7 @@ export function MentionsListComponent({ editor }: Props) {
 			setSelectedIndex(0)
 		}
 		oldMentions.current = mentions
-	}, [mentions, visible])
+	}, [mentions])
 
 	const [adjustedTop, setAdjustedTop] = useState(pos.top)
 	const [adjustedLeft, setAdjustedLeft] = useState(pos.left)
@@ -176,7 +185,7 @@ export function MentionsListComponent({ editor }: Props) {
 
 	const recalculatePosition = useCallback(() => {
 		const el = paperRef.current
-		if (!el || !visible) {
+		if (!el) {
 			return
 		}
 
@@ -193,12 +202,11 @@ export function MentionsListComponent({ editor }: Props) {
 		}
 
 		if (currentBottom + elHeight > window.innerHeight) {
-			// Position above the cursor
 			setAdjustedTop(Math.max(0, pos.top - elHeight))
 		} else {
 			setAdjustedTop(currentBottom)
 		}
-	}, [visible, pos.bottom, pos.left, pos.top])
+	}, [pos.bottom, pos.left, pos.top])
 
 	useLayoutEffect(() => {
 		recalculatePosition()
@@ -241,7 +249,6 @@ export function MentionsListComponent({ editor }: Props) {
 				position: 'fixed',
 				top: adjustedTop,
 				left: adjustedLeft,
-				display: visible ? 'block' : 'none',
 				minWidth: '350px',
 			}}
 		>

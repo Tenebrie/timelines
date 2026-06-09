@@ -4,7 +4,9 @@ import { usePopupState } from 'material-ui-popup-state/hooks'
 import { memo, useCallback, useRef, useState } from 'react'
 
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
+import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 
 import { useMoveArticle } from '../api/useMoveArticle'
 import { ArticleContextMenu } from '../components/ArticleContextMenu'
@@ -15,12 +17,13 @@ import { ArticleListItem } from './ArticleListItem'
 
 type Props = {
 	parentId: string | null
+	color?: string
 	depth: number
 }
 
 export const ArticleList = memo(ArticleListComponent)
 
-export function ArticleListComponent({ parentId, depth }: Props) {
+export function ArticleListComponent({ parentId, color, depth }: Props) {
 	const [moveArticle] = useMoveArticle()
 	const [contextMenuArticle, setContextMenuArticle] = useState<BoxedWikiEntity | null>(null)
 
@@ -49,6 +52,16 @@ export function ArticleListComponent({ parentId, depth }: Props) {
 		setContextMenuArticle(article)
 		contextMenuStateRef.current.open(event)
 	}, [])
+	const theme = useCustomTheme()
+	const fullColor = useEntityColor({
+		id: parentId ?? '',
+		color: color ?? '',
+	})
+	const folderColor = useEntityColor({
+		id: parentId ?? '',
+		color: color ?? '',
+		opacity: 0.04,
+	})
 
 	return (
 		<Stack
@@ -56,15 +69,17 @@ export function ArticleListComponent({ parentId, depth }: Props) {
 			direction="column"
 			height={1}
 			sx={{
-				marginLeft: parentId ? 1.5 : 0,
-				paddingLeft: parentId ? 0.5 : 0,
+				background: parentId ? folderColor : 'transparent',
+				marginLeft: parentId ? 1.9 : 0,
+				paddingLeft: parentId ? 0.1 : 0,
 				marginRight: parentId ? 0 : -2,
 				paddingRight: parentId ? 0 : 2,
+				borderRadius: '0 6px 6px 6px',
 				height: '100%',
-				paddingBottom: parentId ? 0 : '50vh',
+				paddingBottom: parentId ? '4px' : '50vh',
 				overflowY: 'auto',
-				borderLeft: parentId ? '2px solid' : 'none',
-				borderColor: 'divider',
+				borderLeft: parentId ? `2px solid` : 'none',
+				borderColor: fullColor,
 				...useBrowserSpecificScrollbars(),
 			}}
 			data-testid={`ArticleList/${depth}`}
@@ -79,6 +94,7 @@ export function ArticleListComponent({ parentId, depth }: Props) {
 						checkboxVisible={checkboxVisible}
 						checked={isChecked(article)}
 						onCheckboxChange={onChange}
+						isContextMenuOpen={contextMenuState.isOpen && contextMenuArticle?.id === article.id}
 					/>
 				</span>
 			))}
@@ -86,7 +102,7 @@ export function ArticleListComponent({ parentId, depth }: Props) {
 				<Typography variant="body2" color="text.secondary" sx={{ py: 1, pl: 1 }}>
 					{parentId && hiddenCount === 0 && <span>Folder is empty!</span>}
 					{hiddenCount > 0 && (
-						<Typography variant="caption" fontStyle={'italic'}>
+						<Typography variant="caption" fontStyle={'italic'} color={theme.custom.palette.hintText}>
 							+{hiddenCount} hidden
 						</Typography>
 					)}

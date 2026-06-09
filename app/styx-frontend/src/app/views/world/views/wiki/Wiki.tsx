@@ -61,7 +61,7 @@ export const Wiki = () => {
 					>
 						<Stack
 							sx={{
-								width: isMobile ? '100%' : '350px',
+								width: isMobile ? '100%' : '400px',
 								minWidth: isMobile ? 0 : '250px',
 							}}
 							data-testid="ArticleListWithHeader"

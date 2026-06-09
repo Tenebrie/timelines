@@ -41,7 +41,7 @@ export function ArticleDropHandle({ position, parentId, marginLeft }: Props) {
 			ref={ref}
 			data-testid={`ArticleDropHandle/${position}`}
 			sx={{
-				width: 'calc(100% - 16px)',
+				width: 'calc(100%)',
 				height: '32px',
 				padding: '0 0px',
 				margin: '-12px 0',
@@ -58,7 +58,7 @@ export function ArticleDropHandle({ position, parentId, marginLeft }: Props) {
 			}}
 		>
 			<Box
-				sx={{ width: '100%', height: '8px', transition: 'background-color 0.3s', borderRadius: '4px' }}
+				sx={{ width: '100%', height: '6px', transition: 'background-color 0.3s', borderRadius: '4px' }}
 			></Box>
 		</Stack>
 	)

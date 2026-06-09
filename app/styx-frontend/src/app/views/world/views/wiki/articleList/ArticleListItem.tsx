@@ -1,23 +1,30 @@
-import Menu from '@mui/icons-material/Menu'
+import Add from '@mui/icons-material/Add'
+import MoreVert from '@mui/icons-material/MoreVert'
+import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import Collapse from '@mui/material/Collapse'
-import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import { useMatches } from '@tanstack/react-router'
-import { memo, useCallback } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
+import { ActorAvatar } from '@/app/components/ActorAvatar/ActorAvatar'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { RootState } from '@/app/store'
+import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
+import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticleDragDrop'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
+import { CustomEntityIcon } from '@/ui-lib/icons/CustomEntityIcon'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 import { ArticleList } from './ArticleList'
 import { ArticleListItemCollapse } from './ArticleListItemCollapse'
+import { ArticleListItemSecondary } from './ArticleListItemSecondary'
 import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
 
 type Props = {
@@ -27,6 +34,7 @@ type Props = {
 	checked: boolean
 	onCheckboxChange: (article: BoxedWikiEntity, event: React.ChangeEvent<HTMLInputElement>) => void
 	onContextMenu: (article: BoxedWikiEntity, event: React.MouseEvent) => void
+	isContextMenuOpen: boolean
 }
 
 export const ArticleListItem = memo(ArticleListItemComponent)
@@ -64,8 +72,12 @@ function ArticleListItemInnerComponent({
 	toggleOpen,
 	highlighted,
 	onContextMenu,
+	isContextMenuOpen,
 }: Props & { expanded: boolean; toggleOpen: () => void; highlighted: boolean }) {
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
+	if (article.type === 'actor') {
+		console.log(article.entity.title, article.entity.updatedAt)
+	}
 
 	const { isReadOnly } = useIsReadOnly()
 
@@ -83,10 +95,68 @@ function ArticleListItemInnerComponent({
 
 	const { ref, ghostElement } = useArticleDragDrop({ article })
 	const isGrayscale = useIsFolderGrayedOut(article)
+	const theme = useCustomTheme()
+	const entityColor = useEntityColor({ id: article.id, color: article.color, opacity: 0.1 })
+	const entityColorHover = useEntityColor({ id: article.id, color: article.color, opacity: 0.15 })
+
+	const endAdornment = useMemo(() => {
+		// if (article.type !== 'folder') {
+		// 	return undefined
+		// }
+		if (article.type !== 'folder') {
+			return (
+				<Box
+					component="span"
+					sx={{
+						color: 'text.secondary',
+						fontSize: '0.7rem',
+						textTransform: 'uppercase',
+						whiteSpace: 'nowrap',
+						ml: 1,
+						fontFamily: 'Inter',
+					}}
+				>
+					{article.type}
+				</Box>
+			)
+		}
+
+		return (
+			<Stack
+				direction="row"
+				alignItems="center"
+				justifyContent="center"
+				sx={{
+					minWidth: 24,
+					maxWidth: 24,
+					minHeight: 24,
+					maxHeight: 24,
+					fontSize: 13,
+					color: 'text.secondary',
+					backgroundColor: theme.custom.palette.neutralBackground.normal,
+					borderRadius: '50%',
+				}}
+			>
+				4
+			</Stack>
+		)
+	}, [article.type, theme])
 
 	return (
 		<Box data-testid={`ArticleListItem/${article.name}/${depth}`} data-item-type={article.type}>
-			<Stack ref={ref} direction="row" position={'relative'}>
+			<Stack
+				ref={ref}
+				direction="row"
+				position={'relative'}
+				sx={{
+					'&:hover .context-menu-button': {
+						opacity: 1,
+					},
+					'&:hover .end-adornment': {
+						opacity: 0,
+					},
+				}}
+			>
 				{checkboxVisible && (
 					<Checkbox
 						size="small"
@@ -96,33 +166,140 @@ function ArticleListItemInnerComponent({
 				)}
 				<Button
 					role="button"
-					startIcon={<EntityIcon variant={article.type} />}
+					startIcon={
+						<>
+							{article.type === 'folder' && <ArticleListItemCollapse entity={article} />}
+							{article.type !== 'event' && article.type !== 'actor' && <EntityIcon variant={article.type} />}
+							{article.type === 'actor' && <ActorAvatar actor={article.entity} />}
+							{article.type === 'event' && (
+								<Avatar sx={{ backgroundColor: article.entity.color }}>
+									<CustomEntityIcon
+										id={article.id}
+										height={24}
+										icon={article.entity.icon}
+										color={getContrastTextColor(article.entity.color)}
+									/>
+								</Avatar>
+							)}
+						</>
+					}
 					variant={highlighted ? 'contained' : 'text'}
 					color="secondary"
-					sx={{ justifyContent: 'start', paddingLeft: 1.5, filter: isGrayscale ? 'grayscale(100%)' : 'none' }}
+					sx={{
+						background: article.type === 'folder' ? entityColor : undefined,
+						'&:hover': {
+							background: article.type === 'folder' ? entityColorHover : undefined,
+						},
+						justifyContent: 'start',
+						paddingLeft: 1.5,
+						paddingRight: '8px',
+						// paddingRight: '40px',
+						filter: isGrayscale ? 'grayscale(70%)' : 'none',
+					}}
 					fullWidth
 					onClick={onNavigate}
 				>
-					<Stack direction="row" justifyContent="space-between" sx={{ width: '100%', alignItems: 'center' }}>
-						<span>{article.name}</span>
+					<Stack direction="row" alignItems="space-between" sx={{ width: '100%' }}>
+						<Stack direction="column" alignItems="flex-start">
+							<Box sx={{ lineHeight: '1.2rem', marginTop: 0.25 }}>
+								<Stack direction="row" alignItems="center" justifyContent="center" display="inline-flex">
+									{/* {article.type !== 'event' && article.type !== 'tag' && article.type !== 'folder' && (
+										<CustomEntityColor id={article.id} height={14} color={article.entity.color} />
+									)} */}
+									{/* {article.type === 'event' && (
+										<CustomEntityIcon
+											id={article.id}
+											height={18}
+											icon={article.entity.icon}
+											color={article.entity.color}
+										/>
+									)} */}
+									{article.name}
+								</Stack>
+							</Box>
+							<ArticleListItemSecondary entity={article} />
+						</Stack>
 					</Stack>
+					{
+						<Stack
+							className="end-adornment"
+							sx={{ opacity: isContextMenuOpen ? 0 : 1, transition: 'opacity 0.15s' }}
+						>
+							{endAdornment}
+						</Stack>
+					}
+					{!isReadOnly && (
+						<>
+							<Button
+								aria-label="Article context menu"
+								className="context-menu-button"
+								onClick={(event) => {
+									onContextMenu(article, event)
+									event.stopPropagation()
+								}}
+								color="inherit"
+								onMouseDown={(event) => event.stopPropagation()}
+								sx={{
+									position: 'absolute',
+									right: 0,
+									top: 0,
+									bottom: 0,
+									width: 36,
+									minWidth: 0,
+									height: 'auto',
+									borderRadius: '8px',
+									color: theme.custom.palette.hintText,
+									opacity: isContextMenuOpen ? 1 : 0,
+									backgroundColor: isContextMenuOpen ? 'action.hover' : 'transparent',
+									'&:hover': {
+										backgroundColor: 'action.hover',
+									},
+									transition: 'color 0.2s, background-color 0.2s, opacity 0.15s !important',
+									padding: 0,
+								}}
+							>
+								<MoreVert />
+							</Button>
+							{article.type === 'folder' && (
+								<Button
+									aria-label="Folder create menu"
+									className="context-menu-button"
+									onClick={(event) => {
+										onContextMenu(article, event)
+										event.stopPropagation()
+									}}
+									color="inherit"
+									onMouseDown={(event) => event.stopPropagation()}
+									sx={{
+										position: 'absolute',
+										right: 36,
+										top: 0,
+										bottom: 0,
+										width: 36,
+										minWidth: 0,
+										height: 'auto',
+										borderRadius: '8px',
+										color: theme.custom.palette.hintText,
+										opacity: isContextMenuOpen ? 1 : 0,
+										backgroundColor: isContextMenuOpen ? 'action.hover' : 'transparent',
+										'&:hover': {
+											backgroundColor: 'action.hover',
+										},
+										transition: 'color 0.2s, background-color 0.2s, opacity 0.15s !important',
+										padding: 0,
+									}}
+								>
+									<Add />
+								</Button>
+							)}
+						</>
+					)}
 				</Button>
-				{article.type === 'folder' && <ArticleListItemCollapse entity={article} />}
-				{!isReadOnly && (
-					<IconButton
-						aria-label="Article context menu"
-						color="secondary"
-						onClick={(event) => onContextMenu(article, event)}
-						sx={{ flexShrink: 0 }}
-					>
-						<Menu />
-					</IconButton>
-				)}
 				{ghostElement}
 			</Stack>
 			{article.type === 'folder' && (
-				<Collapse in={expanded}>
-					<ArticleList parentId={article.id} depth={depth + 1} />
+				<Collapse in={expanded} unmountOnExit>
+					<ArticleList color={article.color} parentId={article.id} depth={depth + 1} />
 				</Collapse>
 			)}
 		</Box>
