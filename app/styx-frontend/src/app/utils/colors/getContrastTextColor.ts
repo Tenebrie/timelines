@@ -30,5 +30,5 @@ export const getContrastTextColor = (hslOrHex: string) => {
 	const rgb = hexToRgb(hexColor)
 	const black = { r: 0, g: 0, b: 0 }
 	const white = { r: 255, g: 255, b: 255 }
-	return contrast(rgb, black) > contrast(rgb, white) ? '#000000' : '#ffffff'
+	return contrast(rgb, black) > contrast(rgb, white) ? '#222' : '#ddd'
 }

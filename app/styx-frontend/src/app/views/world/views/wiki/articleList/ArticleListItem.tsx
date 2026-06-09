@@ -98,6 +98,7 @@ function ArticleListItemInnerComponent({
 	const theme = useCustomTheme()
 	const entityColor = useEntityColor({ id: article.id, color: article.color, opacity: 0.1 })
 	const entityColorHover = useEntityColor({ id: article.id, color: article.color, opacity: 0.15 })
+	const entityColorSolid = useEntityColor({ id: article.id, color: article.color })
 
 	const endAdornment = useMemo(() => {
 		// if (article.type !== 'folder') {
@@ -190,9 +191,12 @@ function ArticleListItemInnerComponent({
 						'&:hover': {
 							background: article.type === 'folder' ? entityColorHover : undefined,
 						},
+						borderRadius: '6px',
 						justifyContent: 'start',
 						paddingLeft: 1.5,
 						paddingRight: '8px',
+						transition: expanded ? 'border-radius 0.1s !important' : 'border-radius 0.5s !important',
+						transitionDelay: !expanded ? '0.2s !important' : '0s',
 						// paddingRight: '40px',
 						filter: isGrayscale ? 'grayscale(70%)' : 'none',
 					}}
@@ -201,7 +205,7 @@ function ArticleListItemInnerComponent({
 				>
 					<Stack direction="row" alignItems="space-between" sx={{ width: '100%' }}>
 						<Stack direction="column" alignItems="flex-start">
-							<Box sx={{ lineHeight: '1.2rem', marginTop: 0.25 }}>
+							<Box sx={{ lineHeight: '1.3rem' }}>
 								<Stack direction="row" alignItems="center" justifyContent="center" display="inline-flex">
 									{/* {article.type !== 'event' && article.type !== 'tag' && article.type !== 'folder' && (
 										<CustomEntityColor id={article.id} height={14} color={article.entity.color} />

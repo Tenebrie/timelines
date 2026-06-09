@@ -15,9 +15,9 @@ export function ArticleListItemSecondary({ entity }: Props) {
 		calendar,
 	})
 
-	if (entity.type === 'actor') {
+	if (entity.type === 'actor' && entity.entity.title) {
 		return (
-			<Typography variant="caption" sx={{ fontWeight: 500, lineHeight: '1.2rem' }}>
+			<Typography variant="caption" sx={{ fontWeight: 500, lineHeight: '1.1rem' }}>
 				{entity.entity.title}
 			</Typography>
 		)
@@ -25,7 +25,7 @@ export function ArticleListItemSecondary({ entity }: Props) {
 
 	if (entity.type === 'tag') {
 		return (
-			<Typography variant="caption" sx={{ fontWeight: 500, lineHeight: '1.2rem' }}>
+			<Typography variant="caption" sx={{ fontWeight: 500, lineHeight: '1.1rem' }}>
 				3 references
 			</Typography>
 		)
@@ -33,7 +33,7 @@ export function ArticleListItemSecondary({ entity }: Props) {
 
 	if (entity.type === 'event') {
 		return (
-			<Typography variant="caption" sx={{ fontWeight: 500, lineHeight: '1.2rem' }}>
+			<Typography variant="caption" sx={{ fontWeight: 500, lineHeight: '1.1rem' }}>
 				{formatTimestamp({ timestamp: entity.entity.timestamp })}
 			</Typography>
 		)

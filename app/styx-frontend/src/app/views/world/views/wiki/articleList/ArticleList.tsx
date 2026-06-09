@@ -21,6 +21,25 @@ type Props = {
 	depth: number
 }
 
+/**
+ * TODO:
+ * - Real number of entities in folder
+ * - Real number of tag references
+ * - Create in folder
+ * - Create new to create at the position of the currently selected entity (after)
+ * - Event moving from the wiki view
+ * - Event moving after clicking "Edit" without selection
+ * - Mention list bugging out (Neverkin Lore / Neverkin tag)
+ * - Article icon to avatars (and color)
+ * - Tag icon to avatars (and color)
+ * - Right click to open context menu
+ * - Deletion modal invalid text
+ * - Mentions to navigate within wiki view (if in wiki view)
+ * - Actor avatars, for real this time
+ * - Article color picker
+ * - Folder color picker
+ * - Scroll wiki list during drag (hover close to edges)
+ */
 export const ArticleList = memo(ArticleListComponent)
 
 export function ArticleListComponent({ parentId, color, depth }: Props) {
@@ -70,8 +89,8 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 			height={1}
 			sx={{
 				background: parentId ? folderColor : 'transparent',
-				marginLeft: parentId ? 1.9 : 0,
-				paddingLeft: parentId ? 0.1 : 0,
+				marginLeft: parentId ? 1 : 0,
+				paddingLeft: parentId ? 1 : 0,
 				marginRight: parentId ? 0 : -2,
 				paddingRight: parentId ? 0 : 2,
 				borderRadius: '0 6px 6px 6px',
