@@ -1825,59 +1825,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/wiki/folders": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns a list of folders in the wiki without content. */
-        get: operations["getFolders"];
-        put?: never;
-        /** @description Creates a new folder in the wiki. */
-        post: operations["createFolder"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/wiki/folder/{folderId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** @description Deletes a folder from the wiki. */
-        delete: operations["deleteFolder"];
-        options?: never;
-        head?: never;
-        /** @description Updates a folder in the wiki. */
-        patch: operations["updateFolder"];
-        trace?: never;
-    };
-    "/api/internal/auth/{userId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns the user's access level for a specific world. */
-        get: operations["getUserWorldAccessLevel"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/world/{worldId}/wiki/articles": {
         parameters: {
             query?: never;
@@ -1946,6 +1893,59 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/internal/auth/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns the user's access level for a specific world. */
+        get: operations["getUserWorldAccessLevel"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/wiki/folders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns a list of folders in the wiki without content. */
+        get: operations["getFolders"];
+        put?: never;
+        /** @description Creates a new folder in the wiki. */
+        post: operations["createFolder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/wiki/folder/{folderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Deletes a folder from the wiki. */
+        delete: operations["deleteFolder"];
+        options?: never;
+        head?: never;
+        /** @description Updates a folder in the wiki. */
+        patch: operations["updateFolder"];
         trace?: never;
     };
 }
@@ -7825,6 +7825,276 @@ export interface operations {
             };
         };
     };
+    getArticles: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pages: {
+                            id: string;
+                            name: string;
+                        }[];
+                        mentions: {
+                            targetId: string;
+                            targetType: "Actor" | "Event" | "Article" | "Tag";
+                        }[];
+                        mentionedIn: {
+                            sourceId: string;
+                            sourceType: "Actor" | "Event" | "Article" | "Tag";
+                        }[];
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        icon: string;
+                        color: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                        contentRich: string;
+                    }[];
+                };
+            };
+        };
+    };
+    createArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name: string;
+                    icon?: string;
+                    color?: string;
+                    contentRich?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name: string;
+                    icon?: string;
+                    color?: string;
+                    contentRich?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        icon: string;
+                        color: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                        contentRich: string;
+                    };
+                };
+            };
+        };
+    };
+    deleteArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                articleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateArticle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                articleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    icon?: string;
+                    color?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name?: string;
+                    icon?: string;
+                    color?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        icon: string;
+                        color: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                        contentRich: string;
+                    };
+                };
+            };
+        };
+    };
+    moveWikiEntity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    entityId: string;
+                    entityType: "actor" | "tag" | "article" | "event" | "folder";
+                    parentId?: null | string;
+                    position: number;
+                };
+                "application/x-www-form-urlencoded": {
+                    entityId: string;
+                    entityType: "actor" | "tag" | "article" | "event" | "folder";
+                    parentId?: null | string;
+                    position: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        updates: {
+                            entityId: string;
+                            entityType: "actor" | "tag" | "article" | "event" | "folder";
+                            position: number;
+                            folderId?: null | string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    getArticleBacklinks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                articleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        type: "Actor" | "Event" | "Article" | "Tag";
+                        id: string;
+                        name: string;
+                    }[];
+                };
+            };
+        };
+    };
+    getUserWorldAccessLevel: {
+        parameters: {
+            query: {
+                /** @description Any string value with at least one character */
+                worldId: string;
+            };
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        owner: boolean;
+                        write: boolean;
+                        read: boolean;
+                    };
+                };
+            };
+        };
+    };
     getFolders: {
         parameters: {
             query?: never;
@@ -7844,25 +8114,37 @@ export interface operations {
                 content: {
                     "application/json": {
                         children: {
-                            worldId: string;
                             id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                            icon: string;
-                            color: string;
-                            parentFolderId?: null | string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        articles: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        actors: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        events: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        tags: {
+                            id: string;
+                            parentFolderId: null | string;
                             parentFolderPosition: number;
                         }[];
                         worldId: string;
+                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
                         icon: string;
                         color: string;
                         parentFolderId?: null | string;
@@ -7906,25 +8188,37 @@ export interface operations {
                 content: {
                     "application/json": {
                         children: {
-                            worldId: string;
                             id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                            icon: string;
-                            color: string;
-                            parentFolderId?: null | string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        articles: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        actors: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        events: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        tags: {
+                            id: string;
+                            parentFolderId: null | string;
                             parentFolderPosition: number;
                         }[];
                         worldId: string;
+                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
                         icon: string;
                         color: string;
                         parentFolderId?: null | string;
@@ -7990,300 +8284,42 @@ export interface operations {
                 content: {
                     "application/json": {
                         children: {
-                            worldId: string;
                             id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                            icon: string;
-                            color: string;
-                            parentFolderId?: null | string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        articles: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        actors: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        events: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        tags: {
+                            id: string;
+                            parentFolderId: null | string;
                             parentFolderPosition: number;
                         }[];
                         worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
                         name: string;
-                        icon: string;
-                        color: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    };
-                };
-            };
-        };
-    };
-    getUserWorldAccessLevel: {
-        parameters: {
-            query: {
-                /** @description Any string value with at least one character */
-                worldId: string;
-            };
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        owner: boolean;
-                        write: boolean;
-                        read: boolean;
-                    };
-                };
-            };
-        };
-    };
-    getArticles: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        pages: {
-                            id: string;
-                            name: string;
-                        }[];
-                        mentions: {
-                            targetId: string;
-                            targetType: "Actor" | "Event" | "Article" | "Tag";
-                        }[];
-                        mentionedIn: {
-                            sourceId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag";
-                        }[];
-                        worldId: string;
                         id: string;
-                        name: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
                         icon: string;
                         color: string;
-                        contentRich: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    }[];
-                };
-            };
-        };
-    };
-    createArticle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name: string;
-                    icon?: string;
-                    color?: string;
-                    contentRich?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    name: string;
-                    icon?: string;
-                    color?: string;
-                    contentRich?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        worldId: string;
-                        id: string;
-                        name: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        icon: string;
-                        color: string;
-                        contentRich: string;
                         parentFolderId?: null | string;
                         parentFolderPosition: number;
                     };
-                };
-            };
-        };
-    };
-    deleteArticle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                articleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateArticle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                articleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name?: string;
-                    icon?: string;
-                    color?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    name?: string;
-                    icon?: string;
-                    color?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        worldId: string;
-                        id: string;
-                        name: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        icon: string;
-                        color: string;
-                        contentRich: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    };
-                };
-            };
-        };
-    };
-    moveWikiEntity: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    entityId: string;
-                    entityType: "actor" | "article" | "folder" | "event" | "tag";
-                    parentId?: null | string;
-                    position: number;
-                };
-                "application/x-www-form-urlencoded": {
-                    entityId: string;
-                    entityType: "actor" | "article" | "folder" | "event" | "tag";
-                    parentId?: null | string;
-                    position: number;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        updates: {
-                            entityId: string;
-                            entityType: "actor" | "article" | "folder" | "event" | "tag";
-                            position: number;
-                            folderId?: null | string;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    getArticleBacklinks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                articleId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        type: "Actor" | "Event" | "Article" | "Tag";
-                        id: string;
-                        name: string;
-                    }[];
                 };
             };
         };

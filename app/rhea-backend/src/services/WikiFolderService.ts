@@ -8,10 +8,18 @@ import { BulkActionService } from './WorldBulkActionService.js'
 
 export const WikiFolderService = {
 	listWikiFolders: async (params: Pick<WikiFolder, 'worldId'>) => {
-		return getPrismaClient().wikiFolder.findMany({
+		const folders = await getPrismaClient().wikiFolder.findMany({
 			where: { worldId: params.worldId },
-			include: { children: true },
+			include: {
+				actors: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+				articles: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+				children: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+				events: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+				tags: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+			},
 		})
+
+		return folders
 	},
 
 	createWikiFolder: async (
@@ -33,7 +41,9 @@ export const WikiFolderService = {
 					parentFolderId: params.parentId,
 					parentFolderPosition: entityCount * 2,
 				},
-				include: { children: true },
+				select: {
+					id: true,
+				},
 			})
 
 			await makeTouchWorldQuery(params.worldId, prisma)
@@ -43,7 +53,13 @@ export const WikiFolderService = {
 				where: {
 					id: baseFolder.id,
 				},
-				include: { children: true },
+				include: {
+					actors: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+					articles: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+					children: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+					events: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+					tags: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+				},
 			})
 
 			return folder!
@@ -64,7 +80,13 @@ export const WikiFolderService = {
 					icon: params.icon,
 					color: params.color,
 				},
-				include: { children: true },
+				include: {
+					actors: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+					articles: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+					children: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+					events: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+					tags: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+				},
 			})
 
 			await makeTouchWorldQuery(params.worldId, prisma)

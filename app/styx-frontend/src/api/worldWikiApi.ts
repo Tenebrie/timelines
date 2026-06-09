@@ -52,14 +52,14 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	}[]
 	worldId: string
 	id: string
-	name: string
 	createdAt: string
 	updatedAt: string
+	name: string
 	icon: string
 	color: string
-	contentRich: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
+	contentRich: string
 }[]
 export type GetArticlesApiArg = {
 	/** Any string value */
@@ -68,14 +68,14 @@ export type GetArticlesApiArg = {
 export type CreateArticleApiResponse = /** status 200  */ {
 	worldId: string
 	id: string
-	name: string
 	createdAt: string
 	updatedAt: string
+	name: string
 	icon: string
 	color: string
-	contentRich: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
+	contentRich: string
 }
 export type CreateArticleApiArg = {
 	/** Any string value */
@@ -97,7 +97,7 @@ export type DeleteArticleApiArg = {
 export type MoveWikiEntityApiResponse = /** status 200  */ {
 	updates: {
 		entityId: string
-		entityType: 'actor' | 'article' | 'folder' | 'event' | 'tag'
+		entityType: 'actor' | 'tag' | 'article' | 'event' | 'folder'
 		position: number
 		folderId?: null | string
 	}[]
@@ -107,7 +107,7 @@ export type MoveWikiEntityApiArg = {
 	worldId: string
 	body: {
 		entityId: string
-		entityType: 'actor' | 'article' | 'folder' | 'event' | 'tag'
+		entityType: 'actor' | 'tag' | 'article' | 'event' | 'folder'
 		parentId?: null | string
 		position: number
 	}

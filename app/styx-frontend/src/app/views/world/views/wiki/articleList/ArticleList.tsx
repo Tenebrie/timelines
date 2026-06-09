@@ -24,8 +24,8 @@ export function ArticleListComponent({ parentId, depth }: Props) {
 	const [moveArticle] = useMoveArticle()
 	const [contextMenuArticle, setContextMenuArticle] = useState<BoxedWikiEntity | null>(null)
 
-	const sortedArticles = useBoxedWikiContent({ filterFolderId: parentId })
-	const { checkboxVisible, isChecked, onChange } = useArticleBulkActions({ articles: sortedArticles })
+	const { visibleEntities, hiddenCount } = useBoxedWikiContent({ filterFolderId: parentId })
+	const { checkboxVisible, isChecked, onChange } = useArticleBulkActions({ articles: visibleEntities })
 
 	const ref = useRef<HTMLDivElement>(null)
 	useDragDropReceiver({
@@ -56,22 +56,20 @@ export function ArticleListComponent({ parentId, depth }: Props) {
 			direction="column"
 			height={1}
 			sx={{
-				marginLeft: parentId ? 2 : 0,
-				marginRight: -0.5,
-				paddingRight: 1.5,
+				marginLeft: parentId ? 1.5 : 0,
+				paddingLeft: parentId ? 0.5 : 0,
+				marginRight: parentId ? 0 : -2,
+				paddingRight: parentId ? 0 : 2,
 				height: '100%',
+				paddingBottom: parentId ? 0 : '50vh',
 				overflowY: 'auto',
+				borderLeft: parentId ? '2px solid' : 'none',
+				borderColor: 'divider',
 				...useBrowserSpecificScrollbars(),
 			}}
 			data-testid={`ArticleList/${depth}`}
 		>
-			{sortedArticles.length === 0 && (
-				<Typography variant="body2" color="text.secondary" sx={{ py: 1, pl: 1 }}>
-					{parentId && <span>Folder is empty!</span>}
-					{!parentId && <span>Nothing has been created yet!</span>}
-				</Typography>
-			)}
-			{sortedArticles.map((article) => (
+			{visibleEntities.map((article) => (
 				<span key={article.id}>
 					<ArticleDropHandle position={article.position} parentId={parentId} />
 					<ArticleListItem
@@ -84,6 +82,17 @@ export function ArticleListComponent({ parentId, depth }: Props) {
 					/>
 				</span>
 			))}
+			{(hiddenCount > 0 || visibleEntities.length === 0) && (
+				<Typography variant="body2" color="text.secondary" sx={{ py: 1, pl: 1 }}>
+					{parentId && hiddenCount === 0 && <span>Folder is empty!</span>}
+					{hiddenCount > 0 && (
+						<Typography variant="caption" fontStyle={'italic'}>
+							+{hiddenCount} hidden
+						</Typography>
+					)}
+					{!parentId && visibleEntities.length === 0 && <span>Nothing has been created yet!</span>}
+				</Typography>
+			)}
 			{contextMenuArticle && (
 				<ArticleContextMenu article={contextMenuArticle} popupState={contextMenuState} />
 			)}

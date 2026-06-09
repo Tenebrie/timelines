@@ -56,7 +56,7 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 
 	const wrapperCache = useRef(new Map<string, BoxedWikiEntity>())
 
-	const combinedList = useMemo(() => {
+	return useMemo(() => {
 		const prevCache = wrapperCache.current
 		const nextCache = new Map<string, BoxedWikiEntity>()
 
@@ -80,6 +80,7 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 		}
 
 		const result: BoxedWikiEntity[] = []
+		let hiddenEntities = 0
 		for (const folder of folders) {
 			if (filterFolderId !== undefined && folder.parentFolderId !== filterFolderId) {
 				continue
@@ -95,10 +96,11 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 			)
 		}
 		for (const article of articles) {
-			if (!visibleEntities.includes('article')) {
+			if (filterFolderId !== undefined && article.parentFolderId !== filterFolderId) {
 				continue
 			}
-			if (filterFolderId !== undefined && article.parentFolderId !== filterFolderId) {
+			if (!visibleEntities.includes('article')) {
+				hiddenEntities += 1
 				continue
 			}
 			result.push(
@@ -112,10 +114,11 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 			)
 		}
 		for (const actor of actors) {
-			if (!visibleEntities.includes('actor')) {
+			if (filterFolderId !== undefined && actor.parentFolderId !== filterFolderId) {
 				continue
 			}
-			if (filterFolderId !== undefined && actor.parentFolderId !== filterFolderId) {
+			if (!visibleEntities.includes('actor')) {
+				hiddenEntities += 1
 				continue
 			}
 			result.push(
@@ -129,10 +132,11 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 			)
 		}
 		for (const event of events) {
-			if (!visibleEntities.includes('event')) {
+			if (filterFolderId !== undefined && event.parentFolderId !== filterFolderId) {
 				continue
 			}
-			if (filterFolderId !== undefined && event.parentFolderId !== filterFolderId) {
+			if (!visibleEntities.includes('event')) {
+				hiddenEntities += 1
 				continue
 			}
 			result.push(
@@ -146,10 +150,11 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 			)
 		}
 		for (const tag of tags) {
-			if (!visibleEntities.includes('tag')) {
+			if (filterFolderId !== undefined && tag.parentFolderId !== filterFolderId) {
 				continue
 			}
-			if (filterFolderId !== undefined && tag.parentFolderId !== filterFolderId) {
+			if (!visibleEntities.includes('tag')) {
+				hiddenEntities += 1
 				continue
 			}
 			result.push(
@@ -164,8 +169,9 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 		}
 
 		wrapperCache.current = nextCache
-		return result.sort((a, b) => a.position - b.position)
+		return {
+			visibleEntities: result.sort((a, b) => a.position - b.position),
+			hiddenCount: hiddenEntities,
+		}
 	}, [actors, articles, events, filterFolderId, folders, tags, visibleEntities])
-
-	return combinedList
 }

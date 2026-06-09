@@ -7,7 +7,9 @@ import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import { useMatches } from '@tanstack/react-router'
 import { memo, useCallback } from 'react'
+import { useSelector } from 'react-redux'
 
+import { RootState } from '@/app/store'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticleDragDrop'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -80,6 +82,7 @@ function ArticleListItemInnerComponent({
 	}, [highlighted, article.type, article.id, toggleOpen, navigate])
 
 	const { ref, ghostElement } = useArticleDragDrop({ article })
+	const isGrayscale = useIsFolderGrayedOut(article)
 
 	return (
 		<Box data-testid={`ArticleListItem/${article.name}/${depth}`} data-item-type={article.type}>
@@ -96,12 +99,15 @@ function ArticleListItemInnerComponent({
 					startIcon={<EntityIcon variant={article.type} />}
 					variant={highlighted ? 'contained' : 'text'}
 					color="secondary"
-					sx={{ justifyContent: 'start', paddingLeft: 1.5 }}
+					sx={{ justifyContent: 'start', paddingLeft: 1.5, filter: isGrayscale ? 'grayscale(100%)' : 'none' }}
 					fullWidth
 					onClick={onNavigate}
 				>
-					{article.name}
+					<Stack direction="row" justifyContent="space-between" sx={{ width: '100%', alignItems: 'center' }}>
+						<span>{article.name}</span>
+					</Stack>
 				</Button>
+				{article.type === 'folder' && <ArticleListItemCollapse entity={article} />}
 				{!isReadOnly && (
 					<IconButton
 						aria-label="Article context menu"
@@ -112,7 +118,6 @@ function ArticleListItemInnerComponent({
 						<Menu />
 					</IconButton>
 				)}
-				{article.type === 'folder' && <ArticleListItemCollapse entity={article} />}
 				{ghostElement}
 			</Stack>
 			{article.type === 'folder' && (
@@ -122,4 +127,32 @@ function ArticleListItemInnerComponent({
 			)}
 		</Box>
 	)
+}
+
+function useIsFolderGrayedOut(article: BoxedWikiEntity) {
+	const folderId = article.type === 'folder' ? article.id : null
+
+	return useSelector((state: RootState) => {
+		if (!folderId) {
+			return false
+		}
+
+		const { folders, articles } = state.wiki
+		const { actors, events, tags } = state.world
+		const { visibleEntities } = state.preferences.wiki
+
+		function hasVisibleEntity(id: string): boolean {
+			if (
+				(visibleEntities.includes('actor') && actors.some((a) => a.parentFolderId === id)) ||
+				(visibleEntities.includes('article') && articles.some((a) => a.parentFolderId === id)) ||
+				(visibleEntities.includes('event') && events.some((e) => e.parentFolderId === id)) ||
+				(visibleEntities.includes('tag') && tags.some((t) => t.parentFolderId === id))
+			) {
+				return true
+			}
+			return folders.filter((f) => f.parentFolderId === id).some((f) => hasVisibleEntity(f.id))
+		}
+
+		return !hasVisibleEntity(folderId)
+	})
 }

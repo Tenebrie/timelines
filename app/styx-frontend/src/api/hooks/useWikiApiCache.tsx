@@ -51,7 +51,9 @@ export function useWikiApiCache() {
 				entity: { parentFolderId?: null | string; parentFolderPosition: number } | undefined,
 				update: WikiPositionUpdate,
 			) {
-				if (!entity) return
+				if (!entity) {
+					return
+				}
 				if (update.folderId !== undefined) {
 					entity.parentFolderId = update.folderId
 				}

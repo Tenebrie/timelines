@@ -122,17 +122,6 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}/accept`, method: 'POST' }),
 				invalidatesTags: [],
 			}),
-			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
-				{
-					query: (queryArg) => ({
-						url: `/api/internal/auth/${queryArg.userId}`,
-						params: {
-							worldId: queryArg.worldId,
-						},
-					}),
-					providesTags: [],
-				},
-			),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/wiki/article/${queryArg.articleId}`,
@@ -147,6 +136,17 @@ const injectedRtkApi = api
 				}),
 				providesTags: ['worldWikiArticle'],
 			}),
+			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
+				{
+					query: (queryArg) => ({
+						url: `/api/internal/auth/${queryArg.userId}`,
+						params: {
+							worldId: queryArg.worldId,
+						},
+					}),
+					providesTags: [],
+				},
+			),
 		}),
 		overrideExisting: false,
 	})
@@ -337,28 +337,17 @@ export type AcceptWorldShareLinkApiArg = {
 	/** Any string value */
 	slug: string
 }
-export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
-	owner: boolean
-	write: boolean
-	read: boolean
-}
-export type GetUserWorldAccessLevelApiArg = {
-	/** Any string value with at least one character */
-	userId: string
-	/** Any string value with at least one character */
-	worldId: string
-}
 export type UpdateArticleApiResponse = /** status 200  */ {
 	worldId: string
 	id: string
-	name: string
 	createdAt: string
 	updatedAt: string
+	name: string
 	icon: string
 	color: string
-	contentRich: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
+	contentRich: string
 }
 export type UpdateArticleApiArg = {
 	/** Any string value */
@@ -381,6 +370,17 @@ export type GetArticleBacklinksApiArg = {
 	worldId: string
 	/** Any string value */
 	articleId: string
+}
+export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
+	owner: boolean
+	write: boolean
+	read: boolean
+}
+export type GetUserWorldAccessLevelApiArg = {
+	/** Any string value with at least one character */
+	userId: string
+	/** Any string value with at least one character */
+	worldId: string
 }
 export const {
 	useAdminGetUserLevelsQuery,
@@ -415,9 +415,9 @@ export const {
 	useVisitWorldShareLinkQuery,
 	useLazyVisitWorldShareLinkQuery,
 	useAcceptWorldShareLinkMutation,
-	useGetUserWorldAccessLevelQuery,
-	useLazyGetUserWorldAccessLevelQuery,
 	useUpdateArticleMutation,
 	useGetArticleBacklinksQuery,
 	useLazyGetArticleBacklinksQuery,
+	useGetUserWorldAccessLevelQuery,
+	useLazyGetUserWorldAccessLevelQuery,
 } = injectedRtkApi
