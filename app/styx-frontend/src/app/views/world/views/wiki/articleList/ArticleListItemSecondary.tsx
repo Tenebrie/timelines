@@ -44,7 +44,7 @@ export function ArticleListItemSecondary({ entity, highlighted }: Props) {
 	if (entity.type === 'tag') {
 		return (
 			<Typography variant="caption" sx={styles}>
-				3 references
+				{entity.entity.mentionedIn.length} references
 			</Typography>
 		)
 	}

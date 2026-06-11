@@ -17,6 +17,7 @@ import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticl
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
+import { useFolderEntityCount } from '../hooks/useFolderEntityCount'
 import { ArticleList } from './ArticleList'
 import { ArticleListItemSecondary } from './ArticleListItemSecondary'
 import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
@@ -70,6 +71,7 @@ function ArticleListItemInnerComponent({
 	isContextMenuOpen,
 }: Props & { expanded: boolean; toggleOpen: () => void; highlighted: boolean }) {
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
+	const folderCount = useFolderEntityCount({ id: article.id, entityType: article.type })
 
 	const { isReadOnly } = useIsReadOnly()
 
@@ -125,20 +127,23 @@ function ArticleListItemInnerComponent({
 				alignItems="center"
 				justifyContent="center"
 				sx={{
+					boxSizing: 'border-box',
 					minWidth: 24,
-					maxWidth: 24,
 					minHeight: 24,
 					maxHeight: 24,
+					px: 0.75,
+					whiteSpace: 'nowrap',
+					flexShrink: 0,
 					fontSize: 13,
 					color: 'text.secondary',
 					backgroundColor: theme.custom.palette.neutralBackground.normal,
-					borderRadius: '50%',
+					borderRadius: '12px',
 				}}
 			>
-				4
+				{folderCount}
 			</Stack>
 		)
-	}, [article.type, color, theme.custom.palette.neutralBackground.normal])
+	}, [article.type, color, folderCount, theme.custom.palette.neutralBackground.normal])
 
 	return (
 		<Box data-testid={`ArticleListItem/${article.name}/${depth}`} data-item-type={article.type}>
@@ -183,22 +188,7 @@ function ArticleListItemInnerComponent({
 				>
 					<Stack direction="row" alignItems="space-between" sx={{ width: '100%' }}>
 						<Stack direction="column" alignItems="flex-start">
-							<Box sx={{ lineHeight: '1.3rem' }}>
-								<Stack direction="row" alignItems="center" justifyContent="center" display="inline-flex">
-									{/* {article.type !== 'event' && article.type !== 'tag' && article.type !== 'folder' && (
-										<CustomEntityColor id={article.id} height={14} color={article.entity.color} />
-									)} */}
-									{/* {article.type === 'event' && (
-										<CustomEntityIcon
-											id={article.id}
-											height={18}
-											icon={article.entity.icon}
-											color={article.entity.color}
-										/>
-									)} */}
-									{article.name}
-								</Stack>
-							</Box>
+							<Box sx={{ lineHeight: '1.3rem' }}>{article.name}</Box>
 							<ArticleListItemSecondary entity={article} highlighted={highlighted} />
 						</Stack>
 					</Stack>

@@ -8,7 +8,7 @@ import {
 	WorldEventDelta,
 	WorldTag,
 } from '@api/types/worldTypes'
-import { WikiArticle, WikiPositionUpdate } from '@api/types/worldWikiTypes'
+import { WikiArticle } from '@api/types/worldWikiTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
@@ -253,34 +253,6 @@ export const worldSlice = createSlice({
 		/* Navigation state */
 		setSelectedTime: (state, { payload }: PayloadAction<number>) => {
 			state.selectedTime = payload
-		},
-
-		/* Wiki order */
-		applyPositionUpdates: (state, { payload }: PayloadAction<{ updates: WikiPositionUpdate[] }>) => {
-			type ActorDraft = (typeof state)['actors'][number]
-			type EventDraft = (typeof state)['events'][number]
-			type TagDraft = (typeof state)['tags'][number]
-			function apply(entity: ActorDraft | EventDraft | TagDraft | undefined, update: WikiPositionUpdate) {
-				if (!entity) {
-					return
-				}
-				if (update.folderId !== undefined) {
-					entity.parentFolderId = update.folderId
-				}
-				entity.parentFolderPosition = update.position
-			}
-			payload.updates.forEach((update) => {
-				if (update.entityType === 'actor') {
-					const article = state.actors.find((a) => a.id === update.entityId)
-					apply(article, update)
-				} else if (update.entityType === 'event') {
-					const folder = state.events.find((f) => f.id === update.entityId)
-					apply(folder, update)
-				} else if (update.entityType === 'tag') {
-					const folder = state.tags.find((f) => f.id === update.entityId)
-					apply(folder, update)
-				}
-			})
 		},
 	},
 })

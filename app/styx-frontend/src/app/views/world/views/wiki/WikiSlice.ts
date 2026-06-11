@@ -1,4 +1,4 @@
-import { WikiArticle, WikiFolder, WikiPositionUpdate } from '@api/types/worldWikiTypes'
+import { WikiArticle, WikiFolder } from '@api/types/worldWikiTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
@@ -49,29 +49,6 @@ export const wikiSlice = createSlice({
 
 		clearBulkSelection: (state) => {
 			state.bulkActionArticles = []
-		},
-
-		applyPositionUpdates: (state, { payload }: PayloadAction<{ updates: WikiPositionUpdate[] }>) => {
-			type ArticleDraft = (typeof state)['articles'][number]
-			type FolderDraft = (typeof state)['folders'][number]
-			function apply(entity: ArticleDraft | FolderDraft | undefined, update: WikiPositionUpdate) {
-				if (!entity) {
-					return
-				}
-				if (update.folderId !== undefined) {
-					entity.parentFolderId = update.folderId
-				}
-				entity.parentFolderPosition = update.position
-			}
-			payload.updates.forEach((update) => {
-				if (update.entityType === 'article') {
-					const article = state.articles.find((a) => a.id === update.entityId)
-					apply(article, update)
-				} else if (update.entityType === 'folder') {
-					const folder = state.folders.find((f) => f.id === update.entityId)
-					apply(folder, update)
-				}
-			})
 		},
 	},
 })

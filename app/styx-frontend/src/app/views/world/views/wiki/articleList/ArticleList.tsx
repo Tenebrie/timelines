@@ -23,15 +23,11 @@ type Props = {
 
 /**
  * TODO:
- * - Real number of entities in folder
- * - Real number of tag references
  * - Create in folder
  * - Create new to create at the position of the currently selected entity (after)
  * - Event moving from the wiki view
- * - Event moving after clicking "Edit" without selection
+ * - Event moving after clicking "Edit" without selection (Timeline view)
  * - Mention list bugging out (Neverkin Lore / Neverkin tag)
- * - Article icon to avatars (and color)
- * - Tag icon to avatars (and color)
  * - Right click to open context menu
  * - Deletion modal invalid text
  * - Mentions to navigate within wiki view (if in wiki view)
