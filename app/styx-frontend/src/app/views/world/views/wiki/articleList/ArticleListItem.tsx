@@ -172,6 +172,10 @@ function ArticleListItemInnerComponent({
 					startIcon={<ArticleListItemIcon article={article} highlighted={highlighted} />}
 					variant={highlighted ? 'contained' : 'text'}
 					color="primary"
+					onContextMenu={(event) => {
+						event.preventDefault()
+						onContextMenu(article, event)
+					}}
 					sx={{
 						background: article.type === 'folder' ? entityColor : undefined,
 						'&:hover': {

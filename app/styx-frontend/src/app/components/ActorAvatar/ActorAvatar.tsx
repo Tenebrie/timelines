@@ -16,7 +16,6 @@ type Props = {
 export const ActorAvatar = ({ actor, sx, fontSize, surroundingColor }: Props) => {
 	const { adaptColor } = useColorUtils()
 	const color = useMemo(() => {
-		console.log(actor.color)
 		if (!actor.color) {
 			return '#000000'
 		}

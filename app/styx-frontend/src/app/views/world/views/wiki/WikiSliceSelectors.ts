@@ -23,8 +23,6 @@ export const getWikiFolderCounts = createSelector(
 		const foldersById = new Map(folders.map((folder) => [folder.id, folder]))
 		const counts = new Map<string, WikiFolderCounts>()
 
-		// Each entity counts toward every folder in its ancestor chain, making
-		// the numbers recursive. Folders are tracked per-type but excluded from `total`.
 		function count(parentFolderId: string | null | undefined, type: WikiEntityType) {
 			let current = parentFolderId ? foldersById.get(parentFolderId) : undefined
 			while (current) {

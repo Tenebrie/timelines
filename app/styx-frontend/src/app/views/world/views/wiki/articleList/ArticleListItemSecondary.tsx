@@ -42,9 +42,10 @@ export function ArticleListItemSecondary({ entity, highlighted }: Props) {
 	}
 
 	if (entity.type === 'tag') {
+		const mentionCount = entity.entity.mentionedIn.length
 		return (
 			<Typography variant="caption" sx={styles}>
-				{entity.entity.mentionedIn.length} references
+				{mentionCount} mention{mentionCount !== 1 ? 's' : ''}
 			</Typography>
 		)
 	}

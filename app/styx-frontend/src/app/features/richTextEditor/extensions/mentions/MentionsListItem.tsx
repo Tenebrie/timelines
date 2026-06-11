@@ -17,18 +17,18 @@ type Props = {
 }
 
 export function MentionsListItem({ mention, query, selected, onClick }: Props) {
-	const [entityId, entityColor] = (() => {
+	const entityColor = (() => {
 		if (mention.type === 'Actor') {
-			return [mention.actor.id, mention.actor.color] as const
+			return mention.actor.color
 		}
 		if (mention.type === 'Event') {
-			return [mention.event.id, mention.event.color] as const
+			return mention.event.color
 		}
 		if (mention.type === 'Article') {
-			return [mention.article.id, mention.article.color] as const
+			return mention.article.color
 		}
 		if (mention.type === 'Tag') {
-			return [mention.tag.id, '#9f2261'] as const
+			return '#9f2261'
 		}
 		throw new Error('Unknown mention type')
 	})()
