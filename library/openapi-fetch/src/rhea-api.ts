@@ -1185,42 +1185,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/tags": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Creates a new tag */
-        post: operations["createTag"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/tag/{tagId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetches the details of a tag, including all entities that mention it */
-        get: operations["getTagDetails"];
-        put?: never;
-        post?: never;
-        /** @description Deletes the target tag */
-        delete: operations["deleteTag"];
-        options?: never;
-        head?: never;
-        /** @description Updates the target tag */
-        patch: operations["updateTag"];
-        trace?: never;
-    };
     "/api/world/{worldId}/article/{articleId}/content": {
         parameters: {
             query?: never;
@@ -1895,23 +1859,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/internal/auth/{userId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns the user's access level for a specific world. */
-        get: operations["getUserWorldAccessLevel"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/world/{worldId}/wiki/folders": {
         parameters: {
             query?: never;
@@ -1946,6 +1893,59 @@ export interface paths {
         head?: never;
         /** @description Updates a folder in the wiki. */
         patch: operations["updateFolder"];
+        trace?: never;
+    };
+    "/api/internal/auth/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns the user's access level for a specific world. */
+        get: operations["getUserWorldAccessLevel"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/tags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates a new tag */
+        post: operations["createTag"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/tag/{tagId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetches the details of a tag, including all entities that mention it */
+        get: operations["getTagDetails"];
+        put?: never;
+        post?: never;
+        /** @description Deletes the target tag */
+        delete: operations["deleteTag"];
+        options?: never;
+        head?: never;
+        /** @description Updates the target tag */
+        patch: operations["updateTag"];
         trace?: never;
     };
 }
@@ -3268,9 +3268,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 ownerId: string;
+                                size: number;
                                 expiresAt?: null | string;
                                 bucketKey: string;
-                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
@@ -4433,8 +4433,8 @@ export interface operations {
                                         createdAt: string;
                                         /** Format: date-time */
                                         updatedAt: string;
-                                        position: number;
                                         calendarId: string;
+                                        position: number;
                                         label?: null | string;
                                         shortLabel?: null | string;
                                         repeats: number;
@@ -4447,17 +4447,44 @@ export interface operations {
                                     /** Format: date-time */
                                     updatedAt: string;
                                     name: string;
-                                    position: number;
                                     calendarId: string;
-                                    formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
-                                    negativeFormat: "MinusSign" | "AbsoluteValue";
+                                    position: number;
                                     displayName?: null | string;
                                     displayNameShort?: null | string;
                                     displayNamePlural?: null | string;
+                                    formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                     formatShorthand?: null | string;
+                                    negativeFormat: "MinusSign" | "AbsoluteValue";
                                     /** Format: bigint */
                                     duration: string;
                                     treeDepth: number;
+                                }[];
+                                presentations: {
+                                    units: {
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        calendarId: string;
+                                        presentationId: string;
+                                        position: number;
+                                        formatString: string;
+                                        subdivision: number;
+                                        labeledIndices: number[];
+                                        unitId: string;
+                                    }[];
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    calendarId: string;
+                                    compression: number;
+                                    scaleFactor: number;
+                                    baselineUnitId?: null | string;
                                 }[];
                                 seasons: {
                                     intervals: {
@@ -4477,37 +4504,12 @@ export interface operations {
                                     /** Format: date-time */
                                     updatedAt: string;
                                     name: string;
-                                    position: number;
                                     calendarId: string;
+                                    position: number;
                                     formatShorthand?: null | string;
                                 }[];
-                                presentations: {
-                                    units: {
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        name: string;
-                                        position: number;
-                                        calendarId: string;
-                                        formatString: string;
-                                        subdivision: number;
-                                        labeledIndices: number[];
-                                        unitId: string;
-                                        presentationId: string;
-                                    }[];
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    calendarId: string;
-                                    compression: number;
-                                    scaleFactor: number;
-                                    baselineUnitId?: null | string;
-                                }[];
+                                description: string;
+                                worldId?: null | string;
                                 id: string;
                                 /** Format: date-time */
                                 createdAt: string;
@@ -4516,8 +4518,6 @@ export interface operations {
                                 name: string;
                                 ownerId?: null | string;
                                 position: number;
-                                description: string;
-                                worldId?: null | string;
                                 /** Format: bigint */
                                 originTime: string;
                                 dateFormat?: null | string;
@@ -4531,8 +4531,8 @@ export interface operations {
                                             createdAt: string;
                                             /** Format: date-time */
                                             updatedAt: string;
-                                            position: number;
                                             calendarId: string;
+                                            position: number;
                                             label?: null | string;
                                             shortLabel?: null | string;
                                             repeats: number;
@@ -4545,17 +4545,44 @@ export interface operations {
                                         /** Format: date-time */
                                         updatedAt: string;
                                         name: string;
-                                        position: number;
                                         calendarId: string;
-                                        formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
-                                        negativeFormat: "MinusSign" | "AbsoluteValue";
+                                        position: number;
                                         displayName?: null | string;
                                         displayNameShort?: null | string;
                                         displayNamePlural?: null | string;
+                                        formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                         formatShorthand?: null | string;
+                                        negativeFormat: "MinusSign" | "AbsoluteValue";
                                         /** Format: bigint */
                                         duration: string;
                                         treeDepth: number;
+                                    }[];
+                                    presentations: {
+                                        units: {
+                                            id: string;
+                                            /** Format: date-time */
+                                            createdAt: string;
+                                            /** Format: date-time */
+                                            updatedAt: string;
+                                            name: string;
+                                            calendarId: string;
+                                            presentationId: string;
+                                            position: number;
+                                            formatString: string;
+                                            subdivision: number;
+                                            labeledIndices: number[];
+                                            unitId: string;
+                                        }[];
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        calendarId: string;
+                                        compression: number;
+                                        scaleFactor: number;
+                                        baselineUnitId?: null | string;
                                     }[];
                                     seasons: {
                                         intervals: {
@@ -4575,37 +4602,12 @@ export interface operations {
                                         /** Format: date-time */
                                         updatedAt: string;
                                         name: string;
-                                        position: number;
                                         calendarId: string;
+                                        position: number;
                                         formatShorthand?: null | string;
                                     }[];
-                                    presentations: {
-                                        units: {
-                                            id: string;
-                                            /** Format: date-time */
-                                            createdAt: string;
-                                            /** Format: date-time */
-                                            updatedAt: string;
-                                            name: string;
-                                            position: number;
-                                            calendarId: string;
-                                            formatString: string;
-                                            subdivision: number;
-                                            labeledIndices: number[];
-                                            unitId: string;
-                                            presentationId: string;
-                                        }[];
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        name: string;
-                                        calendarId: string;
-                                        compression: number;
-                                        scaleFactor: number;
-                                        baselineUnitId?: null | string;
-                                    }[];
+                                    description: string;
+                                    worldId?: null | string;
                                     id: string;
                                     /** Format: date-time */
                                     createdAt: string;
@@ -4614,49 +4616,19 @@ export interface operations {
                                     name: string;
                                     ownerId?: null | string;
                                     position: number;
-                                    description: string;
-                                    worldId?: null | string;
                                     /** Format: bigint */
                                     originTime: string;
                                     dateFormat?: null | string;
                                 }[];
-                                tags: {
-                                    mentions: {
-                                        id: string;
-                                        sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                        targetType: "Actor" | "Event" | "Article" | "Tag";
-                                        pageId?: null | string;
-                                        sourceId: string;
-                                        targetId: string;
-                                        sourceActorId?: null | string;
-                                        sourceEventId?: null | string;
-                                        sourceArticleId?: null | string;
-                                        sourceTagId?: null | string;
-                                        targetActorId?: null | string;
-                                        targetEventId?: null | string;
-                                        targetArticleId?: null | string;
-                                        targetTagId?: null | string;
-                                    }[];
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    description: string;
-                                    worldId: string;
-                                    parentFolderId?: null | string;
-                                    parentFolderPosition: number;
-                                }[];
-                                events: {
+                                actors: {
                                     pages: {
+                                        description: string;
                                         id: string;
                                         /** Format: date-time */
                                         createdAt: string;
                                         /** Format: date-time */
                                         updatedAt: string;
                                         name: string;
-                                        description: string;
                                         descriptionRich: string;
                                         parentActorId?: null | string;
                                         parentEventId?: null | string;
@@ -4664,11 +4636,11 @@ export interface operations {
                                     }[];
                                     mentions: {
                                         id: string;
-                                        sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                        targetType: "Actor" | "Event" | "Article" | "Tag";
                                         pageId?: null | string;
                                         sourceId: string;
                                         targetId: string;
+                                        sourceType: "Actor" | "Event" | "Article" | "Tag";
+                                        targetType: "Actor" | "Event" | "Article" | "Tag";
                                         sourceActorId?: null | string;
                                         sourceEventId?: null | string;
                                         sourceArticleId?: null | string;
@@ -4678,17 +4650,62 @@ export interface operations {
                                         targetArticleId?: null | string;
                                         targetTagId?: null | string;
                                     }[];
+                                    description: string;
+                                    worldId: string;
                                     id: string;
                                     /** Format: date-time */
                                     createdAt: string;
                                     /** Format: date-time */
                                     updatedAt: string;
                                     name: string;
-                                    description: string;
-                                    worldId: string;
-                                    descriptionRich: string;
+                                    title: string;
                                     icon: string;
                                     color: string;
+                                    descriptionRich: string;
+                                    parentFolderId?: null | string;
+                                    parentFolderPosition: number;
+                                }[];
+                                events: {
+                                    pages: {
+                                        description: string;
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        descriptionRich: string;
+                                        parentActorId?: null | string;
+                                        parentEventId?: null | string;
+                                        parentArticleId?: null | string;
+                                    }[];
+                                    mentions: {
+                                        id: string;
+                                        pageId?: null | string;
+                                        sourceId: string;
+                                        targetId: string;
+                                        sourceType: "Actor" | "Event" | "Article" | "Tag";
+                                        targetType: "Actor" | "Event" | "Article" | "Tag";
+                                        sourceActorId?: null | string;
+                                        sourceEventId?: null | string;
+                                        sourceArticleId?: null | string;
+                                        sourceTagId?: null | string;
+                                        targetActorId?: null | string;
+                                        targetEventId?: null | string;
+                                        targetArticleId?: null | string;
+                                        targetTagId?: null | string;
+                                    }[];
+                                    description: string;
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    icon: string;
+                                    color: string;
+                                    descriptionRich: string;
                                     parentFolderId?: null | string;
                                     parentFolderPosition: number;
                                     /** Format: bigint */
@@ -4696,86 +4713,15 @@ export interface operations {
                                     revokedAt?: null | string;
                                     worldEventTrackId?: null | string;
                                 }[];
-                                savedColors: {
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    value: string;
-                                    label?: null | string;
-                                    worldId: string;
-                                }[];
-                                worldCommonIconSets: {
-                                    id: string;
-                                    worldId: string;
-                                    iconSet: string;
-                                }[];
-                                worldEventTracks: {
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    position: number;
-                                    worldId: string;
-                                    visible: boolean;
-                                }[];
-                                actors: {
-                                    pages: {
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        name: string;
-                                        description: string;
-                                        descriptionRich: string;
-                                        parentActorId?: null | string;
-                                        parentEventId?: null | string;
-                                        parentArticleId?: null | string;
-                                    }[];
-                                    mentions: {
-                                        id: string;
-                                        sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                        targetType: "Actor" | "Event" | "Article" | "Tag";
-                                        pageId?: null | string;
-                                        sourceId: string;
-                                        targetId: string;
-                                        sourceActorId?: null | string;
-                                        sourceEventId?: null | string;
-                                        sourceArticleId?: null | string;
-                                        sourceTagId?: null | string;
-                                        targetActorId?: null | string;
-                                        targetEventId?: null | string;
-                                        targetArticleId?: null | string;
-                                        targetTagId?: null | string;
-                                    }[];
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    description: string;
-                                    worldId: string;
-                                    descriptionRich: string;
-                                    icon: string;
-                                    color: string;
-                                    parentFolderId?: null | string;
-                                    parentFolderPosition: number;
-                                    title: string;
-                                }[];
                                 articles: {
                                     pages: {
+                                        description: string;
                                         id: string;
                                         /** Format: date-time */
                                         createdAt: string;
                                         /** Format: date-time */
                                         updatedAt: string;
                                         name: string;
-                                        description: string;
                                         descriptionRich: string;
                                         parentActorId?: null | string;
                                         parentEventId?: null | string;
@@ -4783,11 +4729,11 @@ export interface operations {
                                     }[];
                                     mentions: {
                                         id: string;
-                                        sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                        targetType: "Actor" | "Event" | "Article" | "Tag";
                                         pageId?: null | string;
                                         sourceId: string;
                                         targetId: string;
+                                        sourceType: "Actor" | "Event" | "Article" | "Tag";
+                                        targetType: "Actor" | "Event" | "Article" | "Tag";
                                         sourceActorId?: null | string;
                                         sourceEventId?: null | string;
                                         sourceArticleId?: null | string;
@@ -4797,18 +4743,59 @@ export interface operations {
                                         targetArticleId?: null | string;
                                         targetTagId?: null | string;
                                     }[];
+                                    worldId: string;
                                     id: string;
                                     /** Format: date-time */
                                     createdAt: string;
                                     /** Format: date-time */
                                     updatedAt: string;
                                     name: string;
-                                    worldId: string;
                                     icon: string;
                                     color: string;
                                     parentFolderId?: null | string;
                                     parentFolderPosition: number;
                                     contentRich: string;
+                                }[];
+                                folders: {
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    icon: string;
+                                    color: string;
+                                    parentFolderId?: null | string;
+                                    parentFolderPosition: number;
+                                }[];
+                                tags: {
+                                    mentions: {
+                                        id: string;
+                                        pageId?: null | string;
+                                        sourceId: string;
+                                        targetId: string;
+                                        sourceType: "Actor" | "Event" | "Article" | "Tag";
+                                        targetType: "Actor" | "Event" | "Article" | "Tag";
+                                        sourceActorId?: null | string;
+                                        sourceEventId?: null | string;
+                                        sourceArticleId?: null | string;
+                                        sourceTagId?: null | string;
+                                        targetActorId?: null | string;
+                                        targetEventId?: null | string;
+                                        targetArticleId?: null | string;
+                                        targetTagId?: null | string;
+                                    }[];
+                                    description: string;
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    parentFolderId?: null | string;
+                                    parentFolderPosition: number;
                                 }[];
                                 mindmapNodes: {
                                     links: {
@@ -4817,46 +4804,59 @@ export interface operations {
                                         createdAt: string;
                                         /** Format: date-time */
                                         updatedAt: string;
+                                        content: string;
                                         direction: "Normal" | "Reversed" | "TwoWay";
                                         sourceNodeId: string;
                                         targetNodeId: string;
-                                        content: string;
                                     }[];
+                                    worldId: string;
                                     id: string;
                                     /** Format: date-time */
                                     createdAt: string;
                                     /** Format: date-time */
                                     updatedAt: string;
-                                    worldId: string;
                                     parentActorId?: null | string;
                                     positionX: number;
                                     positionY: number;
                                 }[];
-                                folders: {
+                                worldEventTracks: {
+                                    worldId: string;
                                     id: string;
                                     /** Format: date-time */
                                     createdAt: string;
                                     /** Format: date-time */
                                     updatedAt: string;
                                     name: string;
-                                    worldId: string;
-                                    icon: string;
-                                    color: string;
-                                    parentFolderId?: null | string;
-                                    parentFolderPosition: number;
+                                    position: number;
+                                    visible: boolean;
                                 }[];
+                                worldCommonIconSets: {
+                                    worldId: string;
+                                    id: string;
+                                    iconSet: string;
+                                }[];
+                                savedColors: {
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    value: string;
+                                    label?: null | string;
+                                }[];
+                                description: string;
                                 id: string;
                                 /** Format: date-time */
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
                                 name: string;
-                                ownerId: string;
                                 calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
-                                description: string;
-                                accessMode: "Private" | "PublicRead" | "PublicEdit";
                                 /** Format: bigint */
                                 timeOrigin: string;
+                                ownerId: string;
+                                accessMode: "Private" | "PublicRead" | "PublicEdit";
                             }[];
                         };
                     };
@@ -5160,9 +5160,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             content: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
                             sourceNodeId: string;
                             targetNodeId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
                         }[];
                     };
                 };
@@ -5366,9 +5366,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             content: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
                             sourceNodeId: string;
                             targetNodeId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
                         }[];
                         updated: {
                             id: string;
@@ -5377,9 +5377,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             content: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
                             sourceNodeId: string;
                             targetNodeId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
                         }[];
                     };
                 };
@@ -5444,9 +5444,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         content: string;
+                        direction: "Normal" | "Reversed" | "TwoWay";
                         sourceNodeId: string;
                         targetNodeId: string;
-                        direction: "Normal" | "Reversed" | "TwoWay";
                     };
                 };
             };
@@ -5629,233 +5629,6 @@ export interface operations {
                 content: {
                     "application/json": {
                         success: boolean;
-                    };
-                };
-            };
-        };
-    };
-    createTag: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name: string;
-                    description?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    name: string;
-                    description?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        mentions: {
-                            id: string;
-                            pageId?: null | string;
-                            sourceId: string;
-                            targetId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag";
-                            targetType: "Actor" | "Event" | "Article" | "Tag";
-                            sourceActorId?: null | string;
-                            sourceEventId?: null | string;
-                            sourceArticleId?: null | string;
-                            sourceTagId?: null | string;
-                            targetActorId?: null | string;
-                            targetEventId?: null | string;
-                            targetArticleId?: null | string;
-                            targetTagId?: null | string;
-                        }[];
-                        mentionedIn: {
-                            id: string;
-                            pageId?: null | string;
-                            sourceId: string;
-                            targetId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag";
-                            targetType: "Actor" | "Event" | "Article" | "Tag";
-                            sourceActorId?: null | string;
-                            sourceEventId?: null | string;
-                            sourceArticleId?: null | string;
-                            sourceTagId?: null | string;
-                            targetActorId?: null | string;
-                            targetEventId?: null | string;
-                            targetArticleId?: null | string;
-                            targetTagId?: null | string;
-                        }[];
-                        description: string;
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    };
-                };
-            };
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getTagDetails: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                tagId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        mentionedBy: {
-                            type: "Actor" | "Event" | "Article" | "Tag";
-                            id: string;
-                            name: string;
-                        }[];
-                        mentions: {
-                            id: string;
-                            pageId?: null | string;
-                            sourceId: string;
-                            targetId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag";
-                            targetType: "Actor" | "Event" | "Article" | "Tag";
-                            sourceActorId?: null | string;
-                            sourceEventId?: null | string;
-                            sourceArticleId?: null | string;
-                            sourceTagId?: null | string;
-                            targetActorId?: null | string;
-                            targetEventId?: null | string;
-                            targetArticleId?: null | string;
-                            targetTagId?: null | string;
-                        }[];
-                        description: string;
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    };
-                };
-            };
-        };
-    };
-    deleteTag: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                tagId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        description: string;
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    };
-                };
-            };
-        };
-    };
-    updateTag: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                tagId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name?: string;
-                    description?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    name?: string;
-                    description?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        mentions: {
-                            targetId: string;
-                            targetType: "Actor" | "Event" | "Article" | "Tag";
-                        }[];
-                        mentionedIn: {
-                            sourceId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag";
-                        }[];
-                        description: string;
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
                     };
                 };
             };
@@ -6789,7 +6562,6 @@ export interface operations {
                         ownedWorlds: {
                             calendars: {
                                 description: string;
-                                worldId?: null | string;
                                 id: string;
                                 /** Format: date-time */
                                 createdAt: string;
@@ -6801,10 +6573,11 @@ export interface operations {
                                 /** Format: bigint */
                                 originTime: string;
                                 dateFormat?: null | string;
+                                worldId?: null | string;
                             }[];
                             collaborators: {
-                                worldId: string;
                                 userId: string;
+                                worldId: string;
                                 access: "ReadOnly" | "Editing";
                             }[];
                             description: string;
@@ -6823,7 +6596,6 @@ export interface operations {
                         contributableWorlds: {
                             calendars: {
                                 description: string;
-                                worldId?: null | string;
                                 id: string;
                                 /** Format: date-time */
                                 createdAt: string;
@@ -6835,10 +6607,11 @@ export interface operations {
                                 /** Format: bigint */
                                 originTime: string;
                                 dateFormat?: null | string;
+                                worldId?: null | string;
                             }[];
                             collaborators: {
-                                worldId: string;
                                 userId: string;
+                                worldId: string;
                                 access: "ReadOnly" | "Editing";
                             }[];
                             description: string;
@@ -6857,7 +6630,6 @@ export interface operations {
                         visibleWorlds: {
                             calendars: {
                                 description: string;
-                                worldId?: null | string;
                                 id: string;
                                 /** Format: date-time */
                                 createdAt: string;
@@ -6869,10 +6641,11 @@ export interface operations {
                                 /** Format: bigint */
                                 originTime: string;
                                 dateFormat?: null | string;
+                                worldId?: null | string;
                             }[];
                             collaborators: {
-                                worldId: string;
                                 userId: string;
+                                worldId: string;
                                 access: "ReadOnly" | "Editing";
                             }[];
                             description: string;
@@ -6953,8 +6726,8 @@ export interface operations {
                             units: {
                                 children: {
                                     id: string;
-                                    calendarId: string;
                                     position: number;
+                                    calendarId: string;
                                     label?: null | string;
                                     shortLabel?: null | string;
                                     repeats: number;
@@ -6963,8 +6736,8 @@ export interface operations {
                                 }[];
                                 parents: {
                                     id: string;
-                                    calendarId: string;
                                     position: number;
+                                    calendarId: string;
                                     label?: null | string;
                                     shortLabel?: null | string;
                                     repeats: number;
@@ -6984,23 +6757,6 @@ export interface operations {
                                 duration: string;
                                 treeDepth: number;
                             }[];
-                            presentations: {
-                                units: {
-                                    id: string;
-                                    name: string;
-                                    calendarId: string;
-                                    position: number;
-                                    formatString: string;
-                                    subdivision: number;
-                                    labeledIndices: number[];
-                                    unitId: string;
-                                }[];
-                                id: string;
-                                name: string;
-                                compression: number;
-                                scaleFactor: number;
-                                baselineUnitId?: null | string;
-                            }[];
                             seasons: {
                                 intervals: {
                                     id: string;
@@ -7018,6 +6774,23 @@ export interface operations {
                                 position: number;
                                 formatShorthand?: null | string;
                             }[];
+                            presentations: {
+                                units: {
+                                    id: string;
+                                    name: string;
+                                    position: number;
+                                    calendarId: string;
+                                    formatString: string;
+                                    subdivision: number;
+                                    labeledIndices: number[];
+                                    unitId: string;
+                                }[];
+                                id: string;
+                                name: string;
+                                compression: number;
+                                scaleFactor: number;
+                                baselineUnitId?: null | string;
+                            }[];
                             description: string;
                             id: string;
                             /** Format: date-time */
@@ -7029,45 +6802,45 @@ export interface operations {
                             dateFormat?: null | string;
                         }[];
                         actors: {
+                            mentions: {
+                                targetId: string;
+                                targetType: "Actor" | "Tag" | "Event" | "Article";
+                            }[];
                             pages: {
                                 id: string;
                                 name: string;
                             }[];
-                            mentions: {
-                                targetId: string;
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
-                            }[];
                             mentionedIn: {
                                 sourceId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
+                                sourceType: "Actor" | "Tag" | "Event" | "Article";
                             }[];
                             description: string;
-                            worldId: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            worldId: string;
+                            descriptionRich: string;
                             title: string;
                             icon: string;
                             color: string;
-                            descriptionRich: string;
                             parentFolderId?: null | string;
                             parentFolderPosition: number;
                         }[];
                         events: {
+                            mentions: {
+                                targetId: string;
+                                targetType: "Actor" | "Tag" | "Event" | "Article";
+                            }[];
                             pages: {
                                 id: string;
                                 name: string;
                             }[];
-                            mentions: {
-                                targetId: string;
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
-                            }[];
                             mentionedIn: {
                                 sourceId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
+                                sourceType: "Actor" | "Tag" | "Event" | "Article";
                             }[];
                             deltaStates: {
                                 description?: null | string;
@@ -7083,16 +6856,16 @@ export interface operations {
                                 worldEventId: string;
                             }[];
                             description: string;
-                            worldId: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            worldId: string;
+                            descriptionRich: string;
                             icon: string;
                             color: string;
-                            descriptionRich: string;
                             parentFolderId?: null | string;
                             parentFolderPosition: number;
                             /** Format: bigint */
@@ -7103,20 +6876,20 @@ export interface operations {
                         tags: {
                             mentions: {
                                 targetId: string;
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                                targetType: "Actor" | "Tag" | "Event" | "Article";
                             }[];
                             mentionedIn: {
                                 sourceId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
+                                sourceType: "Actor" | "Tag" | "Event" | "Article";
                             }[];
                             description: string;
-                            worldId: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            worldId: string;
                             parentFolderId?: null | string;
                             parentFolderPosition: number;
                         }[];
@@ -7290,11 +7063,11 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        worldId: string;
                         user: {
                             id: string;
                             email: string;
                         };
+                        worldId: string;
                         access: "ReadOnly" | "Editing";
                     }[];
                 };
@@ -7371,7 +7144,6 @@ export interface operations {
                 content: {
                     "application/json": {
                         description: string;
-                        worldId?: null | string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
@@ -7383,6 +7155,7 @@ export interface operations {
                         /** Format: bigint */
                         originTime: string;
                         dateFormat?: null | string;
+                        worldId?: null | string;
                     }[];
                 };
             };
@@ -8066,35 +7839,6 @@ export interface operations {
             };
         };
     };
-    getUserWorldAccessLevel: {
-        parameters: {
-            query: {
-                /** @description Any string value with at least one character */
-                worldId: string;
-            };
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        owner: boolean;
-                        write: boolean;
-                        read: boolean;
-                    };
-                };
-            };
-        };
-    };
     getFolders: {
         parameters: {
             query?: never;
@@ -8113,16 +7857,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        children: {
-                            id: string;
-                            parentFolderId: null | string;
-                            parentFolderPosition: number;
-                        }[];
-                        articles: {
-                            id: string;
-                            parentFolderId: null | string;
-                            parentFolderPosition: number;
-                        }[];
                         actors: {
                             id: string;
                             parentFolderId: null | string;
@@ -8133,18 +7867,28 @@ export interface operations {
                             parentFolderId: null | string;
                             parentFolderPosition: number;
                         }[];
+                        articles: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
                         tags: {
                             id: string;
                             parentFolderId: null | string;
                             parentFolderPosition: number;
                         }[];
+                        children: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
                         worldId: string;
-                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
                         icon: string;
                         color: string;
                         parentFolderId?: null | string;
@@ -8187,16 +7931,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        children: {
-                            id: string;
-                            parentFolderId: null | string;
-                            parentFolderPosition: number;
-                        }[];
-                        articles: {
-                            id: string;
-                            parentFolderId: null | string;
-                            parentFolderPosition: number;
-                        }[];
                         actors: {
                             id: string;
                             parentFolderId: null | string;
@@ -8207,18 +7941,28 @@ export interface operations {
                             parentFolderId: null | string;
                             parentFolderPosition: number;
                         }[];
+                        articles: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
                         tags: {
                             id: string;
                             parentFolderId: null | string;
                             parentFolderPosition: number;
                         }[];
+                        children: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
                         worldId: string;
-                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
                         icon: string;
                         color: string;
                         parentFolderId?: null | string;
@@ -8283,16 +8027,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        children: {
-                            id: string;
-                            parentFolderId: null | string;
-                            parentFolderPosition: number;
-                        }[];
-                        articles: {
-                            id: string;
-                            parentFolderId: null | string;
-                            parentFolderPosition: number;
-                        }[];
                         actors: {
                             id: string;
                             parentFolderId: null | string;
@@ -8303,20 +8037,286 @@ export interface operations {
                             parentFolderId: null | string;
                             parentFolderPosition: number;
                         }[];
+                        articles: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
                         tags: {
                             id: string;
                             parentFolderId: null | string;
                             parentFolderPosition: number;
                         }[];
+                        children: {
+                            id: string;
+                            parentFolderId: null | string;
+                            parentFolderPosition: number;
+                        }[];
                         worldId: string;
-                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
                         icon: string;
                         color: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+        };
+    };
+    getUserWorldAccessLevel: {
+        parameters: {
+            query: {
+                /** @description Any string value with at least one character */
+                worldId: string;
+            };
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        owner: boolean;
+                        write: boolean;
+                        read: boolean;
+                    };
+                };
+            };
+        };
+    };
+    createTag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name: string;
+                    description?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name: string;
+                    description?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        mentions: {
+                            id: string;
+                            sourceId: string;
+                            targetId: string;
+                            sourceType: "Tag" | "Actor" | "Event" | "Article";
+                            targetType: "Tag" | "Actor" | "Event" | "Article";
+                            sourceActorId?: null | string;
+                            sourceEventId?: null | string;
+                            sourceArticleId?: null | string;
+                            sourceTagId?: null | string;
+                            targetActorId?: null | string;
+                            targetEventId?: null | string;
+                            targetArticleId?: null | string;
+                            targetTagId?: null | string;
+                            pageId?: null | string;
+                        }[];
+                        mentionedIn: {
+                            id: string;
+                            sourceId: string;
+                            targetId: string;
+                            sourceType: "Tag" | "Actor" | "Event" | "Article";
+                            targetType: "Tag" | "Actor" | "Event" | "Article";
+                            sourceActorId?: null | string;
+                            sourceEventId?: null | string;
+                            sourceArticleId?: null | string;
+                            sourceTagId?: null | string;
+                            targetActorId?: null | string;
+                            targetEventId?: null | string;
+                            targetArticleId?: null | string;
+                            targetTagId?: null | string;
+                            pageId?: null | string;
+                        }[];
+                        description: string;
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getTagDetails: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                tagId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        mentionedBy: {
+                            type: "Tag" | "Actor" | "Event" | "Article";
+                            id: string;
+                            name: string;
+                        }[];
+                        mentions: {
+                            id: string;
+                            sourceId: string;
+                            targetId: string;
+                            sourceType: "Tag" | "Actor" | "Event" | "Article";
+                            targetType: "Tag" | "Actor" | "Event" | "Article";
+                            sourceActorId?: null | string;
+                            sourceEventId?: null | string;
+                            sourceArticleId?: null | string;
+                            sourceTagId?: null | string;
+                            targetActorId?: null | string;
+                            targetEventId?: null | string;
+                            targetArticleId?: null | string;
+                            targetTagId?: null | string;
+                            pageId?: null | string;
+                        }[];
+                        description: string;
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+        };
+    };
+    deleteTag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                tagId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        description: string;
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+        };
+    };
+    updateTag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                tagId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    description?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name?: string;
+                    description?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        mentions: {
+                            targetId: string;
+                            targetType: "Tag" | "Actor" | "Event" | "Article";
+                        }[];
+                        mentionedIn: {
+                            sourceId: string;
+                            sourceType: "Tag" | "Actor" | "Event" | "Article";
+                        }[];
+                        description: string;
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
                         parentFolderId?: null | string;
                         parentFolderPosition: number;
                     };

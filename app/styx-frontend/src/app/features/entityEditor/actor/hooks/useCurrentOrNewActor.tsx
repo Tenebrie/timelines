@@ -3,7 +3,6 @@ import { ActorDetails } from '@api/types/worldTypes'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 type Props = {
@@ -20,7 +19,7 @@ export const useCurrentOrNewActor = ({ editedActor }: Props) => {
 					worldId,
 					name: '',
 					title: '',
-					color: getRandomEntityColor(),
+					color: '#11ac26',
 					description: '',
 					descriptionRich: '',
 				}),

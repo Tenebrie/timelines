@@ -5,7 +5,7 @@ model WikiArticle {
 
   name        String
   icon        String  @default("default")
-  color       String  @default("#000000")
+  color       String  @default("#3a92e4")
   contentRich String  @default("")
 
   pages       ContentPage[]    @relation("ArticleContentPage")
@@ -28,7 +28,7 @@ model WikiFolder {
 
   name  String
   icon  String @default("default")
-  color String @default("#000000")
+  color String @default("#9f7eed")
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String

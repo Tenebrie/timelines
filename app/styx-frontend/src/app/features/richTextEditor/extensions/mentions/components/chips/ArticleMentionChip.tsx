@@ -17,7 +17,7 @@ export const ArticleMentionChip = ({ articleId, fallbackName }: Props) => {
 
 	const article = articles.find((article) => article.id === articleId)
 	const articleName = article ? `${article.name}` : `Deleted Article (${fallbackName ?? 'Unknown'})`
-	const articleColor = article ? '#525' : undefined
+	const articleColor = article ? '#3a92e4' : undefined
 
 	const onClick = () => {
 		if (!article) {

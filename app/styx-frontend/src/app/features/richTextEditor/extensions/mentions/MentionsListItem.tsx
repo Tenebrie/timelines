@@ -4,7 +4,6 @@ import ListItemText from '@mui/material/ListItemText'
 import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
 
-import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 import { HighlightedText } from '@/ui-lib/components/HighlightedText/HighlightedText'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
@@ -29,11 +28,10 @@ export function MentionsListItem({ mention, query, selected, onClick }: Props) {
 			return [mention.article.id, mention.article.color] as const
 		}
 		if (mention.type === 'Tag') {
-			return [mention.tag.id, '#255'] as const
+			return [mention.tag.id, '#9f2261'] as const
 		}
 		throw new Error('Unknown mention type')
 	})()
-	const color = useEntityColor({ id: entityId, color: entityColor })
 
 	return (
 		<MenuItem
@@ -60,7 +58,7 @@ export function MentionsListItem({ mention, query, selected, onClick }: Props) {
 			<Stack direction="row" alignItems="center" gap={1} width={1}>
 				<ListItemIcon sx={{ marginRight: 0 }}>
 					<Stack direction={'row'} gap={1} alignItems={'center'} sx={{ color: 'text.secondary' }}>
-						<Box sx={{ backgroundColor: color, width: 12, height: 12, borderRadius: 0.3 }} />
+						<Box sx={{ backgroundColor: entityColor, width: 12, height: 12, borderRadius: 0.3 }} />
 						<EntityIcon variant={mention.type} height={16} />
 					</Stack>
 				</ListItemIcon>

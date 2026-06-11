@@ -7,5 +7,7 @@ type Props = {
 }
 
 export function EventColorIconPicker({ draft }: Props) {
-	return <ColorIconPicker icon={draft.icon} color={draft.color} onClick={() => {}} />
+	return (
+		<ColorIconPicker icon={draft.icon} defaultIcon="mdi:event" color={draft.color} onClick={() => null} />
+	)
 }

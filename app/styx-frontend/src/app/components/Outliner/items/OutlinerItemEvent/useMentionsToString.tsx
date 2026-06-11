@@ -2,7 +2,6 @@ import { Actor, MentionDetails } from '@api/types/worldTypes'
 import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useEntityColorResolver } from '@/app/utils/colors/useEntityColor'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 export const useMentionsToString = () => {
@@ -10,8 +9,6 @@ export const useMentionsToString = () => {
 		getWorldState,
 		(a, b) => a.actors === b.actors && a.events === b.events,
 	)
-
-	const getEntityColor = useEntityColorResolver()
 
 	const mentionsToString = useCallback(
 		(data: MentionDetails[], owningActor: Actor | null, maxActorsDisplayed: number) => {
@@ -26,14 +23,14 @@ export const useMentionsToString = () => {
 			} else if (shownMentions.length <= maxActorsDisplayed) {
 				return shownMentions.map((actor, index) => (
 					<React.Fragment key={actor.id}>
-						<span style={{ color: getEntityColor(actor) }}>{actor.name}</span>
+						<span style={{ color: actor.color }}>{actor.name}</span>
 						{index < shownMentions.length - 1 ? ' & ' : ''}
 					</React.Fragment>
 				))
 			} else {
 				return shownMentions.slice(0, maxActorsDisplayed - 1).map((actor, index) => (
 					<React.Fragment key={actor.id}>
-						<span style={{ color: getEntityColor(actor) }}>{actor.name}</span>
+						<span style={{ color: actor.color }}>{actor.name}</span>
 						{index < maxActorsDisplayed - 2
 							? ' & '
 							: ` & (and ${shownMentions.length - maxActorsDisplayed + 1} more...)`}
@@ -41,7 +38,7 @@ export const useMentionsToString = () => {
 				))
 			}
 		},
-		[baseActors, baseEvents, getEntityColor],
+		[baseActors, baseEvents],
 	)
 
 	return mentionsToString

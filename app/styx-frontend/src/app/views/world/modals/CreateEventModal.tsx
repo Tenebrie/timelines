@@ -11,7 +11,6 @@ import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/Ri
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { store } from '@/app/store'
-import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
 import { useCreateEvent } from '@/app/views/world/api/useCreateEvent'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -48,7 +47,6 @@ export const CreateEventModal = () => {
 			name: descriptionPlain.trim(),
 			descriptionRich: trimmedDescription,
 			timestamp: String(selectedTime),
-			color: getRandomEntityColor(),
 			worldEventTrackId: targetTrack,
 		})
 

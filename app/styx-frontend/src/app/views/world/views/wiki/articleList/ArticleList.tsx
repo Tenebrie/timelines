@@ -6,7 +6,7 @@ import { memo, useCallback, useRef, useState } from 'react'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
-import { useEntityColor } from '@/app/utils/colors/useEntityColor'
+import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 
 import { useMoveArticle } from '../api/useMoveArticle'
 import { ArticleContextMenu } from '../components/ArticleContextMenu'
@@ -72,15 +72,9 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 		contextMenuStateRef.current.open(event)
 	}, [])
 	const theme = useCustomTheme()
-	const fullColor = useEntityColor({
-		id: parentId ?? '',
-		color: color ?? '',
-	})
-	const folderColor = useEntityColor({
-		id: parentId ?? '',
-		color: color ?? '',
-		opacity: 0.04,
-	})
+	const { setOpacity } = useColorUtils()
+	const fullColor = setOpacity(color, 0.3)
+	const folderColor = setOpacity(color, 0.04)
 
 	return (
 		<Stack

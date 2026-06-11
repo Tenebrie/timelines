@@ -1,6 +1,5 @@
 import Add from '@mui/icons-material/Add'
 import MoreVert from '@mui/icons-material/MoreVert'
-import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
@@ -10,21 +9,21 @@ import { useMatches } from '@tanstack/react-router'
 import { memo, useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { ActorAvatar } from '@/app/components/ActorAvatar/ActorAvatar'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { RootState } from '@/app/store'
-import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
-import { useEntityColor } from '@/app/utils/colors/useEntityColor'
+import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticleDragDrop'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
-import { CustomEntityIcon } from '@/ui-lib/icons/CustomEntityIcon'
-import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 import { ArticleList } from './ArticleList'
+import { ArticleListItemActorIcon } from './ArticleListItemActorIcon'
+import { ArticleListItemArticleIcon } from './ArticleListItemArticleIcon'
 import { ArticleListItemCollapse } from './ArticleListItemCollapse'
+import { ArticleListItemEventIcon } from './ArticleListItemEventIcon'
 import { ArticleListItemSecondary } from './ArticleListItemSecondary'
+import { ArticleListItemTagIcon } from './ArticleListItemTagIcon'
 import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
 
 type Props = {
@@ -75,9 +74,6 @@ function ArticleListItemInnerComponent({
 	isContextMenuOpen,
 }: Props & { expanded: boolean; toggleOpen: () => void; highlighted: boolean }) {
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
-	if (article.type === 'actor') {
-		console.log(article.entity.title, article.entity.updatedAt)
-	}
 
 	const { isReadOnly } = useIsReadOnly()
 
@@ -96,25 +92,30 @@ function ArticleListItemInnerComponent({
 	const { ref, ghostElement } = useArticleDragDrop({ article })
 	const isGrayscale = useIsFolderGrayedOut(article)
 	const theme = useCustomTheme()
-	const entityColor = useEntityColor({ id: article.id, color: article.color, opacity: 0.1 })
-	const entityColorHover = useEntityColor({ id: article.id, color: article.color, opacity: 0.15 })
-	const entityColorSolid = useEntityColor({ id: article.id, color: article.color })
+	const { setOpacity } = useColorUtils()
+	const entityColor = setOpacity(article.color, 0.1)
+	const entityColorHover = setOpacity(article.color, 0.15)
+
+	const color = useMemo(() => {
+		if (highlighted && theme.mode === 'light') {
+			return 'primary.contrastText'
+		}
+		return 'text.secondary'
+	}, [highlighted, theme.mode])
 
 	const endAdornment = useMemo(() => {
-		// if (article.type !== 'folder') {
-		// 	return undefined
-		// }
 		if (article.type !== 'folder') {
 			return (
 				<Box
 					component="span"
 					sx={{
-						color: 'text.secondary',
+						color,
 						fontSize: '0.7rem',
 						textTransform: 'uppercase',
 						whiteSpace: 'nowrap',
 						ml: 1,
 						fontFamily: 'Inter',
+						transition: 'color 0.1s ease-out',
 					}}
 				>
 					{article.type}
@@ -141,7 +142,7 @@ function ArticleListItemInnerComponent({
 				4
 			</Stack>
 		)
-	}, [article.type, theme])
+	}, [article.type, color, theme.custom.palette.neutralBackground.normal])
 
 	return (
 		<Box data-testid={`ArticleListItem/${article.name}/${depth}`} data-item-type={article.type}>
@@ -170,22 +171,22 @@ function ArticleListItemInnerComponent({
 					startIcon={
 						<>
 							{article.type === 'folder' && <ArticleListItemCollapse entity={article} />}
-							{article.type !== 'event' && article.type !== 'actor' && <EntityIcon variant={article.type} />}
-							{article.type === 'actor' && <ActorAvatar actor={article.entity} />}
+							{article.type === 'article' && (
+								<ArticleListItemArticleIcon article={article.entity} highlighted={highlighted} />
+							)}
+							{article.type === 'tag' && (
+								<ArticleListItemTagIcon tag={article.entity} highlighted={highlighted} />
+							)}
+							{article.type === 'actor' && (
+								<ArticleListItemActorIcon actor={article.entity} highlighted={highlighted} />
+							)}
 							{article.type === 'event' && (
-								<Avatar sx={{ backgroundColor: article.entity.color }}>
-									<CustomEntityIcon
-										id={article.id}
-										height={24}
-										icon={article.entity.icon}
-										color={getContrastTextColor(article.entity.color)}
-									/>
-								</Avatar>
+								<ArticleListItemEventIcon event={article.entity} highlighted={highlighted} />
 							)}
 						</>
 					}
 					variant={highlighted ? 'contained' : 'text'}
-					color="secondary"
+					color="primary"
 					sx={{
 						background: article.type === 'folder' ? entityColor : undefined,
 						'&:hover': {
@@ -195,8 +196,6 @@ function ArticleListItemInnerComponent({
 						justifyContent: 'start',
 						paddingLeft: 1.5,
 						paddingRight: '8px',
-						transition: expanded ? 'border-radius 0.1s !important' : 'border-radius 0.5s !important',
-						transitionDelay: !expanded ? '0.2s !important' : '0s',
 						// paddingRight: '40px',
 						filter: isGrayscale ? 'grayscale(70%)' : 'none',
 					}}
@@ -221,7 +220,7 @@ function ArticleListItemInnerComponent({
 									{article.name}
 								</Stack>
 							</Box>
-							<ArticleListItemSecondary entity={article} />
+							<ArticleListItemSecondary entity={article} highlighted={highlighted} />
 						</Stack>
 					</Stack>
 					{
@@ -252,7 +251,7 @@ function ArticleListItemInnerComponent({
 									minWidth: 0,
 									height: 'auto',
 									borderRadius: '8px',
-									color: theme.custom.palette.hintText,
+									color: color,
 									opacity: isContextMenuOpen ? 1 : 0,
 									backgroundColor: isContextMenuOpen ? 'action.hover' : 'transparent',
 									'&:hover': {

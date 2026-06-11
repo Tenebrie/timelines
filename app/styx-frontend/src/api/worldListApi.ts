@@ -26,7 +26,6 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
 		calendars: {
 			description: string
-			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
@@ -35,10 +34,11 @@ export type GetWorldsApiResponse = /** status 200  */ {
 			position: number
 			originTime: string
 			dateFormat?: null | string
+			worldId?: null | string
 		}[]
 		collaborators: {
-			worldId: string
 			userId: string
+			worldId: string
 			access: 'ReadOnly' | 'Editing'
 		}[]
 		description: string
@@ -54,7 +54,6 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	contributableWorlds: {
 		calendars: {
 			description: string
-			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
@@ -63,10 +62,11 @@ export type GetWorldsApiResponse = /** status 200  */ {
 			position: number
 			originTime: string
 			dateFormat?: null | string
+			worldId?: null | string
 		}[]
 		collaborators: {
-			worldId: string
 			userId: string
+			worldId: string
 			access: 'ReadOnly' | 'Editing'
 		}[]
 		description: string
@@ -82,7 +82,6 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	visibleWorlds: {
 		calendars: {
 			description: string
-			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
@@ -91,10 +90,11 @@ export type GetWorldsApiResponse = /** status 200  */ {
 			position: number
 			originTime: string
 			dateFormat?: null | string
+			worldId?: null | string
 		}[]
 		collaborators: {
-			worldId: string
 			userId: string
+			worldId: string
 			access: 'ReadOnly' | 'Editing'
 		}[]
 		description: string

@@ -170,7 +170,7 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 					entity: tag,
 					name: tag.name,
 					position: tag.parentFolderPosition,
-					color: undefined,
+					color: '#9f2261',
 				})),
 			)
 		}

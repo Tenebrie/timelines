@@ -608,7 +608,6 @@ export type DeleteCalendarUnitApiArg = {
 }
 export type ListWorldCalendarsApiResponse = /** status 200  */ {
 	description: string
-	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
@@ -617,6 +616,7 @@ export type ListWorldCalendarsApiResponse = /** status 200  */ {
 	position: number
 	originTime: string
 	dateFormat?: null | string
+	worldId?: null | string
 }[]
 export type ListWorldCalendarsApiArg = {
 	/** Any string value */

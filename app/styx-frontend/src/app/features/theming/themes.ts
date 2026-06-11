@@ -141,97 +141,6 @@ const baseThemeOptions = ({ reduceAnimations }: Props): ThemeOptions => ({
 	},
 })
 
-export const lightTheme = (props: Props): Theme => {
-	const options: ThemeOptions = {
-		...baseThemeOptions(props),
-		palette: {
-			mode: 'light',
-			background: {
-				paper: '#fff',
-				default: 'hsl(250, 25%, 93%)',
-			},
-			primary: {
-				main: 'hsl(258, 45%, 48%)',
-				contrastText: '#fff',
-			},
-			secondary: {
-				main: 'hsl(200, 50%, 42%)',
-				contrastText: '#fff',
-			},
-			error: {
-				main: '#9d0000',
-				contrastText: '#fff',
-			},
-		},
-	}
-
-	return createTheme(options)
-}
-
-export const darkTheme = (props: Props): Theme => {
-	const base = baseThemeOptions(props)
-	const options: ThemeOptions = {
-		...base,
-		components: {
-			...base.components,
-			MuiOutlinedInput: {
-				styleOverrides: {
-					...((base.components?.MuiOutlinedInput?.styleOverrides as Record<string, unknown>) ?? {}),
-					root: {
-						...((base.components?.MuiOutlinedInput?.styleOverrides as Record<string, unknown>)?.root ?? {}),
-						'&:hover:not(.Mui-focused):not(.Mui-disabled) .MuiOutlinedInput-notchedOutline': {
-							borderColor: 'hsla(31, 100%, 50%, 1.00)',
-						},
-					},
-				},
-			},
-			MuiButton: {
-				styleOverrides: {
-					...(base.components?.MuiButton?.styleOverrides ?? {}),
-					containedPrimary: {
-						backgroundColor: 'hsl(258, 50%, 38%)',
-						color: '#f0ecff',
-						'&:hover': {
-							backgroundColor: 'hsl(258, 52%, 46%)',
-						},
-					},
-					containedSecondary: {
-						backgroundColor: 'hsl(200, 55%, 25%)',
-						color: '#f0ecff',
-						'&:hover': {
-							backgroundColor: 'hsl(200, 55%, 30%)',
-						},
-					},
-				},
-			},
-		},
-		palette: {
-			mode: 'dark',
-			background: {
-				default: '#0f0e1a',
-				paper: 'hsl(252, 25%, 14%)',
-			},
-			primary: {
-				main: 'hsla(258, 75%, 71%, 1.00)',
-				contrastText: '#f0ecff',
-				// TODO: Explore orange primary
-				// main: 'hsla(31, 100%, 50%, 1.00)',
-				// contrastText: '#000000ff',
-			},
-			secondary: {
-				main: 'hsl(200, 55%, 55%)',
-				contrastText: '#0f0e1a',
-			},
-			error: {
-				main: '#f07070',
-				contrastText: '#0f0e1a',
-			},
-		},
-	}
-
-	return createTheme(options)
-}
-
 export const customLightTheme = {
 	palette: {
 		timelineAnchor: {
@@ -300,4 +209,98 @@ export const customDarkTheme: typeof customLightTheme = {
 			timelineMarkerTail: 'hsl(252, 20%, 28%)',
 		},
 	},
+}
+
+export const lightTheme = (props: Props): Theme => {
+	const base = baseThemeOptions(props)
+	const options: ThemeOptions = {
+		...base,
+		palette: {
+			mode: 'light',
+			background: {
+				paper: '#fff',
+				default: 'hsl(250, 25%, 93%)',
+			},
+			primary: {
+				main: 'hsl(258, 45%, 48%)',
+				contrastText: '#fff',
+			},
+			secondary: {
+				main: 'hsl(200, 50%, 42%)',
+				contrastText: '#fff',
+			},
+			error: {
+				main: '#9d0000',
+				contrastText: '#fff',
+			},
+		},
+	}
+
+	return createTheme(options)
+}
+
+export const darkTheme = (props: Props): Theme => {
+	const base = baseThemeOptions(props)
+	const options: ThemeOptions = {
+		...base,
+		components: {
+			...base.components,
+			MuiOutlinedInput: {
+				styleOverrides: {
+					...((base.components?.MuiOutlinedInput?.styleOverrides as Record<string, unknown>) ?? {}),
+					root: {
+						...((base.components?.MuiOutlinedInput?.styleOverrides as Record<string, unknown>)?.root ?? {}),
+						'&:hover:not(.Mui-focused):not(.Mui-disabled) .MuiOutlinedInput-notchedOutline': {
+							borderColor: 'hsla(31, 100%, 50%, 1.00)',
+						},
+					},
+				},
+			},
+			MuiButton: {
+				styleOverrides: {
+					...(base.components?.MuiButton?.styleOverrides ?? {}),
+					containedPrimary: ({ theme }) => ({
+						backgroundColor: theme.palette.primary.dark,
+						color: '#f0ecff',
+						'&:hover': {
+							backgroundColor: 'hsl(258, 52%, 46%)',
+						},
+					}),
+					containedSecondary: {
+						backgroundColor: 'hsl(200, 55%, 25%)',
+						color: '#f0ecff',
+						'&:hover': {
+							backgroundColor: 'hsl(200, 55%, 30%)',
+						},
+					},
+				},
+			},
+		},
+		palette: {
+			mode: 'dark',
+			background: {
+				default: '#0f0e1a',
+				paper: 'hsl(252, 25%, 14%)',
+			},
+			primary: {
+				main: '#9f7eed',
+				// Contained primary buttons are painted with this (see MuiButton styleOverrides)
+				dark: 'hsl(258, 50%, 38%)',
+				contrastText: '#f0ecff',
+				// TODO: Explore orange primary
+				// main: 'hsla(31, 100%, 50%, 1.00)',
+				// contrastText: '#000000ff',
+			},
+			secondary: {
+				main: 'hsl(200, 55%, 55%)',
+				contrastText: '#0f0e1a',
+			},
+			error: {
+				main: '#f07070',
+				contrastText: '#0f0e1a',
+			},
+		},
+	}
+
+	return createTheme(options)
 }

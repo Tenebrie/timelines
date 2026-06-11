@@ -1,5 +1,7 @@
+import { SxProps } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useFormatTimestamp } from '@/app/features/time/calendar/hooks/useFormatTimestamp'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 
@@ -7,17 +9,33 @@ import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 
 type Props = {
 	entity: BoxedWikiEntity
+	highlighted: boolean
 }
 
-export function ArticleListItemSecondary({ entity }: Props) {
+export function ArticleListItemSecondary({ entity, highlighted }: Props) {
 	const { calendar } = useWorldTime()
 	const formatTimestamp = useFormatTimestamp({
 		calendar,
 	})
 
+	const theme = useCustomTheme()
+	const color = (() => {
+		if (highlighted && theme.mode === 'light') {
+			return 'primary.contrastText'
+		}
+		return 'text.secondary'
+	})()
+
+	const styles: SxProps = {
+		color,
+		fontWeight: 400,
+		lineHeight: '1.1rem',
+		transition: 'color 0.1s ease-out',
+	}
+
 	if (entity.type === 'actor' && entity.entity.title) {
 		return (
-			<Typography variant="caption" sx={{ fontWeight: 500, lineHeight: '1.1rem' }}>
+			<Typography variant="caption" sx={styles}>
 				{entity.entity.title}
 			</Typography>
 		)
@@ -25,7 +43,7 @@ export function ArticleListItemSecondary({ entity }: Props) {
 
 	if (entity.type === 'tag') {
 		return (
-			<Typography variant="caption" sx={{ fontWeight: 500, lineHeight: '1.1rem' }}>
+			<Typography variant="caption" sx={styles}>
 				3 references
 			</Typography>
 		)
@@ -33,8 +51,16 @@ export function ArticleListItemSecondary({ entity }: Props) {
 
 	if (entity.type === 'event') {
 		return (
-			<Typography variant="caption" sx={{ fontWeight: 500, lineHeight: '1.1rem' }}>
+			<Typography variant="caption" sx={styles}>
 				{formatTimestamp({ timestamp: entity.entity.timestamp })}
+			</Typography>
+		)
+	}
+
+	if (entity.type === 'article') {
+		return (
+			<Typography variant="caption" sx={styles}>
+				832 words | 2 mentions
 			</Typography>
 		)
 	}

@@ -45,6 +45,7 @@ export const Wiki = () => {
 						sx={(theme) => ({
 							padding: 2,
 							paddingTop: '24px',
+							paddingBottom: 0,
 							height: isMobile ? '100%' : 'calc(100%)',
 							maxHeight: 'calc(100%)',
 							width: isMobile ? '100%' : undefined,
