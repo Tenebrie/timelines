@@ -18,13 +18,9 @@ import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 import { ArticleList } from './ArticleList'
-import { ArticleListItemActorIcon } from './ArticleListItemActorIcon'
-import { ArticleListItemArticleIcon } from './ArticleListItemArticleIcon'
-import { ArticleListItemCollapse } from './ArticleListItemCollapse'
-import { ArticleListItemEventIcon } from './ArticleListItemEventIcon'
 import { ArticleListItemSecondary } from './ArticleListItemSecondary'
-import { ArticleListItemTagIcon } from './ArticleListItemTagIcon'
 import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
+import { ArticleListItemIcon } from './icon/ArticleListItemIcon'
 
 type Props = {
 	article: BoxedWikiEntity
@@ -168,23 +164,7 @@ function ArticleListItemInnerComponent({
 				)}
 				<Button
 					role="button"
-					startIcon={
-						<>
-							{article.type === 'folder' && <ArticleListItemCollapse entity={article} />}
-							{article.type === 'article' && (
-								<ArticleListItemArticleIcon article={article.entity} highlighted={highlighted} />
-							)}
-							{article.type === 'tag' && (
-								<ArticleListItemTagIcon tag={article.entity} highlighted={highlighted} />
-							)}
-							{article.type === 'actor' && (
-								<ArticleListItemActorIcon actor={article.entity} highlighted={highlighted} />
-							)}
-							{article.type === 'event' && (
-								<ArticleListItemEventIcon event={article.entity} highlighted={highlighted} />
-							)}
-						</>
-					}
+					startIcon={<ArticleListItemIcon article={article} highlighted={highlighted} />}
 					variant={highlighted ? 'contained' : 'text'}
 					color="primary"
 					sx={{
@@ -196,7 +176,6 @@ function ArticleListItemInnerComponent({
 						justifyContent: 'start',
 						paddingLeft: 1.5,
 						paddingRight: '8px',
-						// paddingRight: '40px',
 						filter: isGrayscale ? 'grayscale(70%)' : 'none',
 					}}
 					fullWidth

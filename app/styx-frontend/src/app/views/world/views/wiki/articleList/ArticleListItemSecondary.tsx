@@ -57,12 +57,5 @@ export function ArticleListItemSecondary({ entity, highlighted }: Props) {
 		)
 	}
 
-	if (entity.type === 'article') {
-		return (
-			<Typography variant="caption" sx={styles}>
-				832 words | 2 mentions
-			</Typography>
-		)
-	}
 	return null
 }

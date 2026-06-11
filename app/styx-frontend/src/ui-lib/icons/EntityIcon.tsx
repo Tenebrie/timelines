@@ -14,7 +14,8 @@ type Props = {
 export function EntityIcon({ variant, height, color }: Props) {
 	const overrides: SxProps = {
 		color: color ?? 'unset',
-		height: height ?? 'unset',
+		width: height ?? undefined,
+		height: height ?? undefined,
 	}
 	switch (variant) {
 		case 'actor':

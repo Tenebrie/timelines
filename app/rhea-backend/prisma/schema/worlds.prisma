@@ -46,7 +46,7 @@ model WorldEvent {
   updatedAt DateTime @updatedAt
 
   icon            String  @default("default")
-  color           String  @default("#87560d")
+  color           String  @default("#efb45e")
   name            String
   timestamp       BigInt
   revokedAt       BigInt?

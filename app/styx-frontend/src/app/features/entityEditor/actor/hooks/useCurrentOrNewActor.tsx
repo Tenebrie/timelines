@@ -19,7 +19,7 @@ export const useCurrentOrNewActor = ({ editedActor }: Props) => {
 					worldId,
 					name: '',
 					title: '',
-					color: '#11ac26',
+					color: '#32a995',
 					description: '',
 					descriptionRich: '',
 				}),

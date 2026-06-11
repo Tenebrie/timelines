@@ -150,6 +150,7 @@ export const ActorService = {
 				},
 				select: {
 					id: true,
+					color: true,
 				},
 			})
 

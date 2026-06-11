@@ -134,6 +134,7 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
+		color: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
 	}[]

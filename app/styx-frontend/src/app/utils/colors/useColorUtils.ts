@@ -18,9 +18,8 @@ export function useColorUtils() {
 		if (getContrastRatio(colorLuminance, backgroundLuminance) >= MIN_CONTRAST_RATIO) {
 			return color
 		}
-		return backgroundLuminance < LUMINANCE_MIDPOINT
-			? setOklchLightness(color, 0.75)
-			: setOklchLightness(color, 0.45)
+		const targetLightness = backgroundLuminance < LUMINANCE_MIDPOINT ? 1 : 0
+		return nudgeLightnessForContrast(color, backgroundLuminance, targetLightness)
 	}, [])
 
 	const setOpacity = useCallback((color: string | undefined, opacity: number) => {
@@ -45,15 +44,34 @@ function getContrastRatio(luminanceA: number, luminanceB: number) {
 	return (lighter + 0.05) / (darker + 0.05)
 }
 
+// Moves the color's OKLCH lightness towards targetLightness (white or black) just far
+// enough to reach MIN_CONTRAST_RATIO against the background, keeping chroma and hue.
 // Returns a concrete hex color (not a CSS relative color string) so that consumers
 // like getContrastTextColor and setOpacity can still parse the result.
-function setOklchLightness(color: string, lightness: number) {
+function nudgeLightnessForContrast(color: string, backgroundLuminance: number, targetLightness: number) {
 	const rgb = parseColor(color)
 	if (!rgb) {
 		return color
 	}
-	const { c, h } = rgbToOklch(rgb)
-	return oklchToHex(lightness, c, h)
+	const { l, c, h } = rgbToOklch(rgb)
+	const passes = (lightness: number) => {
+		const luminance = linearRgbLuminance(oklchToLinearRgb(lightness, c, h))
+		return getContrastRatio(luminance, backgroundLuminance) >= MIN_CONTRAST_RATIO
+	}
+	if (!passes(targetLightness)) {
+		return linearRgbToHex(oklchToLinearRgb(targetLightness, c, h))
+	}
+	let failing = l
+	let passing = targetLightness
+	for (let i = 0; i < 16; i++) {
+		const mid = (failing + passing) / 2
+		if (passes(mid)) {
+			passing = mid
+		} else {
+			failing = mid
+		}
+	}
+	return linearRgbToHex(oklchToLinearRgb(passing, c, h))
 }
 
 // OKLab conversion math from https://bottosson.github.io/posts/oklab/
@@ -71,23 +89,34 @@ function rgbToOklch({ r, g, b }: { r: number; g: number; b: number }) {
 	}
 }
 
-function oklchToHex(l: number, c: number, h: number) {
+function oklchToLinearRgb(l: number, c: number, h: number) {
 	const labA = c * Math.cos(h)
 	const labB = c * Math.sin(h)
 	const lmsL = (l + 0.3963377774 * labA + 0.2158037573 * labB) ** 3
 	const lmsM = (l - 0.1055613458 * labA - 0.0638541728 * labB) ** 3
 	const lmsS = (l - 0.0894841775 * labA - 1.291485548 * labB) ** 3
-	const lr = 4.0767416621 * lmsL - 3.3077115913 * lmsM + 0.2309699292 * lmsS
-	const lg = -1.2684380046 * lmsL + 2.6097574011 * lmsM - 0.3413193965 * lmsS
-	const lb = -0.0041960863 * lmsL - 0.7034186147 * lmsM + 1.707614701 * lmsS
-	const toHexChannel = (v: number) => {
-		// Saturated colors can fall outside the sRGB gamut after the lightness change
-		const clamped = Math.min(1, Math.max(0, linearToSrgb(v)))
-		return Math.round(clamped * 255)
+	// Saturated colors can fall outside the sRGB gamut after the lightness change
+	return {
+		r: clamp01(4.0767416621 * lmsL - 3.3077115913 * lmsM + 0.2309699292 * lmsS),
+		g: clamp01(-1.2684380046 * lmsL + 2.6097574011 * lmsM - 0.3413193965 * lmsS),
+		b: clamp01(-0.0041960863 * lmsL - 0.7034186147 * lmsM + 1.707614701 * lmsS),
+	}
+}
+
+function linearRgbLuminance({ r, g, b }: { r: number; g: number; b: number }) {
+	return 0.2126 * r + 0.7152 * g + 0.0722 * b
+}
+
+function linearRgbToHex({ r, g, b }: { r: number; g: number; b: number }) {
+	const toHexChannel = (v: number) =>
+		Math.round(linearToSrgb(v) * 255)
 			.toString(16)
 			.padStart(2, '0')
-	}
-	return `#${toHexChannel(lr)}${toHexChannel(lg)}${toHexChannel(lb)}`
+	return `#${toHexChannel(r)}${toHexChannel(g)}${toHexChannel(b)}`
+}
+
+function clamp01(v: number) {
+	return Math.min(1, Math.max(0, v))
 }
 
 function srgbToLinear(v: number) {

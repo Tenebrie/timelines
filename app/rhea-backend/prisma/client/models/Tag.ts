@@ -40,6 +40,7 @@ export type TagMinAggregateOutputType = {
   updatedAt: Date | null
   name: string | null
   description: string | null
+  color: string | null
   worldId: string | null
   parentFolderId: string | null
   parentFolderPosition: number | null
@@ -51,6 +52,7 @@ export type TagMaxAggregateOutputType = {
   updatedAt: Date | null
   name: string | null
   description: string | null
+  color: string | null
   worldId: string | null
   parentFolderId: string | null
   parentFolderPosition: number | null
@@ -62,6 +64,7 @@ export type TagCountAggregateOutputType = {
   updatedAt: number
   name: number
   description: number
+  color: number
   worldId: number
   parentFolderId: number
   parentFolderPosition: number
@@ -83,6 +86,7 @@ export type TagMinAggregateInputType = {
   updatedAt?: true
   name?: true
   description?: true
+  color?: true
   worldId?: true
   parentFolderId?: true
   parentFolderPosition?: true
@@ -94,6 +98,7 @@ export type TagMaxAggregateInputType = {
   updatedAt?: true
   name?: true
   description?: true
+  color?: true
   worldId?: true
   parentFolderId?: true
   parentFolderPosition?: true
@@ -105,6 +110,7 @@ export type TagCountAggregateInputType = {
   updatedAt?: true
   name?: true
   description?: true
+  color?: true
   worldId?: true
   parentFolderId?: true
   parentFolderPosition?: true
@@ -203,6 +209,7 @@ export type TagGroupByOutputType = {
   updatedAt: Date
   name: string
   description: string
+  color: string
   worldId: string
   parentFolderId: string | null
   parentFolderPosition: number
@@ -237,6 +244,7 @@ export type TagWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Tag"> | Date | string
   name?: Prisma.StringFilter<"Tag"> | string
   description?: Prisma.StringFilter<"Tag"> | string
+  color?: Prisma.StringFilter<"Tag"> | string
   worldId?: Prisma.StringFilter<"Tag"> | string
   parentFolderId?: Prisma.StringNullableFilter<"Tag"> | string | null
   parentFolderPosition?: Prisma.IntFilter<"Tag"> | number
@@ -253,6 +261,7 @@ export type TagOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   parentFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentFolderPosition?: Prisma.SortOrder
@@ -272,6 +281,7 @@ export type TagWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Tag"> | Date | string
   name?: Prisma.StringFilter<"Tag"> | string
   description?: Prisma.StringFilter<"Tag"> | string
+  color?: Prisma.StringFilter<"Tag"> | string
   worldId?: Prisma.StringFilter<"Tag"> | string
   parentFolderId?: Prisma.StringNullableFilter<"Tag"> | string | null
   parentFolderPosition?: Prisma.IntFilter<"Tag"> | number
@@ -288,6 +298,7 @@ export type TagOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   parentFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentFolderPosition?: Prisma.SortOrder
@@ -307,6 +318,7 @@ export type TagScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Tag"> | Date | string
   name?: Prisma.StringWithAggregatesFilter<"Tag"> | string
   description?: Prisma.StringWithAggregatesFilter<"Tag"> | string
+  color?: Prisma.StringWithAggregatesFilter<"Tag"> | string
   worldId?: Prisma.StringWithAggregatesFilter<"Tag"> | string
   parentFolderId?: Prisma.StringNullableWithAggregatesFilter<"Tag"> | string | null
   parentFolderPosition?: Prisma.IntWithAggregatesFilter<"Tag"> | number
@@ -318,6 +330,7 @@ export type TagCreateInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   parentFolderPosition?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceTagInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetTagInput
@@ -332,6 +345,7 @@ export type TagUncheckedCreateInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
@@ -346,6 +360,7 @@ export type TagUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceTagNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetTagNestedInput
@@ -360,6 +375,7 @@ export type TagUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
@@ -374,6 +390,7 @@ export type TagCreateManyInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
@@ -385,6 +402,7 @@ export type TagUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -394,6 +412,7 @@ export type TagUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
@@ -410,6 +429,7 @@ export type TagCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   parentFolderId?: Prisma.SortOrder
   parentFolderPosition?: Prisma.SortOrder
@@ -425,6 +445,7 @@ export type TagMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   parentFolderId?: Prisma.SortOrder
   parentFolderPosition?: Prisma.SortOrder
@@ -436,6 +457,7 @@ export type TagMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   parentFolderId?: Prisma.SortOrder
   parentFolderPosition?: Prisma.SortOrder
@@ -593,6 +615,7 @@ export type TagCreateWithoutAssetRefsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   parentFolderPosition?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceTagInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetTagInput
@@ -606,6 +629,7 @@ export type TagUncheckedCreateWithoutAssetRefsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
@@ -635,6 +659,7 @@ export type TagUpdateWithoutAssetRefsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceTagNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetTagNestedInput
@@ -648,6 +673,7 @@ export type TagUncheckedUpdateWithoutAssetRefsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
@@ -661,6 +687,7 @@ export type TagCreateWithoutMentionsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   parentFolderPosition?: number
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetTagInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderTagInput
@@ -674,6 +701,7 @@ export type TagUncheckedCreateWithoutMentionsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
@@ -692,6 +720,7 @@ export type TagCreateWithoutMentionedInInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   parentFolderPosition?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceTagInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderTagInput
@@ -705,6 +734,7 @@ export type TagUncheckedCreateWithoutMentionedInInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
@@ -734,6 +764,7 @@ export type TagUpdateWithoutMentionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetTagNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderTagNestedInput
@@ -747,6 +778,7 @@ export type TagUncheckedUpdateWithoutMentionsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
@@ -771,6 +803,7 @@ export type TagUpdateWithoutMentionedInInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceTagNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderTagNestedInput
@@ -784,6 +817,7 @@ export type TagUncheckedUpdateWithoutMentionedInInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
@@ -797,6 +831,7 @@ export type TagCreateWithoutParentFolderInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   parentFolderPosition?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceTagInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetTagInput
@@ -810,6 +845,7 @@ export type TagUncheckedCreateWithoutParentFolderInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   worldId: string
   parentFolderPosition?: number
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceTagInput
@@ -852,6 +888,7 @@ export type TagScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Tag"> | Date | string
   name?: Prisma.StringFilter<"Tag"> | string
   description?: Prisma.StringFilter<"Tag"> | string
+  color?: Prisma.StringFilter<"Tag"> | string
   worldId?: Prisma.StringFilter<"Tag"> | string
   parentFolderId?: Prisma.StringNullableFilter<"Tag"> | string | null
   parentFolderPosition?: Prisma.IntFilter<"Tag"> | number
@@ -863,6 +900,7 @@ export type TagCreateWithoutWorldInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   parentFolderPosition?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceTagInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetTagInput
@@ -876,6 +914,7 @@ export type TagUncheckedCreateWithoutWorldInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   parentFolderId?: string | null
   parentFolderPosition?: number
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceTagInput
@@ -915,6 +954,7 @@ export type TagCreateManyParentFolderInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   worldId: string
   parentFolderPosition?: number
 }
@@ -925,6 +965,7 @@ export type TagUpdateWithoutParentFolderInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceTagNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetTagNestedInput
@@ -938,6 +979,7 @@ export type TagUncheckedUpdateWithoutParentFolderInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceTagNestedInput
@@ -951,6 +993,7 @@ export type TagUncheckedUpdateManyWithoutParentFolderInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -961,6 +1004,7 @@ export type TagCreateManyWorldInput = {
   updatedAt?: Date | string
   name: string
   description?: string
+  color?: string
   parentFolderId?: string | null
   parentFolderPosition?: number
 }
@@ -971,6 +1015,7 @@ export type TagUpdateWithoutWorldInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceTagNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetTagNestedInput
@@ -984,6 +1029,7 @@ export type TagUncheckedUpdateWithoutWorldInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceTagNestedInput
@@ -997,6 +1043,7 @@ export type TagUncheckedUpdateManyWithoutWorldInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -1056,6 +1103,7 @@ export type TagSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   updatedAt?: boolean
   name?: boolean
   description?: boolean
+  color?: boolean
   worldId?: boolean
   parentFolderId?: boolean
   parentFolderPosition?: boolean
@@ -1073,6 +1121,7 @@ export type TagSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   updatedAt?: boolean
   name?: boolean
   description?: boolean
+  color?: boolean
   worldId?: boolean
   parentFolderId?: boolean
   parentFolderPosition?: boolean
@@ -1086,6 +1135,7 @@ export type TagSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   updatedAt?: boolean
   name?: boolean
   description?: boolean
+  color?: boolean
   worldId?: boolean
   parentFolderId?: boolean
   parentFolderPosition?: boolean
@@ -1099,12 +1149,13 @@ export type TagSelectScalar = {
   updatedAt?: boolean
   name?: boolean
   description?: boolean
+  color?: boolean
   worldId?: boolean
   parentFolderId?: boolean
   parentFolderPosition?: boolean
 }
 
-export type TagOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "description" | "worldId" | "parentFolderId" | "parentFolderPosition", ExtArgs["result"]["tag"]>
+export type TagOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "description" | "color" | "worldId" | "parentFolderId" | "parentFolderPosition", ExtArgs["result"]["tag"]>
 export type TagInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mentions?: boolean | Prisma.Tag$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.Tag$mentionedInArgs<ExtArgs>
@@ -1137,6 +1188,7 @@ export type $TagPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     updatedAt: Date
     name: string
     description: string
+    color: string
     worldId: string
     parentFolderId: string | null
     parentFolderPosition: number
@@ -1573,6 +1625,7 @@ export interface TagFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"Tag", 'DateTime'>
   readonly name: Prisma.FieldRef<"Tag", 'String'>
   readonly description: Prisma.FieldRef<"Tag", 'String'>
+  readonly color: Prisma.FieldRef<"Tag", 'String'>
   readonly worldId: Prisma.FieldRef<"Tag", 'String'>
   readonly parentFolderId: Prisma.FieldRef<"Tag", 'String'>
   readonly parentFolderPosition: Prisma.FieldRef<"Tag", 'Int'>

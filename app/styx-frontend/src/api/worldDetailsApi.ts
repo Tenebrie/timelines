@@ -76,8 +76,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				parentUnitId: string
 				childUnitId: string
 			}[]
-			id: string
 			name: string
+			id: string
 			position: number
 			displayName: string
 			displayNameShort: string
@@ -98,15 +98,15 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				rightIndex: number
 				seasonId: string
 			}[]
-			id: string
 			name: string
+			id: string
 			position: number
 			formatShorthand?: null | string
 		}[]
 		presentations: {
 			units: {
-				id: string
 				name: string
+				id: string
 				position: number
 				calendarId: string
 				formatString: string
@@ -114,16 +114,16 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				labeledIndices: number[]
 				unitId: string
 			}[]
-			id: string
 			name: string
+			id: string
 			compression: number
 			scaleFactor: number
 			baselineUnitId?: null | string
 		}[]
-		description: string
+		name: string
 		id: string
 		updatedAt: string
-		name: string
+		description: string
 		position: number
 		originTime: string
 		dateFormat?: null | string
@@ -134,18 +134,18 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetType: 'Actor' | 'Tag' | 'Event' | 'Article'
 		}[]
 		pages: {
-			id: string
 			name: string
+			id: string
 		}[]
 		mentionedIn: {
 			sourceId: string
 			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article'
 		}[]
-		description: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		description: string
 		worldId: string
 		descriptionRich: string
 		title: string
@@ -160,28 +160,28 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetType: 'Actor' | 'Tag' | 'Event' | 'Article'
 		}[]
 		pages: {
-			id: string
 			name: string
+			id: string
 		}[]
 		mentionedIn: {
 			sourceId: string
 			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article'
 		}[]
 		deltaStates: {
-			description?: null | string
+			name?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
-			name?: null | string
+			description?: null | string
 			descriptionRich?: null | string
 			timestamp: string
 			worldEventId: string
 		}[]
-		description: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		description: string
 		worldId: string
 		descriptionRich: string
 		icon: string
@@ -201,20 +201,21 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			sourceId: string
 			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article'
 		}[]
-		description: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		description: string
 		worldId: string
+		color: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
 	}[]
-	description: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
+	description: string
 	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
@@ -238,11 +239,11 @@ export type GetCommonWorldEventIconsApiArg = {
 	worldId: string
 }
 export type GetWorldBriefApiResponse = /** status 200  */ {
-	description: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
+	description: string
 	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string

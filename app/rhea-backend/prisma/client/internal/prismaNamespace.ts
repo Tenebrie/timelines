@@ -3063,6 +3063,7 @@ export const TagScalarFieldEnum = {
   updatedAt: 'updatedAt',
   name: 'name',
   description: 'description',
+  color: 'color',
   worldId: 'worldId',
   parentFolderId: 'parentFolderId',
   parentFolderPosition: 'parentFolderPosition'

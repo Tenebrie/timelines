@@ -17,5 +17,5 @@ export function ArticleListItemTagIcon({ tag, highlighted }: Props) {
 		theme.mode === 'dark' ? theme.material.palette.primary.dark : theme.material.palette.primary.main
 	const background = highlighted ? highlightBackground : theme.material.palette.background.paper
 
-	return <EntityIcon variant="tag" height={24} color={adaptColor('#9f2261', background)} />
+	return <EntityIcon variant="tag" height={24} color={adaptColor(tag.color, background)} />
 }

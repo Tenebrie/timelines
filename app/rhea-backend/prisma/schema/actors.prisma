@@ -6,7 +6,7 @@ model Actor {
   name            String
   title           String  @default("")
   icon            String  @default("default")
-  color           String  @default("#11ac26")
+  color           String  @default("#32a995")
   description     String  @default("")
   descriptionRich String  @default("")
   descriptionYjs  String?

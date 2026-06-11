@@ -25,7 +25,6 @@ export const useQuickCreateEvent = () => {
 					worldId,
 					body: {
 						name: query,
-						color: '#efb45e',
 						descriptionRich: query,
 						timestamp: '0',
 					},

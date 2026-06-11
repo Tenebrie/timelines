@@ -20,7 +20,6 @@ export const useQuickCreateActor = () => {
 					worldId,
 					body: {
 						name: query.length > 0 ? query : 'Unnamed Actor',
-						color: '#11ac26',
 					},
 				}),
 			)
