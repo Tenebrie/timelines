@@ -13,10 +13,12 @@ import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
 import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 
+import { getWorldState } from '../../../WorldSliceSelectors'
 import { ArticleListHeaderCreateButton } from './ArticleListHeaderCreateButton'
 
 export const ArticleListHeader = () => {
 	const { data: articles } = useListArticles()
+	const { name } = useSelector(getWorldState, (a, b) => a.name === b.name)
 	const { isBulkSelecting, bulkActionArticles } = useSelector(getWikiState)
 	const { open: openArticleWizard } = useModal('articleWizard')
 	const { open: openDeleteArticleModal } = useModal('deleteArticleModal')
@@ -62,7 +64,7 @@ export const ArticleListHeader = () => {
 			)}
 			<Stack direction="row" justifyContent="space-between" width="100%">
 				<Typography variant="h6" marginLeft={1}>
-					{!isBulkSelecting && <>World Wiki</>}
+					{!isBulkSelecting && <>{name}</>}
 				</Typography>
 				{!isBulkSelecting && !isReadOnly && <ArticleListHeaderCreateButton />}
 				{isBulkSelecting && (

@@ -56,6 +56,26 @@ export const WorldSidebar = () => {
 				>
 					<Stack sx={{ gap: '8px', flexDirection: 'column' }}>
 						<NavigationLink
+							to="/world/$worldId/wiki"
+							search={true}
+							from="/world/$worldId"
+							data-testid="NavigateToWiki"
+						>
+							<StyledSmallButton variant={getButtonStyle(matchesWiki)}>
+								<AutoStories />
+							</StyledSmallButton>
+						</NavigationLink>
+						<NavigationLink
+							to="/world/$worldId/mindmap"
+							search={true}
+							from="/world/$worldId"
+							data-testid="NavigateToMindmap"
+						>
+							<StyledSmallButton variant={getButtonStyle(matchesMindmap)}>
+								<Person />
+							</StyledSmallButton>
+						</NavigationLink>
+						<NavigationLink
 							to="/world/$worldId/timeline"
 							search={true}
 							from="/world/$worldId"
@@ -68,26 +88,6 @@ export const WorldSidebar = () => {
 						{/* <StyledSmallButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}> 
 							<ViewList />
 						</StyledSmallButton> */}
-						<NavigationLink
-							to="/world/$worldId/mindmap"
-							search={true}
-							from="/world/$worldId"
-							data-testid="NavigateToMindmap"
-						>
-							<StyledSmallButton variant={getButtonStyle(matchesMindmap)}>
-								<Person />
-							</StyledSmallButton>
-						</NavigationLink>
-						<NavigationLink
-							to="/world/$worldId/wiki"
-							search={true}
-							from="/world/$worldId"
-							data-testid="NavigateToWiki"
-						>
-							<StyledSmallButton variant={getButtonStyle(matchesWiki)}>
-								<AutoStories />
-							</StyledSmallButton>
-						</NavigationLink>
 						{!isReadOnly && (
 							<>
 								<Divider />

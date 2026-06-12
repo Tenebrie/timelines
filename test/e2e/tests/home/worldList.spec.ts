@@ -24,8 +24,8 @@ test.describe('World List View', () => {
 
 		await page.getByLabel('Load world "My First World"').click()
 
-		await page.waitForURL(/\/world\/[a-f0-9-]+\/timeline/)
-		await expect(page.getByText('January 01, 2026', { exact: true })).toBeVisible()
+		await page.waitForURL(/\/world\/[a-f0-9-]+\/wiki/)
+		await expect(page.getByText('My First World', { exact: true })).toBeVisible()
 
 		// Navigate to settings
 		await page.getByLabel('Home navigation menu').click()
@@ -55,7 +55,8 @@ test.describe('World List View', () => {
 			await page.getByText('Create', { exact: true }).click()
 
 			await page.getByLabel(`Load world "${worldName}"`).click()
-			await page.waitForURL(/\/world\/[a-f0-9-]+\/timeline/)
+			await page.waitForURL(/\/world\/[a-f0-9-]+\/wiki/)
+			await page.getByTestId('NavigateToTimeline').click()
 		}
 
 		await createAndOpenWorld('Earth World', 'Gregorian Calendar (Earth)')
@@ -119,7 +120,8 @@ test.describe('World List View', () => {
 
 		// Navigate to the new world
 		await page.getByLabel(`Load world "Custom Calendar World"`).click()
-		await page.waitForURL(/\/world\/[a-f0-9-]+\/timeline/)
+		await page.waitForURL(/\/world\/[a-f0-9-]+\/wiki/)
+		await page.getByTestId('NavigateToTimeline').click()
 
 		// Check anchor line is rendered
 		await expect(page.getByText('March 26, 3379', { exact: true })).toBeVisible()

@@ -41,7 +41,7 @@ export function WorldListItem({ world, showActions }: Props) {
 
 	return (
 		<NavigationLink
-			to="/world/$worldId/timeline"
+			to="/world/$worldId/wiki"
 			params={{ worldId: world.id }}
 			search={(prev) => ({
 				...prev,
