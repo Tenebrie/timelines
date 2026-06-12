@@ -1,5 +1,6 @@
 import { MentionedEntity } from '@prisma/client'
 
+import { TagUncheckedUpdateInput } from '../../prisma/client/models.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
@@ -164,10 +165,7 @@ export const TagService = {
 	}: {
 		worldId: string
 		tagId: string
-		params: {
-			name?: string
-			description?: string
-		}
+		params: Pick<TagUncheckedUpdateInput, 'name' | 'description' | 'color'>
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
 			const tag = await getPrismaClient(prisma).tag.update({
@@ -175,6 +173,7 @@ export const TagService = {
 				data: {
 					name: params.name,
 					description: params.description,
+					color: params.color,
 				},
 				include: {
 					mentions: {

@@ -87,6 +87,7 @@ const makeTag = (worldId: string, id = 'tag-1', mentions: ReturnType<typeof make
 		updatedAt: now,
 		name: 'Tag',
 		description: '',
+		color: '',
 		worldId,
 		mentions,
 		parentFolderId: null,

@@ -15,6 +15,7 @@ import {
 	usePathParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { tagEntityTag, worldDetailsTag } from './utils/tags.js'
 import { NameStringValidator } from './validators/NameStringValidator.js'
@@ -71,6 +72,7 @@ router.patch('/api/world/:worldId/tag/:tagId', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		name: OptionalParam(NameStringValidator),
 		description: OptionalParam(OptionalNameStringValidator),
+		color: z.string().optional(),
 	})
 
 	const { tag } = await TagService.updateTag({

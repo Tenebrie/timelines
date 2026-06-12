@@ -40,10 +40,11 @@ export { injectedRtkApi as worldTagApi }
 export type CreateTagApiResponse = /** status 200  */ {
 	mentions: {
 		id: string
+		pageId?: null | string
 		sourceId: string
 		targetId: string
-		sourceType: 'Tag' | 'Actor' | 'Event' | 'Article'
-		targetType: 'Tag' | 'Actor' | 'Event' | 'Article'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
@@ -52,14 +53,14 @@ export type CreateTagApiResponse = /** status 200  */ {
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
-		pageId?: null | string
 	}[]
 	mentionedIn: {
 		id: string
+		pageId?: null | string
 		sourceId: string
 		targetId: string
-		sourceType: 'Tag' | 'Actor' | 'Event' | 'Article'
-		targetType: 'Tag' | 'Actor' | 'Event' | 'Article'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
@@ -68,7 +69,6 @@ export type CreateTagApiResponse = /** status 200  */ {
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
-		pageId?: null | string
 	}[]
 	description: string
 	worldId: string
@@ -91,11 +91,11 @@ export type CreateTagApiArg = {
 export type UpdateTagApiResponse = /** status 200  */ {
 	mentions: {
 		targetId: string
-		targetType: 'Tag' | 'Actor' | 'Event' | 'Article'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	mentionedIn: {
 		sourceId: string
-		sourceType: 'Tag' | 'Actor' | 'Event' | 'Article'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	description: string
 	worldId: string
@@ -115,6 +115,7 @@ export type UpdateTagApiArg = {
 	body: {
 		name?: string
 		description?: string
+		color?: string
 	}
 }
 export type DeleteTagApiResponse = /** status 200  */ {
@@ -136,16 +137,17 @@ export type DeleteTagApiArg = {
 }
 export type GetTagDetailsApiResponse = /** status 200  */ {
 	mentionedBy: {
-		type: 'Tag' | 'Actor' | 'Event' | 'Article'
+		type: 'Actor' | 'Event' | 'Article' | 'Tag'
 		id: string
 		name: string
 	}[]
 	mentions: {
 		id: string
+		pageId?: null | string
 		sourceId: string
 		targetId: string
-		sourceType: 'Tag' | 'Actor' | 'Event' | 'Article'
-		targetType: 'Tag' | 'Actor' | 'Event' | 'Article'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
@@ -154,7 +156,6 @@ export type GetTagDetailsApiResponse = /** status 200  */ {
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
-		pageId?: null | string
 	}[]
 	description: string
 	worldId: string

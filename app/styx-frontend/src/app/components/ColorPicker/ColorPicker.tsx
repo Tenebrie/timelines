@@ -25,7 +25,7 @@ type Props = {
 
 export const ColorPicker = memo(ColorPickerComponent)
 
-export function ColorPickerComponent({
+function ColorPickerComponent({
 	initialValue = 'hsl(180, 100%, 50%)',
 	onChangeHex,
 	onChangeHsl,
@@ -179,6 +179,7 @@ export function ColorPickerComponent({
 					setSaturation(Math.round(parsedValue.s * 1000))
 					setLightness(Math.round(parsedValue.l * 1000))
 				}}
+				allowSave
 			/>
 		</Stack>
 	)

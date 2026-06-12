@@ -1,4 +1,4 @@
-import { WikiArticle, WikiPositionUpdate } from '@api/types/worldWikiTypes'
+import { WikiArticle, WikiFolder, WikiPositionUpdate } from '@api/types/worldWikiTypes'
 import { worldDetailsApi } from '@api/worldDetailsApi'
 import { worldWikiApi } from '@api/worldWikiApi'
 import { worldWikiFolderApi } from '@api/worldWikiFolderApi'
@@ -14,7 +14,7 @@ export function useWikiApiCache() {
 
 	const upsertCachedArticle = useCallback(
 		(article: WikiArticle) => {
-			dispatch(
+			return dispatch(
 				worldWikiApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
 					const index = draft.findIndex((a) => a.id === article.id)
 					if (index >= 0) {
@@ -37,6 +37,23 @@ export function useWikiApiCache() {
 						draft[index] = {
 							...draft[index],
 							...article,
+						}
+					}
+				}),
+			)
+		},
+		[dispatch, worldId],
+	)
+
+	const updateCachedFolder = useCallback(
+		(folder: Partial<WikiFolder>) => {
+			return dispatch(
+				worldWikiFolderApi.util.updateQueryData('getFolders', { worldId }, (draft) => {
+					const index = draft.findIndex((a) => a.id === folder.id)
+					if (index >= 0) {
+						draft[index] = {
+							...draft[index],
+							...folder,
 						}
 					}
 				}),
@@ -125,5 +142,5 @@ export function useWikiApiCache() {
 		[dispatch, worldId],
 	)
 
-	return { upsertCachedArticle, updateCachedArticle, applyPositionUpdates }
+	return { upsertCachedArticle, updateCachedFolder, updateCachedArticle, applyPositionUpdates }
 }

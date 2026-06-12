@@ -204,10 +204,42 @@ function ArticleListItemInnerComponent({
 							{endAdornment}
 						</Stack>
 					}
-					{!isReadOnly && (
-						<>
+				</Button>
+				{!isReadOnly && (
+					<>
+						<Button
+							aria-label="Article context menu"
+							className="context-menu-button"
+							onClick={(event) => {
+								onContextMenu(article, event)
+								event.stopPropagation()
+							}}
+							color="inherit"
+							onMouseDown={(event) => event.stopPropagation()}
+							sx={{
+								position: 'absolute',
+								right: 0,
+								top: 0,
+								bottom: 0,
+								width: 36,
+								minWidth: 0,
+								height: 'auto',
+								borderRadius: '8px',
+								color: color,
+								opacity: isContextMenuOpen ? 1 : 0,
+								backgroundColor: isContextMenuOpen ? 'action.hover' : 'transparent',
+								'&:hover': {
+									backgroundColor: 'action.hover',
+								},
+								transition: 'color 0.2s, background-color 0.2s, opacity 0.15s !important',
+								padding: 0,
+							}}
+						>
+							<MoreVert />
+						</Button>
+						{article.type === 'folder' && (
 							<Button
-								aria-label="Article context menu"
+								aria-label="Folder create menu"
 								className="context-menu-button"
 								onClick={(event) => {
 									onContextMenu(article, event)
@@ -217,14 +249,14 @@ function ArticleListItemInnerComponent({
 								onMouseDown={(event) => event.stopPropagation()}
 								sx={{
 									position: 'absolute',
-									right: 0,
+									right: 36,
 									top: 0,
 									bottom: 0,
 									width: 36,
 									minWidth: 0,
 									height: 'auto',
 									borderRadius: '8px',
-									color: color,
+									color: theme.custom.palette.hintText,
 									opacity: isContextMenuOpen ? 1 : 0,
 									backgroundColor: isContextMenuOpen ? 'action.hover' : 'transparent',
 									'&:hover': {
@@ -234,43 +266,11 @@ function ArticleListItemInnerComponent({
 									padding: 0,
 								}}
 							>
-								<MoreVert />
+								<Add />
 							</Button>
-							{article.type === 'folder' && (
-								<Button
-									aria-label="Folder create menu"
-									className="context-menu-button"
-									onClick={(event) => {
-										onContextMenu(article, event)
-										event.stopPropagation()
-									}}
-									color="inherit"
-									onMouseDown={(event) => event.stopPropagation()}
-									sx={{
-										position: 'absolute',
-										right: 36,
-										top: 0,
-										bottom: 0,
-										width: 36,
-										minWidth: 0,
-										height: 'auto',
-										borderRadius: '8px',
-										color: theme.custom.palette.hintText,
-										opacity: isContextMenuOpen ? 1 : 0,
-										backgroundColor: isContextMenuOpen ? 'action.hover' : 'transparent',
-										'&:hover': {
-											backgroundColor: 'action.hover',
-										},
-										transition: 'color 0.2s, background-color 0.2s, opacity 0.15s !important',
-										padding: 0,
-									}}
-								>
-									<Add />
-								</Button>
-							)}
-						</>
-					)}
-				</Button>
+						)}
+					</>
+				)}
 				{ghostElement}
 			</Stack>
 			{article.type === 'folder' && (

@@ -9,8 +9,8 @@ import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScro
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 
 import { useMoveArticle } from '../api/useMoveArticle'
-import { ArticleContextMenu } from '../components/ArticleContextMenu'
 import { ArticleDropHandle } from '../components/ArticleDropHandle'
+import { WikiContextMenu } from '../components/WikiContextMenu'
 import { useArticleBulkActions } from '../hooks/useArticleBulkActions'
 import { BoxedWikiEntity, useBoxedWikiContent } from '../hooks/useBoxedWikiContent'
 import { ArticleListItem } from './ArticleListItem'
@@ -31,9 +31,8 @@ type Props = {
  * - Deletion modal invalid text
  * - Mentions to navigate within wiki view (if in wiki view)
  * - Actor avatars, for real this time
- * - Article color picker
- * - Folder color picker
  * - Scroll wiki list during drag (hover close to edges)
+ * - Article deletion not updating the list
  */
 export const ArticleList = memo(ArticleListComponent)
 
@@ -117,9 +116,7 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 					{!parentId && visibleEntities.length === 0 && <span>Nothing has been created yet!</span>}
 				</Typography>
 			)}
-			{contextMenuArticle && (
-				<ArticleContextMenu article={contextMenuArticle} popupState={contextMenuState} />
-			)}
+			{contextMenuArticle && <WikiContextMenu article={contextMenuArticle} popupState={contextMenuState} />}
 		</Stack>
 	)
 }

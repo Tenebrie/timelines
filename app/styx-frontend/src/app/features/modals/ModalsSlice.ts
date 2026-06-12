@@ -72,6 +72,9 @@ const modals = {
 	timeTravelModal: {
 		isOpen: false as boolean,
 	},
+	createColorModal: {
+		isOpen: false as boolean,
+	},
 
 	/* WorldList */
 	shareWorldModal: {
