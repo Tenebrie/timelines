@@ -4,9 +4,10 @@ model WikiArticle {
   updatedAt DateTime @default(now()) @updatedAt
 
   name        String
-  icon        String  @default("default")
-  color       String  @default("#3a92e4")
-  contentRich String  @default("")
+  icon        String @default("default")
+  color       String @default("#3a92e4")
+  content     String @default("")
+  contentRich String @default("")
 
   pages       ContentPage[]    @relation("ArticleContentPage")
   mentions    Mention[]        @relation("ArticleMentionSource")

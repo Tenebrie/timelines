@@ -104,7 +104,7 @@ export const WikiArticleService = {
 	},
 
 	createWikiArticle: async (
-		params: Pick<WikiArticle, 'worldId' | 'name' | 'contentRich'> & {
+		params: Pick<WikiArticle, 'worldId' | 'name' | 'content' | 'contentRich'> & {
 			icon?: string
 			color?: string
 			mentions?: MentionData[]
@@ -119,6 +119,7 @@ export const WikiArticleService = {
 					name: params.name,
 					icon: params.icon,
 					color: params.color,
+					content: params.content,
 					contentRich: params.contentRich,
 					parentFolderPosition: entityCount * 2,
 				},
@@ -150,7 +151,7 @@ export const WikiArticleService = {
 	},
 
 	updateWikiArticle: async (
-		params: Partial<Pick<WikiArticle, 'name' | 'contentRich'>> & {
+		params: Partial<Pick<WikiArticle, 'name' | 'content' | 'contentRich'>> & {
 			id: string
 			color?: string
 			worldId: string
@@ -190,6 +191,7 @@ export const WikiArticleService = {
 				data: {
 					name: params.name,
 					color: params.color,
+					content: params.content,
 					contentRich: params.contentRich,
 				},
 			})

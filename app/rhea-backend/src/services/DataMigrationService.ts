@@ -35,9 +35,6 @@ export const DataMigrationService = {
 					worlds: {
 						include: {
 							actors: {
-								omit: {
-									descriptionYjs: true,
-								},
 								include: {
 									mentions: {
 										where: {
@@ -61,35 +58,20 @@ export const DataMigrationService = {
 											],
 										},
 									},
-									pages: {
-										omit: {
-											descriptionYjs: true,
-										},
-									},
+									pages: true,
 								},
 							},
 							articles: {
 								include: {
 									mentions: true,
-									pages: {
-										omit: {
-											descriptionYjs: true,
-										},
-									},
+									pages: true,
 								},
 							},
 							folders: true,
 							events: {
-								omit: {
-									descriptionYjs: true,
-								},
 								include: {
 									mentions: true,
-									pages: {
-										omit: {
-											descriptionYjs: true,
-										},
-									},
+									pages: true,
 								},
 							},
 							tags: {

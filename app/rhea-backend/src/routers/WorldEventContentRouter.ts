@@ -6,8 +6,6 @@ import { RichTextService } from '@src/services/RichTextService.js'
 import { ValidationService } from '@src/services/ValidationService.js'
 import { WorldEventService } from '@src/services/WorldEventService.js'
 import {
-	BooleanValidator,
-	OptionalParam,
 	PathParam,
 	RequiredParam,
 	Router,
@@ -15,7 +13,6 @@ import {
 	useApiEndpoint,
 	useAuth,
 	usePathParams,
-	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
 import z from 'zod'
@@ -41,19 +38,13 @@ router.get('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 		eventId: PathParam(StringValidator),
 	})
 
-	const { acceptDeltas } = useQueryParams(ctx, {
-		acceptDeltas: OptionalParam(BooleanValidator),
-	})
-
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 	await ValidationService.checkEventValidity(eventId)
 
 	const event = await WorldEventService.fetchWorldEvent(eventId)
 
 	return {
-		hasDeltas: event.descriptionYjs ? true : false,
-		contentHtml: acceptDeltas && event.descriptionYjs ? undefined : event.descriptionRich,
-		contentDeltas: acceptDeltas ? event.descriptionYjs : undefined,
+		contentHtml: event.descriptionRich,
 	}
 })
 

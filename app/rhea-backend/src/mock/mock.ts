@@ -65,6 +65,7 @@ export const mockWikiArticle = (data?: Partial<BaselineArticle>): BaselineArticl
 	name: 'Test Article',
 	icon: 'mui:leaf',
 	color: '#000',
+	content: 'Test Article Content',
 	contentRich: 'Test Article Content',
 	mentions: [],
 	mentionedIn: [],

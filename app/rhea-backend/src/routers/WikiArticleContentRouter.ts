@@ -85,6 +85,7 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	const { article, updatedMentions } = await WikiArticleService.updateWikiArticle({
 		id: articleId,
 		worldId,
+		content: parsed.contentPlain,
 		contentRich: parsed.contentRich,
 		mentions: parsed.mentions,
 		referencedAssetIds: parsed.referencedAssetIds,

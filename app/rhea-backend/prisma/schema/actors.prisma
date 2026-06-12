@@ -9,7 +9,6 @@ model Actor {
   color           String  @default("#32a995")
   description     String  @default("")
   descriptionRich String  @default("")
-  descriptionYjs  String?
 
   pages       ContentPage[]    @relation("ActorContentPage")
   mentions    Mention[]        @relation("ActorMentionSource")

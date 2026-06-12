@@ -68,6 +68,7 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 		contentRich: OptionalParam(ContentStringValidator),
 	})
 
+	let parsedContent: string | undefined
 	let parsedContentRich: string | undefined
 	let mentions: MentionData[] | undefined
 	if (contentRich) {
@@ -75,6 +76,7 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 			worldId,
 			contentString: contentRich,
 		})
+		parsedContent = parsed.contentPlain
 		parsedContentRich = contentRich
 		mentions = parsed.mentions
 	}
@@ -84,6 +86,7 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 		name,
 		icon,
 		color,
+		content: parsedContent ?? '',
 		contentRich: parsedContentRich ?? '',
 		mentions,
 	})

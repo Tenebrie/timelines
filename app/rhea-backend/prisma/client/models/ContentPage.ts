@@ -31,7 +31,6 @@ export type ContentPageMinAggregateOutputType = {
   name: string | null
   description: string | null
   descriptionRich: string | null
-  descriptionYjs: string | null
   parentActorId: string | null
   parentEventId: string | null
   parentArticleId: string | null
@@ -44,7 +43,6 @@ export type ContentPageMaxAggregateOutputType = {
   name: string | null
   description: string | null
   descriptionRich: string | null
-  descriptionYjs: string | null
   parentActorId: string | null
   parentEventId: string | null
   parentArticleId: string | null
@@ -57,7 +55,6 @@ export type ContentPageCountAggregateOutputType = {
   name: number
   description: number
   descriptionRich: number
-  descriptionYjs: number
   parentActorId: number
   parentEventId: number
   parentArticleId: number
@@ -72,7 +69,6 @@ export type ContentPageMinAggregateInputType = {
   name?: true
   description?: true
   descriptionRich?: true
-  descriptionYjs?: true
   parentActorId?: true
   parentEventId?: true
   parentArticleId?: true
@@ -85,7 +81,6 @@ export type ContentPageMaxAggregateInputType = {
   name?: true
   description?: true
   descriptionRich?: true
-  descriptionYjs?: true
   parentActorId?: true
   parentEventId?: true
   parentArticleId?: true
@@ -98,7 +93,6 @@ export type ContentPageCountAggregateInputType = {
   name?: true
   description?: true
   descriptionRich?: true
-  descriptionYjs?: true
   parentActorId?: true
   parentEventId?: true
   parentArticleId?: true
@@ -184,7 +178,6 @@ export type ContentPageGroupByOutputType = {
   name: string
   description: string
   descriptionRich: string
-  descriptionYjs: string | null
   parentActorId: string | null
   parentEventId: string | null
   parentArticleId: string | null
@@ -218,7 +211,6 @@ export type ContentPageWhereInput = {
   name?: Prisma.StringFilter<"ContentPage"> | string
   description?: Prisma.StringFilter<"ContentPage"> | string
   descriptionRich?: Prisma.StringFilter<"ContentPage"> | string
-  descriptionYjs?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentActorId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentEventId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentArticleId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
@@ -236,7 +228,6 @@ export type ContentPageOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
-  descriptionYjs?: Prisma.SortOrderInput | Prisma.SortOrder
   parentActorId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentEventId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentArticleId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -257,7 +248,6 @@ export type ContentPageWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"ContentPage"> | string
   description?: Prisma.StringFilter<"ContentPage"> | string
   descriptionRich?: Prisma.StringFilter<"ContentPage"> | string
-  descriptionYjs?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentActorId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentEventId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentArticleId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
@@ -275,7 +265,6 @@ export type ContentPageOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
-  descriptionYjs?: Prisma.SortOrderInput | Prisma.SortOrder
   parentActorId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentEventId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentArticleId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -294,7 +283,6 @@ export type ContentPageScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"ContentPage"> | string
   description?: Prisma.StringWithAggregatesFilter<"ContentPage"> | string
   descriptionRich?: Prisma.StringWithAggregatesFilter<"ContentPage"> | string
-  descriptionYjs?: Prisma.StringNullableWithAggregatesFilter<"ContentPage"> | string | null
   parentActorId?: Prisma.StringNullableWithAggregatesFilter<"ContentPage"> | string | null
   parentEventId?: Prisma.StringNullableWithAggregatesFilter<"ContentPage"> | string | null
   parentArticleId?: Prisma.StringNullableWithAggregatesFilter<"ContentPage"> | string | null
@@ -307,7 +295,6 @@ export type ContentPageCreateInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActor?: Prisma.ActorCreateNestedOneWithoutPagesInput
   parentEvent?: Prisma.WorldEventCreateNestedOneWithoutPagesInput
   parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutPagesInput
@@ -322,7 +309,6 @@ export type ContentPageUncheckedCreateInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActorId?: string | null
   parentEventId?: string | null
   parentArticleId?: string | null
@@ -337,7 +323,6 @@ export type ContentPageUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActor?: Prisma.ActorUpdateOneWithoutPagesNestedInput
   parentEvent?: Prisma.WorldEventUpdateOneWithoutPagesNestedInput
   parentArticle?: Prisma.WikiArticleUpdateOneWithoutPagesNestedInput
@@ -352,7 +337,6 @@ export type ContentPageUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -367,7 +351,6 @@ export type ContentPageCreateManyInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActorId?: string | null
   parentEventId?: string | null
   parentArticleId?: string | null
@@ -380,7 +363,6 @@ export type ContentPageUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ContentPageUncheckedUpdateManyInput = {
@@ -390,7 +372,6 @@ export type ContentPageUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -418,7 +399,6 @@ export type ContentPageCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
-  descriptionYjs?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrder
   parentEventId?: Prisma.SortOrder
   parentArticleId?: Prisma.SortOrder
@@ -431,7 +411,6 @@ export type ContentPageMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
-  descriptionYjs?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrder
   parentEventId?: Prisma.SortOrder
   parentArticleId?: Prisma.SortOrder
@@ -444,7 +423,6 @@ export type ContentPageMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
-  descriptionYjs?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrder
   parentEventId?: Prisma.SortOrder
   parentArticleId?: Prisma.SortOrder
@@ -615,7 +593,6 @@ export type ContentPageCreateWithoutParentActorInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentEvent?: Prisma.WorldEventCreateNestedOneWithoutPagesInput
   parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutPagesInput
   mentions?: Prisma.MentionCreateNestedManyWithoutPageInput
@@ -629,7 +606,6 @@ export type ContentPageUncheckedCreateWithoutParentActorInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentEventId?: string | null
   parentArticleId?: string | null
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutPageInput
@@ -672,7 +648,6 @@ export type ContentPageScalarWhereInput = {
   name?: Prisma.StringFilter<"ContentPage"> | string
   description?: Prisma.StringFilter<"ContentPage"> | string
   descriptionRich?: Prisma.StringFilter<"ContentPage"> | string
-  descriptionYjs?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentActorId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentEventId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentArticleId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
@@ -685,7 +660,6 @@ export type ContentPageCreateWithoutAssetRefsInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActor?: Prisma.ActorCreateNestedOneWithoutPagesInput
   parentEvent?: Prisma.WorldEventCreateNestedOneWithoutPagesInput
   parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutPagesInput
@@ -699,7 +673,6 @@ export type ContentPageUncheckedCreateWithoutAssetRefsInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActorId?: string | null
   parentEventId?: string | null
   parentArticleId?: string | null
@@ -729,7 +702,6 @@ export type ContentPageUpdateWithoutAssetRefsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActor?: Prisma.ActorUpdateOneWithoutPagesNestedInput
   parentEvent?: Prisma.WorldEventUpdateOneWithoutPagesNestedInput
   parentArticle?: Prisma.WikiArticleUpdateOneWithoutPagesNestedInput
@@ -743,7 +715,6 @@ export type ContentPageUncheckedUpdateWithoutAssetRefsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -757,7 +728,6 @@ export type ContentPageCreateWithoutMentionsInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActor?: Prisma.ActorCreateNestedOneWithoutPagesInput
   parentEvent?: Prisma.WorldEventCreateNestedOneWithoutPagesInput
   parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutPagesInput
@@ -771,7 +741,6 @@ export type ContentPageUncheckedCreateWithoutMentionsInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActorId?: string | null
   parentEventId?: string | null
   parentArticleId?: string | null
@@ -801,7 +770,6 @@ export type ContentPageUpdateWithoutMentionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActor?: Prisma.ActorUpdateOneWithoutPagesNestedInput
   parentEvent?: Prisma.WorldEventUpdateOneWithoutPagesNestedInput
   parentArticle?: Prisma.WikiArticleUpdateOneWithoutPagesNestedInput
@@ -815,7 +783,6 @@ export type ContentPageUncheckedUpdateWithoutMentionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -829,7 +796,6 @@ export type ContentPageCreateWithoutParentArticleInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActor?: Prisma.ActorCreateNestedOneWithoutPagesInput
   parentEvent?: Prisma.WorldEventCreateNestedOneWithoutPagesInput
   mentions?: Prisma.MentionCreateNestedManyWithoutPageInput
@@ -843,7 +809,6 @@ export type ContentPageUncheckedCreateWithoutParentArticleInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActorId?: string | null
   parentEventId?: string | null
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutPageInput
@@ -883,7 +848,6 @@ export type ContentPageCreateWithoutParentEventInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActor?: Prisma.ActorCreateNestedOneWithoutPagesInput
   parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutPagesInput
   mentions?: Prisma.MentionCreateNestedManyWithoutPageInput
@@ -897,7 +861,6 @@ export type ContentPageUncheckedCreateWithoutParentEventInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActorId?: string | null
   parentArticleId?: string | null
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutPageInput
@@ -937,7 +900,6 @@ export type ContentPageCreateManyParentActorInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentEventId?: string | null
   parentArticleId?: string | null
 }
@@ -949,7 +911,6 @@ export type ContentPageUpdateWithoutParentActorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEvent?: Prisma.WorldEventUpdateOneWithoutPagesNestedInput
   parentArticle?: Prisma.WikiArticleUpdateOneWithoutPagesNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutPageNestedInput
@@ -963,7 +924,6 @@ export type ContentPageUncheckedUpdateWithoutParentActorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutPageNestedInput
@@ -977,7 +937,6 @@ export type ContentPageUncheckedUpdateManyWithoutParentActorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -989,7 +948,6 @@ export type ContentPageCreateManyParentArticleInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActorId?: string | null
   parentEventId?: string | null
 }
@@ -1001,7 +959,6 @@ export type ContentPageUpdateWithoutParentArticleInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActor?: Prisma.ActorUpdateOneWithoutPagesNestedInput
   parentEvent?: Prisma.WorldEventUpdateOneWithoutPagesNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutPageNestedInput
@@ -1015,7 +972,6 @@ export type ContentPageUncheckedUpdateWithoutParentArticleInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutPageNestedInput
@@ -1029,7 +985,6 @@ export type ContentPageUncheckedUpdateManyWithoutParentArticleInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -1041,7 +996,6 @@ export type ContentPageCreateManyParentEventInput = {
   name: string
   description?: string
   descriptionRich?: string
-  descriptionYjs?: string | null
   parentActorId?: string | null
   parentArticleId?: string | null
 }
@@ -1053,7 +1007,6 @@ export type ContentPageUpdateWithoutParentEventInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActor?: Prisma.ActorUpdateOneWithoutPagesNestedInput
   parentArticle?: Prisma.WikiArticleUpdateOneWithoutPagesNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutPageNestedInput
@@ -1067,7 +1020,6 @@ export type ContentPageUncheckedUpdateWithoutParentEventInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutPageNestedInput
@@ -1081,7 +1033,6 @@ export type ContentPageUncheckedUpdateManyWithoutParentEventInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -1133,7 +1084,6 @@ export type ContentPageSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   name?: boolean
   description?: boolean
   descriptionRich?: boolean
-  descriptionYjs?: boolean
   parentActorId?: boolean
   parentEventId?: boolean
   parentArticleId?: boolean
@@ -1152,7 +1102,6 @@ export type ContentPageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   name?: boolean
   description?: boolean
   descriptionRich?: boolean
-  descriptionYjs?: boolean
   parentActorId?: boolean
   parentEventId?: boolean
   parentArticleId?: boolean
@@ -1168,7 +1117,6 @@ export type ContentPageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   name?: boolean
   description?: boolean
   descriptionRich?: boolean
-  descriptionYjs?: boolean
   parentActorId?: boolean
   parentEventId?: boolean
   parentArticleId?: boolean
@@ -1184,13 +1132,12 @@ export type ContentPageSelectScalar = {
   name?: boolean
   description?: boolean
   descriptionRich?: boolean
-  descriptionYjs?: boolean
   parentActorId?: boolean
   parentEventId?: boolean
   parentArticleId?: boolean
 }
 
-export type ContentPageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "description" | "descriptionRich" | "descriptionYjs" | "parentActorId" | "parentEventId" | "parentArticleId", ExtArgs["result"]["contentPage"]>
+export type ContentPageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "description" | "descriptionRich" | "parentActorId" | "parentEventId" | "parentArticleId", ExtArgs["result"]["contentPage"]>
 export type ContentPageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parentActor?: boolean | Prisma.ContentPage$parentActorArgs<ExtArgs>
   parentEvent?: boolean | Prisma.ContentPage$parentEventArgs<ExtArgs>
@@ -1226,7 +1173,6 @@ export type $ContentPagePayload<ExtArgs extends runtime.Types.Extensions.Interna
     name: string
     description: string
     descriptionRich: string
-    descriptionYjs: string | null
     parentActorId: string | null
     parentEventId: string | null
     parentArticleId: string | null
@@ -1664,7 +1610,6 @@ export interface ContentPageFieldRefs {
   readonly name: Prisma.FieldRef<"ContentPage", 'String'>
   readonly description: Prisma.FieldRef<"ContentPage", 'String'>
   readonly descriptionRich: Prisma.FieldRef<"ContentPage", 'String'>
-  readonly descriptionYjs: Prisma.FieldRef<"ContentPage", 'String'>
   readonly parentActorId: Prisma.FieldRef<"ContentPage", 'String'>
   readonly parentEventId: Prisma.FieldRef<"ContentPage", 'String'>
   readonly parentArticleId: Prisma.FieldRef<"ContentPage", 'String'>

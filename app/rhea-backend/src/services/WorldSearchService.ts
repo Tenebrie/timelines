@@ -104,9 +104,6 @@ export const WorldSearchService = {
 				},
 				nodes: true,
 			},
-			omit: {
-				descriptionYjs: true,
-			},
 		})
 	},
 
@@ -221,9 +218,6 @@ export const WorldSearchService = {
 						timestamp: 'asc',
 					},
 				},
-			},
-			omit: {
-				descriptionYjs: true,
 			},
 		})
 	},

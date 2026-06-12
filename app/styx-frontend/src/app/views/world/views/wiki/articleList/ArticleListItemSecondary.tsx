@@ -28,9 +28,15 @@ export function ArticleListItemSecondary({ entity, highlighted }: Props) {
 
 	const styles: SxProps = {
 		color,
+		display: 'block',
+		maxWidth: '100%',
 		fontWeight: 400,
 		lineHeight: '1.1rem',
 		transition: 'color 0.1s ease-out',
+		textOverflow: 'ellipsis',
+		overflow: 'hidden',
+		whiteSpace: 'nowrap',
+		flexGrow: 0,
 	}
 
 	if (entity.type === 'actor' && entity.entity.title) {
@@ -54,6 +60,14 @@ export function ArticleListItemSecondary({ entity, highlighted }: Props) {
 		return (
 			<Typography variant="caption" sx={styles}>
 				{formatTimestamp({ timestamp: entity.entity.timestamp })}
+			</Typography>
+		)
+	}
+
+	if (entity.type === 'article') {
+		return (
+			<Typography variant="caption" sx={styles}>
+				{entity.entity.content.slice(0, entity.entity.content.indexOf('.'))}
 			</Typography>
 		)
 	}

@@ -7,7 +7,6 @@ model ContentPage {
 
     description     String  @default("")
     descriptionRich String  @default("")
-    descriptionYjs  String?
 
     parentActorId   String?
     parentEventId   String?

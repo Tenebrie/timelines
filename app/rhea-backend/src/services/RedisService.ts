@@ -54,7 +54,7 @@ export const RedisService = {
 
 	notifyAboutWorldEventUpdate: (
 		ctx: ContextWithSessionId,
-		{ worldId, event }: { worldId: string; event: Omit<WorldEvent, 'descriptionYjs'> },
+		{ worldId, event }: { worldId: string; event: WorldEvent },
 	) => {
 		const eventToSend = {
 			...event,
@@ -114,7 +114,7 @@ export const RedisService = {
 
 	notifyAboutActorUpdate: (
 		ctx: ContextWithSessionId,
-		{ worldId, actor }: { worldId: string; actor: Omit<Actor, 'descriptionYjs'> },
+		{ worldId, actor }: { worldId: string; actor: Actor },
 	) => {
 		const actorToSend = {
 			...actor,
@@ -287,7 +287,7 @@ export const RedisService = {
 
 	notifyAboutWikiArticleUpdate: (
 		ctx: ContextWithSessionId,
-		{ worldId, article }: { worldId: string; article: Omit<WikiArticle, 'contentYjs'> },
+		{ worldId, article }: { worldId: string; article: WikiArticle },
 	) => {
 		const articleToSend = {
 			...article,

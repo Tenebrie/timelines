@@ -52,7 +52,6 @@ model WorldEvent {
   revokedAt       BigInt?
   description     String  @default("")
   descriptionRich String  @default("")
-  descriptionYjs  String?
 
   pages       ContentPage[]    @relation("EventContentPage")
   mentions    Mention[]        @relation("EventMentionSource")

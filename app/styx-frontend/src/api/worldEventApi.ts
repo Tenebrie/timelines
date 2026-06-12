@@ -7,12 +7,7 @@ const injectedRtkApi = api
 	.injectEndpoints({
 		endpoints: (build) => ({
 			getWorldEventContent: build.query<GetWorldEventContentApiResponse, GetWorldEventContentApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/content`,
-					params: {
-						acceptDeltas: queryArg.acceptDeltas,
-					},
-				}),
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/content` }),
 				providesTags: ['worldEvent'],
 			}),
 			putWorldEventContent: build.mutation<PutWorldEventContentApiResponse, PutWorldEventContentApiArg>({
@@ -70,17 +65,13 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as worldEventApi }
 export type GetWorldEventContentApiResponse = /** status 200  */ {
-	hasDeltas: boolean
-	contentHtml?: string
-	contentDeltas?: null | string
+	contentHtml: string
 }
 export type GetWorldEventContentApiArg = {
 	/** Any string value */
 	worldId: string
 	/** Any string value */
 	eventId: string
-	/** Any boolean value */
-	acceptDeltas?: boolean
 }
 export type PutWorldEventContentApiResponse = unknown
 export type PutWorldEventContentApiArg = {
@@ -219,7 +210,6 @@ export type RevokeWorldEventApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
-	descriptionYjs?: null | string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 	timestamp: string
@@ -245,7 +235,6 @@ export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
-	descriptionYjs?: null | string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 	timestamp: string

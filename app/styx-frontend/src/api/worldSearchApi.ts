@@ -79,6 +79,7 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		color: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
+		content: string
 		contentRich: string
 	}[]
 	events: {

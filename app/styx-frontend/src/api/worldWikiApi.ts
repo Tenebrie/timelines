@@ -59,6 +59,7 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	color: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
+	content: string
 	contentRich: string
 }[]
 export type GetArticlesApiArg = {
@@ -75,6 +76,7 @@ export type CreateArticleApiResponse = /** status 200  */ {
 	color: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
+	content: string
 	contentRich: string
 }
 export type CreateArticleApiArg = {

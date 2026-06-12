@@ -358,6 +358,7 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	color: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
+	content: string
 	contentRich: string
 }
 export type UpdateArticleApiArg = {

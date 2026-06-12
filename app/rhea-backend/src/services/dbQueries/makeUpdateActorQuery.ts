@@ -65,9 +65,6 @@ export const makeUpdateActorQuery = async ({
 				},
 			},
 		},
-		omit: {
-			descriptionYjs: true,
-		},
 	})
 
 	await MentionsService.clearOrphanedMentions(prisma)

@@ -40,9 +40,6 @@ export const ActorService = {
 				},
 				nodes: true,
 			},
-			omit: {
-				descriptionYjs: true,
-			},
 		})
 	},
 

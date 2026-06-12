@@ -190,9 +190,19 @@ function ArticleListItemInnerComponent({
 					fullWidth
 					onClick={onNavigate}
 				>
-					<Stack direction="row" alignItems="space-between" sx={{ width: '100%' }}>
-						<Stack direction="column" alignItems="flex-start">
-							<Box sx={{ lineHeight: '1.3rem' }}>{article.name}</Box>
+					<Stack direction="row" sx={{ width: '100%', minWidth: 0 }}>
+						<Stack direction="column" alignItems="flex-start" sx={{ maxWidth: '100%', minWidth: 0 }}>
+							<Box
+								sx={{
+									lineHeight: '1.3rem',
+									maxWidth: '100%',
+									overflow: 'hidden',
+									textOverflow: 'ellipsis',
+									whiteSpace: 'nowrap',
+								}}
+							>
+								{article.name}
+							</Box>
 							<ArticleListItemSecondary entity={article} highlighted={highlighted} />
 						</Stack>
 					</Stack>

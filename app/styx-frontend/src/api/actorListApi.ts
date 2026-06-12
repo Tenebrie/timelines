@@ -7,12 +7,7 @@ const injectedRtkApi = api
 	.injectEndpoints({
 		endpoints: (build) => ({
 			getActorContent: build.query<GetActorContentApiResponse, GetActorContentApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content`,
-					params: {
-						acceptDeltas: queryArg.acceptDeltas,
-					},
-				}),
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content` }),
 				providesTags: ['actorList'],
 			}),
 			putActorContent: build.mutation<PutActorContentApiResponse, PutActorContentApiArg>({
@@ -26,9 +21,6 @@ const injectedRtkApi = api
 			getActorContentPage: build.query<GetActorContentPageApiResponse, GetActorContentPageApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content/pages/${queryArg.pageId}`,
-					params: {
-						acceptDeltas: queryArg.acceptDeltas,
-					},
 				}),
 				providesTags: ['actorList'],
 			}),
@@ -91,17 +83,13 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as actorListApi }
 export type GetActorContentApiResponse = /** status 200  */ {
-	hasDeltas: boolean
-	contentHtml?: string
-	contentDeltas?: null | string
+	contentHtml: string
 }
 export type GetActorContentApiArg = {
 	/** Any string value */
 	worldId: string
 	/** Any string value */
 	actorId: string
-	/** Any boolean value */
-	acceptDeltas?: boolean
 }
 export type PutActorContentApiResponse = unknown
 export type PutActorContentApiArg = {
@@ -115,9 +103,7 @@ export type PutActorContentApiArg = {
 	}
 }
 export type GetActorContentPageApiResponse = /** status 200  */ {
-	hasDeltas: boolean
-	contentHtml?: string
-	contentDeltas?: null | string
+	contentHtml: string
 }
 export type GetActorContentPageApiArg = {
 	/** Any string value */
@@ -126,8 +112,6 @@ export type GetActorContentPageApiArg = {
 	actorId: string
 	/** Any string value */
 	pageId: string
-	/** Any boolean value */
-	acceptDeltas?: boolean
 }
 export type PutActorContentPageApiResponse = unknown
 export type PutActorContentPageApiArg = {
@@ -158,7 +142,6 @@ export type CreateActorContentPageApiResponse = /** status 200  */ {
 	updatedAt: string
 	name: string
 	descriptionRich: string
-	descriptionYjs?: null | string
 	parentActorId?: null | string
 	parentEventId?: null | string
 	parentArticleId?: null | string
@@ -306,7 +289,6 @@ export type DeleteActorApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
-	descriptionYjs?: null | string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 }
