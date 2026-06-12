@@ -1,5 +1,5 @@
 import { createNewUser, deleteAccount } from '@fixtures/auth'
-import { createWikiArticle, createWorld, navigateToWiki } from '@fixtures/world'
+import { createWikiArticle, createWikiFolder, createWorld, navigateToWiki } from '@fixtures/world'
 import { expect, Page, test } from '@playwright/test'
 
 test.describe('Wiki View', () => {
@@ -18,12 +18,10 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await page.getByText('Create article').click()
-			await expect(page.getByText('Create new article')).toBeVisible()
+			await createArticleViaUI(page, 'Testing article')
 
-			await page.getByLabel('Name').fill('Testing article')
-			await withYjsSocket(page, () => page.getByText('Create', { exact: true }).click())
-			await expect(page.getByText('Create new article')).not.toBeVisible()
+			// Open article
+			await withYjsSocket(page, () => page.getByText('Testing article').click())
 			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
 			// Edit article
@@ -131,73 +129,58 @@ test.describe('Wiki View', () => {
 			await expect(textbox).toHaveText('Hello TestActorHello UnrelatedActor')
 		})
 
-		test('moving articles and creating folders', async ({ page }) => {
+		test('moving articles into and out of folders', async ({ page }) => {
 			// Prepare world
 			const world = await createWorld(page)
-			await createWikiArticle(page, world, { name: 'Parent article' })
-			await createWikiArticle(page, world, { name: 'Child article' })
-			await createWikiArticle(page, world, { name: 'Sibling article' })
-			await createWikiArticle(page, world, { name: 'Nested article' })
+			await createWikiFolder(page, world, { name: 'Parent folder' })
+			await createWikiFolder(page, world, { name: 'Inner folder' })
+			await createWikiArticle(page, world, { name: 'First article' })
+			await createWikiArticle(page, world, { name: 'Second article' })
 			await navigateToWiki(page, world)
 
-			const childArticle = page.getByText('Child article')
-			const parentArticle = page.getByText('Parent article')
-			const siblingArticle = page.getByText('Sibling article')
-			const nestedArticle = page.getByText('Nested article')
+			const parentFolder = page.getByText('Parent folder')
+			const innerFolder = page.getByText('Inner folder')
+			const firstArticle = page.getByText('First article')
+			const secondArticle = page.getByText('Second article')
 
-			// Perform drag and drop
-			await childArticle.dragTo(parentArticle)
-			await nestedArticle.dragTo(childArticle)
-			await siblingArticle.dragTo(parentArticle)
-
-			// Get references to all articles by their list item IDs
-			await expect(page.getByTestId('ArticleListItem/Parent article/0')).toBeVisible()
-			await expect(page.getByTestId('ArticleListItem/Child article/1')).toBeVisible()
-			await expect(page.getByTestId('ArticleListItem/Sibling article/1')).toBeVisible()
-			await expect(page.getByTestId('ArticleListItem/Nested article/2')).toBeVisible()
-			await expect(
-				page
-					.getByTestId('ArticleListItem/Parent article/0')
-					.getByTestId('ArticleListItem/Child article/1')
-					.getByTestId('ArticleListItem/Nested article/2'),
-			).toBeVisible()
-
-			// Check item types (folder = has children, article = no children)
-			await expect(page.getByTestId('ArticleListItem/Child article/1')).toHaveAttribute(
+			await expect(page.getByTestId('ArticleListItem/Parent folder/0')).toHaveAttribute(
 				'data-item-type',
 				'folder',
 			)
-			await expect(page.getByTestId('ArticleListItem/Sibling article/1')).toHaveAttribute(
-				'data-item-type',
-				'article',
-			)
-			await expect(page.getByTestId('ArticleListItem/Nested article/2')).toHaveAttribute(
+			await expect(page.getByTestId('ArticleListItem/First article/0')).toHaveAttribute(
 				'data-item-type',
 				'article',
 			)
 
-			// Move nested article to sibling article
-			await nestedArticle.dragTo(siblingArticle)
-
-			// Check that nested article is now a child of sibling article
-			await expect(page.getByTestId('ArticleListItem/Child article/1')).toHaveAttribute(
-				'data-item-type',
-				'article',
-			)
-			await expect(page.getByTestId('ArticleListItem/Sibling article/1')).toHaveAttribute(
-				'data-item-type',
-				'folder',
-			)
+			// Move an article into a folder
+			await firstArticle.dragTo(parentFolder)
 			await expect(
-				page
-					.getByTestId('ArticleListItem/Parent article/0')
-					.getByTestId('ArticleListItem/Sibling article/1')
-					.getByTestId('ArticleListItem/Nested article/2'),
+				page.getByTestId('ArticleListItem/Parent folder/0').getByTestId('ArticleListItem/First article/1'),
 			).toBeVisible()
 
-			// Move nested article to root
-			await nestedArticle.dragTo(page.getByTestId('ArticleList/0'))
-			await expect(page.getByTestId('ArticleListItem/Nested article/0')).toBeVisible()
+			// Nest a folder inside a folder, then move an article into the nested folder
+			await innerFolder.dragTo(parentFolder)
+			await expect(
+				page.getByTestId('ArticleListItem/Parent folder/0').getByTestId('ArticleListItem/Inner folder/1'),
+			).toBeVisible()
+
+			await secondArticle.dragTo(innerFolder)
+			await expect(
+				page
+					.getByTestId('ArticleListItem/Parent folder/0')
+					.getByTestId('ArticleListItem/Inner folder/1')
+					.getByTestId('ArticleListItem/Second article/2'),
+			).toBeVisible()
+
+			// Dropping an article onto another article does nothing
+			await firstArticle.dragTo(secondArticle)
+			await expect(
+				page.getByTestId('ArticleListItem/Parent folder/0').getByTestId('ArticleListItem/First article/1'),
+			).toBeVisible()
+
+			// Move an article back to root
+			await firstArticle.dragTo(page.getByTestId('ArticleList/0'))
+			await expect(page.getByTestId('ArticleListItem/First article/0')).toBeVisible()
 		})
 
 		test('drag an article to drop handle -> article is moved', async ({ page }) => {
@@ -211,13 +194,16 @@ test.describe('Wiki View', () => {
 			const list = page.getByTestId('ArticleList/0')
 			await expect(list).toBeVisible()
 
-			await expect(list.getByRole('button').nth(0)).toHaveText('First article')
-			await expect(list.getByRole('button').nth(2)).toHaveText('Second article')
+			const items = list.getByTestId(/^ArticleListItem\//)
+			await expect(items.nth(0)).toHaveAttribute('data-testid', 'ArticleListItem/First article/0')
+			await expect(items.nth(1)).toHaveAttribute('data-testid', 'ArticleListItem/Second article/0')
 
 			// Perform drag and drop
-			await page.getByText('Second article').dragTo(page.getByTestId('ArticleDropHandle/0'))
-			expect(list.getByRole('button').nth(0)).toHaveText('Second article')
-			expect(list.getByRole('button').nth(2)).toHaveText('First article')
+			await page.getByText('Second article').dragTo(page.getByTestId('ArticleDropHandle/0'), {
+				force: true,
+			})
+			await expect(items.nth(0)).toHaveAttribute('data-testid', 'ArticleListItem/Second article/0')
+			await expect(items.nth(1)).toHaveAttribute('data-testid', 'ArticleListItem/First article/0')
 		})
 	})
 
@@ -226,9 +212,8 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await page.getByText('Create article').click()
-			await page.getByLabel('Name').fill('Testing article')
-			await withYjsSocket(page, () => page.getByText('Create', { exact: true }).click())
+			await createArticleViaUI(page, 'Testing article')
+			await withYjsSocket(page, () => page.getByText('Testing article').click())
 			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
 			// Click into the editor
@@ -248,9 +233,8 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await page.getByText('Create article').click()
-			await page.getByLabel('Name').fill('Testing article')
-			await withYjsSocket(page, () => page.getByText('Create', { exact: true }).click())
+			await createArticleViaUI(page, 'Testing article')
+			await withYjsSocket(page, () => page.getByText('Testing article').click())
 			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
 			// Click into the editor and type some text
@@ -275,27 +259,29 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await page.getByText('Create article').click()
-			await expect(page.getByText('Create new article')).toBeVisible()
+			await page.getByRole('button', { name: 'Create new entity' }).click()
+			await expect(page.getByText('Create New Entity', { exact: true })).toBeVisible()
 
-			await page.getByLabel('Name').fill('Testing article')
+			await page.getByRole('button', { name: 'Article', exact: true }).click()
+			await page.getByPlaceholder('Name').fill('Testing article')
 			await page.keyboard.press('Enter')
-			await expect(page.getByText('Create new article')).not.toBeVisible()
-			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
+			await expect(page.getByText('Create New Entity', { exact: true })).not.toBeVisible()
+			await expect(page.getByTestId('ArticleListItem/Testing article/0')).toBeVisible()
 		})
 
 		test('create article with full shortcut', async ({ page }) => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await page.getByText('Create article').click()
-			await expect(page.getByText('Create new article')).toBeVisible()
+			await page.getByRole('button', { name: 'Create new entity' }).click()
+			await expect(page.getByText('Create New Entity', { exact: true })).toBeVisible()
 
-			await page.getByLabel('Name').fill('Testing article')
+			await page.getByRole('button', { name: 'Article', exact: true }).click()
+			await page.getByPlaceholder('Name').fill('Testing article')
 			await page.keyboard.press('Control+Enter')
 
-			await expect(page.getByText('Create new article')).not.toBeVisible()
-			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
+			await expect(page.getByText('Create New Entity', { exact: true })).not.toBeVisible()
+			await expect(page.getByTestId('ArticleListItem/Testing article/0')).toBeVisible()
 		})
 	})
 
@@ -304,6 +290,14 @@ test.describe('Wiki View', () => {
 		await page.waitForTimeout(3000)
 		await deleteAccount(page)
 	})
+
+	async function createArticleViaUI(page: Page, name: string) {
+		await page.getByRole('button', { name: 'Create new entity' }).click()
+		await page.getByRole('button', { name: 'Article', exact: true }).click()
+		await page.getByPlaceholder('Name').fill(name)
+		await page.getByRole('button', { name: 'Create', exact: true }).click()
+		await expect(page.getByTestId(`ArticleListItem/${name}/0`)).toBeVisible()
+	}
 
 	async function withYjsSocket(page: Page, action: () => unknown) {
 		const yjsRequest = page.waitForEvent('websocket', (ws) => {

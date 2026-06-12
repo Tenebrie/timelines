@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['worldWiki'] as const
+export const addTagTypes = ['worldWiki', 'worldWikiArticle'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -8,7 +8,7 @@ const injectedRtkApi = api
 		endpoints: (build) => ({
 			getArticles: build.query<GetArticlesApiResponse, GetArticlesApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/wiki/articles` }),
-				providesTags: ['worldWiki'],
+				providesTags: ['worldWiki', 'worldWikiArticle'],
 			}),
 			createArticle: build.mutation<CreateArticleApiResponse, CreateArticleApiArg>({
 				query: (queryArg) => ({
@@ -16,14 +16,14 @@ const injectedRtkApi = api
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['worldWiki'],
+				invalidatesTags: ['worldWiki', 'worldWikiArticle'],
 			}),
 			deleteArticle: build.mutation<DeleteArticleApiResponse, DeleteArticleApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/wiki/article/${queryArg.articleId}`,
 					method: 'DELETE',
 				}),
-				invalidatesTags: ['worldWiki'],
+				invalidatesTags: ['worldWiki', 'worldWikiArticle'],
 			}),
 			moveWikiEntity: build.mutation<MoveWikiEntityApiResponse, MoveWikiEntityApiArg>({
 				query: (queryArg) => ({
@@ -52,15 +52,15 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	}[]
 	worldId: string
 	id: string
+	name: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	icon: string
 	color: string
-	parentFolderId?: null | string
-	parentFolderPosition: number
 	content: string
 	contentRich: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }[]
 export type GetArticlesApiArg = {
 	/** Any string value */
@@ -69,15 +69,15 @@ export type GetArticlesApiArg = {
 export type CreateArticleApiResponse = /** status 200  */ {
 	worldId: string
 	id: string
+	name: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	icon: string
 	color: string
-	parentFolderId?: null | string
-	parentFolderPosition: number
 	content: string
 	contentRich: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }
 export type CreateArticleApiArg = {
 	/** Any string value */
@@ -99,7 +99,7 @@ export type DeleteArticleApiArg = {
 export type MoveWikiEntityApiResponse = /** status 200  */ {
 	updates: {
 		entityId: string
-		entityType: 'actor' | 'tag' | 'article' | 'event' | 'folder'
+		entityType: 'actor' | 'article' | 'folder' | 'event' | 'tag'
 		position: number
 		folderId?: null | string
 	}[]
@@ -109,7 +109,7 @@ export type MoveWikiEntityApiArg = {
 	worldId: string
 	body: {
 		entityId: string
-		entityType: 'actor' | 'tag' | 'article' | 'event' | 'folder'
+		entityType: 'actor' | 'article' | 'folder' | 'event' | 'tag'
 		parentId?: null | string
 		position: number
 	}

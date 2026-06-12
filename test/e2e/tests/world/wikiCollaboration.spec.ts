@@ -17,12 +17,14 @@ test.describe('Wiki Collaboration', () => {
 		await secondaryPage.waitForTimeout(1000)
 
 		// Create article
-		await page.getByText('Create article').click()
-		await expect(page.getByText('Create new article')).toBeVisible()
+		await page.getByRole('button', { name: 'Create new entity' }).click()
+		await page.getByRole('button', { name: 'Article', exact: true }).click()
+		await page.getByPlaceholder('Name').fill('Testing article')
+		await page.getByRole('button', { name: 'Create', exact: true }).click()
+		await expect(page.getByTestId('ArticleListItem/Testing article/0')).toBeVisible()
 
-		await page.getByLabel('Name').fill('Testing article')
-		await page.getByText('Create', { exact: true }).click()
-		await expect(page.getByText('Create new article')).not.toBeVisible()
+		// Open article on both pages
+		await page.getByText('Testing article').click()
 		await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
 		await secondaryPage.getByText('Testing article').click()

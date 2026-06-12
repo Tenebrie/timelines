@@ -85,11 +85,12 @@ export async function createActor(page: Page, name: string) {
 
 export async function createArticle(page: Page, name: string) {
 	await page.getByTestId('NavigateToWiki').click()
-	await page.getByText('Create article').click()
-	await page.getByTestId('ModalBackdrop').getByLabel('Name').fill(name)
+	await page.getByRole('button', { name: 'Create new entity' }).click()
+	await page.getByRole('button', { name: 'Article', exact: true }).click()
+	await page.getByPlaceholder('Name').fill(name)
 	await withCreatedArticle(
 		page,
-		async () => await page.getByTestId('ModalBackdrop').getByText('Create', { exact: true }).click(),
+		async () => await page.getByRole('button', { name: 'Create', exact: true }).click(),
 	)
 }
 
@@ -115,6 +116,33 @@ export const createWikiArticle = async (
 		world: worldData,
 		article: {
 			...articleData,
+			id: response.id,
+		},
+	}
+}
+
+export const createWikiFolder = async (
+	page: Page,
+	worldData: 'createWorld' | Awaited<ReturnType<typeof createWorld>>,
+	folder?: { name?: string },
+) => {
+	if (worldData === 'createWorld') {
+		worldData = await createWorld(page)
+	}
+
+	const folderData = {
+		name: 'My Folder',
+		...folder,
+	}
+	const rawResponse = await page.request.post(makeUrl(`/api/world/${worldData.id}/wiki/folders`), {
+		data: folderData,
+	})
+	expect(rawResponse.ok()).toBeTruthy()
+	const response = (await rawResponse.json()) as { id: string }
+	return {
+		world: worldData,
+		folder: {
+			...folderData,
 			id: response.id,
 		},
 	}

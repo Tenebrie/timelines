@@ -32,7 +32,7 @@ router.get('/api/world/:worldId/wiki/articles', async (ctx) => {
 	useApiEndpoint({
 		name: 'getArticles',
 		description: 'Returns a list of articles in the wiki without content.',
-		tags: [worldWikiTag],
+		tags: [worldWikiTag, worldWikiArticleTag],
 	})
 
 	const user = await useOptionalAuth(ctx, UserAuthenticator)
@@ -50,7 +50,7 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 	useApiEndpoint({
 		name: 'createArticle',
 		description: 'Creates a new article in the wiki.',
-		tags: [worldWikiTag],
+		tags: [worldWikiTag, worldWikiArticleTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -134,7 +134,7 @@ router.post('/api/world/:worldId/wiki/move', async (ctx) => {
 	useApiEndpoint({
 		name: 'moveWikiEntity',
 		description: 'Moves an entity to a new wiki position.',
-		tags: [worldWikiTag],
+		tags: [worldWikiTag, worldWikiArticleTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -170,7 +170,7 @@ router.delete('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteArticle',
 		description: 'Deletes an article from the wiki.',
-		tags: [worldWikiTag],
+		tags: [worldWikiTag, worldWikiArticleTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
