@@ -5,6 +5,7 @@ import { memo, useCallback, useRef, useState } from 'react'
 import { MouseEvent } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { DragDropState } from '@/app/features/dragDrop/DragDropState'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
@@ -80,7 +81,7 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 
 	const onFolderClick = useCallback(
 		(event: MouseEvent) => {
-			if (!parentId || event.target !== ref.current) {
+			if (!parentId || event.target !== ref.current || DragDropState.current) {
 				return
 			}
 			dispatch(collapseWikiFolderById(parentId))
@@ -99,7 +100,7 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 			sx={{
 				position: 'relative',
 				pointerEvents: 'auto',
-				'--hit-gap': '5px',
+				'--hit-gap': '4px',
 				gap: 'calc(2 * var(--hit-gap))',
 				background: parentId ? folderColor : 'transparent',
 				paddingLeft: parentId ? 1 : 0,

@@ -1,28 +1,20 @@
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
-import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
-import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
 import { useMoveArticle } from '../api/useMoveArticle'
+import { ArticleListItemIcon } from '../articleList/icon/ArticleListItemIcon'
 import { BoxedWikiEntity } from './useBoxedWikiContent'
 
 type Props = {
 	article: BoxedWikiEntity
-	isDropHandle?: boolean
+	isFolderExpanded: boolean
 }
 
-export const useArticleDragDrop = ({ article, isDropHandle }: Props) => {
+export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 	const [moveArticle] = useMoveArticle()
-
-	const { uncollapseWikiFolder } = preferencesSlice.actions
-	const dispatch = useDispatch()
-	const forceOpen = useCallback(() => {
-		dispatch(uncollapseWikiFolder(article))
-	}, [dispatch, uncollapseWikiFolder, article])
 
 	const { ref, ghostElement } = useDragDrop({
 		type: 'articleListItem',
@@ -32,12 +24,22 @@ export const useArticleDragDrop = ({ article, isDropHandle }: Props) => {
 		},
 		ghostFactory: () => (
 			<Button
-				startIcon={<EntityIcon variant={article.type} />}
+				startIcon={<ArticleListItemIcon article={article} highlighted={false} />}
 				color="secondary"
 				variant="contained"
 				sx={{ justifyContent: 'start', opacity: 0.3, width: '300px', filter: 'grayscale(100%)' }}
 			>
-				{article.name}
+				<Box
+					sx={{
+						lineHeight: '1.3rem',
+						maxWidth: '100%',
+						overflow: 'hidden',
+						textOverflow: 'ellipsis',
+						whiteSpace: 'nowrap',
+					}}
+				>
+					{article.name}
+				</Box>
 			</Button>
 		),
 		params: { article },
@@ -52,19 +54,26 @@ export const useArticleDragDrop = ({ article, isDropHandle }: Props) => {
 				return
 			}
 
-			const targetTop = ref.current.getBoundingClientRect().top
-			const delta = targetRootPos.y < targetTop ? 1 : -1
-			const dropHandleDelta = isDropHandle && delta > 0 ? -2 : 0
-			console.log(delta)
+			const targetRect = ref.current.getBoundingClientRect()
+			const dropY = event.mouseEvent?.clientY ?? targetRootPos.y
+			const isTopHalf = dropY < targetRect.top + targetRect.height / 2
+			const delta = isTopHalf ? -1 : 1
 
-			if (article.entity.parentFolderId !== params.article.entity.parentFolderId) {
-				requestIdleCallback(forceOpen, { timeout: 150 })
+			if (!isTopHalf && article.type === 'folder' && isFolderExpanded) {
+				await moveArticle({
+					entityId: params.article.id,
+					entityType: params.article.type,
+					parentId: article.id,
+					position: -1,
+				})
+				return
 			}
+
 			await moveArticle({
 				entityId: params.article.id,
 				entityType: params.article.type,
 				parentId: article.entity.parentFolderId,
-				position: article.position + delta + dropHandleDelta,
+				position: article.position + delta,
 			})
 		},
 	})

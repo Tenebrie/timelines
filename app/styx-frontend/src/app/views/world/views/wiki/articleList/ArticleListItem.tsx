@@ -84,7 +84,7 @@ function ArticleListItemInnerComponent({
 		}
 	}, [highlighted, article.type, article.id, toggleOpen, navigate])
 
-	const { ref, ghostElement } = useArticleDragDrop({ article })
+	const { ref, ghostElement } = useArticleDragDrop({ article, isFolderExpanded: expanded })
 	const isGrayscale = useIsFolderGrayedOut(article)
 	const theme = useCustomTheme()
 	const { setOpacity } = useColorUtils()
@@ -149,6 +149,8 @@ function ArticleListItemInnerComponent({
 							top: 'calc(-1 * var(--hit-gap))',
 							bottom: 'calc(-1 * var(--hit-gap))',
 						},
+						paddingTop: 1,
+						paddingBottom: 1,
 						justifyContent: 'start',
 						paddingLeft: 1.5,
 						paddingRight: '8px',
