@@ -64,13 +64,5 @@ export function ArticleListItemSecondary({ entity, highlighted }: Props) {
 		)
 	}
 
-	if (entity.type === 'article') {
-		return (
-			<Typography variant="caption" sx={styles}>
-				{entity.entity.content.slice(0, entity.entity.content.indexOf('.'))}
-			</Typography>
-		)
-	}
-
 	return null
 }

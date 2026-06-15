@@ -2,14 +2,16 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { usePopupState } from 'material-ui-popup-state/hooks'
 import { memo, useCallback, useRef, useState } from 'react'
+import { MouseEvent } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
+import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 
 import { useMoveArticle } from '../api/useMoveArticle'
-import { ArticleDropHandle } from '../components/ArticleDropHandle'
 import { WikiContextMenu } from '../components/WikiContextMenu'
 import { useArticleBulkActions } from '../hooks/useArticleBulkActions'
 import { BoxedWikiEntity, useBoxedWikiContent } from '../hooks/useBoxedWikiContent'
@@ -47,15 +49,18 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 	useDragDropReceiver({
 		type: 'articleListItem',
 		receiverRef: ref,
-		onDrop: ({ params }) => {
+		onDrop: ({ params }, { markHandled }) => {
 			moveArticle({
 				entityId: params.article.id,
 				entityType: params.article.type,
-				parentId: null,
+				parentId,
 				position: 99999,
 			})
+			markHandled()
 		},
 	})
+	const { collapseWikiFolderById } = preferencesSlice.actions
+	const dispatch = useDispatch()
 
 	const contextMenuState = usePopupState({ variant: 'popover', popupId: 'articleListItem' })
 	const contextMenuStateRef = useRef(contextMenuState)
@@ -69,45 +74,81 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 	const { setOpacity } = useColorUtils()
 	const fullColor = setOpacity(color, 0.3)
 	const folderColor = setOpacity(color, 0.04)
+	const folderColorHover = setOpacity(color, 0.5)
+
+	const scrollbars = useBrowserSpecificScrollbars()
+
+	const onFolderClick = useCallback(
+		(event: MouseEvent) => {
+			if (!parentId || event.target !== ref.current) {
+				return
+			}
+			dispatch(collapseWikiFolderById(parentId))
+			event.stopPropagation()
+		},
+		[collapseWikiFolderById, dispatch, parentId],
+	)
 
 	return (
 		<Stack
 			ref={ref}
+			component={'div'}
+			onClick={onFolderClick}
 			direction="column"
-			height={1}
+			height={parentId ? 'auto' : 1}
 			sx={{
+				position: 'relative',
+				pointerEvents: 'auto',
+				'--hit-gap': '5px',
+				gap: 'calc(2 * var(--hit-gap))',
 				background: parentId ? folderColor : 'transparent',
-				marginLeft: parentId ? 1 : 0,
 				paddingLeft: parentId ? 1 : 0,
 				marginRight: parentId ? 0 : -2,
 				paddingRight: parentId ? 0 : 2,
 				borderRadius: '0 6px 6px 6px',
-				height: '100%',
-				paddingBottom: parentId ? '4px' : '50vh',
-				overflowY: 'auto',
+				height: parentId ? 'auto' : 'calc(100% + var(--hit-gap))',
+				paddingTop: parentId ? 'var(--hit-gap)' : '4px',
+				paddingBottom: parentId ? 'calc(var(--hit-gap) * 2)' : '50vh',
+				overflowY: parentId ? 'visible' : 'auto',
 				borderLeft: parentId ? `2px solid` : 'none',
 				borderColor: fullColor,
-				...useBrowserSpecificScrollbars(),
+				cursor: parentId ? 'pointer' : 'default',
+				...scrollbars,
+				'&:hover:not(:has(*:hover))': {
+					borderColor: parentId ? folderColorHover : 'transparent',
+				},
+				...(parentId && {
+					'&::after': {
+						content: '""',
+						position: 'absolute',
+						left: 0,
+						right: 0,
+						bottom: 'calc(var(--hit-gap) * -1)',
+						height: 'calc(var(--hit-gap))',
+					},
+				}),
 			}}
 			data-testid={`ArticleList/${depth}`}
 		>
 			{visibleEntities.map((article) => (
-				<span key={article.id}>
-					<ArticleDropHandle position={article.position} parentId={parentId} />
-					<ArticleListItem
-						article={article}
-						depth={depth}
-						onContextMenu={openContextMenu}
-						checkboxVisible={checkboxVisible}
-						checked={isChecked(article)}
-						onCheckboxChange={onChange}
-						isContextMenuOpen={contextMenuState.isOpen && contextMenuArticle?.id === article.id}
-					/>
-				</span>
+				<ArticleListItem
+					key={article.id}
+					article={article}
+					depth={depth}
+					onContextMenu={openContextMenu}
+					checkboxVisible={checkboxVisible}
+					checked={isChecked(article)}
+					onCheckboxChange={onChange}
+					isContextMenuOpen={contextMenuState.isOpen && contextMenuArticle?.id === article.id}
+				/>
 			))}
 			{(hiddenCount > 0 || visibleEntities.length === 0) && (
 				<Typography variant="body2" color="text.secondary" sx={{ py: 1, pl: 1 }}>
-					{parentId && hiddenCount === 0 && <span>Folder is empty!</span>}
+					{parentId && hiddenCount === 0 && (
+						<Typography variant="caption" fontStyle={'italic'} color={theme.custom.palette.hintText}>
+							Empty folder
+						</Typography>
+					)}
 					{hiddenCount > 0 && (
 						<Typography variant="caption" fontStyle={'italic'} color={theme.custom.palette.hintText}>
 							+{hiddenCount} hidden

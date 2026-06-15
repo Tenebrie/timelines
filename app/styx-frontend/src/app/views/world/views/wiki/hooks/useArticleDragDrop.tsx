@@ -12,9 +12,10 @@ import { BoxedWikiEntity } from './useBoxedWikiContent'
 
 type Props = {
 	article: BoxedWikiEntity
+	isDropHandle?: boolean
 }
 
-export const useArticleDragDrop = ({ article }: Props) => {
+export const useArticleDragDrop = ({ article, isDropHandle }: Props) => {
 	const [moveArticle] = useMoveArticle()
 
 	const { uncollapseWikiFolder } = preferencesSlice.actions
@@ -45,20 +46,26 @@ export const useArticleDragDrop = ({ article }: Props) => {
 	useDragDropReceiver({
 		type: 'articleListItem',
 		receiverRef: ref,
-		onDrop: async ({ params }, event) => {
+		onDrop: async ({ params, targetRootPos }, event) => {
 			event.markHandled()
-			if (params.article.id === article.id || article.type !== 'folder') {
+			if (params.article.id === article.id || !ref.current) {
 				return
+			}
+
+			const targetTop = ref.current.getBoundingClientRect().top
+			const delta = targetRootPos.y < targetTop ? 1 : -1
+			const dropHandleDelta = isDropHandle && delta > 0 ? -2 : 0
+			console.log(delta)
+
+			if (article.entity.parentFolderId !== params.article.entity.parentFolderId) {
+				requestIdleCallback(forceOpen, { timeout: 150 })
 			}
 			await moveArticle({
 				entityId: params.article.id,
 				entityType: params.article.type,
-				parentId: article.id,
-				// Always the last position
-				position: 999999,
+				parentId: article.entity.parentFolderId,
+				position: article.position + delta + dropHandleDelta,
 			})
-
-			requestIdleCallback(forceOpen, { timeout: 250 })
 		},
 	})
 

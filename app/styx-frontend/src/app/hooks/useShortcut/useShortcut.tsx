@@ -6,12 +6,15 @@ import { RegisteredShortcuts, Shortcut, ShortcutPriorities, ShortcutPriority } f
 export { Shortcut, ShortcutPriorities }
 
 export const useShortcut = (
-	shortcutOrArray: (typeof Shortcut)[keyof typeof Shortcut] | (typeof Shortcut)[keyof typeof Shortcut][],
+	shortcutOrArray:
+		| (typeof Shortcut)[keyof typeof Shortcut]
+		| (typeof Shortcut)[keyof typeof Shortcut][]
+		| undefined,
 	callback: () => void,
 	priority?: ShortcutPriority,
 ) => {
 	useEffect(() => {
-		if (priority === -1 || priority === false) {
+		if (priority === -1 || priority === false || shortcutOrArray === undefined) {
 			return
 		}
 

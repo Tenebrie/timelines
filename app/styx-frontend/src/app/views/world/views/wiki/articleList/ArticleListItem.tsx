@@ -1,5 +1,3 @@
-import Add from '@mui/icons-material/Add'
-import MoreVert from '@mui/icons-material/MoreVert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
@@ -7,20 +5,20 @@ import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import { useMatches } from '@tanstack/react-router'
 import { memo, useCallback, useMemo } from 'react'
-import { useSelector } from 'react-redux'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { RootState } from '@/app/store'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticleDragDrop'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
-import { useFolderEntityCount } from '../hooks/useFolderEntityCount'
 import { ArticleList } from './ArticleList'
+import { ArticleListItemContextMenu } from './ArticleListItemContextMenu'
+import { ArticleListItemEndAdornment } from './ArticleListItemEndAdornment'
 import { ArticleListItemSecondary } from './ArticleListItemSecondary'
 import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
+import { useIsFolderGrayedOut } from './hooks/useIsFolderGrayedOut'
 import { ArticleListItemIcon } from './icon/ArticleListItemIcon'
 
 type Props = {
@@ -71,7 +69,6 @@ function ArticleListItemInnerComponent({
 	isContextMenuOpen,
 }: Props & { expanded: boolean; toggleOpen: () => void; highlighted: boolean }) {
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
-	const folderCount = useFolderEntityCount({ id: article.id, entityType: article.type })
 
 	const { isReadOnly } = useIsReadOnly()
 
@@ -101,57 +98,20 @@ function ArticleListItemInnerComponent({
 		return 'text.secondary'
 	}, [highlighted, theme.mode])
 
-	const endAdornment = useMemo(() => {
-		if (article.type !== 'folder') {
-			return (
-				<Box
-					component="span"
-					sx={{
-						color,
-						fontSize: '0.7rem',
-						textTransform: 'uppercase',
-						whiteSpace: 'nowrap',
-						ml: 1,
-						fontFamily: 'Inter',
-						transition: 'color 0.1s ease-out',
-					}}
-				>
-					{article.type}
-				</Box>
-			)
-		}
-
-		return (
-			<Stack
-				direction="row"
-				alignItems="center"
-				justifyContent="center"
-				sx={{
-					boxSizing: 'border-box',
-					minWidth: 24,
-					minHeight: 24,
-					maxHeight: 24,
-					px: 0.75,
-					whiteSpace: 'nowrap',
-					flexShrink: 0,
-					fontSize: 13,
-					color: 'text.secondary',
-					backgroundColor: theme.custom.palette.neutralBackground.normal,
-					borderRadius: '12px',
-				}}
-			>
-				{folderCount}
-			</Stack>
-		)
-	}, [article.type, color, folderCount, theme.custom.palette.neutralBackground.normal])
-
 	return (
-		<Box data-testid={`ArticleListItem/${article.name}/${depth}`} data-item-type={article.type}>
+		<Box
+			data-testid={`ArticleListItem/${article.name}/${depth}`}
+			data-item-type={article.type}
+			sx={{
+				pointerEvents: 'none',
+			}}
+		>
 			<Stack
 				ref={ref}
 				direction="row"
-				position={'relative'}
+				position="relative"
 				sx={{
+					pointerEvents: 'auto',
 					'&:hover .context-menu-button': {
 						opacity: 1,
 					},
@@ -181,7 +141,14 @@ function ArticleListItemInnerComponent({
 						'&:hover': {
 							background: article.type === 'folder' ? entityColorHover : undefined,
 						},
-						borderRadius: '6px',
+						'&::after': {
+							content: '""',
+							position: 'absolute',
+							left: 0,
+							right: 0,
+							top: 'calc(-1 * var(--hit-gap))',
+							bottom: 'calc(-1 * var(--hit-gap))',
+						},
 						justifyContent: 'start',
 						paddingLeft: 1.5,
 						paddingRight: '8px',
@@ -190,132 +157,42 @@ function ArticleListItemInnerComponent({
 					fullWidth
 					onClick={onNavigate}
 				>
-					<Stack direction="row" sx={{ width: '100%', minWidth: 0 }}>
-						<Stack direction="column" alignItems="flex-start" sx={{ maxWidth: '100%', minWidth: 0 }}>
-							<Box
-								sx={{
-									lineHeight: '1.3rem',
-									maxWidth: '100%',
-									overflow: 'hidden',
-									textOverflow: 'ellipsis',
-									whiteSpace: 'nowrap',
-								}}
-							>
-								{article.name}
-							</Box>
-							<ArticleListItemSecondary entity={article} highlighted={highlighted} />
-						</Stack>
-					</Stack>
-					{
-						<Stack
-							className="end-adornment"
-							sx={{ opacity: isContextMenuOpen ? 0 : 1, transition: 'opacity 0.15s' }}
+					<Stack direction="column" alignItems="flex-start" sx={{ width: '100%', minWidth: 0 }}>
+						<Box
+							sx={{
+								lineHeight: '1.3rem',
+								maxWidth: '100%',
+								overflow: 'hidden',
+								textOverflow: 'ellipsis',
+								whiteSpace: 'nowrap',
+							}}
 						>
-							{endAdornment}
-						</Stack>
-					}
+							{article.name}
+						</Box>
+						<ArticleListItemSecondary entity={article} highlighted={highlighted} />
+					</Stack>
+					<Box
+						className="end-adornment"
+						sx={{ opacity: isContextMenuOpen ? 0 : 1, transition: 'opacity 0.15s' }}
+					>
+						<ArticleListItemEndAdornment article={article} color={color} />
+					</Box>
 				</Button>
 				{!isReadOnly && (
-					<>
-						<Button
-							aria-label="Article context menu"
-							className="context-menu-button"
-							onClick={(event) => {
-								onContextMenu(article, event)
-								event.stopPropagation()
-							}}
-							color="inherit"
-							onMouseDown={(event) => event.stopPropagation()}
-							sx={{
-								position: 'absolute',
-								right: 0,
-								top: 0,
-								bottom: 0,
-								width: 36,
-								minWidth: 0,
-								height: 'auto',
-								borderRadius: '8px',
-								color: color,
-								opacity: isContextMenuOpen ? 1 : 0,
-								backgroundColor: isContextMenuOpen ? 'action.hover' : 'transparent',
-								'&:hover': {
-									backgroundColor: 'action.hover',
-								},
-								transition: 'color 0.2s, background-color 0.2s, opacity 0.15s !important',
-								padding: 0,
-							}}
-						>
-							<MoreVert />
-						</Button>
-						{article.type === 'folder' && (
-							<Button
-								aria-label="Folder create menu"
-								className="context-menu-button"
-								onClick={(event) => {
-									onContextMenu(article, event)
-									event.stopPropagation()
-								}}
-								color="inherit"
-								onMouseDown={(event) => event.stopPropagation()}
-								sx={{
-									position: 'absolute',
-									right: 36,
-									top: 0,
-									bottom: 0,
-									width: 36,
-									minWidth: 0,
-									height: 'auto',
-									borderRadius: '8px',
-									color: theme.custom.palette.hintText,
-									opacity: isContextMenuOpen ? 1 : 0,
-									backgroundColor: isContextMenuOpen ? 'action.hover' : 'transparent',
-									'&:hover': {
-										backgroundColor: 'action.hover',
-									},
-									transition: 'color 0.2s, background-color 0.2s, opacity 0.15s !important',
-									padding: 0,
-								}}
-							>
-								<Add />
-							</Button>
-						)}
-					</>
+					<ArticleListItemContextMenu
+						article={article}
+						color={color}
+						onContextMenu={onContextMenu}
+						isContextMenuOpen={isContextMenuOpen}
+					/>
 				)}
 				{ghostElement}
 			</Stack>
 			{article.type === 'folder' && (
-				<Collapse in={expanded} unmountOnExit>
+				<Collapse in={expanded} unmountOnExit sx={{ paddingLeft: 1 }}>
 					<ArticleList color={article.color} parentId={article.id} depth={depth + 1} />
 				</Collapse>
 			)}
 		</Box>
 	)
-}
-
-function useIsFolderGrayedOut(article: BoxedWikiEntity) {
-	const folderId = article.type === 'folder' ? article.id : null
-
-	return useSelector((state: RootState) => {
-		if (!folderId) {
-			return false
-		}
-
-		const { folders, articles } = state.wiki
-		const { actors, events, tags } = state.world
-		const { visibleEntities } = state.preferences.wiki
-
-		function hasVisibleEntity(id: string): boolean {
-			if (
-				(visibleEntities.includes('actor') && actors.some((a) => a.parentFolderId === id)) ||
-				(visibleEntities.includes('article') && articles.some((a) => a.parentFolderId === id)) ||
-				(visibleEntities.includes('event') && events.some((e) => e.parentFolderId === id)) ||
-				(visibleEntities.includes('tag') && tags.some((t) => t.parentFolderId === id))
-			) {
-				return true
-			}
-			return folders.filter((f) => f.parentFolderId === id).some((f) => hasVisibleEntity(f.id))
-		}
-
-		return !hasVisibleEntity(folderId)
-	})
 }

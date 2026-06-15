@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
-import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useListArticles } from '@/app/views/world/api/useListArticles'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
@@ -20,7 +19,6 @@ export const ArticleListHeader = () => {
 	const { data: articles } = useListArticles()
 	const { name } = useSelector(getWorldState, (a, b) => a.name === b.name)
 	const { isBulkSelecting, bulkActionArticles } = useSelector(getWikiState)
-	const { open: openArticleWizard } = useModal('articleWizard')
 	const { open: openDeleteArticleModal } = useModal('deleteArticleModal')
 
 	const { isReadOnly } = useIsReadOnly()
@@ -43,8 +41,6 @@ export const ArticleListHeader = () => {
 		dispatch(setBulkSelecting(false))
 		dispatch(clearBulkSelection())
 	}
-
-	useShortcut(Shortcut.CreateNew, () => openArticleWizard({}))
 
 	return (
 		<Stack sx={{ height: '32px' }} direction="row">

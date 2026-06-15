@@ -176,6 +176,10 @@ export const preferencesSlice = createSlice({
 			state.wiki.expandedFolders = state.wiki.expandedFolders.filter((id) => id !== payload.id)
 			saveToLocalStorage(state)
 		},
+		collapseWikiFolderById: (state, { payload }: PayloadAction<string>) => {
+			state.wiki.expandedFolders = state.wiki.expandedFolders.filter((id) => id !== payload)
+			saveToLocalStorage(state)
+		},
 		uncollapseWikiFolder: (state, { payload }: PayloadAction<BoxedWikiEntity>) => {
 			state.wiki.expandedFolders = [...new Set([...state.wiki.expandedFolders, payload.id])]
 			saveToLocalStorage(state)

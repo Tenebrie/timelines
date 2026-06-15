@@ -88,9 +88,6 @@ const modals = {
 	},
 
 	/* WorldWiki */
-	articleWizard: {
-		isOpen: false as boolean,
-	},
 	deleteArticleModal: {
 		isOpen: false as boolean,
 		articles: [] as string[],

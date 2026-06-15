@@ -14,7 +14,7 @@ type Props = {
 	tooltip: string
 	disabled?: boolean
 	color?: Parameters<typeof IconButton>['0']['color']
-	size: 'small' | 'medium' | 'large'
+	size?: 'small' | 'medium' | 'large'
 	popoverBody: (props: { close: () => void }) => ReactNode
 	popoverAction: (props: { close: () => void }) => ReactNode
 	buttonSx?: Parameters<typeof IconButton>['0']['sx']
@@ -26,7 +26,10 @@ type Props = {
 	popoverAlign?: Parameters<typeof Popover>['0']['anchorOrigin']
 	children?: ReactNode
 	slotProps?: PopoverButtonSlotProps
+	shortcut?: Parameters<typeof useShortcut>[0]
 }
+
+export type PopoverButtonProps = Props
 
 export type PopoverButtonSlotProps = {
 	primaryButton?: Partial<Parameters<typeof Button>[0]>
@@ -38,7 +41,7 @@ export function PopoverButton({
 	startIcon,
 	tooltip,
 	disabled,
-	size,
+	size = 'medium',
 	color,
 	popoverBody,
 	popoverAction,
@@ -50,6 +53,7 @@ export function PopoverButton({
 	buttonVariant = 'icon',
 	popoverAlign = { vertical: 'bottom', horizontal: 'right' },
 	slotProps,
+	shortcut,
 }: Props) {
 	const popupState = usePopupState({ variant: 'popover', popupId: tooltip })
 
@@ -66,6 +70,10 @@ export function PopoverButton({
 			bindTrigger(popupState).onClick(e)
 		},
 	}
+
+	useShortcut(shortcut, () => {
+		popupState.open()
+	})
 
 	useShortcut(
 		['Enter', 'Ctrl+Enter'],
