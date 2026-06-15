@@ -17,6 +17,7 @@ import {
 	usePathParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { actorListTag, worldDetailsTag } from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'
@@ -46,6 +47,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		icon: OptionalParam(NameStringValidator),
 		color: OptionalParam(NameStringValidator),
 		descriptionRich: OptionalParam(ContentStringValidator),
+		parentFolderId: z.string().nullable().optional(),
 	})
 
 	let description: string | undefined
@@ -67,6 +69,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		worldId,
 		createData: {
 			name: params.name,
+			parentFolderId: params.parentFolderId,
 		},
 		updateData: {
 			...params,

@@ -214,6 +214,7 @@ export type CreateActorApiArg = {
 		icon?: string
 		color?: string
 		descriptionRich?: string
+		parentFolderId?: null | string
 	}
 }
 export type UpdateActorApiResponse = /** status 200  */ {

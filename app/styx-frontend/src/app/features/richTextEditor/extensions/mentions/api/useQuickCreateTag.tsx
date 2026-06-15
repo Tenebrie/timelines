@@ -1,4 +1,4 @@
-import { useCreateTagMutation } from '@api/worldTagApi'
+import { CreateTagApiArg, useCreateTagMutation } from '@api/worldTagApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -15,7 +15,7 @@ export const useQuickCreateTag = () => {
 	const dispatch = useDispatch()
 
 	const quickCreateTag = useCallback(
-		async ({ query }: { query: string }) => {
+		async ({ query, ...body }: { query: string } & Omit<CreateTagApiArg['body'], 'name'>) => {
 			if (query.length === 0) {
 				return
 			}
@@ -24,6 +24,7 @@ export const useQuickCreateTag = () => {
 				await createTag({
 					worldId,
 					body: {
+						...body,
 						name: query,
 					},
 				}),

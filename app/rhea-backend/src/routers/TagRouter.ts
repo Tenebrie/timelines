@@ -41,6 +41,7 @@ router.post('/api/world/:worldId/tags', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		name: RequiredParam(NameStringValidator),
 		description: OptionalParam(OptionalNameStringValidator),
+		parentFolderId: z.string().nullable().optional(),
 	})
 
 	const { tag, world } = await TagService.createTag({

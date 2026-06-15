@@ -40,7 +40,11 @@ export const WorldEventService = {
 		updateData: UpdateWorldEventQueryParams
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
-			const entityCount = await BulkActionService.countWikiEntities({ worldId, prisma })
+			const entityCount = await BulkActionService.countWikiEntities({
+				worldId,
+				folderId: createData.parentFolderId ?? null,
+				prisma,
+			})
 
 			const baseEvent = await prisma.worldEvent.create({
 				data: {

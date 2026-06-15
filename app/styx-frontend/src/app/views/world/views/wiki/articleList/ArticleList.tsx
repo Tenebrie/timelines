@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 
 import { DragDropState } from '@/app/features/dragDrop/DragDropState'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
+import { useDragScroll } from '@/app/features/dragDrop/hooks/useDragScroll'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
@@ -26,16 +27,12 @@ type Props = {
 
 /**
  * TODO:
- * - Create in folder
  * - Create new to create at the position of the currently selected entity (after)
  * - Event moving from the wiki view
  * - Event moving after clicking "Edit" without selection (Timeline view)
- * - Right click to open context menu
  * - Deletion modal invalid text
  * - Mentions to navigate within wiki view (if in wiki view)
  * - Actor avatars, for real this time
- * - Scroll wiki list during drag (hover close to edges)
- * - Article deletion not updating the list
  */
 export const ArticleList = memo(ArticleListComponent)
 
@@ -47,6 +44,7 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 	const { checkboxVisible, isChecked, onChange } = useArticleBulkActions({ articles: visibleEntities })
 
 	const ref = useRef<HTMLDivElement>(null)
+	useDragScroll({ type: 'articleListItem', scrollRef: ref, enabled: !parentId })
 	useDragDropReceiver({
 		type: 'articleListItem',
 		receiverRef: ref,

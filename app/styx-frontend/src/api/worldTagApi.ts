@@ -86,6 +86,7 @@ export type CreateTagApiArg = {
 	body: {
 		name: string
 		description?: string
+		parentFolderId?: null | string
 	}
 }
 export type UpdateTagApiResponse = /** status 200  */ {

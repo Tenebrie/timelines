@@ -3,31 +3,33 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { getWikiPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
+import { RootState } from '@/app/store'
 
-import { BoxedWikiEntity } from '../../hooks/useBoxedWikiContent'
-
-export function useArticleCollapseControls(article: BoxedWikiEntity) {
-	const { expandedFolders } = useSelector(
-		getWikiPreferences,
-		(a, b) => a.expandedFolders === b.expandedFolders,
+export function useArticleCollapseControls(article: { id: string | null }) {
+	const collapsed = useSelector(
+		(state: RootState) => !!article.id && !getWikiPreferences(state).expandedFolders.includes(article.id),
 	)
 
-	const { collapseWikiFolder, uncollapseWikiFolder } = preferencesSlice.actions
+	const { collapseWikiFolderById, uncollapseWikiFolderById } = preferencesSlice.actions
 	const dispatch = useDispatch()
 
-	const collapsed = !expandedFolders.includes(article.id)
-
 	const forceOpen = useCallback(() => {
-		dispatch(uncollapseWikiFolder(article))
-	}, [dispatch, uncollapseWikiFolder, article])
+		if (!article.id) {
+			return
+		}
+		dispatch(uncollapseWikiFolderById(article.id))
+	}, [dispatch, uncollapseWikiFolderById, article])
 
 	const toggleOpen = useCallback(() => {
-		if (collapsed) {
-			dispatch(uncollapseWikiFolder(article))
-		} else {
-			dispatch(collapseWikiFolder(article))
+		if (!article.id) {
+			return
 		}
-	}, [collapsed, dispatch, uncollapseWikiFolder, article, collapseWikiFolder])
+		if (collapsed) {
+			dispatch(uncollapseWikiFolderById(article.id))
+		} else {
+			dispatch(collapseWikiFolderById(article.id))
+		}
+	}, [collapsed, dispatch, uncollapseWikiFolderById, article, collapseWikiFolderById])
 
 	return {
 		collapsed,

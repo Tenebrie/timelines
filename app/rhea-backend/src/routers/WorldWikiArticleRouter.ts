@@ -61,11 +61,12 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
-	const { name, icon, color, contentRich } = useRequestBody(ctx, {
+	const { name, icon, color, contentRich, parentFolderId } = useRequestBody(ctx, {
 		name: RequiredParam(StringValidator),
 		icon: z.string().optional(),
 		color: z.string().optional(),
 		contentRich: OptionalParam(ContentStringValidator),
+		parentFolderId: z.string().nullable().optional(),
 	})
 
 	let parsedContent: string | undefined
@@ -89,6 +90,7 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 		content: parsedContent ?? '',
 		contentRich: parsedContentRich ?? '',
 		mentions,
+		parentFolderId: parentFolderId ?? null,
 	})
 
 	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })

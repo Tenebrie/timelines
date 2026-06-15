@@ -104,14 +104,18 @@ export const WikiArticleService = {
 	},
 
 	createWikiArticle: async (
-		params: Pick<WikiArticle, 'worldId' | 'name' | 'content' | 'contentRich'> & {
+		params: Pick<WikiArticle, 'worldId' | 'name' | 'content' | 'contentRich' | 'parentFolderId'> & {
 			icon?: string
 			color?: string
 			mentions?: MentionData[]
 		},
 	) => {
 		return getPrismaClient().$transaction(async (prisma) => {
-			const entityCount = await BulkActionService.countWikiEntities({ worldId: params.worldId, prisma })
+			const entityCount = await BulkActionService.countWikiEntities({
+				worldId: params.worldId,
+				folderId: params.parentFolderId,
+				prisma,
+			})
 
 			const baseArticle = await prisma.wikiArticle.create({
 				data: {
@@ -121,6 +125,7 @@ export const WikiArticleService = {
 					color: params.color,
 					content: params.content,
 					contentRich: params.contentRich,
+					parentFolderId: params.parentFolderId,
 					parentFolderPosition: entityCount * 2,
 				},
 				select: {

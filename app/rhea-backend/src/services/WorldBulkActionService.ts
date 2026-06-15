@@ -7,15 +7,23 @@ import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 type SupportedEntityType = 'article' | 'actor' | 'event' | 'tag' | 'folder'
 
 export const BulkActionService = {
-	countWikiEntities: async ({ worldId, prisma }: { worldId: string; prisma?: TransactionClient }) => {
+	countWikiEntities: async ({
+		worldId,
+		folderId,
+		prisma,
+	}: {
+		worldId: string
+		folderId: string | null
+		prisma?: TransactionClient
+	}) => {
 		const client = getPrismaClient(prisma)
 
 		const counts = await Promise.all([
-			client.wikiArticle.count({ where: { worldId } }),
-			client.wikiFolder.count({ where: { worldId } }),
-			client.worldEvent.count({ where: { worldId } }),
-			client.actor.count({ where: { worldId } }),
-			client.tag.count({ where: { worldId } }),
+			client.wikiArticle.count({ where: { worldId, parentFolderId: folderId } }),
+			client.wikiFolder.count({ where: { worldId, parentFolderId: folderId } }),
+			client.worldEvent.count({ where: { worldId, parentFolderId: folderId } }),
+			client.actor.count({ where: { worldId, parentFolderId: folderId } }),
+			client.tag.count({ where: { worldId, parentFolderId: folderId } }),
 		])
 
 		return counts.reduce((acc, count) => acc + count, 0)

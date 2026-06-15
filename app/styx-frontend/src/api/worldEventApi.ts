@@ -136,6 +136,7 @@ export type CreateWorldEventApiArg = {
 		customName?: boolean
 		externalLink?: string
 		worldEventTrackId?: null | string
+		parentFolderId?: null | string
 	}
 }
 export type UpdateWorldEventApiResponse = /** status 200  */ {

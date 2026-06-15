@@ -137,13 +137,17 @@ export const ActorService = {
 		updateData: UpdateActorQueryParams
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
-			const entityCount = await BulkActionService.countWikiEntities({ worldId, prisma })
+			const entityCount = await BulkActionService.countWikiEntities({
+				worldId,
+				folderId: createData.parentFolderId ?? null,
+				prisma,
+			})
 
 			const baseActor = await getPrismaClient(prisma).actor.create({
 				data: {
 					worldId,
-					parentFolderPosition: entityCount * 2,
 					...createData,
+					parentFolderPosition: entityCount * 2,
 				},
 				select: {
 					id: true,

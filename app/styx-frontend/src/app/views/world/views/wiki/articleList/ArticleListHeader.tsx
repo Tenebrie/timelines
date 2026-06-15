@@ -62,7 +62,7 @@ export const ArticleListHeader = () => {
 				<Typography variant="h6" marginLeft={1}>
 					{!isBulkSelecting && <>{name}</>}
 				</Typography>
-				{!isBulkSelecting && !isReadOnly && <ArticleListHeaderCreateButton />}
+				{!isBulkSelecting && !isReadOnly && <ArticleListHeaderCreateButton folderId={null} />}
 				{isBulkSelecting && (
 					<Stack direction="row" gap={1}>
 						<Button

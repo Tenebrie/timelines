@@ -1,4 +1,4 @@
-import { useCreateFolderMutation, worldWikiFolderApi } from '@api/worldWikiFolderApi'
+import { CreateFolderApiArg, useCreateFolderMutation, worldWikiFolderApi } from '@api/worldWikiFolderApi'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { AppDispatch } from '@/app/store'
@@ -11,13 +11,11 @@ export function useCreateFolder() {
 
 	const dispatch = useDispatch<AppDispatch>()
 
-	const commit = async ({ name }: { name: string }) => {
+	const commit = async (body: CreateFolderApiArg['body']) => {
 		const { response, error } = parseApiResponse(
 			await createFolder({
 				worldId,
-				body: {
-					name,
-				},
+				body,
 			}),
 		)
 		if (error) {

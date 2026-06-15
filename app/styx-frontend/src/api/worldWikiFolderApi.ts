@@ -120,7 +120,7 @@ export type CreateFolderApiArg = {
 		name: string
 		icon?: string
 		color?: string
-		parentId?: null | string
+		parentFolderId?: null | string
 	}
 }
 export type UpdateFolderApiResponse = /** status 200  */ {

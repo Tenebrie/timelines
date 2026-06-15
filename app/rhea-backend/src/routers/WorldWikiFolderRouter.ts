@@ -14,10 +14,10 @@ import {
 	usePathParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { SessionMiddleware } from '../middleware/SessionMiddleware.js'
 import { worldWikiFolderTag } from './utils/tags.js'
-import { NullableStringValidator } from './validators/NullableStringValidator.js'
 
 const router = new Router().with(SessionMiddleware)
 
@@ -54,14 +54,20 @@ router.post('/api/world/:worldId/wiki/folders', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
-	const { name, icon, color, parentId } = useRequestBody(ctx, {
+	const { name, icon, color, parentFolderId } = useRequestBody(ctx, {
 		name: RequiredParam(StringValidator),
 		icon: OptionalParam(StringValidator),
 		color: OptionalParam(StringValidator),
-		parentId: OptionalParam(NullableStringValidator),
+		parentFolderId: z.string().nullable().optional(),
 	})
 
-	const folder = await WikiFolderService.createWikiFolder({ worldId, name, icon, color, parentId })
+	const folder = await WikiFolderService.createWikiFolder({
+		worldId,
+		name,
+		icon,
+		color,
+		parentFolderId: parentFolderId ?? null,
+	})
 
 	RedisService.notifyAboutWikiFolderUpdate(ctx, { worldId, folder })
 

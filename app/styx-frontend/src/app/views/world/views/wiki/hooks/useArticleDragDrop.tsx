@@ -3,8 +3,10 @@ import Button from '@mui/material/Button'
 
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
+import { useDragHoverExpand } from '@/app/features/dragDrop/hooks/useDragHoverExpand'
 
 import { useMoveArticle } from '../api/useMoveArticle'
+import { useArticleCollapseControls } from '../articleList/hooks/useArticleCollapseControls'
 import { ArticleListItemIcon } from '../articleList/icon/ArticleListItemIcon'
 import { BoxedWikiEntity } from './useBoxedWikiContent'
 
@@ -15,6 +17,7 @@ type Props = {
 
 export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 	const [moveArticle] = useMoveArticle()
+	const { forceOpen } = useArticleCollapseControls(article)
 
 	const { ref, ghostElement } = useDragDrop({
 		type: 'articleListItem',
@@ -76,6 +79,13 @@ export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 				position: article.position + delta,
 			})
 		},
+	})
+
+	useDragHoverExpand({
+		type: 'articleListItem',
+		targetRef: ref,
+		enabled: article.type === 'folder' && !isFolderExpanded,
+		onTrigger: forceOpen,
 	})
 
 	return {

@@ -7,15 +7,19 @@ type Props = Omit<PopoverButtonProps, 'content' | 'popoverAction'> & {
 	onConfirm: () => void | boolean | Promise<void | boolean>
 	confirmDisabled?: boolean
 }
+export type CreatePopoverButtonProps = Props
 
 export function CreatePopoverButton(props: Props) {
-	const { onConfirm, confirmDisabled, size = 'medium', popoverSx, buttonSx } = props
+	const { onConfirm, confirmDisabled, size = 'medium', popoverSx, buttonSx, buttonVariant } = props
+
+	const content = buttonVariant === 'icon' ? <AddIcon fontSize={size} /> : <>Create new...</>
+	const startIcon = buttonVariant === 'icon' ? undefined : <AddIcon fontSize={size} />
 
 	return (
 		<PopoverButton
 			{...props}
-			content={<>Create new...</>}
-			startIcon={<AddIcon fontSize={size} />}
+			content={content}
+			startIcon={startIcon}
 			buttonVariant="contained"
 			popoverSx={{ gap: 1.5, p: 2, ...popoverSx }}
 			buttonSx={{

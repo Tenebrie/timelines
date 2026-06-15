@@ -19,6 +19,7 @@ import {
 	usePathParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { worldDetailsTag, worldEventDeltaTag, worldEventTag } from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'
@@ -60,6 +61,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		customName: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(ContentStringValidator),
 		worldEventTrackId: OptionalParam(NullableEventTrackValidator),
+		parentFolderId: z.string().nullable().optional(),
 	})
 
 	const parsed = await RichTextService.parseContentString({
@@ -73,6 +75,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 			id: params.id,
 			name: params.name,
 			timestamp: params.timestamp,
+			parentFolderId: params.parentFolderId,
 		},
 		updateData: {
 			...params,

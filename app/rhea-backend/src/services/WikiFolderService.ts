@@ -23,14 +23,17 @@ export const WikiFolderService = {
 	},
 
 	createWikiFolder: async (
-		params: Pick<WikiFolder, 'worldId' | 'name'> & {
+		params: Pick<WikiFolder, 'worldId' | 'name' | 'parentFolderId'> & {
 			icon?: string
 			color?: string
-			parentId?: string | null
 		},
 	) => {
 		return getPrismaClient().$transaction(async (prisma) => {
-			const entityCount = await BulkActionService.countWikiEntities({ worldId: params.worldId, prisma })
+			const entityCount = await BulkActionService.countWikiEntities({
+				worldId: params.worldId,
+				folderId: params.parentFolderId,
+				prisma,
+			})
 
 			const baseFolder = await prisma.wikiFolder.create({
 				data: {
@@ -38,7 +41,7 @@ export const WikiFolderService = {
 					name: params.name,
 					icon: params.icon,
 					color: params.color,
-					parentFolderId: params.parentId,
+					parentFolderId: params.parentFolderId,
 					parentFolderPosition: entityCount * 2,
 				},
 				select: {

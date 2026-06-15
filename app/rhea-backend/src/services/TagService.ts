@@ -1,6 +1,6 @@
 import { MentionedEntity } from '@prisma/client'
 
-import { TagUncheckedUpdateInput } from '../../prisma/client/models.js'
+import { TagUncheckedCreateInput, TagUncheckedUpdateInput } from '../../prisma/client/models.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
@@ -118,18 +118,19 @@ export const TagService = {
 		params,
 	}: {
 		worldId: string
-		params: {
-			name: string
-			description?: string
-		}
+		params: Omit<TagUncheckedCreateInput, 'worldId'>
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
-			const entityCount = await BulkActionService.countWikiEntities({ worldId, prisma })
+			const entityCount = await BulkActionService.countWikiEntities({
+				worldId,
+				folderId: params.parentFolderId ?? null,
+				prisma,
+			})
 
 			const baseTag = await getPrismaClient(prisma).tag.create({
 				data: {
 					worldId,
-					name: params.name,
+					...params,
 					description: params.description ?? '',
 					parentFolderPosition: entityCount * 2,
 				},

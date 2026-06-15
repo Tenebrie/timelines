@@ -27,6 +27,7 @@ type Props = {
 	children?: ReactNode
 	slotProps?: PopoverButtonSlotProps
 	shortcut?: Parameters<typeof useShortcut>[0]
+	disableTooltip?: boolean
 }
 
 export type PopoverButtonProps = Props
@@ -54,6 +55,7 @@ export function PopoverButton({
 	popoverAlign = { vertical: 'bottom', horizontal: 'right' },
 	slotProps,
 	shortcut,
+	disableTooltip,
 }: Props) {
 	const popupState = usePopupState({ variant: 'popover', popupId: tooltip })
 
@@ -90,7 +92,7 @@ export function PopoverButton({
 
 	return (
 		<>
-			<Tooltip title={tooltip} disableInteractive enterDelay={700}>
+			<Tooltip title={disableTooltip ? undefined : tooltip} disableInteractive enterDelay={700}>
 				{buttonVariant === 'icon' ? (
 					<IconButton
 						color={color}

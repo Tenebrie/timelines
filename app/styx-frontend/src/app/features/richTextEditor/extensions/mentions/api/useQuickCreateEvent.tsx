@@ -1,4 +1,4 @@
-import { useCreateWorldEventMutation } from '@api/worldEventApi'
+import { CreateWorldEventApiArg, useCreateWorldEventMutation } from '@api/worldEventApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -15,7 +15,13 @@ export const useQuickCreateEvent = () => {
 	const dispatch = useDispatch()
 
 	const quickCreateEvent = useCallback(
-		async ({ query }: { query: string }) => {
+		async ({
+			query,
+			...body
+		}: { query: string } & Omit<
+			CreateWorldEventApiArg['body'],
+			'name' | 'descriptionRich' | 'timestamp'
+		>) => {
 			if (query.length === 0) {
 				return
 			}
@@ -24,8 +30,9 @@ export const useQuickCreateEvent = () => {
 				await createEvent({
 					worldId,
 					body: {
+						...body,
 						name: query,
-						descriptionRich: query,
+						descriptionRich: '',
 						timestamp: '0',
 					},
 				}),

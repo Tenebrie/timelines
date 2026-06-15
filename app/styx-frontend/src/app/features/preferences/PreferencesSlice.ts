@@ -184,6 +184,10 @@ export const preferencesSlice = createSlice({
 			state.wiki.expandedFolders = [...new Set([...state.wiki.expandedFolders, payload.id])]
 			saveToLocalStorage(state)
 		},
+		uncollapseWikiFolderById: (state, { payload }: PayloadAction<string>) => {
+			state.wiki.expandedFolders = [...new Set([...state.wiki.expandedFolders, payload])]
+			saveToLocalStorage(state)
+		},
 		setVisibleWikiEntities: (
 			state,
 			{ payload }: PayloadAction<PreferencesState['wiki']['visibleEntities']>,

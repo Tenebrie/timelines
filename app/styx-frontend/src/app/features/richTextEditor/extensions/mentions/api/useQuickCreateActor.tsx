@@ -1,4 +1,4 @@
-import { useCreateActorMutation } from '@api/actorListApi'
+import { CreateActorApiArg, useCreateActorMutation } from '@api/actorListApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -14,11 +14,12 @@ export const useQuickCreateActor = () => {
 	const dispatch = useDispatch()
 
 	const quickCreateActor = useCallback(
-		async ({ query }: { query: string }) => {
+		async ({ query, ...body }: { query: string } & Omit<CreateActorApiArg['body'], 'name'>) => {
 			const { response, error } = parseApiResponse(
 				await createActor({
 					worldId,
 					body: {
+						...body,
 						name: query.length > 0 ? query : 'Unnamed Actor',
 					},
 				}),

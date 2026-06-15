@@ -7,13 +7,21 @@ import { useCallback, useState } from 'react'
 import { useQuickCreateActor } from '@/app/features/richTextEditor/extensions/mentions/api/useQuickCreateActor'
 import { useQuickCreateEvent } from '@/app/features/richTextEditor/extensions/mentions/api/useQuickCreateEvent'
 import { useQuickCreateTag } from '@/app/features/richTextEditor/extensions/mentions/api/useQuickCreateTag'
-import { CreatePopoverButton } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
+import {
+	CreatePopoverButton,
+	CreatePopoverButtonProps,
+} from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
 import { useCreateArticle } from '../api/useCreateArticle'
 import { useCreateFolder } from '../api/useCreateFolder'
+import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
 
-export function ArticleListHeaderCreateButton() {
+type Props = Omit<CreatePopoverButtonProps, 'tooltip' | 'popoverBody' | 'onConfirm'> & {
+	folderId: string | null
+}
+
+export function ArticleListHeaderCreateButton({ folderId, slotProps, ...props }: Props) {
 	const [newEntityName, setNewEntityName] = useState('')
 
 	const createActor = useQuickCreateActor()
@@ -21,6 +29,8 @@ export function ArticleListHeaderCreateButton() {
 	const [createArticle] = useCreateArticle()
 	const [createFolder] = useCreateFolder()
 	const createTag = useQuickCreateTag()
+
+	const { forceOpen } = useArticleCollapseControls({ id: folderId })
 
 	const types = ['folder', 'article', 'actor', 'event', 'tag'] as const
 	type Type = (typeof types)[number]
@@ -35,47 +45,53 @@ export function ArticleListHeaderCreateButton() {
 
 	const handleCreate = useCallback(async () => {
 		if (selectedType === 'folder') {
-			await createFolder({ name: newEntityName })
+			await createFolder({ name: newEntityName, parentFolderId: folderId })
 		} else if (selectedType === 'article') {
-			await createArticle({ name: newEntityName })
+			await createArticle({ name: newEntityName, parentFolderId: folderId })
 		} else if (selectedType === 'actor') {
-			await createActor({ query: newEntityName })
+			await createActor({ query: newEntityName, parentFolderId: folderId })
 		} else if (selectedType === 'event') {
-			await createEvent({ query: newEntityName })
+			await createEvent({ query: newEntityName, parentFolderId: folderId })
 		} else if (selectedType === 'tag') {
-			await createTag({ query: newEntityName })
+			await createTag({ query: newEntityName, parentFolderId: folderId })
 		}
-	}, [createActor, createArticle, createEvent, createFolder, createTag, newEntityName, selectedType])
+		forceOpen()
+	}, [
+		createActor,
+		createArticle,
+		createEvent,
+		createFolder,
+		createTag,
+		folderId,
+		forceOpen,
+		newEntityName,
+		selectedType,
+	])
 
 	return (
 		<CreatePopoverButton
-			tooltip={'Create new entity'}
 			onEnterKey={async ({ close }) => {
 				await handleCreate()
 				close()
 			}}
+			buttonVariant={folderId ? 'icon' : 'contained'}
+			{...props}
 			slotProps={{
-				primaryButton: {
-					size: 'small',
-				},
+				...slotProps,
+				primaryButton: { size: 'small', ...slotProps?.primaryButton },
 				popover: {
-					sx: {
-						marginTop: '4px',
-					},
-					anchorOrigin: {
-						vertical: 'bottom',
-						horizontal: 'center',
-					},
-					transformOrigin: {
-						vertical: 'top',
-						horizontal: 'center',
-					},
+					sx: { marginTop: '4px' },
+					anchorOrigin: { vertical: 'bottom', horizontal: 'center' },
+					transformOrigin: { vertical: 'top', horizontal: 'center' },
+					...slotProps?.popover,
 				},
 			}}
+			tooltip={folderId ? 'Create in folder' : 'Create new object'}
+			disableTooltip
 			popoverBody={() => (
 				<>
 					<Typography variant="subtitle2" fontWeight="bold">
-						Create New Entity
+						{folderId ? 'Create in folder' : 'Create new object'}
 					</Typography>
 					<ButtonGroup>
 						{types.map((type) => (
