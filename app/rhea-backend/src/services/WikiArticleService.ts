@@ -1,10 +1,9 @@
 import { MentionedEntity, ReferenceHoldingEntity, WikiArticle } from '@prisma/client'
-import { WikiEntityType } from '@src/schema/EntityType.js'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 import { BadRequestError } from 'moonflower'
 
 import { AssetRefService } from './AssetRefService.js'
-import { makeFetchArticleAncestorsQuery } from './dbQueries/makeFetchArticleAncestorsQuery.js'
+import { makeMoveWikiEntityQuery } from './dbQueries/makeMoveWikiEntityQuery.js'
 import { makeSortWikiArticlesQuery as makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { MentionData, MentionsService } from './MentionsService.js'
@@ -225,84 +224,58 @@ export const WikiArticleService = {
 	moveWikiArticle: async (params: {
 		worldId: string
 		entityId: string
-		entityType: WikiEntityType
 		toPosition: number
 		toParentId?: string | null
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
-			const baseEntity = await (async () => {
-				const findParams = {
-					where: { id: params.entityId },
-					select: {
-						id: true,
-						parentFolderId: true,
-					},
-				}
-
-				if (params.entityType === 'actor') {
-					return prisma.actor.findFirst(findParams)
-				}
-				if (params.entityType === 'article') {
-					return prisma.wikiArticle.findFirst(findParams)
-				}
-				if (params.entityType === 'folder') {
-					return prisma.wikiFolder.findFirst(findParams)
-				}
-				if (params.entityType === 'event') {
-					return prisma.worldEvent.findFirst(findParams)
-				}
-				if (params.entityType === 'tag') {
-					return prisma.tag.findFirst(findParams)
-				}
-				throw new BadRequestError('Unsupported entity type')
-			})()
-
-			if (!baseEntity) {
-				throw new BadRequestError('Article not found')
-			}
-
-			if (params.toParentId === baseEntity.id) {
-				throw new BadRequestError('Cannot move article to be its own parent')
-			}
-
-			if (params.toParentId && params.entityType === 'folder') {
-				const ancestors = await makeFetchArticleAncestorsQuery(params.worldId, params.toParentId, prisma)
-				if (ancestors.includes(params.entityId)) {
-					throw new BadRequestError('Cannot move article to be its own descendant')
-				}
-			}
-
-			const updateParams = {
-				where: {
-					id: params.entityId,
-				},
-				data: {
-					parentFolderId: params.toParentId,
-					parentFolderPosition: params.toPosition,
-				},
-			}
-
-			if (params.entityType === 'actor') {
-				await prisma.actor.update(updateParams)
-			} else if (params.entityType === 'article') {
-				await prisma.wikiArticle.update(updateParams)
-			} else if (params.entityType === 'folder') {
-				await prisma.wikiFolder.update(updateParams)
-			} else if (params.entityType === 'event') {
-				await prisma.worldEvent.update(updateParams)
-			} else if (params.entityType === 'tag') {
-				await prisma.tag.update(updateParams)
-			}
-
+			const { type } = await makeMoveWikiEntityQuery(params, prisma)
 			const updates = await makeSortWikiArticlesQuery(params.worldId, prisma)
 			const world = await makeTouchWorldQuery(params.worldId, prisma)
 
 			if (params.toParentId !== undefined) {
 				updates.unshift({
 					entityId: params.entityId,
-					entityType: params.entityType,
+					entityType: type,
 					position: params.toPosition,
 					folderId: params.toParentId,
+				})
+			}
+
+			return { world, updates }
+		})
+	},
+
+	bulkMoveWikiEntities: async (params: {
+		worldId: string
+		entityIds: string[]
+		toPosition: number
+		toParentId?: string | null
+	}) => {
+		return getPrismaClient().$transaction(async (prisma) => {
+			const promises = params.entityIds.map((id) => {
+				return makeMoveWikiEntityQuery(
+					{
+						worldId: params.worldId,
+						entityId: id,
+						toParentId: params.toParentId,
+						toPosition: params.toPosition,
+					},
+					prisma,
+				)
+			})
+			const results = await Promise.all(promises)
+
+			const updates = await makeSortWikiArticlesQuery(params.worldId, prisma)
+			const world = await makeTouchWorldQuery(params.worldId, prisma)
+
+			if (params.toParentId !== undefined) {
+				results.forEach((entity) => {
+					updates.unshift({
+						entityId: entity.id,
+						entityType: entity.type,
+						position: params.toPosition,
+						folderId: params.toParentId,
+					})
 				})
 			}
 

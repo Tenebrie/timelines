@@ -1895,6 +1895,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/world/{worldId}/wiki/bulk/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Moves a number of entities to a new wiki position. */
+        post: operations["bulkMoveWikiEntities"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/world/{worldId}/wiki/article/{articleId}/backlinks": {
         parameters: {
             query?: never;
@@ -8040,13 +8057,53 @@ export interface operations {
             content: {
                 "application/json": {
                     entityId: string;
-                    entityType: "actor" | "tag" | "article" | "event" | "folder";
                     parentId?: null | string;
                     position: number;
                 };
                 "application/x-www-form-urlencoded": {
                     entityId: string;
-                    entityType: "actor" | "tag" | "article" | "event" | "folder";
+                    parentId?: null | string;
+                    position: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        updates: {
+                            entityId: string;
+                            entityType: "actor" | "tag" | "article" | "event" | "folder";
+                            position: number;
+                            folderId?: null | string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    bulkMoveWikiEntities: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    entityIds: string[];
+                    parentId?: null | string;
+                    position: number;
+                };
+                "application/x-www-form-urlencoded": {
+                    entityIds: string[];
                     parentId?: null | string;
                     position: number;
                 };

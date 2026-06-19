@@ -47,7 +47,7 @@ export function ArticleListItemContextMenu({ article, onContextMenu, isContextMe
 					buttonSx={{
 						...buttonSx,
 						right: 36,
-						opacity: 1,
+						opacity: isContextMenuOpen ? 1 : 0,
 						backgroundColor: 'transparent',
 					}}
 				/>

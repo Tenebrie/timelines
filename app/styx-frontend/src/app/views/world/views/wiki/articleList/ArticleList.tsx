@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography'
 import { usePopupState } from 'material-ui-popup-state/hooks'
 import { memo, useCallback, useRef, useState } from 'react'
 import { MouseEvent } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useStore } from 'react-redux'
 
 import { DragDropState } from '@/app/features/dragDrop/DragDropState'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
@@ -11,11 +11,14 @@ import { useDragScroll } from '@/app/features/dragDrop/hooks/useDragScroll'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
+import { RootState } from '@/app/store'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 
+import { useBulkWikiMove } from '../api/useBulkWikiMove'
 import { useMoveArticle } from '../api/useMoveArticle'
 import { WikiContextMenu } from '../components/WikiContextMenu'
 import { BoxedWikiEntity, useBoxedWikiContent } from '../hooks/useBoxedWikiContent'
+import { getWikiState } from '../WikiSliceSelectors'
 import { ArticleListItem } from './ArticleListItem'
 
 type Props = {
@@ -26,7 +29,6 @@ type Props = {
 
 /**
  * TODO:
- * - Create new to create at the position of the currently selected entity (after)
  * - Event moving from the wiki view
  * - Event moving after clicking "Edit" without selection (Timeline view)
  * - Deletion modal invalid text
@@ -37,9 +39,11 @@ export const ArticleList = memo(ArticleListComponent)
 
 export function ArticleListComponent({ parentId, color, depth }: Props) {
 	const [moveArticle] = useMoveArticle()
+	const [bulkMoveEntities] = useBulkWikiMove()
 	const [contextMenuArticle, setContextMenuArticle] = useState<BoxedWikiEntity | null>(null)
 
 	const { visibleEntities, hiddenCount } = useBoxedWikiContent({ filterFolderId: parentId })
+	const store = useStore<RootState>()
 
 	const ref = useRef<HTMLDivElement>(null)
 	useDragScroll({ type: 'articleListItem', scrollRef: ref, enabled: !parentId })
@@ -47,12 +51,21 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 		type: 'articleListItem',
 		receiverRef: ref,
 		onDrop: ({ params }, { markHandled }) => {
-			moveArticle({
-				entityId: params.article.id,
-				entityType: params.article.type,
-				parentId,
-				position: 99999,
-			})
+			const { bulkActionArticles } = getWikiState(store.getState())
+			if (bulkActionArticles.includes(params.article.id)) {
+				bulkMoveEntities({
+					entityIds: bulkActionArticles,
+					parentId,
+					position: 99999,
+				})
+			} else {
+				moveArticle({
+					entityId: params.article.id,
+					entityType: params.article.type,
+					parentId,
+					position: 99999,
+				})
+			}
 			markHandled()
 		},
 	})
@@ -105,7 +118,7 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 				paddingRight: parentId ? 0 : 2,
 				borderRadius: '0 6px 6px 6px',
 				height: parentId ? 'auto' : 'calc(100% + var(--hit-gap))',
-				paddingTop: parentId ? 'var(--hit-gap)' : '4px',
+				paddingTop: parentId ? 'calc(var(--hit-gap) * 2)' : '4px',
 				paddingBottom: parentId ? 'calc(var(--hit-gap) * 2)' : '50vh',
 				overflowY: parentId ? 'visible' : 'auto',
 				borderLeft: parentId ? `2px solid` : 'none',
@@ -141,7 +154,7 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 				/>
 			))}
 			{(hiddenCount > 0 || visibleEntities.length === 0) && (
-				<Typography variant="body2" color="text.secondary" sx={{ py: 1, pl: 1 }}>
+				<Typography variant="body2" color="text.secondary" sx={{ py: 1, pl: 1, pointerEvents: 'none' }}>
 					{parentId && hiddenCount === 0 && (
 						<Typography variant="caption" fontStyle={'italic'} color={theme.custom.palette.hintText}>
 							Empty folder

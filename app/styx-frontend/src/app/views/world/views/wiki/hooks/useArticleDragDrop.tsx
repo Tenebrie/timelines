@@ -1,13 +1,17 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import { useStore } from 'react-redux'
 
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { useDragHoverExpand } from '@/app/features/dragDrop/hooks/useDragHoverExpand'
+import { RootState } from '@/app/store'
 
+import { useBulkWikiMove } from '../api/useBulkWikiMove'
 import { useMoveArticle } from '../api/useMoveArticle'
 import { useArticleCollapseControls } from '../articleList/hooks/useArticleCollapseControls'
 import { ArticleListItemIcon } from '../articleList/icon/ArticleListItemIcon'
+import { getWikiState } from '../WikiSliceSelectors'
 import { BoxedWikiEntity } from './useBoxedWikiContent'
 
 type Props = {
@@ -16,8 +20,11 @@ type Props = {
 }
 
 export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
-	const [moveArticle] = useMoveArticle()
+	const [moveEntity] = useMoveArticle()
+	const [bulkMoveEntities] = useBulkWikiMove()
 	const { forceOpen } = useArticleCollapseControls(article)
+
+	const store = useStore<RootState>()
 
 	const { ref, ghostElement } = useDragDrop({
 		type: 'articleListItem',
@@ -62,8 +69,27 @@ export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 			const isTopHalf = dropY < targetRect.top + targetRect.height / 2
 			const delta = isTopHalf ? -1 : 1
 
+			const { bulkActionArticles } = getWikiState(store.getState())
+			if (bulkActionArticles.includes(params.article.id)) {
+				if (!isTopHalf && article.type === 'folder' && isFolderExpanded) {
+					await bulkMoveEntities({
+						entityIds: bulkActionArticles,
+						parentId: article.id,
+						position: -1,
+					})
+				} else {
+					await bulkMoveEntities({
+						entityIds: bulkActionArticles,
+						parentId: article.entity.parentFolderId,
+						position: article.position + delta,
+					})
+				}
+
+				return
+			}
+
 			if (!isTopHalf && article.type === 'folder' && isFolderExpanded) {
-				await moveArticle({
+				await moveEntity({
 					entityId: params.article.id,
 					entityType: params.article.type,
 					parentId: article.id,
@@ -72,7 +98,7 @@ export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 				return
 			}
 
-			await moveArticle({
+			await moveEntity({
 				entityId: params.article.id,
 				entityType: params.article.type,
 				parentId: article.entity.parentFolderId,

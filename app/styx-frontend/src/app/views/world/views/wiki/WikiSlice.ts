@@ -34,6 +34,8 @@ export const wikiSlice = createSlice({
 
 		setBulkSelecting: (state, { payload }: PayloadAction<boolean>) => {
 			state.isBulkSelecting = payload
+			state.bulkActionArticles = []
+			state.lastCheckedArticle = null
 		},
 
 		addToBulkSelection: (state, { payload }: PayloadAction<{ articles: string[] }>) => {

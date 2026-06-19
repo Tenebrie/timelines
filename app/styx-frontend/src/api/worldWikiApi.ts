@@ -33,6 +33,14 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: [],
 			}),
+			bulkMoveWikiEntities: build.mutation<BulkMoveWikiEntitiesApiResponse, BulkMoveWikiEntitiesApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/wiki/bulk/move`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: [],
+			}),
 		}),
 		overrideExisting: false,
 	})
@@ -110,7 +118,23 @@ export type MoveWikiEntityApiArg = {
 	worldId: string
 	body: {
 		entityId: string
+		parentId?: null | string
+		position: number
+	}
+}
+export type BulkMoveWikiEntitiesApiResponse = /** status 200  */ {
+	updates: {
+		entityId: string
 		entityType: 'actor' | 'tag' | 'article' | 'event' | 'folder'
+		position: number
+		folderId?: null | string
+	}[]
+}
+export type BulkMoveWikiEntitiesApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		entityIds: string[]
 		parentId?: null | string
 		position: number
 	}
@@ -121,4 +145,5 @@ export const {
 	useCreateArticleMutation,
 	useDeleteArticleMutation,
 	useMoveWikiEntityMutation,
+	useBulkMoveWikiEntitiesMutation,
 } = injectedRtkApi

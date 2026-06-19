@@ -1,5 +1,4 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
-import { WikiEntityTypeSchema } from '@src/schema/EntityType.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { MentionData } from '@src/services/MentionsService.js'
 import { RedisService } from '@src/services/RedisService.js'
@@ -147,9 +146,8 @@ router.post('/api/world/:worldId/wiki/move', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
-	const { entityId, entityType, parentId, position } = useRequestBody(ctx, {
+	const { entityId, parentId, position } = useRequestBody(ctx, {
 		entityId: RequiredParam(StringValidator),
-		entityType: WikiEntityTypeSchema,
 		parentId: OptionalParam(NullableStringValidator),
 		position: RequiredParam(NumberValidator),
 	})
@@ -157,7 +155,40 @@ router.post('/api/world/:worldId/wiki/move', async (ctx) => {
 	const { updates } = await WikiArticleService.moveWikiArticle({
 		worldId,
 		entityId,
-		entityType,
+		toPosition: position,
+		toParentId: parentId,
+	})
+
+	RedisService.notifyAboutWikiReorder(ctx, { worldId, updates })
+	return {
+		updates,
+	}
+})
+
+router.post('/api/world/:worldId/wiki/bulk/move', async (ctx) => {
+	useApiEndpoint({
+		name: 'bulkMoveWikiEntities',
+		description: 'Moves a number of entities to a new wiki position.',
+		tags: [worldWikiTag, worldWikiArticleTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(user, worldId)
+
+	const { entityIds, parentId, position } = useRequestBody(ctx, {
+		entityIds: z.string().array(),
+		parentId: OptionalParam(NullableStringValidator),
+		position: RequiredParam(NumberValidator),
+	})
+
+	const { updates } = await WikiArticleService.bulkMoveWikiEntities({
+		worldId,
+		entityIds,
 		toPosition: position,
 		toParentId: parentId,
 	})

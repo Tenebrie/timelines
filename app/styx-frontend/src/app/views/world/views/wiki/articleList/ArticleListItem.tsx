@@ -3,6 +3,7 @@ import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
+import { alpha } from '@mui/material/styles'
 import { useMatches } from '@tanstack/react-router'
 import { memo, MouseEvent, useCallback, useMemo } from 'react'
 
@@ -66,12 +67,24 @@ function ArticleListItemInnerComponent({
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	const { isReadOnly } = useIsReadOnly()
-	const { checkboxVisible, isChecked, onChange, onShiftSelect } = useArticleBulkActions()
+	const { isBulkSelecting, checked, onRowToggle, onShiftSelect } = useArticleBulkActions(article)
+	const renderHighlighted = !isBulkSelecting && highlighted
+	const tinted = isBulkSelecting && checked && !renderHighlighted
 
 	const onNavigate = useCallback(
 		(event: MouseEvent) => {
+			if (isBulkSelecting) {
+				onRowToggle(event)
+				return
+			}
+
 			if (event.shiftKey) {
-				onShiftSelect(article.id)
+				onShiftSelect()
+				return
+			}
+
+			if (event.metaKey || event.ctrlKey) {
+				onRowToggle(event)
 				return
 			}
 
@@ -85,7 +98,16 @@ function ArticleListItemInnerComponent({
 				})
 			}
 		},
-		[onShiftSelect, highlighted, article.type, article.id, toggleOpen, navigate],
+		[
+			isBulkSelecting,
+			onRowToggle,
+			onShiftSelect,
+			highlighted,
+			article.type,
+			article.id,
+			toggleOpen,
+			navigate,
+		],
 	)
 
 	const { ref, ghostElement } = useArticleDragDrop({ article, isFolderExpanded: expanded })
@@ -96,11 +118,11 @@ function ArticleListItemInnerComponent({
 	const entityColorHover = setOpacity(article.color, 0.15)
 
 	const color = useMemo(() => {
-		if (highlighted && theme.mode === 'light') {
+		if (renderHighlighted && theme.mode === 'light') {
 			return 'primary.contrastText'
 		}
 		return 'text.secondary'
-	}, [highlighted, theme.mode])
+	}, [renderHighlighted, theme.mode])
 
 	return (
 		<Box
@@ -124,26 +146,40 @@ function ArticleListItemInnerComponent({
 					},
 				}}
 			>
-				{checkboxVisible && (
-					<Checkbox
-						size="small"
-						checked={isChecked(article)}
-						onChange={(event) => onChange(article, event)}
-					></Checkbox>
-				)}
 				<Button
 					role="button"
-					startIcon={<ArticleListItemIcon article={article} highlighted={highlighted} />}
-					variant={highlighted ? 'contained' : 'text'}
+					startIcon={
+						<Stack direction="row" alignItems="center" sx={{ gap: 0.5 }}>
+							{isBulkSelecting && (
+								<Checkbox
+									size="small"
+									checked={checked}
+									readOnly
+									tabIndex={-1}
+									sx={{ p: 0, pointerEvents: 'none' }}
+								/>
+							)}
+							<ArticleListItemIcon article={article} highlighted={renderHighlighted} />
+						</Stack>
+					}
+					variant={renderHighlighted ? 'contained' : 'text'}
 					color="primary"
 					onContextMenu={(event) => {
 						event.preventDefault()
 						onContextMenu(article, event)
 					}}
 					sx={{
-						background: article.type === 'folder' ? entityColor : undefined,
+						background: tinted
+							? (theme) => alpha(theme.palette.primary.main, 0.18)
+							: article.type === 'folder'
+								? entityColor
+								: undefined,
 						'&:hover': {
-							background: article.type === 'folder' ? entityColorHover : undefined,
+							background: tinted
+								? (theme) => alpha(theme.palette.primary.main, 0.26)
+								: article.type === 'folder'
+									? entityColorHover
+									: undefined,
 						},
 						'&::after': {
 							content: '""',
@@ -175,7 +211,7 @@ function ArticleListItemInnerComponent({
 						>
 							{article.name}
 						</Box>
-						<ArticleListItemSecondary entity={article} highlighted={highlighted} />
+						<ArticleListItemSecondary entity={article} highlighted={renderHighlighted} />
 					</Stack>
 					<Box
 						className="end-adornment"
