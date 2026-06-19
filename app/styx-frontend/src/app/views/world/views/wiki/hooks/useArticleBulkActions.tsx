@@ -4,7 +4,7 @@ import useEvent from 'react-use-event-hook'
 
 import { RootState } from '@/app/store'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
-import { getVisibleOrderedWikiEntityIds } from '@/app/views/world/views/wiki/WikiSliceSelectors'
+import { getVisibleOrderedWikiEntities } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 
 import { BoxedWikiEntity } from './useBoxedWikiContent'
 
@@ -26,7 +26,7 @@ export const useArticleBulkActions = (article: BoxedWikiEntity) => {
 
 		const anchor = state.wiki.lastCheckedArticle
 		if (shiftRange && anchor) {
-			const range = rangeBetween(getVisibleOrderedWikiEntityIds(state), anchor, article.id)
+			const range = rangeBetween(getVisibleOrderedWikiEntities(state), anchor, article.id)
 			dispatch(action({ articles: range }))
 		}
 
@@ -49,7 +49,7 @@ export const useArticleBulkActions = (article: BoxedWikiEntity) => {
 	const onShiftSelect = useEvent(() => {
 		const state = store.getState()
 		const anchor = state.wiki.lastCheckedArticle ?? getOpenArticleId(router.state.matches)
-		const range = anchor ? rangeBetween(getVisibleOrderedWikiEntityIds(state), anchor, article.id) : []
+		const range = anchor ? rangeBetween(getVisibleOrderedWikiEntities(state), anchor, article.id) : []
 
 		dispatch(addToBulkSelection({ articles: range.length > 0 ? range : [article.id] }))
 		dispatch(setLastCheckedArticle({ article: article.id }))
@@ -69,12 +69,19 @@ function getOpenArticleId(matches: AnyRouteMatch[]): string | null {
 	return match ? (match.params as { articleId: string }).articleId : null
 }
 
-function rangeBetween(orderedIds: string[], anchorId: string, targetId: string): string[] {
-	const anchorIndex = orderedIds.indexOf(anchorId)
-	const targetIndex = orderedIds.indexOf(targetId)
+function rangeBetween(
+	ordered: { id: string; parentId: string | null }[],
+	anchorId: string,
+	targetId: string,
+): string[] {
+	const anchorIndex = ordered.findIndex((entity) => entity.id === anchorId)
+	const targetIndex = ordered.findIndex((entity) => entity.id === targetId)
 	if (anchorIndex === -1 || targetIndex === -1) {
 		return []
 	}
 	const [start, end] = anchorIndex < targetIndex ? [anchorIndex, targetIndex] : [targetIndex, anchorIndex]
-	return orderedIds.slice(start, end + 1)
+	const slice = ordered.slice(start, end + 1)
+	const inRange = new Set(slice.map((entity) => entity.id))
+	// Skip entities whose folder is itself in the range — selecting a folder already moves its contents.
+	return slice.filter((entity) => !inRange.has(entity.parentId ?? '')).map((entity) => entity.id)
 }

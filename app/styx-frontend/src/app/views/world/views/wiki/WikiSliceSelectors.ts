@@ -59,6 +59,7 @@ export const getWikiFolderCounts = createSelector(
 
 type OrderedWikiEntity = {
 	id: string
+	parentId: string | null
 	/** True when an ancestor folder is collapsed, i.e. the entity is not currently rendered. */
 	hidden: boolean
 }
@@ -115,7 +116,7 @@ export const getOrderedWikiEntities = createSelector(
 				return
 			}
 			for (const child of children) {
-				ordered.push({ id: child.id, hidden })
+				ordered.push({ id: child.id, parentId, hidden })
 				if (child.type === 'folder') {
 					walk(child.id, hidden || !expanded.has(child.id))
 				}
@@ -127,9 +128,9 @@ export const getOrderedWikiEntities = createSelector(
 	},
 )
 
-/** Ids of entities currently rendered in the sidebar, in visual order. Used for shift-range selection. */
-export const getVisibleOrderedWikiEntityIds = createSelector([getOrderedWikiEntities], (ordered) =>
-	ordered.filter((entity) => !entity.hidden).map((entity) => entity.id),
+/** Entities currently rendered in the sidebar, in visual order. Used for shift-range selection. */
+export const getVisibleOrderedWikiEntities = createSelector([getOrderedWikiEntities], (ordered) =>
+	ordered.filter((entity) => !entity.hidden),
 )
 
 /** Ids of every wiki entity (all folders, collapsed or not), in visual order. Used for "select all". */

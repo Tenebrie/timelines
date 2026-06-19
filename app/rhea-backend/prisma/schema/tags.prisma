@@ -16,5 +16,5 @@ model Tag {
 
     parentFolder         WikiFolder? @relation("FolderTag", fields: [parentFolderId], references: [id], onDelete: Cascade)
     parentFolderId       String?
-    parentFolderPosition Int         @default(2147483647)
+    parentFolderPosition Float         @default(0)
 }

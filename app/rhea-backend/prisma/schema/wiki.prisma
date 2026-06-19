@@ -19,7 +19,7 @@ model WikiArticle {
 
   parentFolder         WikiFolder? @relation("FolderArticle", fields: [parentFolderId], references: [id], onDelete: Cascade)
   parentFolderId       String?
-  parentFolderPosition Int         @default(0)
+  parentFolderPosition Float         @default(0)
 }
 
 model WikiFolder {
@@ -36,7 +36,7 @@ model WikiFolder {
 
   parent               WikiFolder? @relation("FolderHierarchy", fields: [parentFolderId], references: [id], onDelete: Cascade)
   parentFolderId       String?
-  parentFolderPosition Int         @default(0)
+  parentFolderPosition Float         @default(0)
 
   children WikiFolder[]  @relation("FolderHierarchy")
   articles WikiArticle[] @relation("FolderArticle")

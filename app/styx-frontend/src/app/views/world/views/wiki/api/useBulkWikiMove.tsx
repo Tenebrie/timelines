@@ -1,27 +1,33 @@
 import { useWikiApiCache } from '@api/hooks/useWikiApiCache'
 import { worldDetailsApi } from '@api/worldDetailsApi'
 import { BulkMoveWikiEntitiesApiArg, useBulkMoveWikiEntitiesMutation, worldWikiApi } from '@api/worldWikiApi'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector, useStore } from 'react-redux'
 
+import { RootState } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-import { wikiSlice } from '../WikiSlice'
+import { getOrderedWikiEntities } from '../WikiSliceSelectors'
 
 export function useBulkWikiMove() {
 	const worldId = useSelector(getWorldIdState)
 	const [moveEntities, params] = useBulkMoveWikiEntitiesMutation()
 
 	const { applyPositionUpdates } = useWikiApiCache()
-
-	const { setBulkSelecting } = wikiSlice.actions
-	const dispatch = useDispatch()
+	const store = useStore<RootState>()
 
 	const commit = async (data: BulkMoveWikiEntitiesApiArg['body']) => {
+		const ordered = getOrderedWikiEntities(store.getState()).filter((entity) =>
+			data.entityIds.includes(entity.id),
+		)
+		const sortedEntityIds = ordered.map((entity) => entity.id)
 		const { response, error } = parseApiResponse(
 			await moveEntities({
 				worldId,
-				body: data,
+				body: {
+					...data,
+					entityIds: sortedEntityIds,
+				},
 			}),
 		)
 		if (error) {
@@ -31,7 +37,6 @@ export function useBulkWikiMove() {
 		}
 
 		applyPositionUpdates(response.updates)
-		dispatch(setBulkSelecting(false))
 		return response
 	}
 

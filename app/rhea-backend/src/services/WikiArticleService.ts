@@ -252,13 +252,13 @@ export const WikiArticleService = {
 		toParentId?: string | null
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
-			const promises = params.entityIds.map((id) => {
+			const promises = params.entityIds.map((id, index) => {
 				return makeMoveWikiEntityQuery(
 					{
 						worldId: params.worldId,
 						entityId: id,
 						toParentId: params.toParentId,
-						toPosition: params.toPosition,
+						toPosition: params.toPosition + index / params.entityIds.length,
 					},
 					prisma,
 				)

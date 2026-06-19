@@ -247,7 +247,7 @@ export type WikiFolderWhereInput = {
   color?: Prisma.StringFilter<"WikiFolder"> | string
   worldId?: Prisma.StringFilter<"WikiFolder"> | string
   parentFolderId?: Prisma.StringNullableFilter<"WikiFolder"> | string | null
-  parentFolderPosition?: Prisma.IntFilter<"WikiFolder"> | number
+  parentFolderPosition?: Prisma.FloatFilter<"WikiFolder"> | number
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
   parent?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
   children?: Prisma.WikiFolderListRelationFilter
@@ -288,7 +288,7 @@ export type WikiFolderWhereUniqueInput = Prisma.AtLeast<{
   color?: Prisma.StringFilter<"WikiFolder"> | string
   worldId?: Prisma.StringFilter<"WikiFolder"> | string
   parentFolderId?: Prisma.StringNullableFilter<"WikiFolder"> | string | null
-  parentFolderPosition?: Prisma.IntFilter<"WikiFolder"> | number
+  parentFolderPosition?: Prisma.FloatFilter<"WikiFolder"> | number
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
   parent?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
   children?: Prisma.WikiFolderListRelationFilter
@@ -327,7 +327,7 @@ export type WikiFolderScalarWhereWithAggregatesInput = {
   color?: Prisma.StringWithAggregatesFilter<"WikiFolder"> | string
   worldId?: Prisma.StringWithAggregatesFilter<"WikiFolder"> | string
   parentFolderId?: Prisma.StringNullableWithAggregatesFilter<"WikiFolder"> | string | null
-  parentFolderPosition?: Prisma.IntWithAggregatesFilter<"WikiFolder"> | number
+  parentFolderPosition?: Prisma.FloatWithAggregatesFilter<"WikiFolder"> | number
 }
 
 export type WikiFolderCreateInput = {
@@ -371,7 +371,7 @@ export type WikiFolderUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
@@ -390,7 +390,7 @@ export type WikiFolderUncheckedUpdateInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -417,7 +417,7 @@ export type WikiFolderUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type WikiFolderUncheckedUpdateManyInput = {
@@ -429,7 +429,7 @@ export type WikiFolderUncheckedUpdateManyInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type WikiFolderNullableScalarRelationFilter = {
@@ -710,7 +710,7 @@ export type WikiFolderUpdateWithoutActorsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
@@ -728,7 +728,7 @@ export type WikiFolderUncheckedUpdateWithoutActorsInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -790,7 +790,7 @@ export type WikiFolderUpdateWithoutTagsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
@@ -808,7 +808,7 @@ export type WikiFolderUncheckedUpdateWithoutTagsInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -870,7 +870,7 @@ export type WikiFolderUpdateWithoutArticlesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
@@ -888,7 +888,7 @@ export type WikiFolderUncheckedUpdateWithoutArticlesInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -992,7 +992,7 @@ export type WikiFolderUpdateWithoutChildrenInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutParentFolderNestedInput
@@ -1010,7 +1010,7 @@ export type WikiFolderUncheckedUpdateWithoutChildrenInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -1045,7 +1045,7 @@ export type WikiFolderScalarWhereInput = {
   color?: Prisma.StringFilter<"WikiFolder"> | string
   worldId?: Prisma.StringFilter<"WikiFolder"> | string
   parentFolderId?: Prisma.StringNullableFilter<"WikiFolder"> | string | null
-  parentFolderPosition?: Prisma.IntFilter<"WikiFolder"> | number
+  parentFolderPosition?: Prisma.FloatFilter<"WikiFolder"> | number
 }
 
 export type WikiFolderCreateWithoutWorldInput = {
@@ -1161,7 +1161,7 @@ export type WikiFolderUpdateWithoutEventsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
@@ -1179,7 +1179,7 @@ export type WikiFolderUncheckedUpdateWithoutEventsInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -1204,7 +1204,7 @@ export type WikiFolderUpdateWithoutParentInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutParentFolderNestedInput
@@ -1221,7 +1221,7 @@ export type WikiFolderUncheckedUpdateWithoutParentInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -1237,7 +1237,7 @@ export type WikiFolderUncheckedUpdateManyWithoutParentInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type WikiFolderCreateManyWorldInput = {
@@ -1258,7 +1258,7 @@ export type WikiFolderUpdateWithoutWorldInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutParentFolderNestedInput
@@ -1275,7 +1275,7 @@ export type WikiFolderUncheckedUpdateWithoutWorldInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -1291,7 +1291,7 @@ export type WikiFolderUncheckedUpdateManyWithoutWorldInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 
@@ -1900,7 +1900,7 @@ export interface WikiFolderFieldRefs {
   readonly color: Prisma.FieldRef<"WikiFolder", 'String'>
   readonly worldId: Prisma.FieldRef<"WikiFolder", 'String'>
   readonly parentFolderId: Prisma.FieldRef<"WikiFolder", 'String'>
-  readonly parentFolderPosition: Prisma.FieldRef<"WikiFolder", 'Int'>
+  readonly parentFolderPosition: Prisma.FieldRef<"WikiFolder", 'Float'>
 }
     
 

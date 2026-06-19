@@ -22,5 +22,5 @@ model Actor {
 
   parentFolder         WikiFolder? @relation("FolderActor", fields: [parentFolderId], references: [id], onDelete: Cascade)
   parentFolderId       String?
-  parentFolderPosition Int         @default(0)
+  parentFolderPosition Float         @default(0)
 }

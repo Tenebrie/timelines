@@ -263,7 +263,7 @@ export type WikiArticleWhereInput = {
   contentRich?: Prisma.StringFilter<"WikiArticle"> | string
   worldId?: Prisma.StringFilter<"WikiArticle"> | string
   parentFolderId?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
-  parentFolderPosition?: Prisma.IntFilter<"WikiArticle"> | number
+  parentFolderPosition?: Prisma.FloatFilter<"WikiArticle"> | number
   pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
@@ -306,7 +306,7 @@ export type WikiArticleWhereUniqueInput = Prisma.AtLeast<{
   contentRich?: Prisma.StringFilter<"WikiArticle"> | string
   worldId?: Prisma.StringFilter<"WikiArticle"> | string
   parentFolderId?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
-  parentFolderPosition?: Prisma.IntFilter<"WikiArticle"> | number
+  parentFolderPosition?: Prisma.FloatFilter<"WikiArticle"> | number
   pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
@@ -348,7 +348,7 @@ export type WikiArticleScalarWhereWithAggregatesInput = {
   contentRich?: Prisma.StringWithAggregatesFilter<"WikiArticle"> | string
   worldId?: Prisma.StringWithAggregatesFilter<"WikiArticle"> | string
   parentFolderId?: Prisma.StringNullableWithAggregatesFilter<"WikiArticle"> | string | null
-  parentFolderPosition?: Prisma.IntWithAggregatesFilter<"WikiArticle"> | number
+  parentFolderPosition?: Prisma.FloatWithAggregatesFilter<"WikiArticle"> | number
 }
 
 export type WikiArticleCreateInput = {
@@ -396,7 +396,7 @@ export type WikiArticleUpdateInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
@@ -416,7 +416,7 @@ export type WikiArticleUncheckedUpdateInput = {
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
@@ -446,7 +446,7 @@ export type WikiArticleUpdateManyMutationInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type WikiArticleUncheckedUpdateManyInput = {
@@ -460,7 +460,7 @@ export type WikiArticleUncheckedUpdateManyInput = {
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type WikiArticleNullableScalarRelationFilter = {
@@ -735,7 +735,7 @@ export type WikiArticleUpdateWithoutAssetRefsInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
@@ -754,7 +754,7 @@ export type WikiArticleUncheckedUpdateWithoutAssetRefsInput = {
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
@@ -819,7 +819,7 @@ export type WikiArticleUpdateWithoutPagesInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderArticleNestedInput
@@ -838,7 +838,7 @@ export type WikiArticleUncheckedUpdateWithoutPagesInput = {
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderArticleNestedInput
@@ -942,7 +942,7 @@ export type WikiArticleUpdateWithoutMentionsInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderArticleNestedInput
@@ -961,7 +961,7 @@ export type WikiArticleUncheckedUpdateWithoutMentionsInput = {
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderArticleNestedInput
@@ -987,7 +987,7 @@ export type WikiArticleUpdateWithoutMentionedInInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderArticleNestedInput
@@ -1006,7 +1006,7 @@ export type WikiArticleUncheckedUpdateWithoutMentionedInInput = {
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderArticleNestedInput
@@ -1086,7 +1086,7 @@ export type WikiArticleScalarWhereInput = {
   contentRich?: Prisma.StringFilter<"WikiArticle"> | string
   worldId?: Prisma.StringFilter<"WikiArticle"> | string
   parentFolderId?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
-  parentFolderPosition?: Prisma.IntFilter<"WikiArticle"> | number
+  parentFolderPosition?: Prisma.FloatFilter<"WikiArticle"> | number
 }
 
 export type WikiArticleCreateWithoutWorldInput = {
@@ -1171,7 +1171,7 @@ export type WikiArticleUpdateWithoutParentFolderInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
@@ -1189,7 +1189,7 @@ export type WikiArticleUncheckedUpdateWithoutParentFolderInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
@@ -1206,7 +1206,7 @@ export type WikiArticleUncheckedUpdateManyWithoutParentFolderInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type WikiArticleCreateManyWorldInput = {
@@ -1231,7 +1231,7 @@ export type WikiArticleUpdateWithoutWorldInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
@@ -1249,7 +1249,7 @@ export type WikiArticleUncheckedUpdateWithoutWorldInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
@@ -1266,7 +1266,7 @@ export type WikiArticleUncheckedUpdateManyWithoutWorldInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  parentFolderPosition?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 
@@ -1874,7 +1874,7 @@ export interface WikiArticleFieldRefs {
   readonly contentRich: Prisma.FieldRef<"WikiArticle", 'String'>
   readonly worldId: Prisma.FieldRef<"WikiArticle", 'String'>
   readonly parentFolderId: Prisma.FieldRef<"WikiArticle", 'String'>
-  readonly parentFolderPosition: Prisma.FieldRef<"WikiArticle", 'Int'>
+  readonly parentFolderPosition: Prisma.FieldRef<"WikiArticle", 'Float'>
 }
     
 
