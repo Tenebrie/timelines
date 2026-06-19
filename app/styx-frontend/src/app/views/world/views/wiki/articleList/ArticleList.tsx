@@ -15,7 +15,6 @@ import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 
 import { useMoveArticle } from '../api/useMoveArticle'
 import { WikiContextMenu } from '../components/WikiContextMenu'
-import { useArticleBulkActions } from '../hooks/useArticleBulkActions'
 import { BoxedWikiEntity, useBoxedWikiContent } from '../hooks/useBoxedWikiContent'
 import { ArticleListItem } from './ArticleListItem'
 
@@ -41,7 +40,6 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 	const [contextMenuArticle, setContextMenuArticle] = useState<BoxedWikiEntity | null>(null)
 
 	const { visibleEntities, hiddenCount } = useBoxedWikiContent({ filterFolderId: parentId })
-	const { checkboxVisible, isChecked, onChange } = useArticleBulkActions({ articles: visibleEntities })
 
 	const ref = useRef<HTMLDivElement>(null)
 	useDragScroll({ type: 'articleListItem', scrollRef: ref, enabled: !parentId })
@@ -74,6 +72,7 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 	const fullColor = setOpacity(color, 0.3)
 	const folderColor = setOpacity(color, 0.04)
 	const folderColorHover = setOpacity(color, 0.5)
+	const folderColorActive = setOpacity(color, 0.6)
 
 	const scrollbars = useBrowserSpecificScrollbars()
 
@@ -116,6 +115,9 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 				'&:hover:not(:has(*:hover))': {
 					borderColor: parentId ? folderColorHover : 'transparent',
 				},
+				'&:active:not(:has(*:active))': {
+					borderColor: parentId ? folderColorActive : 'transparent',
+				},
 				...(parentId && {
 					'&::after': {
 						content: '""',
@@ -135,9 +137,6 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 					article={article}
 					depth={depth}
 					onContextMenu={openContextMenu}
-					checkboxVisible={checkboxVisible}
-					checked={isChecked(article)}
-					onCheckboxChange={onChange}
 					isContextMenuOpen={contextMenuState.isOpen && contextMenuArticle?.id === article.id}
 				/>
 			))}

@@ -14,7 +14,7 @@ type Props = {
 	isContextMenuOpen: boolean
 }
 
-export function ArticleListItemContextMenu({ article, color, onContextMenu, isContextMenuOpen }: Props) {
+export function ArticleListItemContextMenu({ article, onContextMenu, isContextMenuOpen }: Props) {
 	const theme = useCustomTheme()
 
 	const buttonSx: SxProps = {

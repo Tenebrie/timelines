@@ -49,6 +49,7 @@ export const wikiSlice = createSlice({
 
 		clearBulkSelection: (state) => {
 			state.bulkActionArticles = []
+			state.lastCheckedArticle = null
 		},
 	},
 })

@@ -4,7 +4,7 @@ import Checkbox from '@mui/material/Checkbox'
 import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import { useMatches } from '@tanstack/react-router'
-import { memo, useCallback, useMemo } from 'react'
+import { memo, MouseEvent, useCallback, useMemo } from 'react'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
@@ -12,6 +12,7 @@ import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticleDragDrop'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
+import { useArticleBulkActions } from '../hooks/useArticleBulkActions'
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 import { ArticleList } from './ArticleList'
 import { ArticleListItemContextMenu } from './ArticleListItemContextMenu'
@@ -24,9 +25,6 @@ import { ArticleListItemIcon } from './icon/ArticleListItemIcon'
 type Props = {
 	article: BoxedWikiEntity
 	depth: number
-	checkboxVisible: boolean
-	checked: boolean
-	onCheckboxChange: (article: BoxedWikiEntity, event: React.ChangeEvent<HTMLInputElement>) => void
 	onContextMenu: (article: BoxedWikiEntity, event: React.MouseEvent) => void
 	isContextMenuOpen: boolean
 }
@@ -60,9 +58,6 @@ function ArticleListItemInnerComponent({
 	article,
 	depth,
 	expanded,
-	checkboxVisible,
-	checked,
-	onCheckboxChange,
 	toggleOpen,
 	highlighted,
 	onContextMenu,
@@ -71,18 +66,27 @@ function ArticleListItemInnerComponent({
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	const { isReadOnly } = useIsReadOnly()
+	const { checkboxVisible, isChecked, onChange, onShiftSelect } = useArticleBulkActions()
 
-	const onNavigate = useCallback(() => {
-		if (highlighted || article.type === 'folder') {
-			toggleOpen()
-		} else {
-			navigate({
-				to: '/world/$worldId/wiki/$articleId',
-				params: { articleId: article.id },
-				search: true,
-			})
-		}
-	}, [highlighted, article.type, article.id, toggleOpen, navigate])
+	const onNavigate = useCallback(
+		(event: MouseEvent) => {
+			if (event.shiftKey) {
+				onShiftSelect(article.id)
+				return
+			}
+
+			if (highlighted || article.type === 'folder') {
+				toggleOpen()
+			} else {
+				navigate({
+					to: '/world/$worldId/wiki/$articleId',
+					params: { articleId: article.id },
+					search: true,
+				})
+			}
+		},
+		[onShiftSelect, highlighted, article.type, article.id, toggleOpen, navigate],
+	)
 
 	const { ref, ghostElement } = useArticleDragDrop({ article, isFolderExpanded: expanded })
 	const isGrayscale = useIsFolderGrayedOut(article)
@@ -123,8 +127,8 @@ function ArticleListItemInnerComponent({
 				{checkboxVisible && (
 					<Checkbox
 						size="small"
-						checked={checked}
-						onChange={(event) => onCheckboxChange(article, event)}
+						checked={isChecked(article)}
+						onChange={(event) => onChange(article, event)}
 					></Checkbox>
 				)}
 				<Button
