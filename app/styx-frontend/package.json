@@ -112,7 +112,7 @@
 		"styled-components": "^6.4.1",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.59.3",
-		"undici": "^7.1.0",
+		"undici": "^7.28.0",
 		"user-agent-data-types": "^0.4.3",
 		"uuid": "^14.0.0"
 	},
