@@ -20,7 +20,7 @@
 	},
 	"dependencies": {
 		"@mui/x-data-grid": "^8.0.0",
-		"@mui/x-date-pickers": "^9.3.0",
+		"@mui/x-date-pickers": "^9.6.0",
 		"@neverkin/tiptap-schema": "file:../../library/tiptap-schema",
 		"@neverkin/esoteric-date": "file:../../library/esoteric-date",
 		"@tanstack/react-form": "^1.33.0",
