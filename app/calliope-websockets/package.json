@@ -17,9 +17,6 @@
 		"test": "vitest --run",
 		"test:watch": "vitest"
 	},
-	"lint-staged": {
-		"*.(ts)": "eslint --fix"
-	},
 	"dependencies": {
 		"@koa/router": "^15.6.0",
 		"@tiptap/core": "^3.27.1",
@@ -50,7 +47,6 @@
 		"koa-bodyparser": "^4.4.1",
 		"koa-route": "^4.0.1",
 		"koa-websocket": "^7.0.0",
-		"lint-staged": "^17.0.8",
 		"nodemon": "^3.1.14",
 		"openapi-fetch": "^0.17.0",
 		"pg": "^8.22.0",

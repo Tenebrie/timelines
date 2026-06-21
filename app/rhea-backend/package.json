@@ -17,9 +17,6 @@
 		"test": "vitest --run",
 		"test:watch": "vitest"
 	},
-	"lint-staged": {
-		"*.(ts)": "eslint --fix"
-	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.1073.0",
 		"@aws-sdk/s3-presigned-post": "^3.1073.0",
@@ -66,7 +63,6 @@
 		"eslint-plugin-simple-import-sort": "^13.0.0",
 		"eslint-plugin-unused-imports": "^4.4.1",
 		"jsdom": "^29.1.1",
-		"lint-staged": "^17.0.8",
 		"nodemon": "^3.1.14",
 		"prettier": "^3.8.4",
 		"prisma": "^7.8.0",

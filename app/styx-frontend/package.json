@@ -18,9 +18,6 @@
 		"test:coverage": "rstest --coverage",
 		"prod": "serve -s build -l 8080"
 	},
-	"lint-staged": {
-		"*.(ts|tsx)": "eslint --fix"
-	},
 	"dependencies": {
 		"@mui/x-data-grid": "^8.0.0",
 		"@mui/x-date-pickers": "^9.3.0",
@@ -100,7 +97,6 @@
 		"eslint-plugin-unused-imports": "^4.4.1",
 		"globals": "^17.6.0",
 		"jsdom": "^29.1.1",
-		"lint-staged": "^17.0.8",
 		"lodash.debounce": "^4.0.8",
 		"lodash.throttle": "^4.1.1",
 		"material-ui-popup-state": "^5.3.7",

@@ -10,9 +10,6 @@
 		"lint": "eslint src/",
 		"lint:fix": "eslint src/ --fix"
 	},
-	"lint-staged": {
-		"*.(ts)": "eslint --fix"
-	},
 	"dependencies": {
 		"@tiptap/core": "^3.26.1",
 		"@tiptap/extension-hard-break": "^3.23.1",
@@ -22,7 +19,6 @@
 		"@tiptap/pm": "^3.23.1",
 		"@tiptap/starter-kit": "^3.26.1",
 		"@tiptap/suggestion": "^3.23.1",
-		"lint-staged": "^17.0.7",
 		"module-alias": "^2.3.4",
 		"ws": "^8.21.0"
 	},
