@@ -25,8 +25,10 @@ export const getWikiFolderCounts = createSelector(
 		const counts = new Map<string, WikiFolderCounts>()
 
 		function count(parentFolderId: string | null | undefined, type: WikiEntityType) {
+			const seen = new Set<string>()
 			let current = parentFolderId ? foldersById.get(parentFolderId) : undefined
-			while (current) {
+			while (current && !seen.has(current.id)) {
+				seen.add(current.id)
 				const entry = counts.get(current.id) ?? makeEmptyCounts()
 				entry[type] += 1
 				if (type !== 'folder') {
