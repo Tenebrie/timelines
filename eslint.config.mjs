@@ -135,4 +135,10 @@ export default defineConfig(
 	},
 	eslintConfigPrettier,
 	eslintPluginPrettierRecommended,
+	{
+		files: ['**/*.astro/*.js', '**/*.astro/*.ts'],
+		rules: {
+			'prettier/prettier': 'off',
+		},
+	},
 )

@@ -115,11 +115,11 @@
 }
 
 [data-aw-toggle-menu].expanded g>path:first-child {
-  @apply -rotate-45 translate-y-[15px] translate-x-[-3px];
+  @apply -rotate-45 translate-y-3.75 -translate-x-0.75;
 }
 
 [data-aw-toggle-menu].expanded g>path:last-child {
-  @apply rotate-45 translate-y-[-8px] translate-x-[14px];
+  @apply rotate-45 -translate-y-2 translate-x-3.5;
 }
 
 /* To deprecated */
