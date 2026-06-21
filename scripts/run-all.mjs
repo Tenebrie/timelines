@@ -32,6 +32,6 @@ function run(pkg) {
 	})
 }
 
-console.log(`Running \x1b[36m${script}\x1b[0m for ${targets.length} packages in parallel...`)
+console.info(`Running \x1b[36m${script}\x1b[0m for ${targets.length} packages in parallel...`)
 const codes = await Promise.all(targets.map(run))
 process.exit(codes.find((code) => code !== 0) ?? 0)
