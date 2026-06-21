@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { Outlet } from '@tanstack/react-router'
 
+import { CreateColorModal } from '@/app/features/colors/CreateColorModal'
 import { ModalsRenderer } from '@/app/features/modals/ModalsRenderer'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
@@ -91,6 +92,7 @@ export const World = () => {
 			<CreateEventModal />
 			<CreateActorModal />
 			<DeleteActorModal />
+			<CreateColorModal />
 			<ModalsRenderer />
 		</>
 	)

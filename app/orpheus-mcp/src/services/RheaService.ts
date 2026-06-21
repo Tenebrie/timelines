@@ -648,8 +648,8 @@ export const RheaService = {
 				path: { worldId, query },
 				query: {
 					mode: 'split_by_space',
-					minTime: timeRange.from === undefined ? undefined : String(timeRange.from),
-					maxTime: timeRange.to === undefined ? undefined : String(timeRange.to),
+					minTime: timeRange.from === undefined ? undefined : timeRange.from,
+					maxTime: timeRange.to === undefined ? undefined : timeRange.to,
 				},
 			},
 			headers: {

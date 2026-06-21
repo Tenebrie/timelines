@@ -4,16 +4,9 @@ import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export type MentionData = Pick<Mention, 'targetId' | 'targetType'>
 
-export function dedupeMentions<T extends Pick<Mention, 'sourceId' | 'targetId'>>(mentions: T[]): T[] {
-	const unique = new Map<string, T>()
-	for (const mention of mentions) {
-		unique.set(`${mention.sourceId}->${mention.targetId}`, mention)
-	}
-	return Array.from(unique.values())
-}
-
 export const MentionsService = {
 	createMentions: async (
+		worldId: string,
 		sourceId: string,
 		sourceType: MentionedEntity,
 		mentions: MentionData[] | undefined,
@@ -52,6 +45,18 @@ export const MentionsService = {
 			})),
 		)
 
+		const dataWithWorldIds = await Promise.all(
+			data.map(async (mention) => ({
+				...mention,
+				sourceWorldId: await getEntityWorldId(mention.sourceId, mention.sourceType),
+				targetWorldId: await getEntityWorldId(mention.targetId, mention.targetType),
+			})),
+		)
+
+		const filteredData = dataWithWorldIds.filter(
+			(mention) => mention.sourceWorldId === worldId && mention.targetWorldId === worldId,
+		)
+
 		await client.mention.deleteMany({
 			where: {
 				...sourceColumn,
@@ -59,9 +64,13 @@ export const MentionsService = {
 			},
 		})
 
-		if (data.length > 0) {
+		if (filteredData.length > 0) {
 			await client.mention.createMany({
-				data,
+				data: filteredData.map((data) => ({
+					...data,
+					sourceWorldId: undefined,
+					targetWorldId: undefined,
+				})),
 				skipDuplicates: true,
 			})
 		}
@@ -83,4 +92,25 @@ export const MentionsService = {
 			},
 		})
 	},
+}
+
+export function dedupeMentions<T extends Pick<Mention, 'sourceId' | 'targetId'>>(mentions: T[]): T[] {
+	const unique = new Map<string, T>()
+	for (const mention of mentions) {
+		unique.set(`${mention.sourceId}->${mention.targetId}`, mention)
+	}
+	return Array.from(unique.values())
+}
+
+async function getEntityWorldId(entityId: string, entityType: MentionedEntity) {
+	switch (entityType) {
+		case MentionedEntity.Actor:
+			return (await getPrismaClient().actor.findUnique({ where: { id: entityId } }))?.worldId
+		case MentionedEntity.Event:
+			return (await getPrismaClient().worldEvent.findUnique({ where: { id: entityId } }))?.worldId
+		case MentionedEntity.Article:
+			return (await getPrismaClient().wikiArticle.findUnique({ where: { id: entityId } }))?.worldId
+		case MentionedEntity.Tag:
+			return (await getPrismaClient().tag.findUnique({ where: { id: entityId } }))?.worldId
+	}
 }

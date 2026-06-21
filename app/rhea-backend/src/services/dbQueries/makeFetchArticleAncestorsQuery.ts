@@ -13,26 +13,26 @@ export const makeFetchArticleAncestorsQuery = async (
 
 	let currentTarget = articleId
 	for (let i = 0; i < 10; i++) {
-		const parent = await prisma.wikiArticle.findFirst({
+		const parent = await prisma.wikiFolder.findFirst({
 			where: {
 				worldId,
 				id: currentTarget,
 			},
 			select: {
 				id: true,
-				parentId: true,
+				parentFolderId: true,
 			},
 		})
 
-		if (!parent || !parent.parentId) {
+		if (!parent || !parent.parentFolderId) {
 			break
 		}
 
-		if (ancestors.includes(parent.parentId)) {
+		if (ancestors.includes(parent.parentFolderId)) {
 			throw new Error('Circular reference detected')
 		}
 
-		currentTarget = parent.parentId
+		currentTarget = parent.parentFolderId
 		ancestors.push(currentTarget)
 	}
 

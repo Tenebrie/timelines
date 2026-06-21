@@ -49,8 +49,14 @@ export const IconsService = {
 			take: iconLimit,
 		})
 
-		if (icons.length < iconLimit && !icons.some((icon) => icon.icon === 'mdi:leaf')) {
-			icons.push({ icon: 'mdi:leaf', _count: { icon: 1 } })
+		if (icons.length < iconLimit && !icons.some((icon) => icon.icon === 'mdi:person')) {
+			icons.push({ icon: 'mdi:person', _count: { icon: 1 } })
+		}
+		if (icons.length < iconLimit && !icons.some((icon) => icon.icon === 'mdi:event')) {
+			icons.push({ icon: 'mdi:event', _count: { icon: 1 } })
+		}
+		if (icons.length < iconLimit && !icons.some((icon) => icon.icon === 'mdi:tag')) {
+			icons.push({ icon: 'mdi:tag', _count: { icon: 1 } })
 		}
 
 		return [

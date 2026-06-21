@@ -24,6 +24,8 @@ export function mockWorldEvent(
 		mentions: [],
 		mentionedIn: [],
 		deltaStates: [],
+		parentFolderId: null,
+		parentFolderPosition: 0,
 		...overrides,
 	}
 }
@@ -43,6 +45,8 @@ export function mockWorldActor(
 		pages: [],
 		mentions: [],
 		mentionedIn: [],
+		parentFolderId: null,
+		parentFolderPosition: 0,
 		...overrides,
 	}
 }
@@ -55,6 +59,9 @@ export function mockWorldTag(overrides: Partial<MockWorldTag> & { id: string; na
 		description: '',
 		mentions: [],
 		mentionedIn: [],
+		color: '',
+		parentFolderId: null,
+		parentFolderPosition: 0,
 		...overrides,
 	}
 }

@@ -36,8 +36,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		nodes: {
-			id: string
 			worldId: string
+			id: string
 			createdAt: string
 			updatedAt: string
 			parentActorId?: null | string
@@ -45,15 +45,17 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			positionY: number
 		}[]
 		description: string
-		id: string
-		title: string
 		worldId: string
+		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		title: string
 		icon: string
 		color: string
 		descriptionRich: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
 	}[]
 	articles: {
 		pages: {
@@ -68,20 +70,17 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
-		children: {
-			id: string
-			name: string
-		}[]
-		id: string
 		worldId: string
+		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
 		icon: string
 		color: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
+		content: string
 		contentRich: string
-		position: number
-		parentId?: null | string
 	}[]
 	events: {
 		pages: {
@@ -107,14 +106,16 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			worldEventId: string
 		}[]
 		description: string
-		id: string
 		worldId: string
+		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
 		icon: string
 		color: string
 		descriptionRich: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
 		timestamp: string
 		revokedAt?: null | string
 		worldEventTrackId?: null | string
@@ -129,18 +130,21 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		description: string
-		id: string
 		worldId: string
+		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		color: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
 	}[]
 }
 export type SearchWorldApiArg = {
 	worldId: string
 	query: string
 	mode?: 'string_match' | 'split_by_space'
-	minTime?: string
-	maxTime?: string
+	minTime?: number
+	maxTime?: number
 }
 export const { useSearchWorldQuery, useLazySearchWorldQuery } = injectedRtkApi

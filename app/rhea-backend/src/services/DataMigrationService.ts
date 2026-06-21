@@ -5,7 +5,7 @@ import { TransactionClient } from '../../prisma/client/internal/prismaNamespace.
 import { exportedUserDataSchema } from './DataMigrationService.schema.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
-const CURRENT_VERSION = 1
+const CURRENT_VERSION = 2
 
 export const DataMigrationService = {
 	exportUserData: async (ctx: { user: { id: string } }) => {
@@ -35,42 +35,43 @@ export const DataMigrationService = {
 					worlds: {
 						include: {
 							actors: {
-								omit: {
-									descriptionYjs: true,
-								},
 								include: {
-									mentions: true,
-									pages: {
-										omit: {
-											descriptionYjs: true,
+									mentions: {
+										where: {
+											AND: [
+												{
+													OR: [
+														{ sourceActor: { isNot: null } },
+														{ sourceArticle: { isNot: null } },
+														{ sourceEvent: { isNot: null } },
+														{ sourceTag: { isNot: null } },
+													],
+												},
+												{
+													OR: [
+														{ targetActor: { isNot: null } },
+														{ targetArticle: { isNot: null } },
+														{ targetEvent: { isNot: null } },
+														{ targetTag: { isNot: null } },
+													],
+												},
+											],
 										},
 									},
-								},
-							},
-							events: {
-								omit: {
-									descriptionYjs: true,
-								},
-								include: {
-									mentions: true,
-									pages: {
-										omit: {
-											descriptionYjs: true,
-										},
-									},
+									pages: true,
 								},
 							},
 							articles: {
-								omit: {
-									contentYjs: true,
-								},
 								include: {
 									mentions: true,
-									pages: {
-										omit: {
-											descriptionYjs: true,
-										},
-									},
+									pages: true,
+								},
+							},
+							folders: true,
+							events: {
+								include: {
+									mentions: true,
+									pages: true,
 								},
 							},
 							tags: {
@@ -115,23 +116,11 @@ export const DataMigrationService = {
 			}
 
 			return {
-				version: 1,
+				version: CURRENT_VERSION,
 				user: {
 					id: user.id,
 					calendars: user.calendars,
-					// Event content-pages post-date the v1 export format, so older exports omit the
-					// field. Re-spreading keeps `pages` present at runtime (arrays are always truthy)
-					// while inference types it as optional — and since the import schema is generated
-					// from this return type, that single touch makes the schema accept exports
-					// created before event pages existed. Scoped to events; actor/article pages stay
-					// required.
-					worlds: user.worlds.map((world) => ({
-						...world,
-						events: world.events.map(({ pages, ...event }) => ({
-							...event,
-							...(pages ? { pages } : {}),
-						})),
-					})),
+					worlds: user.worlds,
 				},
 			}
 		})
@@ -214,6 +203,7 @@ export const DataMigrationService = {
 				...world.worldEventTracks,
 				...world.mindmapNodes,
 				...world.calendars,
+				...world.folders,
 			].filter((entity) => entity.worldId !== world.id)
 
 			if (childrenWithWrongWorld.length > 0) {
@@ -237,6 +227,7 @@ export const DataMigrationService = {
 			}
 		}
 
+		// Mentions
 		for (const world of worlds) {
 			const validIds = new Set<string>([
 				...world.actors.map((a) => a.id),
@@ -315,28 +306,54 @@ export const DataMigrationService = {
 		}
 
 		for (const world of worlds) {
-			const articleIds = new Set(world.articles.map((a) => a.id))
+			const folderIds = new Set(world.folders.map((f) => f.id))
+			for (const actor of world.actors) {
+				if (actor.parentFolderId && !folderIds.has(actor.parentFolderId)) {
+					throw new BadRequestError(`Actor ${actor.id} has a parent outside its world`)
+				}
+			}
 			for (const article of world.articles) {
-				if (article.parentId && !articleIds.has(article.parentId)) {
+				if (article.parentFolderId && !folderIds.has(article.parentFolderId)) {
 					throw new BadRequestError(`Article ${article.id} has a parent outside its world`)
+				}
+			}
+			for (const folder of world.folders) {
+				if (folder.parentFolderId && !folderIds.has(folder.parentFolderId)) {
+					throw new BadRequestError(`Folder ${folder.id} has a parent outside its world`)
+				}
+			}
+			for (const event of world.events) {
+				if (event.parentFolderId && !folderIds.has(event.parentFolderId)) {
+					throw new BadRequestError(`Event ${event.id} has a parent outside its world`)
+				}
+			}
+			for (const tag of world.tags) {
+				if (tag.parentFolderId && !folderIds.has(tag.parentFolderId)) {
+					throw new BadRequestError(`Tag ${tag.id} has a parent outside its world`)
 				}
 			}
 		}
 
+		// Pages validity
 		for (const world of worlds) {
-			const actorIds = new Set(world.actors.map((a) => a.id))
-			const eventIds = new Set(world.events.map((e) => e.id))
-			const articleIds = new Set(world.articles.map((a) => a.id))
+			for (const actor of world.actors) {
+				for (const page of actor.pages) {
+					if (!page.parentActorId || page.parentActorId !== actor.id) {
+						throw new BadRequestError(`Actor page ${page.id} is not attributed correctly`)
+					}
+				}
+			}
 			for (const article of world.articles) {
 				for (const page of article.pages) {
-					if (page.parentActorId && !actorIds.has(page.parentActorId)) {
-						throw new BadRequestError(`Page ${page.id} references an actor outside its world`)
+					if (!page.parentArticleId || page.parentArticleId !== article.id) {
+						throw new BadRequestError(`Article page ${page.id} is not attributed correctly`)
 					}
-					if (page.parentEventId && !eventIds.has(page.parentEventId)) {
-						throw new BadRequestError(`Page ${page.id} references an event outside its world`)
-					}
-					if (page.parentArticleId && !articleIds.has(page.parentArticleId)) {
-						throw new BadRequestError(`Page ${page.id} references an article outside its world`)
+				}
+			}
+			for (const event of world.events) {
+				for (const page of event.pages) {
+					if (!page.parentEventId || page.parentEventId !== event.id) {
+						throw new BadRequestError(`Event page ${page.id} is not attributed correctly`)
 					}
 				}
 			}
@@ -407,16 +424,26 @@ export const DataMigrationService = {
 					},
 				})
 
+				const perWorldActors = worlds.map((w) => w.actors.map((a) => ({ ...a, worldId: w.id })))
+				const perWorldArticles = worlds.map((w) => w.articles.map((a) => ({ ...a, worldId: w.id })))
+				const perWorldFolders = worlds.map((w) => w.folders.map((f) => ({ ...f, worldId: w.id })))
+				const perWorldEvents = worlds.map((w) => w.events.map((e) => ({ ...e, worldId: w.id })))
+				const perWorldTags = worlds.map((w) => w.tags.map((t) => ({ ...t, worldId: w.id })))
+				const perWorldMindmapNodes = worlds.map((w) => w.mindmapNodes.map((n) => ({ ...n, worldId: w.id })))
+
 				const allMentions = worlds.flatMap((w) => [
 					...w.actors.flatMap((a) => a.mentions),
 					...w.events.flatMap((e) => e.mentions),
 					...w.articles.flatMap((a) => a.mentions),
 					...w.tags.flatMap((t) => t.mentions),
 				])
-				const allActors = worlds.flatMap((w) => w.actors)
-				const allEvents = worlds.flatMap((w) => w.events)
-				const allArticles = worlds.flatMap((w) => w.articles)
-				const allMindmapLinks = worlds.flatMap((w) => w.mindmapNodes.flatMap((n) => n.links))
+				const allActors = perWorldActors.flat()
+				const allArticles = perWorldArticles.flat()
+				const allFolders = perWorldFolders.flat()
+				const allEvents = perWorldEvents.flat()
+				const allTags = perWorldTags.flat()
+				const allMindmapNodes = perWorldMindmapNodes.flat()
+				const allMindmapLinks = allMindmapNodes.flatMap((n) => n.links)
 				const allCalendarUnitRelations = [
 					...calendars.flatMap((c) => c.units.flatMap((u) => u.children)),
 					...worlds.flatMap((w) => w.calendars.flatMap((c) => c.units.flatMap((u) => u.children))),
@@ -452,19 +479,19 @@ export const DataMigrationService = {
 						worlds: {
 							create: strip(worlds).map(
 								({
-									tags,
+									tags: _tags,
 									savedColors,
 									worldCommonIconSets,
 									worldEventTracks,
-									actors,
-									events,
+									actors: _actors,
+									events: _events,
+									folders: _folders,
 									articles: _articles,
-									mindmapNodes,
+									mindmapNodes: _mindmapNodes,
 									calendars: worldCalendars,
 									...world
 								}) => ({
 									...world,
-									tags: { create: strip(tags) },
 									savedColors: {
 										create: strip(savedColors),
 									},
@@ -472,15 +499,6 @@ export const DataMigrationService = {
 										create: strip(worldCommonIconSets),
 									},
 									worldEventTracks: { create: strip(worldEventTracks) },
-									actors: {
-										create: strip(actors),
-									},
-									events: {
-										create: strip(events),
-									},
-									mindmapNodes: {
-										create: strip(mindmapNodes).map(({ links: _l, ...node }) => node),
-									},
 									calendars: {
 										create: strip(worldCalendars).map(({ units, seasons, presentations, ...cal }) => ({
 											...cal,
@@ -511,13 +529,28 @@ export const DataMigrationService = {
 					},
 				})
 
+				await prisma.wikiFolder.createMany({
+					data: stripWithoutWorld(allFolders).map(({ ...a }) => a),
+				})
+				await prisma.actor.createMany({
+					data: stripWithoutWorld(allActors),
+				})
 				await prisma.wikiArticle.createMany({
-					data: allArticles.map(({ mentions: _m, pages: _p, ...a }) => a),
+					data: stripWithoutWorld(allArticles),
+				})
+				await prisma.worldEvent.createMany({
+					data: stripWithoutWorld(allEvents),
+				})
+				await prisma.tag.createMany({
+					data: stripWithoutWorld(allTags),
+				})
+				await prisma.mindmapNode.createMany({
+					data: stripWithoutWorld(allMindmapNodes).map(({ links: _l, ...node }) => node),
 				})
 				await prisma.contentPage.createMany({
 					data: [
 						...allActors.flatMap((a) => a.pages),
-						...allEvents.flatMap((e) => e.pages ?? []),
+						...allEvents.flatMap((e) => e.pages),
 						...allArticles.flatMap((a) => a.pages),
 					],
 				})
@@ -546,17 +579,24 @@ export const DataMigrationService = {
 				return null
 			}
 			console.error('Import validation failed:', error)
-			throw new BadRequestError(`Invalid user data: ${(error as Error).message}`)
+			throw new BadRequestError(`Validation failed: ${(error as Error).message}`)
 		}
 		return null
 	},
 }
 
 function strip<T extends object[]>(arr: T): Omit<T[number], 'mentions' | 'pages'>[] {
+	return stripWithoutWorld(arr).map((item) => {
+		const copy = { ...item }
+		if ('worldId' in copy) delete copy.worldId
+		return copy as Omit<T[number], 'mentions' | 'pages'>
+	})
+}
+
+function stripWithoutWorld<T extends object[]>(arr: T): Omit<T[number], 'mentions' | 'pages'>[] {
 	return arr.map((item) => {
 		const copy = { ...item }
 		if ('ownerId' in copy) delete copy.ownerId
-		if ('worldId' in copy) delete copy.worldId
 		if ('pageId' in copy) delete copy.pageId
 		if ('calendarId' in copy) delete copy.calendarId
 		if ('seasonId' in copy) delete copy.seasonId

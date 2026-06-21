@@ -27,6 +27,7 @@ function TimelineAnchorCurrentTimeComponent() {
 	const containerRef = useRef<HTMLDivElement>(null)
 
 	const { open: openTimeTravelModal } = useModal('timeTravelModal')
+	const currentTimeRef = useRef(0)
 
 	const updateLabel = useMemo(
 		() =>
@@ -36,6 +37,7 @@ function TimelineAnchorCurrentTimeComponent() {
 				}
 
 				const snappedTime = binarySearchForClosest(TimelineState.anchorTimestamps, timestamp)
+				currentTimeRef.current = snappedTime
 				const smallestBackingUnit = calendar.units.find((u) => u.id === presentation.smallestUnit?.unitId)
 				if (!smallestBackingUnit) {
 					return
@@ -113,7 +115,9 @@ function TimelineAnchorCurrentTimeComponent() {
 		>
 			<Button
 				variant="text"
-				onClick={openTimeTravelModal}
+				onClick={() => {
+					openTimeTravelModal({ startingTime: currentTimeRef.current, markers: [] })
+				}}
 				sx={{ fontSize: 16, borderRadius: 0, padding: '2px 16px 2px 16px', height: '100%', width: '100%' }}
 			>
 				<Box

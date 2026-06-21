@@ -1,6 +1,8 @@
 import { WorldEventTrack } from '@prisma/client'
+import { BadRequestError } from 'moonflower'
 
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { makeSortEventTracksQuery } from './dbQueries/makeSortEventTracksQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 
 export const WorldEventTrackService = {
@@ -142,6 +144,36 @@ export const WorldEventTrackService = {
 			makeTouchWorldQuery(worldId),
 		])
 		return { world }
+	},
+
+	moveEventTrack: async (params: { worldId: string; trackId: string; toPosition: number }) => {
+		return getPrismaClient().$transaction(async (prisma) => {
+			const baseTrack = await prisma.worldEventTrack.findFirst({
+				where: { id: params.trackId },
+				select: {
+					id: true,
+					position: true,
+				},
+			})
+
+			if (!baseTrack) {
+				throw new BadRequestError('Event track not found')
+			}
+
+			const eventTrack = await prisma.worldEventTrack.update({
+				where: {
+					id: params.trackId,
+				},
+				data: {
+					position: params.toPosition,
+				},
+			})
+
+			await makeSortEventTracksQuery(params.worldId, prisma)
+			const world = await makeTouchWorldQuery(params.worldId, prisma)
+
+			return { eventTrack, world }
+		})
 	},
 
 	deleteEventTrack: async ({ worldId, trackId }: { worldId: string; trackId: string }) => {

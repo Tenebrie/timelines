@@ -6,6 +6,7 @@ import {
 	MindmapNode,
 	User,
 	WikiArticle,
+	WikiFolder,
 	WorldEvent,
 	WorldEventDelta,
 } from '@prisma/client'
@@ -14,6 +15,7 @@ import { ParameterizedContext } from 'koa'
 
 import { RheaToCalliopeMessage, RheaToCalliopeMessageType } from '../ts-shared/RheaToCalliopeMessage.js'
 import { getRedisClient, openRedisChannel } from './dbClients/RedisClient.js'
+import { WikiPositionUpdate } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { TagService } from './TagService.js'
 import { BaselineTag } from './types.js'
 
@@ -52,7 +54,7 @@ export const RedisService = {
 
 	notifyAboutWorldEventUpdate: (
 		ctx: ContextWithSessionId,
-		{ worldId, event }: { worldId: string; event: Omit<WorldEvent, 'descriptionYjs'> },
+		{ worldId, event }: { worldId: string; event: WorldEvent },
 	) => {
 		const eventToSend = {
 			...event,
@@ -66,6 +68,16 @@ export const RedisService = {
 				event: JSON.stringify(eventToSend, (_, value) =>
 					typeof value === 'bigint' ? value.toString() : value,
 				),
+			},
+		})
+	},
+
+	notifyAboutWorldEventsDelete: (ctx: ContextWithSessionId, { worldId }: { worldId: string }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.WORLD_EVENTS_DELETED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
 			},
 		})
 	},
@@ -102,7 +114,7 @@ export const RedisService = {
 
 	notifyAboutActorUpdate: (
 		ctx: ContextWithSessionId,
-		{ worldId, actor }: { worldId: string; actor: Omit<Actor, 'descriptionYjs'> },
+		{ worldId, actor }: { worldId: string; actor: Actor },
 	) => {
 		const actorToSend = {
 			...actor,
@@ -114,6 +126,16 @@ export const RedisService = {
 			data: {
 				worldId,
 				actor: JSON.stringify(actorToSend),
+			},
+		})
+	},
+
+	notifyAboutActorsDelete: (ctx: ContextWithSessionId, { worldId }: { worldId: string }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.ACTORS_DELETED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
 			},
 		})
 	},
@@ -217,6 +239,16 @@ export const RedisService = {
 		})
 	},
 
+	notifyAboutTagsDelete: (ctx: ContextWithSessionId, { worldId }: { worldId: string }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.TAGS_DELETED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+			},
+		})
+	},
+
 	notifyAboutWorldTracksUpdate: (
 		ctx: ContextWithSessionId,
 		{ worldId, timestamp }: { worldId: string; timestamp: Date },
@@ -255,7 +287,7 @@ export const RedisService = {
 
 	notifyAboutWikiArticleUpdate: (
 		ctx: ContextWithSessionId,
-		{ worldId, article }: { worldId: string; article: Omit<WikiArticle, 'contentYjs'> },
+		{ worldId, article }: { worldId: string; article: WikiArticle },
 	) => {
 		const articleToSend = {
 			...article,
@@ -271,12 +303,50 @@ export const RedisService = {
 		})
 	},
 
-	notifyAboutWikiArticleDeletion: (ctx: ContextWithSessionId, { worldId }: { worldId: string }) => {
+	notifyAboutWikiArticlesDelete: (ctx: ContextWithSessionId, { worldId }: { worldId: string }) => {
 		calliope.sendMessage({
 			type: RheaToCalliopeMessageType.WIKI_ARTICLE_DELETED,
 			messageSourceSessionId: ctx.sessionId,
 			data: {
 				worldId,
+			},
+		})
+	},
+
+	notifyAboutWikiFolderUpdate: (
+		ctx: ContextWithSessionId,
+		{ worldId, folder }: { worldId: string; folder: WikiFolder },
+	) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.WIKI_FOLDER_UPDATED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+				folder: JSON.stringify(folder),
+			},
+		})
+	},
+
+	notifyAboutWikiFoldersDelete: (ctx: ContextWithSessionId, { worldId }: { worldId: string }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.WIKI_FOLDER_DELETED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+			},
+		})
+	},
+
+	notifyAboutWikiReorder: (
+		ctx: ContextWithSessionId,
+		{ worldId, updates }: { worldId: string; updates: WikiPositionUpdate[] },
+	) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.WIKI_ORDER_CHANGED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+				updates: JSON.stringify(updates),
 			},
 		})
 	},

@@ -1,4 +1,3 @@
-import { WorldEventTrack } from '@api/types/worldEventTracksTypes'
 import { ActorDetails, WorldEvent, WorldEventDelta, WorldTag } from '@api/types/worldTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
@@ -26,12 +25,8 @@ const modals = {
 	},
 
 	/* Event Tracks */
-	eventTrackWizard: {
+	eventTracks: {
 		isOpen: false as boolean,
-	},
-	eventTrackEdit: {
-		isOpen: false as boolean,
-		target: null as WorldEventTrack | null,
 	},
 
 	/* World */
@@ -76,6 +71,11 @@ const modals = {
 	},
 	timeTravelModal: {
 		isOpen: false as boolean,
+		startingTime: 0 as number,
+		markers: [] as { key: string; eventId: string }[],
+	},
+	createColorModal: {
+		isOpen: false as boolean,
 	},
 
 	/* WorldList */
@@ -90,9 +90,6 @@ const modals = {
 	},
 
 	/* WorldWiki */
-	articleWizard: {
-		isOpen: false as boolean,
-	},
 	deleteArticleModal: {
 		isOpen: false as boolean,
 		articles: [] as string[],

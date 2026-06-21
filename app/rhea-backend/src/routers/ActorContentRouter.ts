@@ -7,8 +7,6 @@ import { RichTextService } from '@src/services/RichTextService.js'
 import { ValidationService } from '@src/services/ValidationService.js'
 import {
 	BadRequestError,
-	BooleanValidator,
-	OptionalParam,
 	PathParam,
 	RequiredParam,
 	Router,
@@ -16,7 +14,6 @@ import {
 	useApiEndpoint,
 	useAuth,
 	usePathParams,
-	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
 import z from 'zod'
@@ -43,10 +40,6 @@ router.get('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 		actorId: PathParam(StringValidator),
 	})
 
-	const { acceptDeltas } = useQueryParams(ctx, {
-		acceptDeltas: OptionalParam(BooleanValidator),
-	})
-
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 
 	const actor = await ActorService.findActorWithContentDeltas({ worldId, actorId })
@@ -55,9 +48,7 @@ router.get('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 	}
 
 	return {
-		hasDeltas: actor.descriptionYjs ? true : false,
-		contentHtml: acceptDeltas && actor.descriptionYjs ? undefined : actor.descriptionRich,
-		contentDeltas: acceptDeltas ? actor.descriptionYjs : undefined,
+		contentHtml: actor.descriptionRich,
 	}
 })
 
@@ -125,10 +116,6 @@ router.get('/api/world/:worldId/actor/:actorId/content/pages/:pageId', async (ct
 		pageId: PathParam(StringValidator),
 	})
 
-	const { acceptDeltas } = useQueryParams(ctx, {
-		acceptDeltas: OptionalParam(BooleanValidator),
-	})
-
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 
 	const page = await ActorService.getActorContentPage({ worldId, actorId, pageId })
@@ -137,9 +124,7 @@ router.get('/api/world/:worldId/actor/:actorId/content/pages/:pageId', async (ct
 	}
 
 	return {
-		hasDeltas: page.descriptionYjs ? true : false,
-		contentHtml: acceptDeltas && page.descriptionYjs ? undefined : page.descriptionRich,
-		contentDeltas: acceptDeltas ? page.descriptionYjs : undefined,
+		contentHtml: page.descriptionRich,
 	}
 })
 

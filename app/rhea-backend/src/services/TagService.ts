@@ -1,7 +1,10 @@
 import { MentionedEntity } from '@prisma/client'
 
+import { TagUncheckedCreateInput, TagUncheckedUpdateInput } from '../../prisma/client/models.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
+import { BulkActionService } from './WorldBulkActionService.js'
 
 export type MentionedByEntry = {
 	type: MentionedEntity
@@ -115,25 +118,39 @@ export const TagService = {
 		params,
 	}: {
 		worldId: string
-		params: {
-			name: string
-			description?: string
-		}
+		params: Omit<TagUncheckedCreateInput, 'worldId'>
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
-			const tag = await getPrismaClient(prisma).tag.create({
+			const entityCount = await BulkActionService.countWikiEntities({
+				worldId,
+				folderId: params.parentFolderId ?? null,
+				prisma,
+			})
+
+			const baseTag = await getPrismaClient(prisma).tag.create({
 				data: {
 					worldId,
-					name: params.name,
+					...params,
 					description: params.description ?? '',
+					parentFolderPosition: entityCount * 2,
+				},
+				select: {
+					id: true,
+				},
+			})
+
+			const world = await makeTouchWorldQuery(worldId, prisma)
+			await makeSortWikiArticlesQuery(worldId, prisma)
+
+			const tag = await getPrismaClient(prisma).tag.findFirst({
+				where: {
+					id: baseTag.id,
 				},
 				include: {
 					mentions: { distinct: ['targetId'] },
 					mentionedIn: { distinct: ['sourceId'] },
 				},
-			})
-
-			const world = await makeTouchWorldQuery(worldId, prisma)
+			})!
 
 			return {
 				world,
@@ -149,10 +166,7 @@ export const TagService = {
 	}: {
 		worldId: string
 		tagId: string
-		params: {
-			name?: string
-			description?: string
-		}
+		params: Pick<TagUncheckedUpdateInput, 'name' | 'description' | 'color'>
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
 			const tag = await getPrismaClient(prisma).tag.update({
@@ -160,6 +174,7 @@ export const TagService = {
 				data: {
 					name: params.name,
 					description: params.description,
+					color: params.color,
 				},
 				include: {
 					mentions: {

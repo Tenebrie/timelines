@@ -4,7 +4,7 @@ import { parseRgbString } from './parseRgbString'
 import { rgbToHsl } from './rgbToHsl'
 
 const hexColorRegex = /^#[a-fA-F0-9]+$/
-const rgbColorRegex = /^rgb\([0-9]+,[0-9]+,[0-9]+\)$/
+const rgbColorRegex = /^rgba?\([0-9]+,[0-9]+,[0-9]+(,[0-9.]+)?\)$/
 const hslColorRegex = /^hsl\([0-9]+,[0-9%]+,[0-9%]+\)$/
 
 export const colorStringToHsl = (color: string) => {
@@ -18,7 +18,7 @@ export const colorStringToHsl = (color: string) => {
 	} else if (hslColorRegex.test(trimmedColor)) {
 		return parseHslString(trimmedColor)
 	}
-	throw new Error('Invalid color string')
+	throw new Error('Invalid color string: ' + color)
 }
 
 export const colorStringToHslWithDefault = (

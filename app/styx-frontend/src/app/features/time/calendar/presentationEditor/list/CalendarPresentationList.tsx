@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { CreatePopoverButton } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
+import { CreatePopoverIconButton } from '@/ui-lib/components/PopoverButton/CreatePopoverIconButton'
 
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'
 import { CalendarPresentationListItem } from './CalendarPresentationListItem'
@@ -65,7 +65,7 @@ export function CalendarPresentationList({ selectedPresentation, onSelectPresent
 					Levels
 				</Typography>
 
-				<CreatePopoverButton
+				<CreatePopoverIconButton
 					size="small"
 					tooltip="Add level"
 					onConfirm={onCreatePresentation}

@@ -279,20 +279,26 @@ test.describe('Timeline View', () => {
 	test('nudging events across tracks', async ({ page }) => {
 		await navigateToTimeline(page, 'createWorld')
 
-		// Create a two event tracks
-		await page.getByText('Create new track...').click()
+		// Open the event tracks modal
+		await page.getByRole('button', { name: 'Manage event tracks...' }).click()
 		await page.waitForTimeout(100)
 
-		await page.getByTestId('ModalBackdrop').getByRole('textbox').fill('First track')
+		// Create two event tracks
+		await page.getByRole('button', { name: 'Create new track' }).click()
+		await page.waitForTimeout(100)
+		await page.getByRole('textbox', { name: 'Name' }).fill('First track')
 		await page.keyboard.press('Enter')
 		await page.waitForTimeout(500)
 
-		await page.getByText('Create new track...').click()
+		await page.getByRole('button', { name: 'Create new track' }).click()
 		await page.waitForTimeout(100)
-
-		await page.getByTestId('ModalBackdrop').getByRole('textbox').fill('Second track')
+		await page.getByRole('textbox', { name: 'Name' }).fill('Second track')
 		await page.keyboard.press('Enter')
 		await page.waitForTimeout(500)
+
+		// Close the event tracks modal
+		await page.keyboard.press('Escape')
+		await page.waitForTimeout(200)
 
 		// Create an event in the default track
 		await page.getByTestId('CreateEntityButton').click()

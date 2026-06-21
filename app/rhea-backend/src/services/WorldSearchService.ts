@@ -104,9 +104,6 @@ export const WorldSearchService = {
 				},
 				nodes: true,
 			},
-			omit: {
-				descriptionYjs: true,
-			},
 		})
 	},
 
@@ -131,12 +128,6 @@ export const WorldSearchService = {
 				],
 			},
 			include: {
-				children: {
-					select: {
-						id: true,
-						name: true,
-					},
-				},
 				mentions: {
 					distinct: ['targetId'],
 					select: {
@@ -157,9 +148,6 @@ export const WorldSearchService = {
 						name: true,
 					},
 				},
-			},
-			omit: {
-				contentYjs: true,
 			},
 		})
 	},
@@ -230,9 +218,6 @@ export const WorldSearchService = {
 						timestamp: 'asc',
 					},
 				},
-			},
-			omit: {
-				descriptionYjs: true,
 			},
 		})
 	},

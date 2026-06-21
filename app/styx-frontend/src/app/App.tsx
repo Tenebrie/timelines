@@ -20,6 +20,7 @@ import { CustomThemeOverrides } from './features/theming/components/CustomThemeO
 import { CustomThemeProvider } from './features/theming/context/CustomThemeProvider'
 import { UndoRedoManager } from './features/undoRedo/UndoRedoManager'
 import { useBrowserSpecificScrollbars } from './hooks/useBrowserSpecificScrollbars'
+import { useCloseMenusOnRightClick } from './hooks/useCloseMenusOnRightClick'
 import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
 import { DeleteAccountModal } from './views/profile/modals/DeleteAccountModal'
 import { DeleteAssetModal } from './views/profile/modals/DeleteAssetModal'
@@ -38,6 +39,7 @@ const App = () => {
 	useLiveUpdates()
 	useSavedPreferences()
 	useShortcutManager()
+	useCloseMenusOnRightClick()
 	const scrollbars = useBrowserSpecificScrollbars()
 
 	useEffect(() => {

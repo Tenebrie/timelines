@@ -1,79 +1,87 @@
-import { WikiArticle } from '@api/types/worldWikiTypes'
-import { ChangeEvent, useCallback, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { AnyRouteMatch, useRouter } from '@tanstack/react-router'
+import { useDispatch, useSelector, useStore } from 'react-redux'
+import useEvent from 'react-use-event-hook'
 
-import { useListArticles } from '@/app/views/world/api/useListArticles'
+import { RootState } from '@/app/store'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
-import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
+import { getVisibleOrderedWikiEntities } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 
-type Props = {
-	article: WikiArticle
-}
+import { BoxedWikiEntity } from './useBoxedWikiContent'
 
-export const useArticleBulkActions = ({ article }: Props) => {
-	const { data: articles } = useListArticles()
-	const { isBulkSelecting, lastCheckedArticle, bulkActionArticles } = useSelector(
-		getWikiState,
-		(a, b) =>
-			a.isBulkSelecting === b.isBulkSelecting &&
-			a.lastCheckedArticle === b.lastCheckedArticle &&
-			a.bulkActionArticles === b.bulkActionArticles,
-	)
-
-	const { setLastCheckedArticle, addToBulkSelection, removeFromBulkSelection } = wikiSlice.actions
+export const useArticleBulkActions = (article: BoxedWikiEntity) => {
 	const dispatch = useDispatch()
+	const store = useStore<RootState>()
+	const router = useRouter()
+	const { setLastCheckedArticle, addToBulkSelection, removeFromBulkSelection } = wikiSlice.actions
 
-	const checked = useMemo(() => bulkActionArticles.includes(article.id), [bulkActionArticles, article.id])
-
-	const onChange = useCallback(
-		(event: ChangeEvent, checked: boolean) => {
-			if (!articles) {
-				return
-			}
-
-			const isBulk =
-				event.nativeEvent instanceof MouseEvent && event.nativeEvent.shiftKey && lastCheckedArticle
-
-			if (checked) {
-				dispatch(addToBulkSelection({ articles: [article.id] }))
-			} else {
-				dispatch(removeFromBulkSelection({ articles: [article.id] }))
-			}
-
-			const sortedArticles = [...articles].sort((a, b) => a.position - b.position)
-
-			if (isBulk) {
-				const lastCheckedIndex = sortedArticles.indexOf(
-					sortedArticles.find((a) => a.id === lastCheckedArticle)!,
-				)
-				const currentIndex = sortedArticles.indexOf(sortedArticles.find((a) => a.id === article.id)!)
-
-				const [start, end] =
-					lastCheckedIndex < currentIndex
-						? [lastCheckedIndex, currentIndex]
-						: [currentIndex, lastCheckedIndex]
-
-				const adjustSelection = checked ? addToBulkSelection : removeFromBulkSelection
-
-				dispatch(adjustSelection({ articles: sortedArticles.slice(start, end + 1).map((a) => a.id) }))
-			} else {
-				dispatch(setLastCheckedArticle({ article: article.id }))
-			}
-		},
-		[
-			addToBulkSelection,
-			article.id,
-			articles,
-			dispatch,
-			lastCheckedArticle,
-			removeFromBulkSelection,
-			setLastCheckedArticle,
-		],
+	const isBulkSelecting = useSelector((state: RootState) => state.wiki.isBulkSelecting)
+	const checked = useSelector((state: RootState) => state.wiki.bulkActionArticles.includes(article.id))
+	const isSelectionHead = useSelector(
+		(state: RootState) => state.wiki.isBulkSelecting && state.wiki.lastCheckedArticle === article.id,
 	)
+
+	function applySelection(state: RootState, nextChecked: boolean, shiftRange: boolean) {
+		const action = nextChecked ? addToBulkSelection : removeFromBulkSelection
+		dispatch(action({ articles: [article.id] }))
+
+		const anchor = state.wiki.lastCheckedArticle
+		if (shiftRange && anchor) {
+			const range = rangeBetween(getVisibleOrderedWikiEntities(state), anchor, article.id)
+			dispatch(action({ articles: range }))
+		}
+
+		dispatch(setLastCheckedArticle({ article: article.id }))
+	}
+
+	const onRowToggle = useEvent((event: { shiftKey: boolean }) => {
+		const state = store.getState()
+
+		if (!state.wiki.isBulkSelecting) {
+			const openArticleId = getOpenArticleId(router.state.matches)
+			if (openArticleId && openArticleId !== article.id) {
+				dispatch(addToBulkSelection({ articles: [openArticleId] }))
+			}
+		}
+
+		applySelection(state, !state.wiki.bulkActionArticles.includes(article.id), event.shiftKey)
+	})
+
+	const onShiftSelect = useEvent(() => {
+		const state = store.getState()
+		const anchor = state.wiki.lastCheckedArticle ?? getOpenArticleId(router.state.matches)
+		const range = anchor ? rangeBetween(getVisibleOrderedWikiEntities(state), anchor, article.id) : []
+
+		dispatch(addToBulkSelection({ articles: range.length > 0 ? range : [article.id] }))
+		dispatch(setLastCheckedArticle({ article: article.id }))
+	})
 
 	return {
-		checkboxVisible: isBulkSelecting,
+		isBulkSelecting,
 		checked,
-		onChange,
+		isSelectionHead,
+		onRowToggle,
+		onShiftSelect,
 	}
+}
+
+function getOpenArticleId(matches: AnyRouteMatch[]): string | null {
+	const match = matches.find((match) => match.routeId === '/world/$worldId/_world/wiki/_wiki/$articleId')
+	return match ? (match.params as { articleId: string }).articleId : null
+}
+
+function rangeBetween(
+	ordered: { id: string; parentId: string | null }[],
+	anchorId: string,
+	targetId: string,
+): string[] {
+	const anchorIndex = ordered.findIndex((entity) => entity.id === anchorId)
+	const targetIndex = ordered.findIndex((entity) => entity.id === targetId)
+	if (anchorIndex === -1 || targetIndex === -1) {
+		return []
+	}
+	const [start, end] = anchorIndex < targetIndex ? [anchorIndex, targetIndex] : [targetIndex, anchorIndex]
+	const slice = ordered.slice(start, end + 1)
+	const inRange = new Set(slice.map((entity) => entity.id))
+	// Skip entities whose folder is itself in the range — selecting a folder already moves its contents.
+	return slice.filter((entity) => !inRange.has(entity.parentId ?? '')).map((entity) => entity.id)
 }

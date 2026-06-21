@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
-import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
 import { isEntityNameValid } from '@/app/utils/isEntityNameValid'
 import { useCreateActor } from '@/app/views/world/api/useCreateActor'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -46,7 +45,6 @@ export const CreateActorModal = () => {
 
 		const createdActor = await createActor({
 			name,
-			color: getRandomEntityColor(),
 		})
 
 		if (!createdActor) {

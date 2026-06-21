@@ -50,6 +50,23 @@ export const timelineSlice = createSlice({
 			state.allTracks = payload.allTracks
 			state.allMarkers = payload.allTracks.flatMap((track) => track.events)
 		},
+		updateTrack: (
+			state,
+			{ payload }: PayloadAction<{ trackId: string; name?: string; position?: number }>,
+		) => {
+			state.tracks.forEach((track) => {
+				if (track.id === payload.trackId) {
+					track.name = payload.name ?? track.name
+					track.position = payload.position ?? track.position
+				}
+			})
+			state.allTracks.forEach((track) => {
+				if (track.id === payload.trackId) {
+					track.name = payload.name ?? track.name
+					track.position = payload.position ?? track.position
+				}
+			})
+		},
 	},
 })
 

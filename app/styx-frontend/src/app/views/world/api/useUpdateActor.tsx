@@ -1,4 +1,5 @@
 import { UpdateActorApiArg, useUpdateActorMutation } from '@api/actorListApi'
+import { useActorApiCache } from '@api/hooks/useActorApiCache'
 import { ActorDetails } from '@api/types/worldTypes'
 import { worldDetailsApi } from '@api/worldDetailsApi'
 import { useCallback } from 'react'
@@ -6,15 +7,15 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { ingestActor } from '@/app/utils/ingestEntity'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldIdState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 export const useUpdateActor = () => {
 	const worldId = useSelector(getWorldIdState)
 	const { actors } = useSelector(getWorldState, (a, b) => a.actors === b.actors)
 	const [updateWorldActor, state] = useUpdateActorMutation()
+	const { updateCachedActor } = useActorApiCache()
 
-	const { updateActor } = worldSlice.actions
+	// const { updateActor } = worldSlice.actions
 	const dispatch = useDispatch()
 
 	const perform = useCallback(
@@ -39,11 +40,11 @@ export const useUpdateActor = () => {
 				dispatch(worldDetailsApi.util.invalidateTags([{ type: 'worldCommonIcons' }]))
 			}
 
-			dispatch(updateActor(actor))
+			updateCachedActor(actor)
 
 			return actor
 		},
-		[dispatch, updateActor, updateWorldActor, worldId, actors],
+		[dispatch, updateCachedActor, updateWorldActor, worldId, actors],
 	)
 
 	return [perform, state] as const

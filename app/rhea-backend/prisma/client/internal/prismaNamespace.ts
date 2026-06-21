@@ -409,6 +409,7 @@ export const ModelName = {
   CollaboratingUser: 'CollaboratingUser',
   FeatureFlagEntry: 'FeatureFlagEntry',
   WikiArticle: 'WikiArticle',
+  WikiFolder: 'WikiFolder',
   World: 'World',
   WorldEvent: 'WorldEvent',
   WorldEventDelta: 'WorldEventDelta',
@@ -429,7 +430,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "assetReference" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "assetReference" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "wikiArticle" | "wikiFolder" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2283,6 +2284,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WikiFolder: {
+      payload: Prisma.$WikiFolderPayload<ExtArgs>
+      fields: Prisma.WikiFolderFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WikiFolderFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WikiFolderPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WikiFolderFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WikiFolderPayload>
+        }
+        findFirst: {
+          args: Prisma.WikiFolderFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WikiFolderPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WikiFolderFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WikiFolderPayload>
+        }
+        findMany: {
+          args: Prisma.WikiFolderFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WikiFolderPayload>[]
+        }
+        create: {
+          args: Prisma.WikiFolderCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WikiFolderPayload>
+        }
+        createMany: {
+          args: Prisma.WikiFolderCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WikiFolderCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WikiFolderPayload>[]
+        }
+        delete: {
+          args: Prisma.WikiFolderDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WikiFolderPayload>
+        }
+        update: {
+          args: Prisma.WikiFolderUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WikiFolderPayload>
+        }
+        deleteMany: {
+          args: Prisma.WikiFolderDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WikiFolderUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WikiFolderUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WikiFolderPayload>[]
+        }
+        upsert: {
+          args: Prisma.WikiFolderUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WikiFolderPayload>
+        }
+        aggregate: {
+          args: Prisma.WikiFolderAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWikiFolder>
+        }
+        groupBy: {
+          args: Prisma.WikiFolderGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WikiFolderGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WikiFolderCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WikiFolderCountAggregateOutputType> | number
+        }
+      }
+    }
     World: {
       payload: Prisma.$WorldPayload<ExtArgs>
       fields: Prisma.WorldFieldRefs
@@ -2702,8 +2777,9 @@ export const ActorScalarFieldEnum = {
   color: 'color',
   description: 'description',
   descriptionRich: 'descriptionRich',
-  descriptionYjs: 'descriptionYjs',
-  worldId: 'worldId'
+  worldId: 'worldId',
+  parentFolderId: 'parentFolderId',
+  parentFolderPosition: 'parentFolderPosition'
 } as const
 
 export type ActorScalarFieldEnum = (typeof ActorScalarFieldEnum)[keyof typeof ActorScalarFieldEnum]
@@ -2900,7 +2976,6 @@ export const ContentPageScalarFieldEnum = {
   name: 'name',
   description: 'description',
   descriptionRich: 'descriptionRich',
-  descriptionYjs: 'descriptionYjs',
   parentActorId: 'parentActorId',
   parentEventId: 'parentEventId',
   parentArticleId: 'parentArticleId'
@@ -2986,7 +3061,10 @@ export const TagScalarFieldEnum = {
   updatedAt: 'updatedAt',
   name: 'name',
   description: 'description',
-  worldId: 'worldId'
+  color: 'color',
+  worldId: 'worldId',
+  parentFolderId: 'parentFolderId',
+  parentFolderPosition: 'parentFolderPosition'
 } as const
 
 export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
@@ -3036,14 +3114,29 @@ export const WikiArticleScalarFieldEnum = {
   name: 'name',
   icon: 'icon',
   color: 'color',
+  content: 'content',
   contentRich: 'contentRich',
-  contentYjs: 'contentYjs',
-  position: 'position',
   worldId: 'worldId',
-  parentId: 'parentId'
+  parentFolderId: 'parentFolderId',
+  parentFolderPosition: 'parentFolderPosition'
 } as const
 
 export type WikiArticleScalarFieldEnum = (typeof WikiArticleScalarFieldEnum)[keyof typeof WikiArticleScalarFieldEnum]
+
+
+export const WikiFolderScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  icon: 'icon',
+  color: 'color',
+  worldId: 'worldId',
+  parentFolderId: 'parentFolderId',
+  parentFolderPosition: 'parentFolderPosition'
+} as const
+
+export type WikiFolderScalarFieldEnum = (typeof WikiFolderScalarFieldEnum)[keyof typeof WikiFolderScalarFieldEnum]
 
 
 export const WorldScalarFieldEnum = {
@@ -3072,9 +3165,10 @@ export const WorldEventScalarFieldEnum = {
   revokedAt: 'revokedAt',
   description: 'description',
   descriptionRich: 'descriptionRich',
-  descriptionYjs: 'descriptionYjs',
   worldId: 'worldId',
-  worldEventTrackId: 'worldEventTrackId'
+  worldEventTrackId: 'worldEventTrackId',
+  parentFolderId: 'parentFolderId',
+  parentFolderPosition: 'parentFolderPosition'
 } as const
 
 export type WorldEventScalarFieldEnum = (typeof WorldEventScalarFieldEnum)[keyof typeof WorldEventScalarFieldEnum]
@@ -3193,6 +3287,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -3340,20 +3448,6 @@ export type EnumCalendarUnitNegativeFormatFieldRefInput<$PrismaModel> = FieldRef
  * Reference to a field of type 'CalendarUnitNegativeFormat[]'
  */
 export type ListEnumCalendarUnitNegativeFormatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CalendarUnitNegativeFormat[]'>
-    
-
-
-/**
- * Reference to a field of type 'Float'
- */
-export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-/**
- * Reference to a field of type 'Float[]'
- */
-export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 
@@ -3603,6 +3697,7 @@ export type GlobalOmitConfig = {
   collaboratingUser?: Prisma.CollaboratingUserOmit
   featureFlagEntry?: Prisma.FeatureFlagEntryOmit
   wikiArticle?: Prisma.WikiArticleOmit
+  wikiFolder?: Prisma.WikiFolderOmit
   world?: Prisma.WorldOmit
   worldEvent?: Prisma.WorldEventOmit
   worldEventDelta?: Prisma.WorldEventDeltaOmit

@@ -1,7 +1,8 @@
 import { Actor, WorldEvent, WorldTag } from '@api/types/worldTypes'
-import { WikiArticle } from '@api/types/worldWikiTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
+
+import { BoxedWikiEntity } from '@/app/views/world/views/wiki/hooks/useBoxedWikiContent'
 
 import { ScaleLevel } from '../../schema/ScaleLevel'
 import { CalendarUnitEditorTab } from '../time/calendar/types'
@@ -30,6 +31,7 @@ const saveToLocalStorage = (state: PreferencesState) => {
 			},
 		}),
 	)
+	window.sessionStorage.setItem(PreferencesKey, JSON.stringify(state))
 }
 
 export const preferencesSlice = createSlice({
@@ -170,12 +172,27 @@ export const preferencesSlice = createSlice({
 		},
 
 		/* Wiki */
-		collapseWikiFolder: (state, { payload }: PayloadAction<WikiArticle>) => {
+		collapseWikiFolder: (state, { payload }: PayloadAction<BoxedWikiEntity>) => {
 			state.wiki.expandedFolders = state.wiki.expandedFolders.filter((id) => id !== payload.id)
 			saveToLocalStorage(state)
 		},
-		uncollapseWikiFolder: (state, { payload }: PayloadAction<WikiArticle>) => {
+		collapseWikiFolderById: (state, { payload }: PayloadAction<string>) => {
+			state.wiki.expandedFolders = state.wiki.expandedFolders.filter((id) => id !== payload)
+			saveToLocalStorage(state)
+		},
+		uncollapseWikiFolder: (state, { payload }: PayloadAction<BoxedWikiEntity>) => {
 			state.wiki.expandedFolders = [...new Set([...state.wiki.expandedFolders, payload.id])]
+			saveToLocalStorage(state)
+		},
+		uncollapseWikiFolderById: (state, { payload }: PayloadAction<string>) => {
+			state.wiki.expandedFolders = [...new Set([...state.wiki.expandedFolders, payload])]
+			saveToLocalStorage(state)
+		},
+		setVisibleWikiEntities: (
+			state,
+			{ payload }: PayloadAction<PreferencesState['wiki']['visibleEntities']>,
+		) => {
+			state.wiki.visibleEntities = payload
 			saveToLocalStorage(state)
 		},
 

@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { BaseMentionChip } from './BaseMentionChip'
@@ -18,7 +17,6 @@ export const ActorMentionChip = ({ actorId, fallbackName }: Props) => {
 
 	const actor = actors.find((actor) => actor.id === actorId)
 	const actorName = actor ? `${actor.name}` : `Deleted Actor (${fallbackName ?? 'Unknown'})`
-	const actorColor = useEntityColor({ id: actorId, color: actor?.color })
 
 	const onClick = () => {
 		if (!actor) {
@@ -35,5 +33,7 @@ export const ActorMentionChip = ({ actorId, fallbackName }: Props) => {
 		})
 	}
 
-	return <BaseMentionChip type="Actor" label={actorName} color={actorColor} onClick={onClick} />
+	return (
+		<BaseMentionChip type="Actor" label={actorName} color={actor?.color ?? '#000000'} onClick={onClick} />
+	)
 }

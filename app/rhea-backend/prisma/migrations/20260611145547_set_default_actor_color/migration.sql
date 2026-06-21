@@ -1,0 +1,1 @@
+UPDATE "Actor" SET "color" = '#32a995' WHERE "color" = '#11ac26';

@@ -7,12 +7,16 @@ import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import { Outlet } from '@tanstack/react-router'
 
+import { ActorDetails } from '@/app/features/entityEditor/actor/details/ActorDetails'
 import { ArticleDetails } from '@/app/features/entityEditor/article/details/ArticleDetails'
+import { EventDetails } from '@/app/features/entityEditor/event/details/EventDetails'
+import { TagDetails } from '@/app/features/entityEditor/tag/details/TagDetails'
 import { useMobileLayout } from '@/app/hooks/useMobileLayout'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { ArticleList } from './articleList/ArticleList'
+import { ArticleListEntityGroupButton } from './articleList/ArticleListEntityGroupButton'
 import { ArticleListHeader } from './articleList/ArticleListHeader'
 import { useCurrentArticle } from './hooks/useCurrentArticle'
 
@@ -41,6 +45,7 @@ export const Wiki = () => {
 						sx={(theme) => ({
 							padding: 2,
 							paddingTop: '24px',
+							paddingBottom: 0,
 							height: isMobile ? '100%' : 'calc(100%)',
 							maxHeight: 'calc(100%)',
 							width: isMobile ? '100%' : undefined,
@@ -57,7 +62,7 @@ export const Wiki = () => {
 					>
 						<Stack
 							sx={{
-								width: isMobile ? '100%' : '350px',
+								width: isMobile ? '100%' : '400px',
 								minWidth: isMobile ? 0 : '250px',
 							}}
 							data-testid="ArticleListWithHeader"
@@ -66,6 +71,7 @@ export const Wiki = () => {
 								<Stack gap={1}>
 									<ArticleListHeader />
 									<Divider />
+									<ArticleListEntityGroupButton />
 								</Stack>
 								<ArticleList parentId={null} depth={0} />
 							</Stack>
@@ -121,5 +127,15 @@ export function CurrentArticleDetails() {
 		</Stack>
 	) : undefined
 
-	return <ArticleDetails article={article} isWikiTab titleProps={{ startAdornment }} />
+	switch (article.type) {
+		case 'article':
+			return <ArticleDetails article={article.entity} isWikiTab titleProps={{ startAdornment }} />
+		case 'actor':
+			return <ActorDetails editedActor={article.entity} />
+		case 'event':
+			return <EventDetails editedEvent={article.entity} />
+		case 'tag':
+			return <TagDetails editedTag={article.entity} />
+	}
+	return null
 }

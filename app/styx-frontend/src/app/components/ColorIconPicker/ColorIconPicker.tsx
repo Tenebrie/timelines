@@ -6,6 +6,7 @@ import styled from 'styled-components'
 type Props = {
 	icon: string
 	color: string
+	defaultIcon: string
 	onClick: () => void
 }
 
@@ -22,7 +23,7 @@ export const Marker = styled(Button)`
 		background-color 0.3s;
 `
 
-export function ColorIconPicker({ icon, color, onClick }: Props) {
+export function ColorIconPicker({ icon, defaultIcon, color, onClick }: Props) {
 	const baseColor = color ?? '#000000'
 
 	return (
@@ -35,7 +36,7 @@ export function ColorIconPicker({ icon, color, onClick }: Props) {
 		>
 			<Marker onClick={onClick}>
 				<Icon
-					icon={icon === 'default' ? 'mdi:leaf' : icon}
+					icon={icon === 'default' ? defaultIcon : icon}
 					color={baseColor}
 					style={{
 						position: 'absolute',

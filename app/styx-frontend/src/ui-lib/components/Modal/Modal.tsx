@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { DragDropState } from '@/app/features/dragDrop/DragDropState'
 import { getTimelinePreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
@@ -104,7 +105,11 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 				onMouseDown={(e) => {
 					e.stopPropagation()
 				}}
-				onMouseUp={(e) => e.stopPropagation()}
+				onMouseUp={(e) => {
+					if (DragDropState.current === null) {
+						e.stopPropagation()
+					}
+				}}
 				onClick={(e) => e.stopPropagation()}
 			>
 				{children}

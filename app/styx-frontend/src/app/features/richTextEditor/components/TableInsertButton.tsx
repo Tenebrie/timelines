@@ -22,7 +22,7 @@ export function TableInsertButton({ editor }: Props) {
 
 	return (
 		<PopoverButton
-			icon={
+			content={
 				<>
 					Table
 					<ArrowDropDownIcon sx={{ fontSize: 20, ml: 1, mr: '-4px' }} />
@@ -32,7 +32,7 @@ export function TableInsertButton({ editor }: Props) {
 			tooltip={isInTable ? 'Table options' : 'Insert table'}
 			color="secondary"
 			size="medium"
-			rippleVariant="button"
+			buttonVariant="text"
 			buttonSx={{ minHeight: 44, minWidth: 40, padding: '0 4px 0 8px', fontSize: '0.875rem' }}
 			popoverBody={({ close }) =>
 				isInTable ? (

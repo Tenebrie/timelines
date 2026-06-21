@@ -2,5 +2,5 @@ import Modal from './Modal'
 
 export default Modal
 export { ModalFooter } from './ModalFooter'
-export { ModalHeader } from './styles'
+export { ModalHeader } from './ModalHeader'
 export { useModalCleanup } from './useModalCleanup'

@@ -1,30 +1,42 @@
-import { MoveArticleApiArg, useMoveArticleMutation, worldWikiApi } from '@api/worldWikiApi'
+import { useWikiApiCache } from '@api/hooks/useWikiApiCache'
+import { WikiEntityType } from '@api/types/worldTypes'
+import { worldDetailsApi } from '@api/worldDetailsApi'
+import { MoveWikiEntityApiArg, useMoveWikiEntityMutation, worldWikiApi } from '@api/worldWikiApi'
 import { useSelector } from 'react-redux'
 
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-import { useArticleApiCache } from './useArticleApiCache'
-
-export const useMoveArticle = () => {
+export function useMoveArticle() {
 	const worldId = useSelector(getWorldIdState)
-	const [moveArticle, params] = useMoveArticleMutation()
-	const { updateCachedArticlePosition } = useArticleApiCache()
+	const [moveEntity, params] = useMoveWikiEntityMutation()
 
-	const commit = async (data: MoveArticleApiArg['body']) => {
-		updateCachedArticlePosition(data)
+	const { applyPositionUpdates } = useWikiApiCache()
+
+	const commit = async (data: MoveWikiEntityApiArg['body'] & { entityType: WikiEntityType }) => {
+		const transaction = applyPositionUpdates([
+			{
+				entityId: data.entityId,
+				entityType: data.entityType,
+				position: data.position,
+				folderId: data.parentId,
+			},
+		])
 
 		const { response, error } = parseApiResponse(
-			await moveArticle({
+			await moveEntity({
 				worldId,
 				body: data,
 			}),
 		)
 		if (error) {
+			transaction.undo()
+			worldDetailsApi.util.invalidateTags(['worldDetails'])
 			worldWikiApi.util.invalidateTags(['worldWiki'])
 			return
 		}
 
+		applyPositionUpdates(response.updates)
 		return response
 	}
 

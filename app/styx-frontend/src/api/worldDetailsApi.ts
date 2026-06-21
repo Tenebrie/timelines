@@ -151,6 +151,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		icon: string
 		color: string
 		descriptionRich: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
 	}[]
 	events: {
 		pages: {
@@ -184,6 +186,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		icon: string
 		color: string
 		descriptionRich: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
 		timestamp: string
 		revokedAt?: null | string
 		worldEventTrackId?: null | string
@@ -203,6 +207,9 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
+		color: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
 	}[]
 	description: string
 	id: string

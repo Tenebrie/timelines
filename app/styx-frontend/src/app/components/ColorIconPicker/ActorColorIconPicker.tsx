@@ -7,5 +7,7 @@ type Props = {
 }
 
 export function ActorColorIconPicker({ draft }: Props) {
-	return <ColorIconPicker icon={draft.icon} color={draft.color} onClick={() => {}} />
+	return (
+		<ColorIconPicker icon={draft.icon} defaultIcon="mdi:person" color={draft.color} onClick={() => null} />
+	)
 }

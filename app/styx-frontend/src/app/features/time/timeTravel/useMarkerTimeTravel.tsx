@@ -4,8 +4,12 @@ import { useSelector } from 'react-redux'
 import { useUpdateEventDebounced } from '@/app/views/world/api/useUpdateEventDebounced'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
-export function useMarkerTimeTravel() {
-	const { selectedTimelineMarkers, events } = useSelector(
+type Props = {
+	markers: { key: string; eventId: string }[]
+}
+
+export function useMarkerTimeTravel({ markers }: Props) {
+	const { events } = useSelector(
 		getWorldState,
 		(a, b) => a.selectedTimelineMarkers === b.selectedTimelineMarkers && a.events === b.events,
 	)
@@ -13,7 +17,7 @@ export function useMarkerTimeTravel() {
 
 	const nudge = useCallback(
 		(timeDifference: number) => {
-			const startingMarker = selectedTimelineMarkers[0]
+			const startingMarker = markers[0]
 			if (!startingMarker) {
 				return {}
 			}
@@ -32,7 +36,7 @@ export function useMarkerTimeTravel() {
 				if (!event.revokedAt) {
 					return [startingMarker, false] as const
 				}
-				if (allMarkers.every((m) => selectedTimelineMarkers.map((marker) => marker.key).includes(m))) {
+				if (allMarkers.every((m) => markers.map((marker) => marker.key).includes(m))) {
 					if (timeDifference > 0) {
 						return [
 							{
@@ -84,7 +88,7 @@ export function useMarkerTimeTravel() {
 			}
 			return {}
 		},
-		[events, selectedTimelineMarkers, updateEvent],
+		[events, markers, updateEvent],
 	)
 
 	return [nudge] as const

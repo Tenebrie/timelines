@@ -7,12 +7,7 @@ const injectedRtkApi = api
 	.injectEndpoints({
 		endpoints: (build) => ({
 			getWorldEventContent: build.query<GetWorldEventContentApiResponse, GetWorldEventContentApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/content`,
-					params: {
-						acceptDeltas: queryArg.acceptDeltas,
-					},
-				}),
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/content` }),
 				providesTags: ['worldEvent'],
 			}),
 			putWorldEventContent: build.mutation<PutWorldEventContentApiResponse, PutWorldEventContentApiArg>({
@@ -70,17 +65,13 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as worldEventApi }
 export type GetWorldEventContentApiResponse = /** status 200  */ {
-	hasDeltas: boolean
-	contentHtml?: string
-	contentDeltas?: null | string
+	contentHtml: string
 }
 export type GetWorldEventContentApiArg = {
 	/** Any string value */
 	worldId: string
 	/** Any string value */
 	eventId: string
-	/** Any boolean value */
-	acceptDeltas?: boolean
 }
 export type PutWorldEventContentApiResponse = unknown
 export type PutWorldEventContentApiArg = {
@@ -125,6 +116,8 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 	timestamp: string
 	revokedAt?: null | string
 	worldEventTrackId?: null | string
@@ -143,6 +136,7 @@ export type CreateWorldEventApiArg = {
 		customName?: boolean
 		externalLink?: string
 		worldEventTrackId?: null | string
+		parentFolderId?: null | string
 	}
 }
 export type UpdateWorldEventApiResponse = /** status 200  */ {
@@ -177,6 +171,8 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 	timestamp: string
 	revokedAt?: null | string
 	worldEventTrackId?: null | string
@@ -215,7 +211,8 @@ export type RevokeWorldEventApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
-	descriptionYjs?: null | string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 	timestamp: string
 	revokedAt?: null | string
 	worldEventTrackId?: null | string
@@ -239,7 +236,8 @@ export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
-	descriptionYjs?: null | string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 	timestamp: string
 	revokedAt?: null | string
 	worldEventTrackId?: null | string
