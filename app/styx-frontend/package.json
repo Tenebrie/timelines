@@ -19,7 +19,7 @@
 		"prod": "serve -s build -l 8080"
 	},
 	"dependencies": {
-		"@mui/x-data-grid": "^8.0.0",
+		"@mui/x-data-grid": "^9.6.0",
 		"@mui/x-date-pickers": "^9.3.0",
 		"@neverkin/tiptap-schema": "file:../../library/tiptap-schema",
 		"@neverkin/esoteric-date": "file:../../library/esoteric-date",
