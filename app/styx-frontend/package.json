@@ -65,7 +65,7 @@
 		"@eslint-react/eslint-plugin": "^5.9.1",
 		"@iconify/react": "^6.0.2",
 		"@iconify/types": "^2.0.0",
-		"@mui/icons-material": "^7.3.8",
+		"@mui/icons-material": "^9.1.1",
 		"@mui/material": "^7.3.8",
 		"@reduxjs/toolkit": "^2.11.2",
 		"@rsbuild/core": "^2.0.15",
