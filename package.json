@@ -71,7 +71,7 @@
 		"typescript": "^6.0.2"
 	},
 	"lint-staged": {
-		"*.(ts|json)": "eslint --fix"
+		"*.{ts,tsx,json}": "eslint --fix"
 	},
 	"engines": {
 		"node": "24.x"
