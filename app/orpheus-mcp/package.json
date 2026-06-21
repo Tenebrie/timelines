@@ -31,7 +31,7 @@
 		"jsonwebtoken": "^9.0.3",
 		"openapi-fetch": "^0.17.0",
 		"redis": "^5.12.1",
-		"vite": "^8.0.14",
+		"vite": "^8.0.16",
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {
