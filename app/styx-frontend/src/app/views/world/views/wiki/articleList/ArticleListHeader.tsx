@@ -1,5 +1,6 @@
 import Cancel from '@mui/icons-material/Cancel'
 import Delete from '@mui/icons-material/Delete'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import Stack from '@mui/material/Stack'
@@ -52,11 +53,25 @@ export const ArticleListHeader = () => {
 					onChange={() => onChange()}
 				/>
 			)}
-			<Stack direction="row" justifyContent="space-between" width="100%">
-				<Typography variant="h6" marginLeft={1}>
-					{!isBulkSelecting && <>{name}</>}
+			<Stack direction="row" justifyContent="space-between" width="100%" sx={{ minWidth: 0 }}>
+				<Typography variant="h6" marginLeft={1} sx={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
+					{!isBulkSelecting && (
+						<Box
+							sx={{
+								overflow: 'hidden',
+								whiteSpace: 'nowrap',
+								textOverflow: 'ellipsis',
+							}}
+						>
+							{name}
+						</Box>
+					)}
 				</Typography>
-				{!isBulkSelecting && !isReadOnly && <ArticleListHeaderCreateButton folderId={null} />}
+				{!isBulkSelecting && !isReadOnly && (
+					<Box sx={{ flexShrink: 0 }}>
+						<ArticleListHeaderCreateButton folderId={null} />
+					</Box>
+				)}
 				{isBulkSelecting && (
 					<Stack direction="row" gap={1}>
 						<Button
