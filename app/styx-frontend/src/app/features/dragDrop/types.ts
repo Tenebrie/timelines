@@ -1,7 +1,8 @@
 import { CalendarDraftUnit, CalendarDraftUnitChildRelation } from '@api/types/calendarTypes'
 import { MindmapNode } from '@api/types/mindmapTypes'
 import { ActorDetails, MarkerType, TimelineEntity } from '@api/types/worldTypes'
-import { WikiArticle } from '@api/types/worldWikiTypes'
+
+import { BoxedWikiEntity } from '@/app/views/world/views/wiki/hooks/useBoxedWikiContent'
 
 import { TimelineTrack } from '../../views/world/views/timeline/hooks/useEventTracks'
 
@@ -13,7 +14,7 @@ export type DraggableParams = {
 		track: TimelineTrack
 	}
 	['articleListItem']: {
-		article: WikiArticle
+		article: BoxedWikiEntity
 	}
 	['newMindmapNode']: {
 		actor: ActorDetails

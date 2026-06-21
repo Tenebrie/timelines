@@ -17,21 +17,26 @@ test.describe('World Tags', () => {
 		// Create event
 		const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 		await textbox.focus()
-		await textbox.pressSequentially('Hello @New Tag', { delay: 10 })
-		await page.keyboard.press('ArrowDown')
-		await page.keyboard.press('ArrowDown')
-		await page.keyboard.press('ArrowDown')
-		await page.keyboard.press('Enter')
+		await textbox.pressSequentially('Hello', { delay: 10 })
 		await page.waitForTimeout(500)
 		await page.getByTestId('ModalBackdrop').getByText('Create', { exact: true }).click()
 		await page.waitForTimeout(500)
 
-		await expect(page.getByText('Tag with 1 mention')).toBeVisible()
-
 		// Open event
 		await page.getByTestId('TimelineMarker').click()
 		await page.getByTestId('TimelineMarker').click()
+		await expect(textbox).toHaveText('Hello')
+
+		// Edit event: quick create a tag mention
+		await textbox.click()
+		await textbox.pressSequentially(' @New Tag', { delay: 10 })
+		await page.keyboard.press('ArrowDown')
+		await page.keyboard.press('ArrowDown')
+		await page.keyboard.press('ArrowDown')
+		await page.keyboard.press('Enter')
 		await expect(textbox).toHaveText('Hello New Tag ')
+
+		await expect(page.getByText('Tag with 1 mention')).toBeVisible()
 
 		// Close event
 		await page.keyboard.press('Escape')

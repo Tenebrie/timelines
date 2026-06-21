@@ -42,7 +42,7 @@ export function LastWorldNavigatorButton({ icon, label, iconOnly }: Props) {
 	}
 
 	return (
-		<Link to="/world/$worldId/timeline" params={{ worldId: id }}>
+		<Link to="/world/$worldId/wiki" params={{ worldId: id }}>
 			{button}
 		</Link>
 	)

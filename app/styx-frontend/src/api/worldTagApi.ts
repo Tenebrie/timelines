@@ -76,6 +76,9 @@ export type CreateTagApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	color: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }
 export type CreateTagApiArg = {
 	/** Any string value */
@@ -83,6 +86,7 @@ export type CreateTagApiArg = {
 	body: {
 		name: string
 		description?: string
+		parentFolderId?: null | string
 	}
 }
 export type UpdateTagApiResponse = /** status 200  */ {
@@ -100,6 +104,9 @@ export type UpdateTagApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	color: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }
 export type UpdateTagApiArg = {
 	/** Any string value */
@@ -109,6 +116,7 @@ export type UpdateTagApiArg = {
 	body: {
 		name?: string
 		description?: string
+		color?: string
 	}
 }
 export type DeleteTagApiResponse = /** status 200  */ {
@@ -118,6 +126,9 @@ export type DeleteTagApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	color: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }
 export type DeleteTagApiArg = {
 	/** Any string value */
@@ -153,6 +164,9 @@ export type GetTagDetailsApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	color: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }
 export type GetTagDetailsApiArg = {
 	/** Any string value */

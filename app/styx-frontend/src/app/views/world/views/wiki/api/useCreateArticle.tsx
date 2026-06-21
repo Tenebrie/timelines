@@ -1,4 +1,4 @@
-import { useCreateArticleMutation, worldWikiApi } from '@api/worldWikiApi'
+import { CreateArticleApiArg, useCreateArticleMutation, worldWikiApi } from '@api/worldWikiApi'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { AppDispatch } from '@/app/store'
@@ -11,13 +11,11 @@ export const useCreateArticle = () => {
 
 	const dispatch = useDispatch<AppDispatch>()
 
-	const commit = async ({ name }: { name: string }) => {
+	const commit = async (body: CreateArticleApiArg['body']) => {
 		const { response, error } = parseApiResponse(
 			await createArticle({
 				worldId,
-				body: {
-					name,
-				},
+				body,
 			}),
 		)
 		if (error) {

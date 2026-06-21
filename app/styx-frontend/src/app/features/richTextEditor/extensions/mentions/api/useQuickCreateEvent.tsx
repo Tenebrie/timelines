@@ -1,8 +1,7 @@
-import { useCreateWorldEventMutation } from '@api/worldEventApi'
+import { CreateWorldEventApiArg, useCreateWorldEventMutation } from '@api/worldEventApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
 import { ingestEvent } from '@/app/utils/ingestEntity'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { worldSlice } from '@/app/views/world/WorldSlice'
@@ -16,7 +15,13 @@ export const useQuickCreateEvent = () => {
 	const dispatch = useDispatch()
 
 	const quickCreateEvent = useCallback(
-		async ({ query }: { query: string }) => {
+		async ({
+			query,
+			...body
+		}: { query: string } & Omit<
+			CreateWorldEventApiArg['body'],
+			'name' | 'descriptionRich' | 'timestamp'
+		>) => {
 			if (query.length === 0) {
 				return
 			}
@@ -25,9 +30,9 @@ export const useQuickCreateEvent = () => {
 				await createEvent({
 					worldId,
 					body: {
+						...body,
 						name: query,
-						color: getRandomEntityColor(),
-						descriptionRich: query,
+						descriptionRich: '',
 						timestamp: '0',
 					},
 				}),

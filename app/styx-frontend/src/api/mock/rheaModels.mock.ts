@@ -83,6 +83,8 @@ export const mockActorModel = (actor: Partial<ActorDetails> = {}): ActorDetails 
 	icon: 'default',
 	color: '#008080',
 	pages: [],
+	parentFolderId: null,
+	parentFolderPosition: 0,
 	...actor,
 })
 
@@ -102,6 +104,8 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	worldEventTrackId: null,
 	color: '#008080',
 	pages: [],
+	parentFolderId: null,
+	parentFolderPosition: 0,
 	...statement,
 })
 
@@ -157,6 +161,8 @@ export const mockApiEventModel = (
 	worldEventTrackId: null,
 	color: '#008080',
 	pages: [],
+	parentFolderId: null,
+	parentFolderPosition: 0,
 	...statement,
 })
 

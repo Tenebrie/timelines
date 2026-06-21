@@ -12,7 +12,6 @@ import { getTimelinePreferences } from '@/app/features/preferences/PreferencesSl
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
-import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -121,7 +120,6 @@ export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 		setIsHovered(false)
 	}
 
-	const color = useEntityColor({ id: entity.eventId, color: entity.color })
 	const theme = useCustomTheme()
 
 	// Calculate absolute position for the timestamp box (above the marker)
@@ -139,7 +137,7 @@ export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 	const timestampBoxPosition = getTimestampBoxPosition()
 
 	const cssVariables = {
-		'--border-color': color,
+		'--border-color': entity.color,
 		'--marker-size': `${TimelineEventHeightPx - 6}px`,
 		'--border-radius': '6px',
 	} as CSSProperties
@@ -172,8 +170,8 @@ export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 			data-event-id={entity.eventId}
 		>
 			<Icon
-				icon={entity.icon === 'default' ? 'mdi:leaf' : entity.icon}
-				color={color}
+				icon={entity.icon === 'default' ? 'mdi:event' : entity.icon}
+				color={entity.color}
 				style={{
 					position: 'absolute',
 					top: '0px',
@@ -250,7 +248,7 @@ export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 				sx={{
 					width: 'calc(100% + 4px)',
 					height: 'calc(100% + 4px)',
-					background: color,
+					background: entity.color,
 					opacity: 0,
 					borderRadius: '6px',
 					transition: 'opacity 0.3s, background 0.3s',

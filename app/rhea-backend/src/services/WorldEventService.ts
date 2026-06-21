@@ -3,12 +3,14 @@ import { Prisma } from '@prisma/client'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { fetchWorldEventDetailsOrThrow } from './dbQueries/fetchWorldEventDetailsOrThrow.js'
 import { fetchWorldEventOrThrow } from './dbQueries/fetchWorldEventOrThrow.js'
+import { makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import {
 	makeUpdateWorldEventQuery,
 	UpdateWorldEventQueryParams,
 } from './dbQueries/makeUpdateWorldEventQuery.js'
 import { MentionedByEntry } from './TagService.js'
+import { BulkActionService } from './WorldBulkActionService.js'
 
 export const WorldEventService = {
 	findEventById: async ({ id, worldId }: { id: string; worldId: string }) => {
@@ -38,10 +40,20 @@ export const WorldEventService = {
 		updateData: UpdateWorldEventQueryParams
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
+			const entityCount = await BulkActionService.countWikiEntities({
+				worldId,
+				folderId: createData.parentFolderId ?? null,
+				prisma,
+			})
+
 			const baseEvent = await prisma.worldEvent.create({
 				data: {
 					worldId,
+					parentFolderPosition: entityCount * 2,
 					...createData,
+				},
+				select: {
+					id: true,
 				},
 			})
 
@@ -53,6 +65,7 @@ export const WorldEventService = {
 			})
 
 			const world = await makeTouchWorldQuery(worldId, prisma)
+			await makeSortWikiArticlesQuery(worldId, prisma)
 
 			const event = await fetchWorldEventDetailsOrThrow(baseEvent.id, prisma)
 

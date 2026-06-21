@@ -1,8 +1,10 @@
 import { ListCalendarTemplatesApiResponse } from '@api/otherApi'
 import { GetWorldsApiResponse } from '@api/worldListApi'
+import { MoveWikiEntityApiResponse } from '@api/worldWikiApi'
 
 import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 
+export type WikiEntityType = MoveWikiEntityApiResponse['updates'][number]['entityType']
 export type FullMentionDetails = GetWorldInfoApiResponse['actors'][number]['mentions'][number]
 export type MentionedEntity = GetWorldInfoApiResponse['actors'][number]['mentions'][number]['targetType']
 export type MentionDetails = Pick<FullMentionDetails, 'targetId' | 'targetType'>

@@ -4,11 +4,9 @@ import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
 import { ValidationService } from '@src/services/ValidationService.js'
-import { WikiService } from '@src/services/WikiService.js'
+import { WikiArticleService } from '@src/services/WikiArticleService.js'
 import {
 	BadRequestError,
-	BooleanValidator,
-	OptionalParam,
 	PathParam,
 	RequiredParam,
 	Router,
@@ -16,7 +14,6 @@ import {
 	useApiEndpoint,
 	useAuth,
 	usePathParams,
-	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
 import z from 'zod'
@@ -42,21 +39,15 @@ router.get('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 		articleId: PathParam(StringValidator),
 	})
 
-	const { acceptDeltas } = useQueryParams(ctx, {
-		acceptDeltas: OptionalParam(BooleanValidator),
-	})
-
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 
-	const article = await WikiService.findArticleByIdWithContentDeltas({ id: articleId, worldId })
+	const article = await WikiArticleService.findArticleByIdWithContentDeltas({ id: articleId, worldId })
 	if (!article) {
 		throw new BadRequestError('Article not found')
 	}
 
 	return {
-		hasDeltas: article.contentYjs ? true : false,
-		contentHtml: acceptDeltas && article.contentYjs ? undefined : article.contentRich,
-		contentDeltas: acceptDeltas ? article.contentYjs : undefined,
+		contentHtml: article.contentRich,
 	}
 })
 
@@ -91,9 +82,10 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 		return
 	}
 
-	const { article, updatedMentions } = await WikiService.updateWikiArticle({
+	const { article, updatedMentions } = await WikiArticleService.updateWikiArticle({
 		id: articleId,
 		worldId,
+		content: parsed.contentPlain,
 		contentRich: parsed.contentRich,
 		mentions: parsed.mentions,
 		referencedAssetIds: parsed.referencedAssetIds,

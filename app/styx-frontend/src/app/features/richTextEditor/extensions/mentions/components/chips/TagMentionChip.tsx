@@ -17,7 +17,7 @@ export const TagMentionChip = ({ tagId, fallbackName }: Props) => {
 
 	const tag = tags.find((tag) => tag.id === tagId)
 	const tagName = tag ? `${tag.name}` : `Deleted Tag (${fallbackName ?? 'Unknown'})`
-	const tagColor = tag ? '#255' : undefined
+	const tagColor = tag ? '#9f2261' : undefined
 
 	const onClick = () => {
 		if (!tag) {

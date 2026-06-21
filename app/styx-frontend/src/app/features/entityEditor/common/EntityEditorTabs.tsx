@@ -64,7 +64,7 @@ export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab, is
 				onChange={(_, newValue) => handleChange(newValue)}
 				sx={{ marginTop: 0 }}
 			>
-				<Tooltip title="Content tab" disableInteractive placement="right" enterDelay={300}>
+				<Tooltip title="Content tab" disableInteractive placement="right" enterDelay={700}>
 					<Tab
 						value={0}
 						data-testid="EntityEditorContentTab"
@@ -78,7 +78,7 @@ export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab, is
 						}}
 					/>
 				</Tooltip>
-				<Tooltip title="Illustration tab" disableInteractive placement="right" enterDelay={300}>
+				<Tooltip title="Illustration tab" disableInteractive placement="right" enterDelay={700}>
 					<Tab
 						value={1}
 						data-testid="EntityEditorIllustrationTab"
@@ -93,7 +93,7 @@ export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab, is
 						}}
 					/>
 				</Tooltip>
-				<Tooltip title="Backlinks tab" disableInteractive placement="right" enterDelay={300}>
+				<Tooltip title="Backlinks tab" disableInteractive placement="right" enterDelay={700}>
 					<Tab
 						value={2}
 						data-testid="EntityEditorBacklinksTab"

@@ -6,9 +6,11 @@ export enum RheaToCalliopeMessageType {
 	WORLD_SHARED = 'worldShared',
 	WORLD_UNSHARED = 'worldUnshared',
 	WORLD_EVENT_UPDATED = 'worldEventUpdated',
+	WORLD_EVENTS_DELETED = 'worldEventsDeleted',
 	WORLD_EVENT_DELTA_UPDATED = 'worldEventDeltaUpdated',
 	WORLD_TRACKS_UPDATED = 'worldTracksUpdated',
 	ACTOR_UPDATED = 'actorUpdated',
+	ACTORS_DELETED = 'actorsDeleted',
 	CALENDAR_UPDATED = 'calendarUpdated',
 	MINDMAP_NODES_UPDATED = 'mindmapNodesUpdated',
 	MINDMAP_NODES_DELETED = 'mindmapNodesDeleted',
@@ -16,8 +18,12 @@ export enum RheaToCalliopeMessageType {
 	MINDMAP_WIRE_UPDATED = 'mindmapWireUpdated',
 	MINDMAP_WIRES_DELETED = 'mindmapWiresDeleted',
 	TAG_UPDATED = 'tagUpdated',
+	TAGS_DELETED = 'tagsDeleted',
 	WIKI_ARTICLE_UPDATED = 'wikiArticleUpdated',
 	WIKI_ARTICLE_DELETED = 'wikiArticleDeleted',
+	WIKI_FOLDER_UPDATED = 'wikiFolderUpdated',
+	WIKI_FOLDER_DELETED = 'wikiFolderDeleted',
+	WIKI_ORDER_CHANGED = 'wikiOrderChanged',
 	DOCUMENT_RESET = 'documentReset',
 	IMAGE_GENERATION_UPDATED = 'imageGenerationUpdated',
 	FEATURE_FLAGS_CHANGED = 'featureFlagsChanged',
@@ -42,6 +48,9 @@ export type RheaToCalliopeMessagePayload = {
 		// TODO: Type properly
 		event: string
 	}
+	[RheaToCalliopeMessageType.WORLD_EVENTS_DELETED]: {
+		worldId: string
+	}
 	[RheaToCalliopeMessageType.WORLD_EVENT_DELTA_UPDATED]: {
 		worldId: string
 		// TODO: Type properly
@@ -56,6 +65,9 @@ export type RheaToCalliopeMessagePayload = {
 		// TODO: Type properly
 		actor: string
 	}
+	[RheaToCalliopeMessageType.ACTORS_DELETED]: {
+		worldId: string
+	}
 	[RheaToCalliopeMessageType.CALENDAR_UPDATED]: {
 		worldId: string
 		// TODO: Type properly
@@ -68,6 +80,19 @@ export type RheaToCalliopeMessagePayload = {
 	}
 	[RheaToCalliopeMessageType.WIKI_ARTICLE_DELETED]: {
 		worldId: string
+	}
+	[RheaToCalliopeMessageType.WIKI_FOLDER_UPDATED]: {
+		worldId: string
+		// TODO: Type properly
+		folder: string
+	}
+	[RheaToCalliopeMessageType.WIKI_FOLDER_DELETED]: {
+		worldId: string
+	}
+	[RheaToCalliopeMessageType.WIKI_ORDER_CHANGED]: {
+		worldId: string
+		// TODO: Type properly
+		updates: string // JSON stringified array of updates
 	}
 	[RheaToCalliopeMessageType.MINDMAP_NODES_UPDATED]: {
 		worldId: string
@@ -97,6 +122,9 @@ export type RheaToCalliopeMessagePayload = {
 		worldId: string
 		// TODO: Type properly
 		tag: string
+	}
+	[RheaToCalliopeMessageType.TAGS_DELETED]: {
+		worldId: string
 	}
 	[RheaToCalliopeMessageType.DOCUMENT_RESET]: {
 		worldId: string

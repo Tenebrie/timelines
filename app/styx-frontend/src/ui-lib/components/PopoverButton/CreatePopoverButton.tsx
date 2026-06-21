@@ -1,54 +1,31 @@
 import AddIcon from '@mui/icons-material/Add'
 import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import Stack from '@mui/material/Stack'
-import { ReactNode } from 'react'
 
-import { PopoverButton } from './PopoverButton'
+import { PopoverButton, PopoverButtonProps } from './PopoverButton'
 
-type Props = {
-	size?: 'small' | 'medium' | 'large'
-	tooltip: string
-	popoverBody: (props: { close: () => void }) => ReactNode
+type Props = Omit<PopoverButtonProps, 'content' | 'popoverAction'> & {
 	onConfirm: () => void | boolean | Promise<void | boolean>
-	onEnterKey?: (props: { close: () => void }) => void
-	onCleanup?: () => void
 	confirmDisabled?: boolean
-	buttonSx?: Parameters<typeof IconButton>['0']['sx']
-	popoverSx?: Parameters<typeof Stack>['0']['sx']
 }
+export type CreatePopoverButtonProps = Props
 
-export function CreatePopoverButton({
-	size = 'medium',
-	tooltip,
-	popoverBody,
-	onEnterKey,
-	onConfirm,
-	onCleanup,
-	confirmDisabled,
-	buttonSx,
-	popoverSx,
-}: Props) {
-	const icon = <AddIcon fontSize={size} />
+export function CreatePopoverButton(props: Props) {
+	const { onConfirm, confirmDisabled, size = 'medium', popoverSx, buttonSx, buttonVariant } = props
+
+	const content = buttonVariant === 'icon' ? <AddIcon fontSize={size} /> : <>Create new...</>
+	const startIcon = buttonVariant === 'icon' ? undefined : <AddIcon fontSize={size} />
 
 	return (
 		<PopoverButton
-			tooltip={tooltip}
-			size={size}
-			icon={icon}
-			onEnterKey={onEnterKey}
-			onCleanup={onCleanup}
+			{...props}
+			content={content}
+			startIcon={startIcon}
+			buttonVariant="contained"
+			popoverSx={{ gap: 1.5, p: 2, ...popoverSx }}
 			buttonSx={{
-				opacity: 1,
-				bgcolor: 'action.hover',
-				'&:hover': {
-					opacity: 1,
-					bgcolor: 'action.selected',
-				},
+				fontSize: '0.875rem',
 				...buttonSx,
 			}}
-			popoverSx={{ gap: 1.5, p: 2, ...popoverSx }}
-			popoverBody={popoverBody}
 			autofocus
 			popoverAction={({ close }) => (
 				<Button
@@ -62,7 +39,7 @@ export function CreatePopoverButton({
 					}}
 					disabled={confirmDisabled}
 					fullWidth
-					startIcon={icon}
+					startIcon={<AddIcon fontSize={size} />}
 				>
 					Create
 				</Button>

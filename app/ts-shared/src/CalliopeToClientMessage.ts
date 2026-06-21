@@ -8,18 +8,24 @@ export enum CalliopeToClientMessageType {
 	WORLD_UNSHARED = 'worldUnshared',
 	WORLD_UPDATED = 'worldUpdated',
 	WORLD_EVENT_UPDATED = 'worldEventUpdated',
+	WORLD_EVENTS_DELETED = 'worldEventsDeleted',
 	WORLD_EVENT_DELTA_UPDATED = 'worldEventDeltaUpdated',
 	WORLD_TRACKS_UPDATED = 'worldTracksUpdated',
 	ACTOR_UPDATED = 'actorUpdated',
+	ACTORS_DELETED = 'actorsDeleted',
 	CALENDAR_UPDATED = 'calendarUpdated',
 	MINDMAP_NODES_UPDATED = 'mindmapNodesUpdated',
 	MINDMAP_NODES_DELETED = 'mindmapNodesDeleted',
 	MINDMAP_WIRES_CREATED = 'mindmapWiresCreated',
 	MINDMAP_WIRE_UPDATED = 'mindmapWireUpdated',
 	MINDMAP_WIRES_DELETED = 'mindmapWiresDeleted',
+	TAG_UPDATED = 'tagUpdated',
+	TAGS_DELETED = 'tagsDeleted',
 	WIKI_ARTICLE_UPDATED = 'wikiArticleUpdated',
 	WIKI_ARTICLE_DELETED = 'wikiArticleDeleted',
-	TAG_UPDATED = 'tagUpdated',
+	WIKI_FOLDER_UPDATED = 'wikiFolderUpdated',
+	WIKI_FOLDER_DELETED = 'wikiFolderDeleted',
+	WIKI_ORDER_CHANGED = 'wikiOrderChanged',
 	DOCUMENT_RESET = 'documentReset',
 	IMAGE_GENERATION_UPDATED = 'imageGenerationUpdated',
 	FEATURE_FLAGS_CHANGED = 'featureFlagsChanged',
@@ -39,6 +45,9 @@ export type CalliopeToClientMessagePayload = {
 		// TODO: Type properly
 		event: string
 	}
+	[CalliopeToClientMessageType.WORLD_EVENTS_DELETED]: {
+		worldId: string
+	}
 	[CalliopeToClientMessageType.WORLD_EVENT_DELTA_UPDATED]: {
 		worldId: string
 		// TODO: Type properly
@@ -53,11 +62,15 @@ export type CalliopeToClientMessagePayload = {
 		// TODO: Type properly
 		actor: string
 	}
+	[CalliopeToClientMessageType.ACTORS_DELETED]: {
+		worldId: string
+	}
 	[CalliopeToClientMessageType.CALENDAR_UPDATED]: {
 		worldId: string
 		// TODO: Type properly
 		calendar: string
 	}
+
 	[CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED]: {
 		worldId: string
 		// TODO: Type properly
@@ -66,6 +79,22 @@ export type CalliopeToClientMessagePayload = {
 	[CalliopeToClientMessageType.WIKI_ARTICLE_DELETED]: {
 		worldId: string
 	}
+
+	[CalliopeToClientMessageType.WIKI_FOLDER_UPDATED]: {
+		worldId: string
+		// TODO: Type properly
+		folder: string
+	}
+	[CalliopeToClientMessageType.WIKI_FOLDER_DELETED]: {
+		worldId: string
+	}
+
+	[CalliopeToClientMessageType.WIKI_ORDER_CHANGED]: {
+		worldId: string
+		// TODO: Type properly
+		updates: string // JSON stringified array of updates
+	}
+
 	[CalliopeToClientMessageType.MINDMAP_NODES_UPDATED]: {
 		worldId: string
 		// TODO: Type properly
@@ -94,6 +123,9 @@ export type CalliopeToClientMessagePayload = {
 		worldId: string
 		// TODO: Type properly
 		tag: string
+	}
+	[CalliopeToClientMessageType.TAGS_DELETED]: {
+		worldId: string
 	}
 	[CalliopeToClientMessageType.DOCUMENT_RESET]: {
 		worldId: string

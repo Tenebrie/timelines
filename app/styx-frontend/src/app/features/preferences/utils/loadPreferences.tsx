@@ -65,6 +65,7 @@ export const PreferencesStateSchema = z.object({
 	wiki: z
 		.object({
 			expandedFolders: z.array(z.string()).default([]),
+			visibleEntities: z.array(z.enum(['article', 'actor', 'event', 'tag'])).default(['article']),
 		})
 		.default({}),
 	imageGenerator: z
@@ -75,6 +76,15 @@ export const PreferencesStateSchema = z.object({
 })
 
 export const loadPreferences = () => {
+	const sessionValue = window.sessionStorage.getItem(PreferencesKey)
+	if (sessionValue) {
+		try {
+			return PreferencesStateSchema.parse(JSON.parse(sessionValue))
+		} catch (error) {
+			console.warn('Failed to load preferences from session storage:', error)
+		}
+	}
+
 	const value = window.localStorage.getItem(PreferencesKey)
 	if (!value) {
 		return DefaultPreferencesValue

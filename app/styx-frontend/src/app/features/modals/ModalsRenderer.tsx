@@ -5,7 +5,6 @@ import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { DeleteAssetModal } from '../../views/profile/modals/DeleteAssetModal'
 import { EventTracksModal } from '../../views/world/views/timeline/tracks/track/EventTracksModal'
-import { ArticleWizardModal } from '../../views/world/views/wiki/modals/ArticleWizardModal'
 import { DeleteArticleModal } from '../../views/world/views/wiki/modals/DeleteArticleModal'
 import { TimeTravelModal } from '../time/timeTravel/TimeTravelModal'
 import { useModal } from './ModalsSlice'
@@ -43,7 +42,6 @@ export const ModalsRenderer = () => {
 		<>
 			<EventTracksModal />
 			<TimeTravelModal />
-			<ArticleWizardModal />
 			<DeleteArticleModal />
 			<DeleteAssetModal />
 		</>

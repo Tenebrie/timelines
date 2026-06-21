@@ -152,16 +152,10 @@ export const WorldService = {
 							},
 						},
 					},
-					omit: {
-						descriptionYjs: true,
-					},
 				},
 				events: {
 					orderBy: {
 						timestamp: 'asc',
-					},
-					omit: {
-						descriptionYjs: true,
 					},
 					include: {
 						pages: {

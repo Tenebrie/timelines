@@ -251,6 +251,7 @@ export type WorldWhereInput = {
   actors?: Prisma.ActorListRelationFilter
   events?: Prisma.WorldEventListRelationFilter
   articles?: Prisma.WikiArticleListRelationFilter
+  folders?: Prisma.WikiFolderListRelationFilter
   tags?: Prisma.TagListRelationFilter
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   collaborators?: Prisma.CollaboratingUserListRelationFilter
@@ -276,6 +277,7 @@ export type WorldOrderByWithRelationInput = {
   actors?: Prisma.ActorOrderByRelationAggregateInput
   events?: Prisma.WorldEventOrderByRelationAggregateInput
   articles?: Prisma.WikiArticleOrderByRelationAggregateInput
+  folders?: Prisma.WikiFolderOrderByRelationAggregateInput
   tags?: Prisma.TagOrderByRelationAggregateInput
   owner?: Prisma.UserOrderByWithRelationInput
   collaborators?: Prisma.CollaboratingUserOrderByRelationAggregateInput
@@ -304,6 +306,7 @@ export type WorldWhereUniqueInput = Prisma.AtLeast<{
   actors?: Prisma.ActorListRelationFilter
   events?: Prisma.WorldEventListRelationFilter
   articles?: Prisma.WikiArticleListRelationFilter
+  folders?: Prisma.WikiFolderListRelationFilter
   tags?: Prisma.TagListRelationFilter
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   collaborators?: Prisma.CollaboratingUserListRelationFilter
@@ -360,6 +363,7 @@ export type WorldCreateInput = {
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
@@ -385,6 +389,7 @@ export type WorldUncheckedCreateInput = {
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
@@ -408,6 +413,7 @@ export type WorldUpdateInput = {
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
@@ -433,6 +439,7 @@ export type WorldUncheckedUpdateInput = {
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
@@ -713,6 +720,20 @@ export type WorldUpdateOneRequiredWithoutArticlesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorldUpdateToOneWithWhereWithoutArticlesInput, Prisma.WorldUpdateWithoutArticlesInput>, Prisma.WorldUncheckedUpdateWithoutArticlesInput>
 }
 
+export type WorldCreateNestedOneWithoutFoldersInput = {
+  create?: Prisma.XOR<Prisma.WorldCreateWithoutFoldersInput, Prisma.WorldUncheckedCreateWithoutFoldersInput>
+  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutFoldersInput
+  connect?: Prisma.WorldWhereUniqueInput
+}
+
+export type WorldUpdateOneRequiredWithoutFoldersNestedInput = {
+  create?: Prisma.XOR<Prisma.WorldCreateWithoutFoldersInput, Prisma.WorldUncheckedCreateWithoutFoldersInput>
+  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutFoldersInput
+  upsert?: Prisma.WorldUpsertWithoutFoldersInput
+  connect?: Prisma.WorldWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorldUpdateToOneWithWhereWithoutFoldersInput, Prisma.WorldUpdateWithoutFoldersInput>, Prisma.WorldUncheckedUpdateWithoutFoldersInput>
+}
+
 export type NullableEnumWorldCalendarTypeFieldUpdateOperationsInput = {
   set?: $Enums.WorldCalendarType | null
 }
@@ -774,6 +795,7 @@ export type WorldCreateWithoutActorsInput = {
   accessMode?: $Enums.WorldAccessMode
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
@@ -798,6 +820,7 @@ export type WorldUncheckedCreateWithoutActorsInput = {
   accessMode?: $Enums.WorldAccessMode
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
@@ -836,6 +859,7 @@ export type WorldUpdateWithoutActorsInput = {
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
@@ -860,6 +884,7 @@ export type WorldUncheckedUpdateWithoutActorsInput = {
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
@@ -883,6 +908,7 @@ export type WorldCreateWithoutAssetReferencesInput = {
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
@@ -907,6 +933,7 @@ export type WorldUncheckedCreateWithoutAssetReferencesInput = {
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
@@ -945,6 +972,7 @@ export type WorldUpdateWithoutAssetReferencesInput = {
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
@@ -969,6 +997,7 @@ export type WorldUncheckedUpdateWithoutAssetReferencesInput = {
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
@@ -991,6 +1020,7 @@ export type WorldCreateWithoutCalendarsInput = {
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
@@ -1015,6 +1045,7 @@ export type WorldUncheckedCreateWithoutCalendarsInput = {
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
@@ -1053,6 +1084,7 @@ export type WorldUpdateWithoutCalendarsInput = {
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
@@ -1077,6 +1109,7 @@ export type WorldUncheckedUpdateWithoutCalendarsInput = {
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
@@ -1099,6 +1132,7 @@ export type WorldCreateWithoutSavedColorsInput = {
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
@@ -1123,6 +1157,7 @@ export type WorldUncheckedCreateWithoutSavedColorsInput = {
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
@@ -1161,6 +1196,7 @@ export type WorldUpdateWithoutSavedColorsInput = {
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
@@ -1185,6 +1221,7 @@ export type WorldUncheckedUpdateWithoutSavedColorsInput = {
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
@@ -1207,6 +1244,7 @@ export type WorldCreateWithoutWorldCommonIconSetsInput = {
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
@@ -1231,6 +1269,7 @@ export type WorldUncheckedCreateWithoutWorldCommonIconSetsInput = {
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
@@ -1269,6 +1308,7 @@ export type WorldUpdateWithoutWorldCommonIconSetsInput = {
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
@@ -1293,6 +1333,7 @@ export type WorldUncheckedUpdateWithoutWorldCommonIconSetsInput = {
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
@@ -1315,6 +1356,7 @@ export type WorldCreateWithoutMindmapNodesInput = {
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
@@ -1339,6 +1381,7 @@ export type WorldUncheckedCreateWithoutMindmapNodesInput = {
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
@@ -1377,6 +1420,7 @@ export type WorldUpdateWithoutMindmapNodesInput = {
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
@@ -1401,6 +1445,7 @@ export type WorldUncheckedUpdateWithoutMindmapNodesInput = {
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
@@ -1423,6 +1468,7 @@ export type WorldCreateWithoutTagsInput = {
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
@@ -1447,6 +1493,7 @@ export type WorldUncheckedCreateWithoutTagsInput = {
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
@@ -1485,6 +1532,7 @@ export type WorldUpdateWithoutTagsInput = {
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
@@ -1509,6 +1557,7 @@ export type WorldUncheckedUpdateWithoutTagsInput = {
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
@@ -1531,6 +1580,7 @@ export type WorldCreateWithoutOwnerInput = {
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
@@ -1554,6 +1604,7 @@ export type WorldUncheckedCreateWithoutOwnerInput = {
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
@@ -1618,6 +1669,7 @@ export type WorldCreateWithoutCollaboratorsInput = {
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
@@ -1642,6 +1694,7 @@ export type WorldUncheckedCreateWithoutCollaboratorsInput = {
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
@@ -1680,6 +1733,7 @@ export type WorldUpdateWithoutCollaboratorsInput = {
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
@@ -1704,6 +1758,7 @@ export type WorldUncheckedUpdateWithoutCollaboratorsInput = {
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
@@ -1725,6 +1780,7 @@ export type WorldCreateWithoutArticlesInput = {
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
@@ -1749,6 +1805,7 @@ export type WorldUncheckedCreateWithoutArticlesInput = {
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
@@ -1787,6 +1844,7 @@ export type WorldUpdateWithoutArticlesInput = {
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
@@ -1811,6 +1869,119 @@ export type WorldUncheckedUpdateWithoutArticlesInput = {
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
+  collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
+  mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
+  worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
+  calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
+  shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
+  assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+}
+
+export type WorldCreateWithoutFoldersInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string
+  calendar?: $Enums.WorldCalendarType | null
+  timeOrigin?: bigint | number
+  accessMode?: $Enums.WorldAccessMode
+  actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
+  events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
+  articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  tags?: Prisma.TagCreateNestedManyWithoutWorldInput
+  owner: Prisma.UserCreateNestedOneWithoutWorldsInput
+  collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
+  mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
+  worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
+  calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
+  shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
+  assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+}
+
+export type WorldUncheckedCreateWithoutFoldersInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string
+  calendar?: $Enums.WorldCalendarType | null
+  timeOrigin?: bigint | number
+  ownerId: string
+  accessMode?: $Enums.WorldAccessMode
+  actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
+  events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
+  articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
+  collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
+  mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
+  worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
+  calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
+  shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
+  assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+}
+
+export type WorldCreateOrConnectWithoutFoldersInput = {
+  where: Prisma.WorldWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorldCreateWithoutFoldersInput, Prisma.WorldUncheckedCreateWithoutFoldersInput>
+}
+
+export type WorldUpsertWithoutFoldersInput = {
+  update: Prisma.XOR<Prisma.WorldUpdateWithoutFoldersInput, Prisma.WorldUncheckedUpdateWithoutFoldersInput>
+  create: Prisma.XOR<Prisma.WorldCreateWithoutFoldersInput, Prisma.WorldUncheckedCreateWithoutFoldersInput>
+  where?: Prisma.WorldWhereInput
+}
+
+export type WorldUpdateToOneWithWhereWithoutFoldersInput = {
+  where?: Prisma.WorldWhereInput
+  data: Prisma.XOR<Prisma.WorldUpdateWithoutFoldersInput, Prisma.WorldUncheckedUpdateWithoutFoldersInput>
+}
+
+export type WorldUpdateWithoutFoldersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
+  timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
+  actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
+  events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
+  articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
+  collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
+  mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
+  worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
+  calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
+  shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
+  assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+}
+
+export type WorldUncheckedUpdateWithoutFoldersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
+  timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
+  actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
+  events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
+  articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
@@ -1833,6 +2004,7 @@ export type WorldCreateWithoutEventsInput = {
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
@@ -1857,6 +2029,7 @@ export type WorldUncheckedCreateWithoutEventsInput = {
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
@@ -1895,6 +2068,7 @@ export type WorldUpdateWithoutEventsInput = {
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
@@ -1919,6 +2093,7 @@ export type WorldUncheckedUpdateWithoutEventsInput = {
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
@@ -1942,6 +2117,7 @@ export type WorldCreateWithoutWorldEventTracksInput = {
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
@@ -1966,6 +2142,7 @@ export type WorldUncheckedCreateWithoutWorldEventTracksInput = {
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
@@ -2004,6 +2181,7 @@ export type WorldUpdateWithoutWorldEventTracksInput = {
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
@@ -2028,6 +2206,7 @@ export type WorldUncheckedUpdateWithoutWorldEventTracksInput = {
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
@@ -2050,6 +2229,7 @@ export type WorldCreateWithoutShareLinksInput = {
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagCreateNestedManyWithoutWorldInput
   owner: Prisma.UserCreateNestedOneWithoutWorldsInput
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
@@ -2074,6 +2254,7 @@ export type WorldUncheckedCreateWithoutShareLinksInput = {
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
   tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
@@ -2112,6 +2293,7 @@ export type WorldUpdateWithoutShareLinksInput = {
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
@@ -2136,6 +2318,7 @@ export type WorldUncheckedUpdateWithoutShareLinksInput = {
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
@@ -2169,6 +2352,7 @@ export type WorldUpdateWithoutOwnerInput = {
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
@@ -2192,6 +2376,7 @@ export type WorldUncheckedUpdateWithoutOwnerInput = {
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
@@ -2223,6 +2408,7 @@ export type WorldCountOutputType = {
   actors: number
   events: number
   articles: number
+  folders: number
   tags: number
   collaborators: number
   mindmapNodes: number
@@ -2238,6 +2424,7 @@ export type WorldCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   actors?: boolean | WorldCountOutputTypeCountActorsArgs
   events?: boolean | WorldCountOutputTypeCountEventsArgs
   articles?: boolean | WorldCountOutputTypeCountArticlesArgs
+  folders?: boolean | WorldCountOutputTypeCountFoldersArgs
   tags?: boolean | WorldCountOutputTypeCountTagsArgs
   collaborators?: boolean | WorldCountOutputTypeCountCollaboratorsArgs
   mindmapNodes?: boolean | WorldCountOutputTypeCountMindmapNodesArgs
@@ -2278,6 +2465,13 @@ export type WorldCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Types.Ex
  */
 export type WorldCountOutputTypeCountArticlesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.WikiArticleWhereInput
+}
+
+/**
+ * WorldCountOutputType without action
+ */
+export type WorldCountOutputTypeCountFoldersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WikiFolderWhereInput
 }
 
 /**
@@ -2357,6 +2551,7 @@ export type WorldSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   actors?: boolean | Prisma.World$actorsArgs<ExtArgs>
   events?: boolean | Prisma.World$eventsArgs<ExtArgs>
   articles?: boolean | Prisma.World$articlesArgs<ExtArgs>
+  folders?: boolean | Prisma.World$foldersArgs<ExtArgs>
   tags?: boolean | Prisma.World$tagsArgs<ExtArgs>
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   collaborators?: boolean | Prisma.World$collaboratorsArgs<ExtArgs>
@@ -2413,6 +2608,7 @@ export type WorldInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   actors?: boolean | Prisma.World$actorsArgs<ExtArgs>
   events?: boolean | Prisma.World$eventsArgs<ExtArgs>
   articles?: boolean | Prisma.World$articlesArgs<ExtArgs>
+  folders?: boolean | Prisma.World$foldersArgs<ExtArgs>
   tags?: boolean | Prisma.World$tagsArgs<ExtArgs>
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   collaborators?: boolean | Prisma.World$collaboratorsArgs<ExtArgs>
@@ -2438,6 +2634,7 @@ export type $WorldPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     actors: Prisma.$ActorPayload<ExtArgs>[]
     events: Prisma.$WorldEventPayload<ExtArgs>[]
     articles: Prisma.$WikiArticlePayload<ExtArgs>[]
+    folders: Prisma.$WikiFolderPayload<ExtArgs>[]
     tags: Prisma.$TagPayload<ExtArgs>[]
     owner: Prisma.$UserPayload<ExtArgs>
     collaborators: Prisma.$CollaboratingUserPayload<ExtArgs>[]
@@ -2856,6 +3053,7 @@ export interface Prisma__WorldClient<T, Null = never, ExtArgs extends runtime.Ty
   actors<T extends Prisma.World$actorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$actorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.World$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   articles<T extends Prisma.World$articlesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$articlesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WikiArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  folders<T extends Prisma.World$foldersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$foldersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WikiFolderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tags<T extends Prisma.World$tagsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   collaborators<T extends Prisma.World$collaboratorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$collaboratorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CollaboratingUserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3374,6 +3572,30 @@ export type World$articlesArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.WikiArticleScalarFieldEnum | Prisma.WikiArticleScalarFieldEnum[]
+}
+
+/**
+ * World.folders
+ */
+export type World$foldersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WikiFolder
+   */
+  select?: Prisma.WikiFolderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WikiFolder
+   */
+  omit?: Prisma.WikiFolderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WikiFolderInclude<ExtArgs> | null
+  where?: Prisma.WikiFolderWhereInput
+  orderBy?: Prisma.WikiFolderOrderByWithRelationInput | Prisma.WikiFolderOrderByWithRelationInput[]
+  cursor?: Prisma.WikiFolderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WikiFolderScalarFieldEnum | Prisma.WikiFolderScalarFieldEnum[]
 }
 
 /**

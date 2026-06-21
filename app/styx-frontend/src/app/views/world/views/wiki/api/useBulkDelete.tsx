@@ -1,4 +1,5 @@
-import { useBulkDeleteArticlesMutation, worldWikiApi } from '@api/worldWikiApi'
+import { useBulkDeleteEntitiesMutation } from '@api/worldBulkApi'
+import { worldWikiApi } from '@api/worldWikiApi'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
@@ -6,26 +7,21 @@ import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
 import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-import { useArticleApiCache } from './useArticleApiCache'
-
-export const useDeleteArticles = () => {
+export function useBulkDelete() {
 	const worldId = useSelector(getWorldIdState)
 	const { bulkActionArticles } = useSelector(getWikiState)
 
-	const [deleteArticle, params] = useBulkDeleteArticlesMutation()
-	const { removeCachedArticles } = useArticleApiCache()
+	const [deleteArticle, params] = useBulkDeleteEntitiesMutation()
 
 	const { removeFromBulkSelection, setBulkSelecting } = wikiSlice.actions
 	const dispatch = useDispatch()
 
-	const commit = async (articles: string[]) => {
-		removeCachedArticles(articles)
-
+	const commit = async (entities: string[]) => {
 		const { response, error } = parseApiResponse(
 			await deleteArticle({
 				worldId,
 				body: {
-					articles,
+					entities,
 				},
 			}),
 		)
@@ -34,10 +30,10 @@ export const useDeleteArticles = () => {
 			return { response: null, error }
 		}
 
-		if (bulkActionArticles.length === articles.length) {
+		if (bulkActionArticles.length === entities.length) {
 			dispatch(setBulkSelecting(false))
 		}
-		dispatch(removeFromBulkSelection({ articles }))
+		dispatch(removeFromBulkSelection({ articles: entities }))
 
 		return { response, error: null }
 	}

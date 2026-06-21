@@ -91,7 +91,7 @@ export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }:
 						</Box>
 
 						<Icon
-							icon={actor.icon === 'default' ? 'mdi:leaf' : actor.icon}
+							icon={actor.icon === 'default' ? 'mdi:person' : actor.icon}
 							color={'#0a0908'}
 							style={{
 								opacity: theme.mode === 'dark' ? 0.5 : 0.25,

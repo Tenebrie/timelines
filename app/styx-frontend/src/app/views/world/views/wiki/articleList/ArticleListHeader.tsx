@@ -1,4 +1,3 @@
-import Add from '@mui/icons-material/Add'
 import Cancel from '@mui/icons-material/Cancel'
 import Delete from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
@@ -8,16 +7,17 @@ import Typography from '@mui/material/Typography'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
-import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
-import { useListArticles } from '@/app/views/world/api/useListArticles'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
-import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
+import { getAllWikiEntityIds, getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
+
+import { getWorldState } from '../../../WorldSliceSelectors'
+import { ArticleListHeaderCreateButton } from './ArticleListHeaderCreateButton'
 
 export const ArticleListHeader = () => {
-	const { data: articles } = useListArticles()
+	const { name } = useSelector(getWorldState, (a, b) => a.name === b.name)
 	const { isBulkSelecting, bulkActionArticles } = useSelector(getWikiState)
-	const { open: openArticleWizard } = useModal('articleWizard')
+	const allEntityIds = useSelector(getAllWikiEntityIds)
 	const { open: openDeleteArticleModal } = useModal('deleteArticleModal')
 
 	const { isReadOnly } = useIsReadOnly()
@@ -26,11 +26,8 @@ export const ArticleListHeader = () => {
 	const dispatch = useDispatch()
 
 	const onChange = () => {
-		if (!articles) {
-			return
-		}
-		if (bulkActionArticles.length < articles!.length) {
-			dispatch(addToBulkSelection({ articles: articles.map((a) => a.id) }))
+		if (bulkActionArticles.length < allEntityIds.length) {
+			dispatch(addToBulkSelection({ articles: allEntityIds }))
 		} else {
 			dispatch(clearBulkSelection())
 		}
@@ -41,16 +38,12 @@ export const ArticleListHeader = () => {
 		dispatch(clearBulkSelection())
 	}
 
-	useShortcut(Shortcut.CreateNew, () => openArticleWizard({}))
-
 	return (
 		<Stack sx={{ height: '32px' }} direction="row">
 			{isBulkSelecting && (
 				<Checkbox
-					checked={!!articles && bulkActionArticles.length > 0}
-					indeterminate={
-						articles && bulkActionArticles.length > 0 && bulkActionArticles.length < articles.length
-					}
+					checked={bulkActionArticles.length > 0}
+					indeterminate={bulkActionArticles.length > 0 && bulkActionArticles.length < allEntityIds.length}
 					size="small"
 					sx={{
 						width: 32,
@@ -61,26 +54,11 @@ export const ArticleListHeader = () => {
 			)}
 			<Stack direction="row" justifyContent="space-between" width="100%">
 				<Typography variant="h6" marginLeft={1}>
-					Articles
+					{!isBulkSelecting && <>{name}</>}
 				</Typography>
-				{!isBulkSelecting && !isReadOnly && (
-					<Button variant={'contained'} startIcon={<Add />} onClick={() => openArticleWizard({})}>
-						Create article
-					</Button>
-				)}
+				{!isBulkSelecting && !isReadOnly && <ArticleListHeaderCreateButton folderId={null} />}
 				{isBulkSelecting && (
 					<Stack direction="row" gap={1}>
-						{bulkActionArticles.length > 0 && (
-							<Button
-								color="error"
-								variant="outlined"
-								sx={{ minWidth: 64 }}
-								startIcon={<Delete />}
-								onClick={() => openDeleteArticleModal({ articles: bulkActionArticles })}
-							>
-								Delete
-							</Button>
-						)}
 						<Button
 							color="secondary"
 							variant="outlined"
@@ -89,6 +67,16 @@ export const ArticleListHeader = () => {
 							onClick={() => onCancel()}
 						>
 							Cancel
+						</Button>
+						<Button
+							color="error"
+							variant="outlined"
+							disabled={bulkActionArticles.length === 0}
+							sx={{ minWidth: 64 }}
+							startIcon={<Delete />}
+							onClick={() => openDeleteArticleModal({ articles: bulkActionArticles })}
+						>
+							Delete
 						</Button>
 					</Stack>
 				)}

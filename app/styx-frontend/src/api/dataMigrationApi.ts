@@ -134,47 +134,6 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 			dateFormat?: null | string
 		}[]
 		worlds: {
-			events: {
-				pages?: {
-					description: string
-					id: string
-					createdAt: string
-					updatedAt: string
-					name: string
-					descriptionRich: string
-					parentActorId?: null | string
-					parentEventId?: null | string
-					parentArticleId?: null | string
-				}[]
-				mentions: {
-					id: string
-					pageId?: null | string
-					sourceId: string
-					targetId: string
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					sourceActorId?: null | string
-					sourceEventId?: null | string
-					sourceArticleId?: null | string
-					sourceTagId?: null | string
-					targetActorId?: null | string
-					targetEventId?: null | string
-					targetArticleId?: null | string
-					targetTagId?: null | string
-				}[]
-				description: string
-				worldId: string
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				icon: string
-				color: string
-				descriptionRich: string
-				timestamp: string
-				revokedAt?: null | string
-				worldEventTrackId?: null | string
-			}[]
 			calendars: {
 				units: {
 					children: {
@@ -294,6 +253,51 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				icon: string
 				color: string
 				descriptionRich: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
+			}[]
+			events: {
+				pages: {
+					description: string
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					descriptionRich: string
+					parentActorId?: null | string
+					parentEventId?: null | string
+					parentArticleId?: null | string
+				}[]
+				mentions: {
+					id: string
+					pageId?: null | string
+					sourceId: string
+					targetId: string
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					sourceActorId?: null | string
+					sourceEventId?: null | string
+					sourceArticleId?: null | string
+					sourceTagId?: null | string
+					targetActorId?: null | string
+					targetEventId?: null | string
+					targetArticleId?: null | string
+					targetTagId?: null | string
+				}[]
+				description: string
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				icon: string
+				color: string
+				descriptionRich: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
+				timestamp: string
+				revokedAt?: null | string
+				worldEventTrackId?: null | string
 			}[]
 			articles: {
 				pages: {
@@ -330,9 +334,21 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				name: string
 				icon: string
 				color: string
-				position: number
+				parentFolderId?: null | string
+				parentFolderPosition: number
+				content: string
 				contentRich: string
-				parentId?: null | string
+			}[]
+			folders: {
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				icon: string
+				color: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
 			}[]
 			tags: {
 				mentions: {
@@ -357,6 +373,9 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				createdAt: string
 				updatedAt: string
 				name: string
+				color: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
 			}[]
 			mindmapNodes: {
 				links: {

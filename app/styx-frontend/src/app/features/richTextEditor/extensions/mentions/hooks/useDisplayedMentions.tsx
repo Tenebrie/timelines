@@ -105,13 +105,16 @@ export const useDisplayedMentions = ({ query }: Props) => {
 		)
 		const filteredTags = allTags.filter((tag) => tag.name.toLowerCase().includes(query.toLowerCase()))
 
-		const mentions = ([] as Mention[])
+		const combinedMentions = ([] as Mention[])
 			.concat(filteredActors)
 			.concat(filteredEvents)
 			.concat(filteredArticles)
 			.concat(filteredTags)
-			.sort((a, b) => b.updatedAt - a.updatedAt)
-			.slice(0, 5)
+
+		const displayedMentions = new Set(
+			combinedMentions.toSorted((a, b) => b.updatedAt - a.updatedAt).slice(0, 5),
+		)
+		const mentions = combinedMentions.filter((mention) => displayedMentions.has(mention))
 
 		return {
 			mentions,

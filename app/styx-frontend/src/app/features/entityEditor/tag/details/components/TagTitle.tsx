@@ -52,7 +52,12 @@ export const TagTitle = ({ draft }: Props) => {
 		>
 			{!editing && (
 				<Stack direction="row" justifyContent="space-between" width="100%">
-					<ColorIconPicker icon={'material-symbols:label'} color={'#255'} onClick={() => {}} />
+					<ColorIconPicker
+						icon="default"
+						defaultIcon="mdi:tag-outline"
+						color={'#9f2261'}
+						onClick={() => {}}
+					/>
 					<Button
 						variant="text"
 						sx={{ padding: '0 8px', flexGrow: 1, justifyContent: 'flex-start' }}

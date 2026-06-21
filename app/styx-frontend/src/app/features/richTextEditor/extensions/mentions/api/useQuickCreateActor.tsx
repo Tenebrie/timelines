@@ -1,8 +1,7 @@
-import { useCreateActorMutation } from '@api/actorListApi'
+import { CreateActorApiArg, useCreateActorMutation } from '@api/actorListApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
@@ -15,13 +14,13 @@ export const useQuickCreateActor = () => {
 	const dispatch = useDispatch()
 
 	const quickCreateActor = useCallback(
-		async ({ query }: { query: string }) => {
+		async ({ query, ...body }: { query: string } & Omit<CreateActorApiArg['body'], 'name'>) => {
 			const { response, error } = parseApiResponse(
 				await createActor({
 					worldId,
 					body: {
+						...body,
 						name: query.length > 0 ? query : 'Unnamed Actor',
-						color: getRandomEntityColor(),
 					},
 				}),
 			)

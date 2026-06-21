@@ -59,7 +59,7 @@ function TimelineMarkerComponent({ entity, visible, selected, trackHeight, realT
 			<>
 				<Marker $theme={theme} style={cssVariables}>
 					<Icon
-						icon={entity.icon === 'default' ? 'mdi:leaf' : entity.icon}
+						icon={entity.icon === 'default' ? 'mdi:event' : entity.icon}
 						color="gray"
 						style={{
 							position: 'absolute',

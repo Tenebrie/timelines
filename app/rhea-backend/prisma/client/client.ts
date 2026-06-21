@@ -169,6 +169,11 @@ export type FeatureFlagEntry = Prisma.FeatureFlagEntryModel
  */
 export type WikiArticle = Prisma.WikiArticleModel
 /**
+ * Model WikiFolder
+ * 
+ */
+export type WikiFolder = Prisma.WikiFolderModel
+/**
  * Model World
  * 
  */

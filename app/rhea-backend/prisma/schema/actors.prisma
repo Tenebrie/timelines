@@ -6,18 +6,21 @@ model Actor {
   name            String
   title           String  @default("")
   icon            String  @default("default")
-  color           String  @default("#000000")
+  color           String  @default("#32a995")
   description     String  @default("")
   descriptionRich String  @default("")
-  descriptionYjs  String?
 
-  pages       ContentPage[] @relation("ActorContentPage")
-  mentions    Mention[]     @relation("ActorMentionSource")
-  mentionedIn Mention[]     @relation("ActorMentionTarget")
+  pages       ContentPage[]    @relation("ActorContentPage")
+  mentions    Mention[]        @relation("ActorMentionSource")
+  mentionedIn Mention[]        @relation("ActorMentionTarget")
   assetRefs   AssetReference[] @relation("ActorAssetReference")
 
   nodes MindmapNode[]
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String
+
+  parentFolder         WikiFolder? @relation("FolderActor", fields: [parentFolderId], references: [id], onDelete: Cascade)
+  parentFolderId       String?
+  parentFolderPosition Float         @default(0)
 }

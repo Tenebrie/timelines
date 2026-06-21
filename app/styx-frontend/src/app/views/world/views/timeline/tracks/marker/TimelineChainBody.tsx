@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography'
 import { memo } from 'react'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 
@@ -17,7 +16,6 @@ export const TimelineChainBody = memo(TimelineChainBodyComponent)
 
 function TimelineChainBodyComponent({ entity }: Props) {
 	const theme = useCustomTheme()
-	const color = useEntityColor({ id: entity.eventId, color: entity.color })
 
 	const chainVisible = entity.markerType === 'issuedAt' || entity.markerType === 'deltaState'
 	const chainMarker = !!entity.chainEntity
@@ -50,9 +48,9 @@ function TimelineChainBodyComponent({ entity }: Props) {
 					opacity: chainVisible ? 1 : 0,
 					paddingLeft: '20px',
 					borderRadius: `8px ${rightBorder ? 8 : 0}px ${rightBorder ? 8 : 2}px 0px`,
-					borderTop: `2px solid ${color}`,
-					borderLeft: `2px solid ${color}`,
-					borderRight: `2px solid ${color}`,
+					borderTop: `2px solid ${entity.color}`,
+					borderLeft: `2px solid ${entity.color}`,
+					borderRight: `2px solid ${entity.color}`,
 					pointerEvents: 'none',
 				}}
 			>

@@ -1,41 +1,55 @@
-import { WikiArticle } from '@api/types/worldWikiTypes'
-import Article from '@mui/icons-material/Article'
-import Folder from '@mui/icons-material/Folder'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { useCallback, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
+import { useStore } from 'react-redux'
 
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
-import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
+import { useDragHoverExpand } from '@/app/features/dragDrop/hooks/useDragHoverExpand'
+import { RootState } from '@/app/store'
 
+import { useBulkWikiMove } from '../api/useBulkWikiMove'
 import { useMoveArticle } from '../api/useMoveArticle'
+import { useArticleCollapseControls } from '../articleList/hooks/useArticleCollapseControls'
+import { ArticleListItemIcon } from '../articleList/icon/ArticleListItemIcon'
+import { getWikiState } from '../WikiSliceSelectors'
+import { BoxedWikiEntity } from './useBoxedWikiContent'
 
 type Props = {
-	article: WikiArticle
+	article: BoxedWikiEntity
+	isFolderExpanded: boolean
 }
 
-export const useArticleDragDrop = ({ article }: Props) => {
-	const [moveArticle] = useMoveArticle()
+export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
+	const [moveEntity] = useMoveArticle()
+	const [bulkMoveEntities] = useBulkWikiMove()
+	const { forceOpen } = useArticleCollapseControls(article)
 
-	const { uncollapseWikiFolder } = preferencesSlice.actions
-	const dispatch = useDispatch()
-	const forceOpen = useCallback(() => {
-		dispatch(uncollapseWikiFolder(article))
-	}, [dispatch, uncollapseWikiFolder, article])
-
-	const icon = useMemo(() => (article.children?.length ? <Folder /> : <Article />), [article.children])
+	const store = useStore<RootState>()
 
 	const { ref, ghostElement } = useDragDrop({
 		type: 'articleListItem',
+		ghostAlign: {
+			top: 'center',
+			left: 'center',
+		},
 		ghostFactory: () => (
 			<Button
-				startIcon={icon}
+				startIcon={<ArticleListItemIcon article={article} highlighted={false} />}
 				color="secondary"
 				variant="contained"
-				sx={{ justifyContent: 'start', opacity: 0.5, width: '200px' }}
+				sx={{ justifyContent: 'start', opacity: 0.3, width: '300px', filter: 'grayscale(100%)' }}
 			>
-				{article.name}
+				<Box
+					sx={{
+						lineHeight: '1.3rem',
+						maxWidth: '100%',
+						overflow: 'hidden',
+						textOverflow: 'ellipsis',
+						whiteSpace: 'nowrap',
+					}}
+				>
+					{article.name}
+				</Box>
 			</Button>
 		),
 		params: { article },
@@ -44,22 +58,60 @@ export const useArticleDragDrop = ({ article }: Props) => {
 	useDragDropReceiver({
 		type: 'articleListItem',
 		receiverRef: ref,
-		onDrop: ({ params }, event) => {
+		onDrop: async ({ params, targetRootPos }, event) => {
 			event.markHandled()
-			if (params.article.id === article.id) {
+			if (params.article.id === article.id || !ref.current) {
 				return
 			}
-			moveArticle({
-				articleId: params.article.id,
-				parentId: article.id,
-				// Always the last position
-				position: 9999,
-			})
 
-			setTimeout(() => {
-				forceOpen()
-			}, 1)
+			const targetRect = ref.current.getBoundingClientRect()
+			const dropY = event.mouseEvent?.clientY ?? targetRootPos.y
+			const isTopHalf = dropY < targetRect.top + targetRect.height / 2
+			const delta = isTopHalf ? -1 : 1
+
+			const { bulkActionArticles } = getWikiState(store.getState())
+			if (bulkActionArticles.includes(params.article.id)) {
+				if (!isTopHalf && article.type === 'folder' && isFolderExpanded) {
+					await bulkMoveEntities({
+						entityIds: bulkActionArticles,
+						parentId: article.id,
+						position: -1,
+					})
+				} else {
+					await bulkMoveEntities({
+						entityIds: bulkActionArticles,
+						parentId: article.entity.parentFolderId,
+						position: article.position + delta,
+					})
+				}
+
+				return
+			}
+
+			if (!isTopHalf && article.type === 'folder' && isFolderExpanded) {
+				await moveEntity({
+					entityId: params.article.id,
+					entityType: params.article.type,
+					parentId: article.id,
+					position: -1,
+				})
+				return
+			}
+
+			await moveEntity({
+				entityId: params.article.id,
+				entityType: params.article.type,
+				parentId: article.entity.parentFolderId,
+				position: article.position + delta,
+			})
 		},
+	})
+
+	useDragHoverExpand({
+		type: 'articleListItem',
+		targetRef: ref,
+		enabled: article.type === 'folder' && !isFolderExpanded,
+		onTrigger: forceOpen,
 	})
 
 	return {

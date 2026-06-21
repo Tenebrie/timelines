@@ -10,4 +10,6 @@ module.exports = [
 	'createMindmapWires',
 	'updateMindmapWire',
 	'deleteMindmapWires',
+	'moveWikiEntity',
+	'bulkMoveWikiEntities',
 ]
