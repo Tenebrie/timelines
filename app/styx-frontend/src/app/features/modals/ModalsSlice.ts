@@ -71,6 +71,8 @@ const modals = {
 	},
 	timeTravelModal: {
 		isOpen: false as boolean,
+		startingTime: 0 as number,
+		markers: [] as { key: string; eventId: string }[],
 	},
 	createColorModal: {
 		isOpen: false as boolean,

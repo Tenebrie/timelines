@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux'
 
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { DeleteAssetModal } from '../../views/profile/modals/DeleteAssetModal'
 import { EventTracksModal } from '../../views/world/views/timeline/tracks/track/EventTracksModal'
@@ -17,13 +18,18 @@ export const ModalsRenderer = () => {
 		open: openEventTracksModal,
 		close: closeEventTracksModal,
 	} = useModal('eventTracks')
+	const { selectedTime, selectedTimelineMarkers } = useSelector(
+		getWorldState,
+		(a, b) => a.selectedTimelineMarkers === b.selectedTimelineMarkers,
+	)
 
+	const isTimelineRoute = useCheckRouteMatch('/world/$worldId/timeline')
 	useShortcut(
 		Shortcut.Search,
 		() => {
-			openTimeTravelModal({})
+			openTimeTravelModal({ startingTime: selectedTime, markers: selectedTimelineMarkers })
 		},
-		isLoaded,
+		isLoaded && isTimelineRoute,
 	)
 
 	useShortcut(

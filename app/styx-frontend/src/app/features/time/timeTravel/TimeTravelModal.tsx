@@ -8,10 +8,8 @@ import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
-import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
@@ -23,16 +21,11 @@ import { useWorldTime } from '../hooks/useWorldTime'
 import { useMarkerTimeTravel } from './useMarkerTimeTravel'
 
 export const TimeTravelModal = () => {
-	const { isOpen, close } = useModal('timeTravelModal')
+	const { isOpen, close, startingTime, markers } = useModal('timeTravelModal')
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
-	const { selectedTime, selectedTimelineMarkers } = useSelector(
-		getWorldState,
-		(a, b) => a.selectedTime === b.selectedTime && a.selectedTimelineMarkers === b.selectedTimelineMarkers,
-	)
-
 	const { timeToLabel, calendar } = useWorldTime()
-	const { applySelector } = useTimeSelector({ rawTime: selectedTime })
+	const { applySelector } = useTimeSelector({ rawTime: startingTime })
 
 	const calendarRef = useRef<WorldCalendar>(null)
 	const selectorRef = useRef<HTMLInputElement | null>(null)
@@ -42,19 +35,19 @@ export const TimeTravelModal = () => {
 
 	const [error, setError] = useState<string | null>(null)
 
-	const [initialTime, setInitialTime] = useState(selectedTime)
-	const [targetTime, setTargetTime] = useState(selectedTime)
+	const [initialTime, setInitialTime] = useState(startingTime)
+	const [targetTime, setTargetTime] = useState(startingTime)
 	const [displayedTargetTime, setDisplayedTargetTime] = useState('')
 
-	const [moveMarkers] = useMarkerTimeTravel()
+	const [moveMarkers] = useMarkerTimeTravel({ markers })
 
 	useEffect(() => {
 		if (calendar !== calendarRef.current) {
-			setTargetTime(selectedTime)
-			setDisplayedTargetTime(timeToLabel(selectedTime))
+			setTargetTime(startingTime)
+			setDisplayedTargetTime(timeToLabel(startingTime))
 		}
 		calendarRef.current = calendar
-	}, [calendar, selectedTime, targetTime, timeToLabel])
+	}, [calendar, startingTime, targetTime, timeToLabel])
 
 	const onSelectorChanged = useCallback(
 		(value: string) => {
@@ -73,7 +66,7 @@ export const TimeTravelModal = () => {
 		onCleanup: () => {
 			const { timestamp } = applySelector(timeSelector)
 			setTargetTime(timestamp)
-			setInitialTime(selectedTime)
+			setInitialTime(startingTime)
 			setError(null)
 			setDisplayedTargetTime(timeToLabel(timestamp))
 		},
@@ -86,7 +79,7 @@ export const TimeTravelModal = () => {
 			return
 		}
 
-		if (selectedTimelineMarkers.length > 0 && moveMarkersValue) {
+		if (markers.length > 0 && moveMarkersValue) {
 			const result = moveMarkers(targetTime - initialTime)
 			if (result.error) {
 				setError(result.error)
@@ -108,7 +101,7 @@ export const TimeTravelModal = () => {
 		scrollTimelineTo,
 		targetTime,
 		navigate,
-		selectedTimelineMarkers.length,
+		markers.length,
 		moveMarkersValue,
 		close,
 		moveMarkers,
@@ -149,7 +142,7 @@ export const TimeTravelModal = () => {
 			<Typography>
 				<b>Travel to:</b> {displayedTargetTime}
 			</Typography>
-			{selectedTimelineMarkers.length > 0 && (
+			{markers.length > 0 && (
 				<FormControlLabel
 					control={
 						<Checkbox
