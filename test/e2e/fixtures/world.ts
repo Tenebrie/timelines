@@ -85,7 +85,7 @@ export async function createActor(page: Page, name: string) {
 
 export async function createArticle(page: Page, name: string) {
 	await page.getByTestId('NavigateToWiki').click()
-	await page.getByRole('button', { name: 'Create new entity' }).click()
+	await page.getByRole('button', { name: 'Create new object' }).click()
 	await page.getByRole('button', { name: 'Article', exact: true }).click()
 	await page.getByPlaceholder('Name').fill(name)
 	await withCreatedArticle(

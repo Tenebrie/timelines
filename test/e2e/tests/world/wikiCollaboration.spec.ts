@@ -17,7 +17,7 @@ test.describe('Wiki Collaboration', () => {
 		await secondaryPage.waitForTimeout(1000)
 
 		// Create article
-		await page.getByRole('button', { name: 'Create new entity' }).click()
+		await page.getByRole('button', { name: 'Create new object' }).click()
 		await page.getByRole('button', { name: 'Article', exact: true }).click()
 		await page.getByPlaceholder('Name').fill('Testing article')
 		await page.getByRole('button', { name: 'Create', exact: true }).click()

@@ -1,6 +1,6 @@
 import { createNewUser, deleteAccount } from '@fixtures/auth'
 import { createWikiArticle, createWikiFolder, createWorld, navigateToWiki } from '@fixtures/world'
-import { expect, Page, test } from '@playwright/test'
+import { expect, Locator, Page, test } from '@playwright/test'
 
 test.describe('Wiki View', () => {
 	test.beforeEach(async ({ page }) => {
@@ -138,52 +138,33 @@ test.describe('Wiki View', () => {
 			await createWikiArticle(page, world, { name: 'Second article' })
 			await navigateToWiki(page, world)
 
-			const parentFolder = page.getByText('Parent folder')
-			const innerFolder = page.getByText('Inner folder')
-			const firstArticle = page.getByText('First article')
-			const secondArticle = page.getByText('Second article')
+			const parentFolder = page.getByTestId('ArticleListItem/Parent folder/0')
 
-			await expect(page.getByTestId('ArticleListItem/Parent folder/0')).toHaveAttribute(
-				'data-item-type',
-				'folder',
-			)
+			await expect(parentFolder).toHaveAttribute('data-item-type', 'folder')
 			await expect(page.getByTestId('ArticleListItem/First article/0')).toHaveAttribute(
 				'data-item-type',
 				'article',
 			)
 
-			// Move an article into a folder
-			await firstArticle.dragTo(parentFolder)
-			await expect(
-				page.getByTestId('ArticleListItem/Parent folder/0').getByTestId('ArticleListItem/First article/1'),
-			).toBeVisible()
+			// Drop an article onto the bottom half of a folder -> the article moves into it
+			await dragEntityIntoFolder(page, page.getByText('First article'), parentFolder)
+			await expect(parentFolder.getByTestId('ArticleListItem/First article/1')).toBeVisible()
 
-			// Nest a folder inside a folder, then move an article into the nested folder
-			await innerFolder.dragTo(parentFolder)
-			await expect(
-				page.getByTestId('ArticleListItem/Parent folder/0').getByTestId('ArticleListItem/Inner folder/1'),
-			).toBeVisible()
+			// Nest a folder inside a folder
+			await dragEntityIntoFolder(page, page.getByText('Inner folder'), parentFolder)
+			const innerFolder = parentFolder.getByTestId('ArticleListItem/Inner folder/1')
+			await expect(innerFolder).toBeVisible()
 
-			await secondArticle.dragTo(innerFolder)
-			await expect(
-				page
-					.getByTestId('ArticleListItem/Parent folder/0')
-					.getByTestId('ArticleListItem/Inner folder/1')
-					.getByTestId('ArticleListItem/Second article/2'),
-			).toBeVisible()
+			// Move an article into the nested folder
+			await dragEntityIntoFolder(page, page.getByText('Second article'), innerFolder)
+			await expect(innerFolder.getByTestId('ArticleListItem/Second article/2')).toBeVisible()
 
-			// Dropping an article onto another article does nothing
-			await firstArticle.dragTo(secondArticle)
-			await expect(
-				page.getByTestId('ArticleListItem/Parent folder/0').getByTestId('ArticleListItem/First article/1'),
-			).toBeVisible()
-
-			// Move an article back to root
-			await firstArticle.dragTo(page.getByTestId('ArticleList/0'))
+			// Move an article back to root by dropping onto the root list
+			await dragEntityToRoot(page, page.getByText('First article'))
 			await expect(page.getByTestId('ArticleListItem/First article/0')).toBeVisible()
 		})
 
-		test('drag an article to drop handle -> article is moved', async ({ page }) => {
+		test('drop an entity onto another -> it is reordered before or after', async ({ page }) => {
 			// Prepare world
 			const world = await createWorld(page)
 			await createWikiArticle(page, world, { name: 'First article' })
@@ -198,12 +179,71 @@ test.describe('Wiki View', () => {
 			await expect(items.nth(0)).toHaveAttribute('data-testid', 'ArticleListItem/First article/0')
 			await expect(items.nth(1)).toHaveAttribute('data-testid', 'ArticleListItem/Second article/0')
 
-			// Perform drag and drop
-			await page.getByText('Second article').dragTo(page.getByTestId('ArticleDropHandle/0'), {
-				force: true,
-			})
+			// Drop "Second article" onto the TOP half of "First article" -> it lands before it
+			await dragEntityOnto(
+				page,
+				page.getByText('Second article'),
+				page.getByTestId('ArticleListItem/First article/0'),
+				'top',
+			)
 			await expect(items.nth(0)).toHaveAttribute('data-testid', 'ArticleListItem/Second article/0')
 			await expect(items.nth(1)).toHaveAttribute('data-testid', 'ArticleListItem/First article/0')
+
+			// Drop "Second article" onto the BOTTOM half of "First article" -> it lands after it again
+			await dragEntityOnto(
+				page,
+				page.getByText('Second article'),
+				page.getByTestId('ArticleListItem/First article/0'),
+				'bottom',
+			)
+			await expect(items.nth(0)).toHaveAttribute('data-testid', 'ArticleListItem/First article/0')
+			await expect(items.nth(1)).toHaveAttribute('data-testid', 'ArticleListItem/Second article/0')
+		})
+
+		test('shift-click multiselect -> drag the stack -> entities move together preserving order', async ({
+			page,
+		}) => {
+			// Prepare world with a mix of entity types
+			const world = await createWorld(page)
+			await createWikiArticle(page, world, { name: 'Alpha article' })
+			await createWikiFolder(page, world, { name: 'Beta folder' })
+			await createWikiArticle(page, world, { name: 'Gamma article' })
+			await createWikiArticle(page, world, { name: 'Delta article' })
+			await navigateToWiki(page, world)
+
+			const list = page.getByTestId('ArticleList/0')
+			const items = list.getByTestId(/^ArticleListItem\//)
+
+			// Sanity check the starting order
+			await expect(items.nth(0)).toHaveAttribute('data-testid', 'ArticleListItem/Alpha article/0')
+			await expect(items.nth(1)).toHaveAttribute('data-testid', 'ArticleListItem/Beta folder/0')
+			await expect(items.nth(2)).toHaveAttribute('data-testid', 'ArticleListItem/Gamma article/0')
+			await expect(items.nth(3)).toHaveAttribute('data-testid', 'ArticleListItem/Delta article/0')
+
+			// Shift-click to select a contiguous stack of mixed types
+			await page.getByText('Alpha article').click({ modifiers: ['Shift'] })
+			await page.getByText('Gamma article').click({ modifiers: ['Shift'] })
+
+			await expect(page.getByTestId('ArticleListItem/Alpha article/0').getByRole('checkbox')).toBeChecked()
+			await expect(page.getByTestId('ArticleListItem/Beta folder/0').getByRole('checkbox')).toBeChecked()
+			await expect(page.getByTestId('ArticleListItem/Gamma article/0').getByRole('checkbox')).toBeChecked()
+			await expect(
+				page.getByTestId('ArticleListItem/Delta article/0').getByRole('checkbox'),
+			).not.toBeChecked()
+
+			// Drag one member of the selection onto the bottom half of "Delta article" -> the whole stack follows
+			await dragEntityOnto(
+				page,
+				page.getByText('Beta folder'),
+				page.getByTestId('ArticleListItem/Delta article/0'),
+				'bottom',
+			)
+
+			// Delta now sits first, with the moved stack after it in its original relative order
+			await expect(items.nth(0)).toHaveAttribute('data-testid', 'ArticleListItem/Delta article/0')
+			await expect(items.nth(1)).toHaveAttribute('data-testid', 'ArticleListItem/Alpha article/0')
+			await expect(items.nth(2)).toHaveAttribute('data-testid', 'ArticleListItem/Beta folder/0')
+			await expect(items.nth(3)).toHaveAttribute('data-testid', 'ArticleListItem/Gamma article/0')
 		})
 	})
 
@@ -259,13 +299,13 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await page.getByRole('button', { name: 'Create new entity' }).click()
-			await expect(page.getByText('Create New Entity', { exact: true })).toBeVisible()
+			await page.getByRole('button', { name: 'Create new object' }).click()
+			await expect(page.getByText('Create new object', { exact: true })).toBeVisible()
 
 			await page.getByRole('button', { name: 'Article', exact: true }).click()
 			await page.getByPlaceholder('Name').fill('Testing article')
 			await page.keyboard.press('Enter')
-			await expect(page.getByText('Create New Entity', { exact: true })).not.toBeVisible()
+			await expect(page.getByText('Create new object', { exact: true })).not.toBeVisible()
 			await expect(page.getByTestId('ArticleListItem/Testing article/0')).toBeVisible()
 		})
 
@@ -273,14 +313,14 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await page.getByRole('button', { name: 'Create new entity' }).click()
-			await expect(page.getByText('Create New Entity', { exact: true })).toBeVisible()
+			await page.getByRole('button', { name: 'Create new object' }).click()
+			await expect(page.getByText('Create new object', { exact: true })).toBeVisible()
 
 			await page.getByRole('button', { name: 'Article', exact: true }).click()
 			await page.getByPlaceholder('Name').fill('Testing article')
 			await page.keyboard.press('Control+Enter')
 
-			await expect(page.getByText('Create New Entity', { exact: true })).not.toBeVisible()
+			await expect(page.getByText('Create new object', { exact: true })).not.toBeVisible()
 			await expect(page.getByTestId('ArticleListItem/Testing article/0')).toBeVisible()
 		})
 	})
@@ -291,8 +331,59 @@ test.describe('Wiki View', () => {
 		await deleteAccount(page)
 	})
 
+	async function dragRowToPoint(page: Page, source: Locator, x: number, y: number, dwellMs = 0) {
+		const sourceBox = await source.boundingBox()
+		if (!sourceBox) {
+			throw new Error('Could not resolve the drag source bounding box')
+		}
+		const startX = sourceBox.x + sourceBox.width / 2
+		const startY = sourceBox.y + sourceBox.height / 2
+
+		await page.mouse.move(startX, startY)
+		await page.mouse.down()
+		// Nudge past the 3px threshold that distinguishes a drag from a click
+		await page.mouse.move(startX + 6, startY + 6, { steps: 4 })
+		await page.mouse.move(x, y, { steps: 12 })
+		if (dwellMs > 0) {
+			await page.waitForTimeout(dwellMs)
+		}
+		await page.mouse.up()
+		await page.waitForTimeout(200)
+	}
+
+	async function rowDropPoint(target: Locator, half: 'top' | 'bottom') {
+		const button = target.getByRole('button').first()
+		const box = await button.boundingBox()
+		if (!box) {
+			throw new Error('Could not resolve the drop target bounding box')
+		}
+		return {
+			x: box.x + box.width / 2,
+			y: box.y + box.height * (half === 'top' ? 0.25 : 0.75),
+		}
+	}
+
+	async function dragEntityOnto(page: Page, source: Locator, target: Locator, half: 'top' | 'bottom') {
+		const { x, y } = await rowDropPoint(target, half)
+		await dragRowToPoint(page, source, x, y)
+	}
+
+	async function dragEntityIntoFolder(page: Page, source: Locator, folder: Locator) {
+		const { x, y } = await rowDropPoint(folder, 'bottom')
+		await dragRowToPoint(page, source, x, y, 1000)
+	}
+
+	async function dragEntityToRoot(page: Page, source: Locator) {
+		const list = page.getByTestId('ArticleList/0')
+		const box = await list.boundingBox()
+		if (!box) {
+			throw new Error('Could not resolve the root list bounding box')
+		}
+		await dragRowToPoint(page, source, box.x + box.width / 2, box.y + box.height - 16)
+	}
+
 	async function createArticleViaUI(page: Page, name: string) {
-		await page.getByRole('button', { name: 'Create new entity' }).click()
+		await page.getByRole('button', { name: 'Create new object' }).click()
 		await page.getByRole('button', { name: 'Article', exact: true }).click()
 		await page.getByPlaceholder('Name').fill(name)
 		await page.getByRole('button', { name: 'Create', exact: true }).click()
