@@ -1,7 +1,7 @@
 import mdx from '@astrojs/mdx'
 import partytown from '@astrojs/partytown'
 import sitemap from '@astrojs/sitemap'
-import tailwind from '@astrojs/tailwind'
+import tailwindcss from '@tailwindcss/vite'
 import type { AstroIntegration } from 'astro'
 import { defineConfig } from 'astro/config'
 import compress from 'astro-compress'
@@ -32,9 +32,6 @@ export default defineConfig({
 	},
 
 	integrations: [
-		tailwind({
-			applyBaseStyles: false,
-		}),
 		sitemap({
 			customPages: [
 				'https://neverkin.com/',
@@ -98,6 +95,7 @@ export default defineConfig({
 	},
 
 	vite: {
+		plugins: [tailwindcss()],
 		resolve: {
 			alias: {
 				'~': path.resolve(__dirname, './src'),

@@ -33,9 +33,9 @@
 		"docker:prod:push": "./scripts/docker-prod-push.sh",
 		"docker:stop": "docker stop $(docker ps -a -q)",
 		"redis:clear": "docker exec -it timelines-redis-1 redis-cli FLUSHALL",
-		"tsc": "(cd app/styx-frontend && npm run tsc) && (cd app/rhea-backend && npm run tsc) && (cd app/calliope-websockets && npm run tsc) && (cd app/orpheus-mcp && npm run tsc)",
-		"lint": "(cd app/styx-frontend && npm run lint) && (cd app/rhea-backend && npm run lint) && (cd app/calliope-websockets && npm run lint) && (cd app/orpheus-mcp && npm run lint)",
-		"test": "npm run test:styx && npm run test:rhea && npm run test:calliope && npm run test:orpheus && npm run test:e2e",
+		"tsc": "node scripts/run-all.mjs tsc app/* library/*",
+		"lint": "node scripts/run-all.mjs lint app/* library/*",
+		"test": "node scripts/run-all.mjs test app/* library/*",
 		"prisma": "cd app/rhea-backend && npx prisma",
 		"test:styx": "cd app/styx-frontend && npm run test run",
 		"test:rhea": "cd app/rhea-backend && npm run test",
@@ -54,24 +54,24 @@
 		"lint:orpheus": "cd app/orpheus-mcp && npm run lint"
 	},
 	"dependencies": {
-		"@typescript-eslint/eslint-plugin": "^8.51.0",
-		"@typescript-eslint/parser": "^8.51.0",
+		"@typescript-eslint/eslint-plugin": "^8.61.0",
+		"@typescript-eslint/parser": "^8.61.0",
 		"cloc": "^2.8.0",
-		"eslint": "^10.4.0",
+		"eslint": "^10.5.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-astro": "^1.6.0",
 		"eslint-plugin-node": "^11.1.0",
-		"eslint-plugin-prettier": "^5.2.1",
+		"eslint-plugin-prettier": "^5.5.6",
 		"eslint-plugin-simple-import-sort": "^13.0.0",
 		"eslint-plugin-unused-imports": "^4.1.4",
-		"lint-staged": "^17.0.5",
+		"lint-staged": "^17.0.7",
 		"nodemon": "^3.1.9",
-		"prettier": "^3.4.2",
+		"prettier": "^3.8.4",
 		"subpackage": "^1.1.0",
 		"typescript": "^6.0.2"
 	},
 	"lint-staged": {
-		"*.(ts|json)": "eslint --fix"
+		"*.{ts,tsx,json}": "eslint --fix"
 	},
 	"engines": {
 		"node": "24.x"
@@ -82,13 +82,13 @@
 	},
 	"homepage": "https://github.com/tenebrie/timelines#readme",
 	"devDependencies": {
-		"@eslint-react/eslint-plugin": "^5.8.5",
+		"@eslint-react/eslint-plugin": "^5.9.0",
 		"astro-eslint-parser": "^1.2.2",
 		"eslint-plugin-mui-path-imports": "^0.0.15",
 		"eslint-plugin-no-relative-import-paths": "^1.6.1",
 		"eslint-plugin-react-hooks": "^7.0.1",
 		"husky": "^9.1.7",
 		"prettier-plugin-astro": "^0.14.1",
-		"typescript-eslint": "^8.59.4"
+		"typescript-eslint": "^8.61.0"
 	}
 }

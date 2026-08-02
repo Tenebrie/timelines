@@ -1,4 +1,1 @@
-(cd app/styx-frontend && npx lint-staged)
-(cd app/rhea-backend && npx lint-staged)
-(cd app/calliope-websockets && npx lint-staged)
-(cd app/orpheus-mcp && npx lint-staged)
+npx lint-staged
