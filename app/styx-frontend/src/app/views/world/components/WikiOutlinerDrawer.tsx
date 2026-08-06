@@ -12,20 +12,22 @@ type Props = {
 }
 
 export function WikiOutlinerDrawer({ children }: Props) {
+	const minWidth = 400
+	const maxWidth = window.innerWidth * 0.4
 	const [preferences, setPreferences] = usePersistentState(
 		'wikiOutlinerState/v1',
 		ResizeGrabberPreferencesSchema,
 		{
-			height: 300,
-			visible: false,
+			height: 432,
+			visible: true,
 		},
 	)
 
 	const grabberProps = useResizeGrabber({
 		initialOpen: preferences.visible,
 		initialHeight: preferences.height,
-		minHeight: 300,
-		maxHeight: window.innerWidth * 0.4 - 252,
+		minHeight: minWidth,
+		maxHeight: maxWidth,
 	})
 	const { drawerVisible, contentVisible, height, overflowHeight, isDragging } = grabberProps
 
@@ -34,32 +36,46 @@ export function WikiOutlinerDrawer({ children }: Props) {
 	}, [drawerVisible, height, setPreferences])
 
 	return (
-		<>
-			<Paper
-				style={{
-					width: grabberProps.height,
-					marginLeft: drawerVisible ? `${Math.max(overflowHeight, -350)}px` : `${-height}px`,
-					transition: `margin-left ${isDragging ? 0 : 0.3}s`,
+		<Paper
+			style={{
+				width: height,
+				marginLeft: drawerVisible ? `${Math.max(overflowHeight, -height)}px` : `${-height}px`,
+				transition: `margin-left ${isDragging ? 0 : 0.3}s`,
+			}}
+			sx={(theme) => ({
+				position: 'relative',
+				flexShrink: 0,
+				zIndex: 2,
+				boxSizing: 'border-box',
+				padding: 2,
+				paddingTop: '24px',
+				paddingBottom: 0,
+				borderRadius: 0,
+				borderLeft: `1px solid ${theme.palette.divider}`,
+				borderRight: `1px solid ${theme.palette.divider}`,
+			})}
+			elevation={1}
+		>
+			<Box sx={{ height: 1, pointerEvents: isDragging ? 'none' : 'unset' }}>
+				{contentVisible && <>{children}</>}
+			</Box>
+			<Box
+				sx={{
+					top: 0,
+					right: 0,
+					position: 'absolute',
+					height: 1,
+					zIndex: 1,
+					opacity: !drawerVisible || isDragging ? 1 : 0,
+					transition: 'opacity 0.3s',
+					'&:hover': {
+						opacity: 1,
+					},
 				}}
-				sx={{ position: 'relative', flexShrink: 0, zIndex: 2 }}
-				elevation={2}
 			>
-				<Box sx={{ height: 1, pointerEvents: grabberProps.isDragging ? 'none' : 'unset' }}>
-					{contentVisible && <>{children}</>}
-				</Box>
-				<Box
-					sx={{
-						top: 0,
-						right: 0,
-						position: 'absolute',
-						height: 1,
-						zIndex: 1,
-					}}
-				>
-					<ResizeGrabber {...grabberProps} active position={'left'} />
-				</Box>
-				<ResizeGrabberOverlay {...grabberProps} />
-			</Paper>
-		</>
+				<ResizeGrabber {...grabberProps} active position={'left'} />
+			</Box>
+			<ResizeGrabberOverlay {...grabberProps} />
+		</Paper>
 	)
 }

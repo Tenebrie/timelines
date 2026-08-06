@@ -12,6 +12,7 @@ import { ArticleDetails } from '@/app/features/entityEditor/article/details/Arti
 import { EventDetails } from '@/app/features/entityEditor/event/details/EventDetails'
 import { TagDetails } from '@/app/features/entityEditor/tag/details/TagDetails'
 import { useMobileLayout } from '@/app/hooks/useMobileLayout'
+import { WikiOutlinerDrawer } from '@/app/views/world/components/WikiOutlinerDrawer'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
@@ -27,78 +28,79 @@ export const Wiki = () => {
 	const showList = !isMobile || !isArticle
 	const showContent = !isMobile || isArticle
 
-	return (
-		<>
-			<Stack
-				sx={{
-					width: isMobile ? '100%' : 'min(max(calc(100% - 32px - 350px), 1650px), calc(100% - 32px))',
-					height: '100%',
-					alignItems: 'flex-start',
-					flexDirection: isMobile ? 'column' : 'row',
-					gap: 2,
-					overflowX: 'hidden',
-					overflowY: isMobile ? 'auto' : undefined,
-				}}
-			>
-				{showList && (
-					<Paper
-						sx={(theme) => ({
-							padding: 2,
-							paddingTop: '24px',
-							paddingBottom: 0,
-							height: isMobile ? '100%' : 'calc(100%)',
-							maxHeight: 'calc(100%)',
-							width: isMobile ? '100%' : undefined,
-							boxSizing: 'border-box',
-							display: 'flex',
-							flexDirection: 'row',
-							borderRadius: 0,
-							gap: 2,
-							overflowX: 'hidden',
-							borderLeft: isMobile ? 'none' : `1px solid ${theme.palette.divider}`,
-							borderRight: isMobile ? 'none' : `1px solid ${theme.palette.divider}`,
-						})}
-						elevation={1}
-					>
-						<Stack
-							sx={{
-								width: isMobile ? '100%' : '400px',
-								minWidth: isMobile ? 0 : '250px',
-							}}
-							data-testid="ArticleListWithHeader"
-						>
-							<Stack gap={1} height={1}>
-								<Stack gap={1}>
-									<ArticleListHeader />
-									<Divider />
-									<ArticleListEntityGroupButton />
-								</Stack>
-								<ArticleList parentId={null} depth={0} />
-							</Stack>
-						</Stack>
-					</Paper>
-				)}
-				{showContent && (
-					<Stack
-						sx={{
-							flex: 1,
-							paddingTop: isMobile ? '12px' : '24px',
-							paddingX: isMobile ? '8px' : 0,
-							alignItems: 'center',
-							height: isMobile ? '100%' : 'calc(100% - 24px)',
-							width: isMobile ? 'calc(100% - 16px)' : undefined,
-							overflowY: 'auto',
-						}}
-					>
-						{isArticle && (
-							<Stack gap={1} height={'calc(100%)'} sx={{ maxWidth: 1278, width: '100%', flex: 1 }}>
-								<Box height={'calc(100% - 1px)'}>{<Outlet />}</Box>
-							</Stack>
-						)}
-					</Stack>
-				)}
+	const articleList = (
+		<Stack
+			sx={{
+				width: '100%',
+				minWidth: 0,
+				height: '100%',
+			}}
+			data-testid="ArticleListWithHeader"
+		>
+			<Stack gap={1} height={1}>
+				<Stack gap={1}>
+					<ArticleListHeader />
+					<Divider />
+					<ArticleListEntityGroupButton />
+				</Stack>
+				<ArticleList parentId={null} depth={0} />
 			</Stack>
-		</>
+		</Stack>
+	)
+
+	return (
+		<Stack
+			sx={{
+				width: '100%',
+				height: '100%',
+				alignItems: isMobile ? 'flex-start' : 'stretch',
+				flexDirection: isMobile ? 'column' : 'row',
+				gap: isMobile ? 2 : 0,
+				overflowX: 'hidden',
+				overflowY: isMobile ? 'auto' : undefined,
+			}}
+		>
+			{isMobile && showList && (
+				<Paper
+					sx={{
+						padding: 2,
+						paddingTop: '24px',
+						paddingBottom: 0,
+						height: '100%',
+						maxHeight: '100%',
+						width: '100%',
+						boxSizing: 'border-box',
+						display: 'flex',
+						flexDirection: 'row',
+						borderRadius: 0,
+						overflowX: 'hidden',
+					}}
+					elevation={1}
+				>
+					{articleList}
+				</Paper>
+			)}
+			{!isMobile && <WikiOutlinerDrawer>{articleList}</WikiOutlinerDrawer>}
+			{showContent && (
+				<Stack
+					sx={{
+						flex: 1,
+						paddingTop: isMobile ? '12px' : '24px',
+						paddingX: isMobile ? '8px' : 2,
+						alignItems: 'center',
+						height: isMobile ? '100%' : 'calc(100% - 24px)',
+						width: isMobile ? 'calc(100% - 16px)' : undefined,
+						overflowY: 'auto',
+					}}
+				>
+					{isArticle && (
+						<Stack gap={1} height={'calc(100%)'} sx={{ maxWidth: 1278, width: '100%', flex: 1 }}>
+							<Box height={'calc(100% - 1px)'}>{<Outlet />}</Box>
+						</Stack>
+					)}
+				</Stack>
+			)}
+		</Stack>
 	)
 }
 
