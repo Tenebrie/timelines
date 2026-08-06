@@ -15,10 +15,10 @@ import { getWikiState } from '../WikiSliceSelectors'
 export const ArticleListEntityGroupButton = memo(ArticleListEntityGroupButtonComponent)
 
 function ArticleListEntityGroupButtonComponent() {
-	const types = ['article', 'actor', 'event', 'tag'] satisfies (typeof visibleEntities)[number][]
+	const types = ['actor', 'article', 'event', 'tag'] satisfies (typeof visibleEntities)[number][]
 	const typeLabels: Record<(typeof visibleEntities)[number], string> = {
-		article: 'Articles',
 		actor: 'Actors',
+		article: 'Articles',
 		event: 'Events',
 		tag: 'Tags',
 	}
