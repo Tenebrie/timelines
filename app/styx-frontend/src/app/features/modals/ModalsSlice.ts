@@ -94,6 +94,11 @@ const modals = {
 		isOpen: false as boolean,
 		articles: [] as string[],
 	},
+	renameFolderModal: {
+		isOpen: false as boolean,
+		folderId: '' as string,
+		folderName: '' as string,
+	},
 
 	/* Profile */
 	deleteAccountModal: {

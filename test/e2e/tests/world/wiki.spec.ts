@@ -164,6 +164,52 @@ test.describe('Wiki View', () => {
 			await expect(page.getByTestId('ArticleListItem/First article/0')).toBeVisible()
 		})
 
+		test('rename folder via context menu', async ({ page }) => {
+			// Prepare world
+			const world = await createWorld(page)
+			await createWikiFolder(page, world, { name: 'Testing folder' })
+			await createWikiArticle(page, world, { name: 'Testing article' })
+			await navigateToWiki(page, world)
+
+			// Articles do not offer the rename option
+			await page.getByTestId('ArticleListItem/Testing article/0').click({ button: 'right' })
+			await expect(page.getByRole('menuitem').getByText('Select')).toBeVisible()
+			await expect(page.getByRole('menuitem').getByText('Rename')).not.toBeVisible()
+			await page.keyboard.press('Escape')
+
+			// Open the rename modal from the folder context menu
+			await page.getByTestId('ArticleListItem/Testing folder/0').click({ button: 'right' })
+			await page.getByRole('menuitem').getByText('Rename').click()
+			await expect(page.getByText('Rename folder', { exact: true })).toBeVisible()
+
+			// The current name is prefilled, focused and fully selected
+			const nameInput = page.getByLabel('Name')
+			await expect(nameInput).toHaveValue('Testing folder')
+			await expect(nameInput).toBeFocused()
+			const selection = await nameInput.evaluate((el: HTMLInputElement) => [
+				el.selectionStart,
+				el.selectionEnd,
+			])
+			expect(selection).toEqual([0, 'Testing folder'.length])
+
+			// Typing replaces the selected name, Enter confirms
+			await page.keyboard.type('Renamed folder', { delay: 10 })
+			await expect(nameInput).toHaveValue('Renamed folder')
+
+			const renameRequest = page.waitForResponse(
+				(response) => response.request().method() === 'PATCH' && response.url().includes('/wiki/folder/'),
+			)
+			await page.keyboard.press('Enter')
+			expect((await renameRequest).ok()).toBeTruthy()
+
+			await expect(page.getByText('Rename folder', { exact: true })).not.toBeVisible()
+			await expect(page.getByTestId('ArticleListItem/Renamed folder/0')).toBeVisible()
+
+			// The rename persists after a reload
+			await page.reload()
+			await expect(page.getByTestId('ArticleListItem/Renamed folder/0')).toBeVisible()
+		})
+
 		test('drop an entity onto another -> it is reordered before or after', async ({ page }) => {
 			// Prepare world
 			const world = await createWorld(page)
