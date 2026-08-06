@@ -7,6 +7,7 @@ import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { DeleteAssetModal } from '../../views/profile/modals/DeleteAssetModal'
 import { EventTracksModal } from '../../views/world/views/timeline/tracks/track/EventTracksModal'
 import { DeleteArticleModal } from '../../views/world/views/wiki/modals/DeleteArticleModal'
+import { RenameFolderModal } from '../../views/world/views/wiki/modals/RenameFolderModal'
 import { TimeTravelModal } from '../time/timeTravel/TimeTravelModal'
 import { useModal } from './ModalsSlice'
 
@@ -49,6 +50,7 @@ export const ModalsRenderer = () => {
 			<EventTracksModal />
 			<TimeTravelModal />
 			<DeleteArticleModal />
+			<RenameFolderModal />
 			<DeleteAssetModal />
 		</>
 	)

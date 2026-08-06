@@ -1,5 +1,6 @@
 import Check from '@mui/icons-material/Check'
 import Delete from '@mui/icons-material/Delete'
+import Edit from '@mui/icons-material/Edit'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
@@ -24,16 +25,33 @@ type Props = {
 export function WikiContextMenu({ article, popupState }: Props) {
 	const { bulkActionArticles } = useSelector(getWikiState)
 	const { open: openDeleteArticleModal } = useModal('deleteArticleModal')
+	const { open: openRenameFolderModal } = useModal('renameFolderModal')
 
 	const { setLastCheckedArticle, addToBulkSelection, removeFromBulkSelection } = wikiSlice.actions
 	const dispatch = useDispatch()
 
 	return (
-		<Menu {...bindMenu(popupState)}>
+		<Menu {...bindMenu(popupState)} disableRestoreFocus disableEnforceFocus>
 			{!bulkActionArticles.includes(article.id) && (
-				<Stack gap={1}>
+				<Stack>
 					<WikiContextMenuColorPicker article={article} onClose={popupState.close} />
-					<Divider />
+					<Divider sx={{ my: 1 }} />
+					{article.type === 'folder' && (
+						<>
+							<MenuItem
+								onClick={() => {
+									openRenameFolderModal({ folderId: article.id, folderName: article.name })
+									popupState.close()
+								}}
+							>
+								<ListItemIcon>
+									<Edit />
+								</ListItemIcon>
+								<ListItemText>Rename</ListItemText>
+							</MenuItem>
+							<Divider />
+						</>
+					)}
 					<MenuItem
 						onClick={() => {
 							dispatch(setLastCheckedArticle({ article: article.id }))
