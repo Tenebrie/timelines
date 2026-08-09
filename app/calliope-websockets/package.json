@@ -38,7 +38,7 @@
 		"@y/websocket-server": "0.1.1",
 		"@neverkin/openapi-fetch": "file:../../library/openapi-fetch",
 		"@neverkin/tiptap-schema": "file:../../library/tiptap-schema",
-		"chalk": "^5.6.2",
+		"chalk": "^6.0.0",
 		"dotenv": "^17.4.2",
 		"happy-dom": "^20.11.1",
 		"http-status-codes": "^2.3.0",
