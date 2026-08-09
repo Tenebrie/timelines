@@ -23,7 +23,7 @@
 		"@neverkin/esoteric-date": "file:../../library/esoteric-date",
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/ws": "^8.5.10",
-		"chalk": "^5.6.2",
+		"chalk": "^6.0.0",
 		"dotenv": "^17.4.2",
 		"jsonwebtoken": "^9.0.3",
 		"openapi-fetch": "^0.17.0",
