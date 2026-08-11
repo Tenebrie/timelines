@@ -20,14 +20,14 @@
 		"@tiptap/starter-kit": "^3.29.2",
 		"@tiptap/suggestion": "^3.23.1",
 		"module-alias": "^2.3.4",
-		"ws": "^8.21.2"
+		"ws": "^8.21.3"
 	},
 	"devDependencies": {
 		"@types/node": "^25.9.3",
 		"@types/ws": "^8.18.1",
 		"@typescript-eslint/eslint-plugin": "^8.66.0",
 		"@typescript-eslint/parser": "^8.59.3",
-		"eslint": "^10.8.0",
+		"eslint": "^10.8.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.6",
 		"eslint-plugin-simple-import-sort": "^13.0.0",
