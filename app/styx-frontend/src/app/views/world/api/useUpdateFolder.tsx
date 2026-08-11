@@ -18,7 +18,7 @@ export function useUpdateFolder() {
 
 	const perform = useCallback(
 		async (id: string, body: UpdateArticleApiArg['body']) => {
-			const diff = updateCachedFolder(body)
+			const diff = updateCachedFolder({ ...body, id })
 
 			const { response, error } = parseApiResponse(
 				await updateFolder({
