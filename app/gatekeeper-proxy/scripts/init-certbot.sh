@@ -17,3 +17,5 @@ certbot --nginx --non-interactive --agree-tos \
 
 service nginx status
 service nginx stop
+
+service cron start
