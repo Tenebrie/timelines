@@ -110,7 +110,7 @@ export function RichTextEditorControlsComponent({ editor }: Props) {
 		}
 		editor.chain().focus().insertContent('@').run()
 		const visualPos = editor.view.coordsAtPos(editor.state.selection.from)
-		dispatchGlobalEvent['richEditor/requestOpenMentions']({
+		dispatchGlobalEvent['quickSelect/requestOpen']({
 			query: '',
 			screenPosTop: visualPos.top,
 			screenPosBottom: visualPos.bottom,
