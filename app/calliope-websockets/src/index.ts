@@ -180,8 +180,14 @@ persistenceLeaderService.connect()
 const server = app.listen(3001)
 console.info(`${chalk.greenBright('[Calliope]')} Listening on port ${chalk.blueBright('3001')}`)
 
+let isShuttingDown = false
 const shutdown = async () => {
+	if (isShuttingDown) {
+		return
+	}
+	isShuttingDown = true
 	console.info('Shutting down gracefully...')
+	await YjsSyncService.flushAllDocuments()
 	await persistenceLeaderService.shutdown()
 	server.close()
 	process.exit(0)
