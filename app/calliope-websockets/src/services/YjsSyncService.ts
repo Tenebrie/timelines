@@ -1,6 +1,6 @@
 import { Logger } from '@src/utils/logger.js'
 import { retry } from '@src/utils/retry.js'
-import { docs, getYDoc, setPersistence } from '@y/websocket-server/utils'
+import { docs, getYDoc, setPersistence, WSSharedDoc } from '@y/websocket-server/utils'
 import * as Y from 'yjs'
 
 import { persistenceLeaderService } from './PersistenceLeaderService.js'
@@ -96,24 +96,11 @@ export const YjsSyncService = {
 		}
 
 		// Listen for updates
-		doc.on('update', async (update: Uint8Array, origin: unknown) => {
-			// Mark dirty and schedule a debounced flush to Rhea
-			metadata.isDirty = true
-			scheduleRheaPersistence(docName, doc, metadata)
-
-			// Skip updates that came from Redis (to avoid echo)
-			if (origin === REDIS_ORIGIN) {
-				return
-			}
-
-			// Store update in Redis list (for new docs to load)
-			const appended = await RedisService.appendDocumentUpdate(docName, update)
-			if (!appended) {
-				await reseedDocumentState(docName, doc)
-			}
-
-			// Broadcast to other Calliope instances (for real-time sync)
-			RedisService.broadcastYjsUpdate(docName, update)
+		doc.on('update', (update: Uint8Array, origin: unknown) => {
+			handleDocumentUpdate(doc, metadata, update, origin).catch((error) => {
+				Logger.yjsError(docName, `Error while handling update, closing all connections:`, error)
+				closeDocumentConnections(doc, 'Failed to handle update')
+			})
 		})
 
 		Logger.yjsInfo(docName, `Document ready`)
@@ -406,6 +393,45 @@ async function flushDocumentToRhea(doc: Y.Doc, metadata: DocumentMetadata): Prom
 		Logger.yjsError(docName, `Failed to flush to Rhea:`, error)
 		return 'failed'
 	}
+}
+
+async function handleDocumentUpdate(
+	doc: WSSharedDoc,
+	metadata: DocumentMetadata,
+	update: Uint8Array,
+	origin: unknown,
+) {
+	const docName = metadata.docName
+
+	// Mark dirty and schedule a debounced flush to Rhea
+	metadata.isDirty = true
+	scheduleRheaPersistence(docName, doc, metadata)
+
+	// Skip updates that came from Redis (to avoid echo)
+	if (origin === REDIS_ORIGIN) {
+		return
+	}
+
+	// Store update in Redis list (for new docs to load)
+	const appended = await RedisService.appendDocumentUpdate(docName, update)
+	if (!appended) {
+		await reseedDocumentState(docName, doc)
+	}
+
+	// Broadcast to other Calliope instances (for real-time sync)
+	RedisService.broadcastYjsUpdate(docName, update)
+}
+
+function closeDocumentConnections(doc: WSSharedDoc, reason: string) {
+	const connections = Array.from(doc.conns.keys())
+	for (const conn of connections) {
+		try {
+			conn.close(4001, reason)
+		} catch {
+			// Connection may already be closed
+		}
+	}
+	return connections.length
 }
 
 /**
