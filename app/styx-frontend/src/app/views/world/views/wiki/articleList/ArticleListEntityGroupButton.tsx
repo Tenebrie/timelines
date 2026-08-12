@@ -64,7 +64,12 @@ function ArticleListEntityGroupButtonComponent() {
 						label={
 							<Stack direction="row" alignItems="center" gap={0.5}>
 								<EntityIcon variant={type} height={16} />
-								<span>{typeLabels[type]}</span>
+								<Box
+									component="span"
+									sx={{ '@container outliner-drawer (width < 400px)': { display: 'none' } }}
+								>
+									{typeLabels[type]}
+								</Box>
 								<Box
 									component="span"
 									sx={{

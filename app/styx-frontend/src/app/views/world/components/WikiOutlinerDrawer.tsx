@@ -12,7 +12,7 @@ type Props = {
 }
 
 export function WikiOutlinerDrawer({ children }: Props) {
-	const minWidth = 400
+	const minWidth = 250
 	const maxWidth = window.innerWidth * 0.4
 	const [preferences, setPreferences] = usePersistentState(
 		'wikiOutlinerState/v1',
@@ -44,6 +44,8 @@ export function WikiOutlinerDrawer({ children }: Props) {
 			}}
 			sx={(theme) => ({
 				position: 'relative',
+				containerType: 'inline-size',
+				containerName: 'outliner-drawer',
 				flexShrink: 0,
 				zIndex: 2,
 				boxSizing: 'border-box',
