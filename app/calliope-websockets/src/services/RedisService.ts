@@ -32,7 +32,7 @@ client.on('error', (err) => {
 const YJS_DOC_KEY_PREFIX = 'yjs:doc:'
 const YJS_LOCK_KEY_PREFIX = 'yjs:lock:'
 const LOCK_TTL_MS = 5000 // Lock expires after 5 seconds
-const DOC_TTL_SECONDS = 60 // Document data expires after 60 seconds without refresh
+const DOC_TTL_SECONDS = 3 // Document data expires after 60 seconds without refresh
 
 export type YjsUpdateMessage = {
 	docName: string

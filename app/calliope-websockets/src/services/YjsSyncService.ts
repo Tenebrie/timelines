@@ -1,5 +1,5 @@
 import { Logger } from '@src/utils/logger.js'
-import { docs, setPersistence } from '@y/websocket-server/utils'
+import { docs, getYDoc, setPersistence } from '@y/websocket-server/utils'
 import * as Y from 'yjs'
 
 import { persistenceLeaderService } from './PersistenceLeaderService.js'
@@ -21,10 +21,13 @@ const RHEA_DEBOUNCE_DELAY = 2000
 
 // Store metadata per document
 export type DocumentMetadata = {
+	docName: string
 	lastWritingUserId: string | null
 	worldId: string
 	entityId: string
 	entityType: 'actor' | 'event' | 'article'
+	isLoaded: boolean
+	loadPromise: Promise<void> | null
 }
 const documentMetadata = new Map<string, DocumentMetadata>()
 
@@ -36,6 +39,11 @@ async function flushDocumentToRhea(
 	doc: Y.Doc,
 	metadata: DocumentMetadata,
 ): Promise<boolean> {
+	if (!metadata.isLoaded) {
+		Logger.yjsWarn(docName, `Attempted to flush to Rhea, but the document never finished loading`)
+		return false
+	}
+
 	if (metadata.lastWritingUserId === null) {
 		Logger.yjsWarn(docName, `Attempted to flush to Rhea, but no user write is recorded`)
 		return false
@@ -77,6 +85,10 @@ function scheduleRheaPersistence(docName: string, doc: Y.Doc, metadata: Document
 	const timer = setTimeout(async () => {
 		rheaPersistenceTimers.delete(docName)
 
+		if (!metadata.isLoaded) {
+			return
+		}
+
 		const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
 		if (isLeader) {
 			await flushDocumentToRhea(docName, doc, metadata)
@@ -107,70 +119,35 @@ export const YjsSyncService = {
 		entityType: 'actor' | 'event' | 'article'
 		docName: string
 	}) {
-		const doc = docs.get(docName)
-		if (!doc) {
-			Logger.yjsWarn(docName, `Document not found`)
-			return
-		}
+		const doc = getYDoc(docName, true)
 
 		if (attachedDocs.has(doc)) {
+			// Another connection is (or was) loading this document - wait for that load to finish
+			await documentMetadata.get(docName)?.loadPromise
 			return
 		}
 		attachedDocs.add(doc)
 
-		const metadata = {
+		const metadata: DocumentMetadata = {
+			docName,
 			lastWritingUserId: accessLevel === 'write' ? userId : null,
 			worldId,
 			entityId,
 			entityType,
+			isLoaded: false,
+			loadPromise: null,
 		}
 		documentMetadata.set(docName, metadata)
 
-		// Load existing state: first try Redis, then fall back to database
-		// Use a lock to prevent race conditions when multiple instances start at the same time
-		Logger.yjsInfo(docName, `Loading state...`)
-
-		const MAX_RETRIES = 20
-		const RETRY_DELAY_MS = 25
-
-		for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
-			const existingUpdates = await RedisService.getDocumentUpdates(docName)
-
-			if (existingUpdates.length > 0) {
-				// Redis has updates - apply them
-				Logger.yjsInfo(docName, `Applying ${existingUpdates.length} updates from Redis`)
-				for (const update of existingUpdates) {
-					try {
-						Y.applyUpdate(doc, update, REDIS_ORIGIN)
-					} catch (err) {
-						Logger.yjsError(docName, `Error applying update from Redis:`, err)
-					}
-				}
-				break // Success, exit retry loop
-			}
-
-			// Redis empty - try to acquire lock to fetch from database
-			const gotLock = await RedisService.tryAcquireDocLock(docName)
-
-			if (gotLock) {
-				// We got the lock - fetch from DB
-				Logger.yjsInfo(docName, `Acquired lock, fetching from database...`)
-				try {
-					await YjsSyncService.initializeFromRheaState({ userId, doc, docName, metadata })
-				} catch (err) {
-					Logger.yjsError(docName, `Failed to fetch from database:`, err)
-				} finally {
-					await RedisService.releaseDocLock(docName)
-				}
-				break
-			} else {
-				// Another instance is loading - wait and retry
-				Logger.yjsInfo(
-					docName,
-					`Lock held by another instance, waiting... (attempt ${attempt + 1}/${MAX_RETRIES})`,
-				)
-				await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
-			}
+		// Load initial state
+		metadata.loadPromise = YjsSyncService.loadDocumentState({ userId, metadata, doc })
+		try {
+			await metadata.loadPromise
+		} catch (error) {
+			Logger.yjsError(docName, `Failed to load initial state:`, error)
+			documentMetadata.delete(docName)
+			attachedDocs.delete(doc)
+			throw error
 		}
 
 		// Listen for updates
@@ -191,6 +168,65 @@ export const YjsSyncService = {
 		})
 
 		Logger.yjsInfo(docName, `Document ready`)
+	},
+
+	loadDocumentState: async ({
+		userId,
+		metadata,
+		doc,
+	}: {
+		userId: string
+		metadata: DocumentMetadata
+		doc: Y.Doc
+	}) => {
+		// Load existing state: first try Redis, then fall back to database
+		// Use a lock to prevent race conditions when multiple instances start at the same time
+		Logger.yjsInfo(metadata.docName, `Loading state...`)
+
+		const MAX_RETRIES = 20
+		const RETRY_DELAY_MS = 25
+
+		for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+			const existingUpdates = await RedisService.getDocumentUpdates(metadata.docName)
+
+			if (existingUpdates.length > 0) {
+				// Redis has updates - apply them
+				Logger.yjsInfo(metadata.docName, `Applying ${existingUpdates.length} updates from Redis`)
+				for (const update of existingUpdates) {
+					try {
+						Y.applyUpdate(doc, update, REDIS_ORIGIN)
+					} catch (err) {
+						Logger.yjsError(metadata.docName, `Error applying update from Redis:`, err)
+					}
+				}
+				metadata.isLoaded = true
+				break // Success, exit retry loop
+			}
+
+			// Redis empty - try to acquire lock to fetch from database
+			const gotLock = await RedisService.tryAcquireDocLock(metadata.docName)
+
+			if (gotLock) {
+				// We got the lock - fetch from DB
+				Logger.yjsInfo(metadata.docName, `Acquired lock, fetching from database...`)
+				try {
+					await YjsSyncService.initializeFromRheaState({ userId, doc, metadata })
+					metadata.isLoaded = true
+				} catch (err) {
+					Logger.yjsError(metadata.docName, `Failed to fetch from database:`, err)
+				} finally {
+					await RedisService.releaseDocLock(metadata.docName)
+				}
+				break
+			} else {
+				// Another instance is loading - wait and retry
+				Logger.yjsInfo(
+					metadata.docName,
+					`Lock held by another instance, waiting... (attempt ${attempt + 1}/${MAX_RETRIES})`,
+				)
+				await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
+			}
+		}
 	},
 
 	/**
@@ -252,30 +288,28 @@ export const YjsSyncService = {
 	async initializeFromRheaState({
 		userId,
 		doc,
-		docName,
 		metadata,
 	}: {
 		userId: string
 		doc: Y.Doc
-		docName: string
 		metadata: DocumentMetadata
 	}) {
 		const { contentHtml } = await RheaService.fetchDocumentState(userId, metadata)
 
 		if (!contentHtml) {
-			Logger.yjsInfo(docName, `No content in database`)
+			Logger.yjsInfo(metadata.docName, `No content in database`)
 			return
 		}
 
 		doc.transact(() => {
 			htmlToYDoc(contentHtml, doc)
 		}, REDIS_ORIGIN)
-		Logger.yjsInfo(docName, `Loaded initial state from database`)
+		Logger.yjsInfo(metadata.docName, `Loaded initial state from database`)
 
 		// Store the initial state to Redis so other instances get the same state
 		const stateUpdate = Y.encodeStateAsUpdate(doc)
-		await RedisService.appendDocumentUpdate(docName, stateUpdate)
-		Logger.yjsInfo(docName, `Stored initial state to Redis`)
+		await RedisService.appendDocumentUpdate(metadata.docName, stateUpdate)
+		Logger.yjsInfo(metadata.docName, `Stored initial state to Redis`)
 	},
 
 	/**

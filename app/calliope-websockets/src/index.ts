@@ -100,6 +100,15 @@ app.ws.use(
 				}
 			})()
 
+			await YjsSyncService.setupDocumentListener({
+				userId,
+				accessLevel,
+				worldId,
+				entityId: documentId,
+				entityType: entityType as 'actor' | 'event' | 'article',
+				docName,
+			})
+
 			setupWSConnection(ctx.websocket, ctx.req, { docName, gc: true })
 
 			if (accessLevel === 'read') {
@@ -127,15 +136,6 @@ app.ws.use(
 					recordLastWritingUser(docName, userId)
 				})
 			}
-
-			await YjsSyncService.setupDocumentListener({
-				userId,
-				accessLevel,
-				worldId,
-				entityId: documentId,
-				entityType: entityType as 'actor' | 'event' | 'article',
-				docName,
-			})
 
 			// Replay queued messages
 			isSetupComplete = true
