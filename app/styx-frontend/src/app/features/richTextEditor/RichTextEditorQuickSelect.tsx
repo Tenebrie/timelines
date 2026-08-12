@@ -1,5 +1,6 @@
 import { MentionNodeName } from '@neverkin/tiptap-schema'
 import { Editor } from '@tiptap/core'
+import { useEditorState } from '@tiptap/react'
 import { useCallback } from 'react'
 
 import { QuickSelectList } from '@/app/components/QuickSelectList/QuickSelectList'
@@ -37,7 +38,12 @@ export function RichTextEditorQuickSelect({ editor }: Props) {
 		[editor],
 	)
 
-	if (!editor) {
+	const isFocused = useEditorState({
+		editor,
+		selector: ({ editor }) => editor?.isFocused ?? false,
+	})
+
+	if (!editor || !isFocused) {
 		return null
 	}
 
