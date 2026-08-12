@@ -36,6 +36,7 @@ export function createCollaborationProvider({
 	provider.on('status', (event: { status: string }) => {
 		if (event.status === 'connected' && reconnectState.timeout) {
 			window.clearTimeout(reconnectState.timeout)
+			reconnectState.reconnectCounter = 0
 			reconnectState.timeout = null
 			console.info('[yjs] Connection established!')
 		}
@@ -52,7 +53,6 @@ export function createCollaborationProvider({
 			reconnectState.timeout = window.setTimeout(() => {
 				console.info(`[yjs] Waited ${Math.round(delay)}ms before reconnecting`)
 				onReconnect()
-				reconnectState.reconnectCounter = 0
 			}, delay)
 		}
 	})

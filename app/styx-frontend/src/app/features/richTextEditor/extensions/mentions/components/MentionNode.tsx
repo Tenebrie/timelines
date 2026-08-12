@@ -11,7 +11,7 @@ import {
 	updateMentionMount,
 } from '@/app/views/world/components/MentionPortalHost'
 
-import { resolveEntityName } from '../hooks/resolveEntityName'
+import { resolveEntityName } from '../utils/resolveEntityName'
 
 export { MentionNodeName }
 

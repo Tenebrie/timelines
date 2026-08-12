@@ -8,7 +8,7 @@ type Props = {
 	disableGutter?: boolean
 }
 
-export function MentionsListSectionHeader({ label, mentionCount, disableGutter }: Props) {
+export function QuickSelectListSectionHeader({ label, mentionCount, disableGutter }: Props) {
 	return (
 		<MenuItem key={label} disabled sx={{ marginTop: disableGutter ? 0.25 : 1, paddingBottom: 0 }}>
 			<ListItemText>

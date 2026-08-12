@@ -5,10 +5,10 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useSelector } from 'react-redux'
 
-import { ActorMentionChip } from '@/app/features/richTextEditor/extensions/mentions/components/chips/ActorMentionChip'
-import { ArticleMentionChip } from '@/app/features/richTextEditor/extensions/mentions/components/chips/ArticleMentionChip'
-import { EventMentionChip } from '@/app/features/richTextEditor/extensions/mentions/components/chips/EventMentionChip'
-import { TagMentionChip } from '@/app/features/richTextEditor/extensions/mentions/components/chips/TagMentionChip'
+import { ActorMentionChip } from '@/app/features/richTextEditor/components/chips/ActorMentionChip'
+import { ArticleMentionChip } from '@/app/features/richTextEditor/components/chips/ArticleMentionChip'
+import { EventMentionChip } from '@/app/features/richTextEditor/components/chips/EventMentionChip'
+import { TagMentionChip } from '@/app/features/richTextEditor/components/chips/TagMentionChip'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 type Props = {

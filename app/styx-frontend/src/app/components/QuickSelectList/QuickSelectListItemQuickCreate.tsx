@@ -12,7 +12,7 @@ type Props = {
 	query: string
 }
 
-export function MentionsListItemQuickCreate({ type, selected, onClick, query }: Props) {
+export function QuickSelectListItemQuickCreate({ type, selected, onClick, query }: Props) {
 	return (
 		<MenuItem
 			selected={selected}

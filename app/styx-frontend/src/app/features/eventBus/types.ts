@@ -1,6 +1,5 @@
 import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import type { NavigateOptions } from '@tanstack/react-router'
-import { Editor } from '@tiptap/core'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
@@ -64,27 +63,26 @@ export type EventParams = {
 	'calliope/documentReset': { worldId: string; entityId: string }
 	'calliope/announcementReceived': void
 	'announcements/requestOpen': void
-	'richEditor/onKeyDown': {
-		editor: Editor
+	'quickSelect/onKeyDown': {
 		key: string
 		ctrlKey: boolean
 		shiftKey: boolean
 		altKey: boolean
 		metaKey: boolean
 	}
-	'richEditor/requestOpenMentions': {
+	'quickSelect/requestOpen': {
 		query: string
 		screenPosTop: number
 		screenPosBottom: number
 		screenPosLeft: number
 	}
-	'richEditor/requestUpdateMentions': {
+	'quickSelect/requestUpdate': {
 		query: string
 		screenPosTop: number
 		screenPosBottom: number
 		screenPosLeft: number
 	}
-	'richEditor/requestCloseMentions': void
+	'quickSelect/requestClose': void
 	'richEditor/mentionRender/onStart': { node: ProseMirrorNode }
 	'richEditor/mentionRender/onEnd': { node: ProseMirrorNode }
 	'richEditor/requestFocus': void
