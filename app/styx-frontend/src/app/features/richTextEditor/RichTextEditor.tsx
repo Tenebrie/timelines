@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box'
 import { Editor, useEditor } from '@tiptap/react'
 import throttle from 'lodash.throttle'
 import { memo, useEffect, useMemo, useRef } from 'react'
@@ -151,7 +152,8 @@ export function RichTextEditorComponent({
 				borderRadius: '6px',
 				minHeight: '128px',
 				background: isReadOnly ? '' : theme.custom.palette.background.textEditor,
-				position: 'relative',
+				display: 'flex',
+				flexDirection: 'column',
 			}}
 			data-testid="RichTextEditor"
 			$theme={theme}
@@ -161,15 +163,23 @@ export function RichTextEditorComponent({
 			}}
 		>
 			<RichTextEditorControls editor={editor} />
-			{editor && <EditorContentBox className="content" editor={editor} mode={isReadOnly ? 'read' : 'edit'} />}
+			<Box sx={{ position: 'relative', flex: 1, minHeight: 0 }}>
+				{editor && (
+					<EditorContentBox
+						className="content"
+						editor={editor}
+						mode={isReadOnly ? 'read' : 'edit'}
+					></EditorContentBox>
+				)}
+				<FadeInOverlay
+					key={softKey}
+					content={value}
+					isReadMode={isReadOnly}
+					color={fadeInOverlayColor}
+					isLoading={isLoading || !collabReady || false}
+				/>
+			</Box>
 			<RichTextEditorQuickSelect editor={editor} />
-			<FadeInOverlay
-				key={softKey}
-				content={value}
-				isReadMode={isReadOnly}
-				color={fadeInOverlayColor}
-				isLoading={isLoading || !collabReady || false}
-			/>
 		</StyledContainer>
 	)
 }
