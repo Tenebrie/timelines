@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack'
 import { HighlightedText } from '@/ui-lib/components/HighlightedText/HighlightedText'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
-import { Mention } from './hooks/useDisplayedMentions'
+import { Mention } from '../../features/richTextEditor/extensions/mentions/hooks/useDisplayedMentions'
 
 type Props = {
 	mention: Mention
@@ -16,7 +16,7 @@ type Props = {
 	onClick: () => void
 }
 
-export function MentionsListItem({ mention, query, selected, onClick }: Props) {
+export function QuickSelectListItem({ mention, query, selected, onClick }: Props) {
 	const entityColor = (() => {
 		if (mention.type === 'Actor') {
 			return mention.actor.color

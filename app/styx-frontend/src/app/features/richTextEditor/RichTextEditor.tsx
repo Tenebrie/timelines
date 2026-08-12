@@ -8,12 +8,12 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { getWorldState } from '../../views/world/WorldSliceSelectors'
 import { useEventBusSubscribe } from '../eventBus'
 import { EditorContentBox } from './components/EditorContentBox'
+import { FadeInOverlay } from './components/FadeInOverlay/FadeInOverlay'
 import { useCollaboration } from './extensions/collaboration/useCollaboration'
 import { EditorExtensions } from './extensions/editorExtensions'
-import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/FadeInOverlay'
-import { MentionsList } from './extensions/mentions/MentionsList'
 import { useEditorPasteHandler } from './hooks/useEditorPasteHandler'
 import { RichTextEditorControls } from './RichTextEditorControls'
+import { RichTextEditorQuickSelect } from './RichTextEditorQuickSelect'
 import { StyledContainer } from './styles'
 
 type Props = {
@@ -162,7 +162,7 @@ export function RichTextEditorComponent({
 		>
 			<RichTextEditorControls editor={editor} />
 			{editor && <EditorContentBox className="content" editor={editor} mode={isReadOnly ? 'read' : 'edit'} />}
-			<MentionsList editor={editor} />
+			<RichTextEditorQuickSelect editor={editor} />
 			<FadeInOverlay
 				key={softKey}
 				content={value}
