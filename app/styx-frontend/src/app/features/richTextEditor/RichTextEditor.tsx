@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { Editor, useEditor } from '@tiptap/react'
+import { useEditor } from '@tiptap/react'
 import throttle from 'lodash.throttle'
 import { memo, useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
@@ -68,13 +68,10 @@ export function RichTextEditorComponent({
 	}, [onChange])
 
 	const onChangeThrottled = useRef(
-		throttle((editor: Editor) => {
-			if (editor.isDestroyed) {
-				return
-			}
+		throttle(({ plainText, richText }: { plainText: string; richText: string }) => {
 			onChangeRef.current({
-				plainText: editor.getText(),
-				richText: editor.getHTML(),
+				plainText,
+				richText,
 			})
 		}, 100),
 	)
@@ -103,7 +100,10 @@ export function RichTextEditorComponent({
 				if (editor.getHTML() === value || transaction.steps.length === 0) {
 					return
 				}
-				onChangeThrottled.current(editor)
+				onChangeThrottled.current({
+					plainText: editor.getText(),
+					richText: editor.getHTML(),
+				})
 			},
 			onCreate({ editor }) {
 				if (!autoFocus) {

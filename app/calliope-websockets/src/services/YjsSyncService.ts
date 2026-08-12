@@ -1,4 +1,5 @@
 import { Logger } from '@src/utils/logger.js'
+import { retry } from '@src/utils/retry.js'
 import { docs, getYDoc, setPersistence } from '@y/websocket-server/utils'
 import * as Y from 'yjs'
 
@@ -34,99 +35,6 @@ export type DocumentMetadata = {
 	loadPromise: Promise<void> | null
 }
 const documentMetadata = new Map<string, DocumentMetadata>()
-
-type FlushResult = 'flushed' | 'skipped' | 'failed'
-
-/**
- * Flush document state to Rhea
- */
-async function flushDocumentToRhea(doc: Y.Doc, metadata: DocumentMetadata): Promise<FlushResult> {
-	const docName = metadata.docName
-	if (!metadata.isLoaded) {
-		Logger.yjsWarn(docName, `Attempted to flush to Rhea, but the document never finished loading`)
-		return 'skipped'
-	}
-
-	if (metadata.lastWritingUserId === null) {
-		Logger.yjsWarn(docName, `Attempted to flush to Rhea, but no user write is recorded`)
-		return 'skipped'
-	}
-
-	// Clear before serializing: updates arriving mid-flush must re-dirty the document
-	metadata.isDirty = false
-
-	try {
-		const html = yDocToHtml(doc)
-
-		await RheaService.flushDocumentState({
-			lastUserId: metadata.lastWritingUserId,
-			worldId: metadata.worldId,
-			entityId: metadata.entityId,
-			entityType: metadata.entityType,
-			contentRich: html,
-		})
-
-		Logger.yjsInfo(docName, `Flushed to Rhea`)
-		return 'flushed'
-	} catch (error) {
-		metadata.isDirty = true
-		Logger.yjsError(docName, `Failed to flush to Rhea:`, error)
-		return 'failed'
-	}
-}
-
-export function recordLastWritingUser(docName: string, userId: string) {
-	Logger.yjsInfo(docName, `Recording last writing user: ${userId}`)
-	const metadata = documentMetadata.get(docName)
-	if (metadata) {
-		metadata.lastWritingUserId = userId
-	}
-}
-
-/**
- * Schedule a debounced save to Rhea.
- */
-function scheduleRheaPersistence(
-	docName: string,
-	doc: Y.Doc,
-	metadata: DocumentMetadata,
-	delay: number = RHEA_DEBOUNCE_DELAY,
-) {
-	const existingTimer = rheaPersistenceTimers.get(docName)
-	if (existingTimer) {
-		clearTimeout(existingTimer)
-	}
-
-	const timer = setTimeout(async () => {
-		rheaPersistenceTimers.delete(docName)
-
-		if (!metadata.isLoaded || !metadata.isDirty) {
-			return
-		}
-
-		// The document has been closed and reopened
-		if (documentMetadata.get(docName) !== metadata) {
-			return
-		}
-
-		let result: FlushResult = 'failed'
-		try {
-			const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
-			if (isLeader) {
-				result = await flushDocumentToRhea(doc, metadata)
-			}
-		} catch (error) {
-			Logger.yjsError(docName, `Error during scheduled flush:`, error)
-		}
-
-		// Not flushed and the session is still current - keep retrying until it goes through
-		if (result === 'failed' && documentMetadata.get(docName) === metadata) {
-			scheduleRheaPersistence(docName, doc, metadata, RHEA_FLUSH_RETRY_DELAY)
-		}
-	}, delay)
-
-	rheaPersistenceTimers.set(docName, timer)
-}
 
 export const YjsSyncService = {
 	/**
@@ -199,10 +107,9 @@ export const YjsSyncService = {
 			}
 
 			// Store update in Redis list (for new docs to load)
-			try {
-				await RedisService.appendDocumentUpdate(docName, update)
-			} catch (error) {
-				Logger.yjsError(docName, `Failed to store update in Redis:`, error)
+			const appended = await RedisService.appendDocumentUpdate(docName, update)
+			if (!appended) {
+				await reseedDocumentState(docName, doc)
 			}
 
 			// Broadcast to other Calliope instances (for real-time sync)
@@ -234,26 +141,33 @@ export const YjsSyncService = {
 			if (existingUpdates.length > 0) {
 				// Redis has updates - apply them
 				Logger.yjsInfo(metadata.docName, `Applying ${existingUpdates.length} updates from Redis`)
+				let failedUpdates = 0
 				for (const update of existingUpdates) {
 					try {
 						Y.applyUpdate(doc, update, REDIS_ORIGIN)
 					} catch (err) {
 						Logger.yjsError(metadata.docName, `Error applying update from Redis:`, err)
+						failedUpdates++
 					}
 				}
-				metadata.isLoaded = true
-				metadata.isDirty = true
-				break // Success, exit retry loop
+				const areDeltasApplied = doc.store.pendingStructs === null && doc.store.pendingDs === null
+				if (failedUpdates === 0 && areDeltasApplied) {
+					metadata.isLoaded = true
+					metadata.isDirty = true
+					break // Success, exit retry loop
+				}
 			}
 
-			// Redis empty - try to acquire lock to fetch from database
+			// Redis empty or invalid - try to acquire lock to fetch from database
 			const gotLock = await RedisService.tryAcquireDocLock(metadata.docName)
 
 			if (gotLock) {
-				// We got the lock - fetch from DB
+				// We got the lock - discard the invalid cached state and fetch from DB
 				Logger.yjsInfo(metadata.docName, `Acquired lock, fetching from database...`)
 				try {
-					// await new Promise((resolve) => setTimeout(resolve, 3000))
+					await RedisService.deleteDocumentUpdates(metadata.docName)
+					doc.store.pendingStructs = null
+					doc.store.pendingDs = null
 					await YjsSyncService.initializeFromRheaState({ userId, doc, metadata })
 					metadata.isLoaded = true
 				} catch (err) {
@@ -340,25 +254,23 @@ export const YjsSyncService = {
 	}) {
 		const { contentHtml } = await RheaService.fetchDocumentState(userId, metadata)
 
-		if (!contentHtml) {
+		if (contentHtml) {
+			doc.transact(() => {
+				htmlToYDoc(contentHtml, doc)
+			}, REDIS_ORIGIN)
+			Logger.yjsInfo(metadata.docName, `Loaded initial state from database`)
+		} else {
 			Logger.yjsInfo(metadata.docName, `No content in database`)
-			return
 		}
 
-		doc.transact(() => {
-			htmlToYDoc(contentHtml, doc)
-		}, REDIS_ORIGIN)
-		Logger.yjsInfo(metadata.docName, `Loaded initial state from database`)
-
-		// Store the initial state to Redis so other instances get the same state
+		// Store the initial state to Redis so other instances get the same state.
 		const stateUpdate = Y.encodeStateAsUpdate(doc)
-		await RedisService.appendDocumentUpdate(metadata.docName, stateUpdate)
+		await RedisService.createDocumentState(metadata.docName, stateUpdate)
 		Logger.yjsInfo(metadata.docName, `Stored initial state to Redis`)
 	},
 
 	/**
-	 * Flush all dirty documents immediately. Called on graceful shutdown, where there is
-	 * no time for retries - a single attempt per document, all in parallel.
+	 * Flush all dirty documents immediately.
 	 */
 	async flushAllDocuments() {
 		const dirtyDocs = Array.from(documentMetadata.values()).filter(
@@ -414,33 +326,21 @@ export const YjsSyncService = {
 					return
 				}
 
-				for (let attempt = 1; metadata.isDirty && attempt <= RHEA_FLUSH_MAX_ATTEMPTS; attempt++) {
-					if (documentMetadata.get(docName) !== metadata) {
-						Logger.yjsInfo(docName, `A new session took over the document, skipping final flush`)
-						return
-					}
-
-					let result: FlushResult = 'failed'
-					try {
-						const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
-						if (isLeader) {
-							result = await flushDocumentToRhea(doc, metadata)
+				await retry(
+					async () => {
+						if (!metadata.isDirty || documentMetadata.get(docName) !== metadata) {
+							return
 						}
-					} catch (error) {
-						Logger.yjsError(docName, `Error during final flush:`, error)
-					}
-
-					if (result !== 'failed') {
-						break
-					}
-					if (attempt === RHEA_FLUSH_MAX_ATTEMPTS) {
-						Logger.yjsError(docName, `Final flush failed after ${attempt} attempts, giving up`)
-						break
-					}
-
-					Logger.yjsWarn(docName, `Final flush failed (attempt ${attempt}), retrying...`)
-					await new Promise((resolve) => setTimeout(resolve, RHEA_FLUSH_RETRY_DELAY))
-				}
+						const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
+						if (!isLeader || (await flushDocumentToRhea(doc, metadata)) === 'failed') {
+							throw new Error('Flush failed')
+						}
+					},
+					RHEA_FLUSH_MAX_ATTEMPTS,
+					RHEA_FLUSH_RETRY_DELAY,
+				).catch(() => {
+					Logger.yjsError(docName, `Final flush failed after ${RHEA_FLUSH_MAX_ATTEMPTS} attempts, giving up`)
+				})
 
 				if (documentMetadata.get(docName) !== metadata) {
 					Logger.yjsInfo(docName, `A new session took over the document`)
@@ -466,4 +366,116 @@ export const YjsSyncService = {
 			}
 		}, TTL_REFRESH_INTERVAL_MS)
 	},
+}
+
+type FlushResult = 'flushed' | 'skipped' | 'failed'
+
+/**
+ * Flush document state to Rhea
+ */
+async function flushDocumentToRhea(doc: Y.Doc, metadata: DocumentMetadata): Promise<FlushResult> {
+	const docName = metadata.docName
+	if (!metadata.isLoaded) {
+		Logger.yjsWarn(docName, `Attempted to flush to Rhea, but the document never finished loading`)
+		return 'skipped'
+	}
+
+	if (metadata.lastWritingUserId === null) {
+		Logger.yjsWarn(docName, `Attempted to flush to Rhea, but no user write is recorded`)
+		return 'skipped'
+	}
+
+	// Clear before serializing: updates arriving mid-flush must re-dirty the document
+	metadata.isDirty = false
+
+	try {
+		const html = yDocToHtml(doc)
+
+		await RheaService.flushDocumentState({
+			lastUserId: metadata.lastWritingUserId,
+			worldId: metadata.worldId,
+			entityId: metadata.entityId,
+			entityType: metadata.entityType,
+			contentRich: html,
+		})
+
+		Logger.yjsInfo(docName, `Flushed to Rhea`)
+		return 'flushed'
+	} catch (error) {
+		metadata.isDirty = true
+		Logger.yjsError(docName, `Failed to flush to Rhea:`, error)
+		return 'failed'
+	}
+}
+
+/**
+ * The Redis entry is missing - recreate the full state.
+ */
+async function reseedDocumentState(docName: string, doc: Y.Doc) {
+	const gotLock = await RedisService.tryAcquireDocLock(docName)
+	if (!gotLock) {
+		return
+	}
+	try {
+		const existingUpdates = await RedisService.getDocumentUpdates(docName)
+		if (existingUpdates.length === 0) {
+			await RedisService.createDocumentState(docName, Y.encodeStateAsUpdate(doc))
+			Logger.yjsWarn(docName, `Redis state was missing for a live document, re-seeded full state`)
+		}
+	} finally {
+		await RedisService.releaseDocLock(docName)
+	}
+}
+
+export function recordLastWritingUser(docName: string, userId: string) {
+	Logger.yjsInfo(docName, `Recording last writing user: ${userId}`)
+	const metadata = documentMetadata.get(docName)
+	if (metadata) {
+		metadata.lastWritingUserId = userId
+	}
+}
+
+/**
+ * Schedule a debounced save to Rhea.
+ */
+function scheduleRheaPersistence(
+	docName: string,
+	doc: Y.Doc,
+	metadata: DocumentMetadata,
+	delay: number = RHEA_DEBOUNCE_DELAY,
+) {
+	const existingTimer = rheaPersistenceTimers.get(docName)
+	if (existingTimer) {
+		clearTimeout(existingTimer)
+	}
+
+	const timer = setTimeout(async () => {
+		rheaPersistenceTimers.delete(docName)
+
+		if (!metadata.isLoaded || !metadata.isDirty) {
+			return
+		}
+
+		// The document has been closed and reopened
+		if (documentMetadata.get(docName) !== metadata) {
+			return
+		}
+
+		let result: FlushResult = 'failed'
+		try {
+			const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
+			if (isLeader) {
+				result = await flushDocumentToRhea(doc, metadata)
+			}
+		} catch (error) {
+			Logger.yjsError(docName, `Error during scheduled flush:`, error)
+		}
+
+		// Not flushed and the session is still current - keep retrying until it goes through
+		if (result === 'failed' && documentMetadata.get(docName) === metadata) {
+			scheduleRheaPersistence(docName, doc, metadata, RHEA_FLUSH_RETRY_DELAY)
+		}
+	}, delay)
+
+	rheaPersistenceTimers.set(docName, timer)
 }

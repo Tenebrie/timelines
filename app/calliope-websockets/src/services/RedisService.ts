@@ -1,5 +1,7 @@
 import { RedisChannel } from '@src/ts-shared/RedisChannel.js'
 import { RheaToCalliopeMessage } from '@src/ts-shared/RheaToCalliopeMessage.js'
+import { Logger } from '@src/utils/logger.js'
+import { retry } from '@src/utils/retry.js'
 import { createClient } from 'redis'
 
 import { RheaMessageHandlerService } from './RheaMessageHandlerService.js'
@@ -79,11 +81,43 @@ export const RedisService = {
 	 * Append a Yjs update to the document's update list in Redis (for persistence).
 	 * Also refreshes the TTL on the document data.
 	 */
-	appendDocumentUpdate: async (docName: string, update: Uint8Array): Promise<void> => {
+	appendDocumentUpdate: async (docName: string, update: Uint8Array) => {
+		try {
+			return await retry(() => RedisService.tryAppendDocumentUpdate(docName, update))
+		} catch (error) {
+			Logger.yjsError(docName, `Failed to store update in Redis:`, error)
+			throw error
+		}
+	},
+
+	tryAppendDocumentUpdate: async (docName: string, update: Uint8Array): Promise<boolean> => {
 		const key = `${YJS_DOC_KEY_PREFIX}${docName}`
 		const base64Update = Buffer.from(update).toString('base64')
-		await publisherClient.rPush(key, base64Update)
-		await publisherClient.expire(key, DOC_TTL_SECONDS)
+		const script = `
+			if redis.call('EXISTS', KEYS[1]) == 1 then
+				redis.call('RPUSH', KEYS[1], ARGV[1])
+				redis.call('EXPIRE', KEYS[1], ARGV[2])
+				return 1
+			end
+			return 0
+		`
+		const result = await publisherClient.eval(script, {
+			keys: [key],
+			arguments: [base64Update, String(DOC_TTL_SECONDS)],
+		})
+		return result === 1
+	},
+
+	/**
+	 * Store the full document state as the base entry of the update list.
+	 */
+	createDocumentState: async (docName: string, state: Uint8Array): Promise<void> => {
+		const key = `${YJS_DOC_KEY_PREFIX}${docName}`
+		const base64State = Buffer.from(state).toString('base64')
+		await retry(async () => {
+			await publisherClient.rPush(key, base64State)
+			await publisherClient.expire(key, DOC_TTL_SECONDS)
+		})
 	},
 
 	/**
@@ -91,7 +125,7 @@ export const RedisService = {
 	 */
 	getDocumentUpdates: async (docName: string): Promise<Uint8Array[]> => {
 		const key = `${YJS_DOC_KEY_PREFIX}${docName}`
-		const updates = await publisherClient.lRange(key, 0, -1)
+		const updates = await retry(() => publisherClient.lRange(key, 0, -1))
 		return updates.map((base64) => Buffer.from(base64, 'base64'))
 	},
 
@@ -100,7 +134,7 @@ export const RedisService = {
 	 */
 	deleteDocumentUpdates: async (docName: string): Promise<void> => {
 		const key = `${YJS_DOC_KEY_PREFIX}${docName}`
-		await publisherClient.del(key)
+		await retry(() => publisherClient.del(key))
 	},
 
 	/**

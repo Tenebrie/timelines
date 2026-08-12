@@ -238,6 +238,7 @@ function QuickSelectListContent({ pos, query, onSelect, onClose }: ContentProps)
 	return (
 		<Paper
 			ref={paperRef}
+			onMouseDown={(event) => event.preventDefault()}
 			sx={{
 				outline: `1px solid ${theme.material.palette.divider}`,
 				zIndex: 10,
