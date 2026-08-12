@@ -43,9 +43,9 @@ export function RichTextEditorQuickSelect({ editor }: Props) {
 		selector: ({ editor }) => editor?.isFocused ?? false,
 	})
 
-	if (!editor || !isFocused) {
+	if (!editor) {
 		return null
 	}
 
-	return <QuickSelectList onSelect={onSelect} />
+	return <QuickSelectList isFocused={isFocused ?? false} onSelect={onSelect} />
 }

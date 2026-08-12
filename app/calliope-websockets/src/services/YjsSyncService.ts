@@ -77,7 +77,10 @@ async function flushDocumentToRhea(doc: Y.Doc, metadata: DocumentMetadata): Prom
 
 export function recordLastWritingUser(docName: string, userId: string) {
 	Logger.yjsInfo(docName, `Recording last writing user: ${userId}`)
-	documentMetadata.get(docName)!.lastWritingUserId = userId
+	const metadata = documentMetadata.get(docName)
+	if (metadata) {
+		metadata.lastWritingUserId = userId
+	}
 }
 
 /**
@@ -149,8 +152,11 @@ export const YjsSyncService = {
 		const doc = getYDoc(docName, true)
 
 		if (attachedDocs.has(doc)) {
-			// Another connection is (or was) loading this document - wait for that load to finish
+			// Another connection is loading this document - attach to that promise.
 			await documentMetadata.get(docName)?.loadPromise
+			if (!documentMetadata.get(docName)?.isLoaded) {
+				throw new Error(`Failed to load document state`)
+			}
 			return
 		}
 		attachedDocs.add(doc)
@@ -171,6 +177,9 @@ export const YjsSyncService = {
 		metadata.loadPromise = YjsSyncService.loadDocumentState({ userId, metadata, doc })
 		try {
 			await metadata.loadPromise
+			if (!metadata.isLoaded) {
+				throw new Error(`Failed to load document state`)
+			}
 		} catch (error) {
 			Logger.yjsError(docName, `Failed to load initial state:`, error)
 			documentMetadata.delete(docName)
@@ -190,7 +199,11 @@ export const YjsSyncService = {
 			}
 
 			// Store update in Redis list (for new docs to load)
-			await RedisService.appendDocumentUpdate(docName, update)
+			try {
+				await RedisService.appendDocumentUpdate(docName, update)
+			} catch (error) {
+				Logger.yjsError(docName, `Failed to store update in Redis:`, error)
+			}
 
 			// Broadcast to other Calliope instances (for real-time sync)
 			RedisService.broadcastYjsUpdate(docName, update)
@@ -289,9 +302,6 @@ export const YjsSyncService = {
 			rheaPersistenceTimers.delete(docName)
 		}
 
-		// Delete cached updates from Redis
-		await RedisService.deleteDocumentUpdates(docName)
-
 		// Clean up metadata
 		documentMetadata.delete(docName)
 
@@ -309,6 +319,9 @@ export const YjsSyncService = {
 			}
 			Logger.yjsInfo(docName, `Closed ${connections.length} client connection(s)`)
 		}
+
+		// Delete cached updates from Redis
+		await RedisService.deleteDocumentUpdates(docName)
 
 		// Release leadership if held
 		await persistenceLeaderService.release(docName)

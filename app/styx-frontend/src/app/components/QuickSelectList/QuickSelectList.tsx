@@ -21,6 +21,7 @@ import { QuickSelectListItemQuickCreate } from './QuickSelectListItemQuickCreate
 import { QuickSelectListSectionHeader } from './QuickSelectListSectionHeader'
 
 type Props = {
+	isFocused: boolean
 	onSelect: (params: { query: string; entity: { id: string; type: MentionedEntity; name: string } }) => void
 }
 
@@ -28,7 +29,7 @@ type Position = { top: number; bottom: number; left: number }
 
 export const QuickSelectList = memo(QuickSelectListComponent)
 
-export function QuickSelectListComponent({ onSelect }: Props) {
+export function QuickSelectListComponent({ isFocused, onSelect }: Props) {
 	const [visible, setVisible] = useState(false)
 	const [pos, setPos] = useState<Position>({ top: 0, bottom: 0, left: 0 })
 	const [query, setQuery] = useState('')
@@ -60,7 +61,7 @@ export function QuickSelectListComponent({ onSelect }: Props) {
 		},
 	})
 
-	if (!visible) {
+	if (!visible || !isFocused) {
 		return null
 	}
 
