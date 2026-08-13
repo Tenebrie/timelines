@@ -1,3 +1,4 @@
+import { useCheckAuthenticationQuery } from '@api/authApi'
 import { useGetWorldsQuery } from '@api/worldListApi'
 import { useSelector } from 'react-redux'
 
@@ -5,13 +6,16 @@ import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 
 export const useWorldListData = () => {
 	const { user } = useSelector(getAuthState)
-	const { data, isFetching, isLoading } = useGetWorldsQuery(undefined, {
-		skip: !user,
+	const { data: authData, isLoading: isAuthLoading } = useCheckAuthenticationQuery()
+	const isAuthenticated = !!user || !!authData?.authenticated
+
+	const { data, error, isFetching } = useGetWorldsQuery(undefined, {
+		skip: !isAuthenticated,
 		refetchOnMountOrArgChange: true,
 	})
 
 	return {
-		isLoading,
+		isLoading: isAuthLoading || (isAuthenticated && !data && !error),
 		isFetching,
 		isReady: !!data,
 		ownedWorlds: data?.ownedWorlds ?? [],
