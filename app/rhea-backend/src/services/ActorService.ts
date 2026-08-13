@@ -188,7 +188,7 @@ export const ActorService = {
 				params,
 				prisma,
 			})
-			const world = await makeTouchWorldQuery(worldId)
+			const world = await makeTouchWorldQuery(worldId, prisma)
 			return {
 				world,
 				actor,
