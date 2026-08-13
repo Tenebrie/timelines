@@ -97,12 +97,13 @@ export function RichTextEditorComponent({
 				handlePaste,
 			},
 			onUpdate({ editor, transaction }) {
-				if (editor.getHTML() === value || transaction.steps.length === 0) {
+				const richText = editor.getHTML()
+				if (richText === value || transaction.steps.length === 0) {
 					return
 				}
 				onChangeThrottled.current({
 					plainText: editor.getText(),
-					richText: editor.getHTML(),
+					richText,
 				})
 			},
 			onCreate({ editor }) {
