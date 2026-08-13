@@ -16,7 +16,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 				state.isOpen = true
 				state.editor = props.editor
 				const pos = props.editor.view.coordsAtPos(props.range.from)
-				dispatchGlobalEvent['richEditor/requestOpenMentions']({
+				dispatchGlobalEvent['quickSelect/requestOpen']({
 					query: props.query,
 					screenPosTop: pos.top,
 					screenPosBottom: pos.bottom,
@@ -26,7 +26,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 
 			onUpdate(props) {
 				const pos = props.editor.view.coordsAtPos(props.range.from)
-				dispatchGlobalEvent['richEditor/requestUpdateMentions']({
+				dispatchGlobalEvent['quickSelect/requestUpdate']({
 					query: props.query,
 					screenPosTop: pos.top,
 					screenPosBottom: pos.bottom,
@@ -43,8 +43,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 					return true
 				}
 				if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'PageUp', 'PageDown'].includes(props.event.key)) {
-					dispatchGlobalEvent['richEditor/onKeyDown']({
-						editor: state.editor,
+					dispatchGlobalEvent['quickSelect/onKeyDown']({
 						key: props.event.key,
 						ctrlKey: props.event.ctrlKey,
 						shiftKey: props.event.shiftKey,
@@ -58,7 +57,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 
 			onExit() {
 				state.isOpen = false
-				dispatchGlobalEvent['richEditor/requestCloseMentions']()
+				dispatchGlobalEvent['quickSelect/requestClose']()
 			},
 		}
 	},

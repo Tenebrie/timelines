@@ -11,11 +11,12 @@ type Props = {
 	mode: 'read' | 'edit'
 	className?: string
 	readOnly?: boolean
+	children?: React.ReactNode
 }
 
 export const EditorContentBox = memo(EditorContentBoxComponent)
 
-function EditorContentBoxComponent({ editor, mode, className, readOnly }: Props) {
+function EditorContentBoxComponent({ editor, mode, className, readOnly, children }: Props) {
 	const { palette } = useTheme()
 	const isDark = palette.mode === 'dark'
 
@@ -28,7 +29,7 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly }: Props)
 			sx={{
 				fontFamily: '"Roboto", sans-serif',
 				outline: 'none',
-				height: mode === 'edit' ? 'calc(100% - 48px)' : 'unset',
+				height: mode === 'edit' ? '100%' : 'unset',
 				overflowY: 'auto',
 				display: 'flex',
 				flexDirection: 'column',
@@ -112,6 +113,8 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly }: Props)
 					zIndex: 2,
 				},
 			}}
-		/>
+		>
+			{children}
+		</Box>
 	)
 }

@@ -1,3 +1,4 @@
+import CalendarMonth from '@mui/icons-material/CalendarMonth'
 import LeftIcon from '@mui/icons-material/PlayArrow'
 import RightIcon from '@mui/icons-material/Stop'
 import Button from '@mui/material/Button'
@@ -6,6 +7,10 @@ import ListItemText from '@mui/material/ListItemText'
 import MenuItem from '@mui/material/MenuItem'
 import MenuList from '@mui/material/MenuList'
 import Popover from '@mui/material/Popover'
+import Stack from '@mui/material/Stack'
+import { useTheme } from '@mui/material/styles'
+import Tooltip from '@mui/material/Tooltip'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -59,27 +64,47 @@ export function EventTimePopover({ draft }: Props) {
 
 	const popupState = usePopupState({ variant: 'popover', popupId: 'event-time-popover' })
 
-	// const { setTimelineMarkerSelection } = worldSlice.actions
-	// const dispatch = useDispatch()
+	const muiTheme = useTheme()
+	const isSmallScreen = useMediaQuery(muiTheme.breakpoints.down('lg'))
+	const buttonStyles = {
+		padding: isSmallScreen ? '4px 8px' : '4px 12px',
+		textWrap: 'nowrap',
+		flexShrink: 0,
+		minWidth: 0,
+	} as const
 
 	if (!draft.revokedAt) {
 		return (
-			<Button
-				sx={{ padding: '4px 12px', textWrap: 'nowrap', flexShrink: 0 }}
-				onClick={() => {
-					onOpen('issuedAt-')
-				}}
-			>
-				{timestampLabel}
-			</Button>
+			<Tooltip title={isSmallScreen ? timestampLabel : ''} disableInteractive enterDelay={700}>
+				<Button
+					sx={buttonStyles}
+					onClick={() => {
+						onOpen('issuedAt-')
+					}}
+				>
+					<Stack direction="row" gap={1} alignItems="center">
+						<CalendarMonth />
+						{!isSmallScreen && timestampLabel}
+					</Stack>
+				</Button>
+			</Tooltip>
 		)
 	}
 
 	return (
 		<>
-			<Button sx={{ padding: '4px 12px', textWrap: 'nowrap', flexShrink: 0 }} {...bindTrigger(popupState)}>
-				Multiple dates
-			</Button>
+			<Tooltip
+				title={isSmallScreen ? `${timestampLabel} — ${revokedAtLabel}` : ''}
+				disableInteractive
+				enterDelay={700}
+			>
+				<Button sx={buttonStyles} {...bindTrigger(popupState)}>
+					<Stack direction="row" gap={1} alignItems="center">
+						<CalendarMonth />
+						{!isSmallScreen && 'Multiple dates'}
+					</Stack>
+				</Button>
+			</Tooltip>
 			<Popover
 				{...bindPopover(popupState)}
 				anchorOrigin={{

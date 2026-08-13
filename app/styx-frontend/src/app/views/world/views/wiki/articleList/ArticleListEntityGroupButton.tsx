@@ -15,10 +15,10 @@ import { getWikiState } from '../WikiSliceSelectors'
 export const ArticleListEntityGroupButton = memo(ArticleListEntityGroupButtonComponent)
 
 function ArticleListEntityGroupButtonComponent() {
-	const types = ['article', 'actor', 'event', 'tag'] satisfies (typeof visibleEntities)[number][]
+	const types = ['actor', 'article', 'event', 'tag'] satisfies (typeof visibleEntities)[number][]
 	const typeLabels: Record<(typeof visibleEntities)[number], string> = {
-		article: 'Articles',
 		actor: 'Actors',
+		article: 'Articles',
 		event: 'Events',
 		tag: 'Tags',
 	}
@@ -64,7 +64,12 @@ function ArticleListEntityGroupButtonComponent() {
 						label={
 							<Stack direction="row" alignItems="center" gap={0.5}>
 								<EntityIcon variant={type} height={16} />
-								<span>{typeLabels[type]}</span>
+								<Box
+									component="span"
+									sx={{ '@container outliner-drawer (width < 400px)': { display: 'none' } }}
+								>
+									{typeLabels[type]}
+								</Box>
 								<Box
 									component="span"
 									sx={{

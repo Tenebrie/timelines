@@ -61,31 +61,36 @@ export const ValidationService = {
 	},
 
 	checkActorValidity: async (actorId: string) => {
-		if (!ValidationService.isActorValid(actorId)) {
+		const isValid = await ValidationService.isActorValid(actorId)
+		if (!isValid) {
 			throw new BadRequestError('Actor does not exist')
 		}
 	},
 
 	checkArticleValidity: async (articleId: string) => {
-		if (!ValidationService.isArticleValid(articleId)) {
+		const isValid = await ValidationService.isArticleValid(articleId)
+		if (!isValid) {
 			throw new BadRequestError('Article does not exist')
 		}
 	},
 
 	checkEventValidity: async (eventId: string) => {
-		if (!ValidationService.isEventValid(eventId)) {
+		const isValid = await ValidationService.isEventValid(eventId)
+		if (!isValid) {
 			throw new BadRequestError('Event does not exist')
 		}
 	},
 
 	checkEventDeltaStateValidity: async (deltaId: string) => {
-		if (!ValidationService.isEventDeltaStateValid(deltaId)) {
+		const isValid = await ValidationService.isEventDeltaStateValid(deltaId)
+		if (!isValid) {
 			throw new BadRequestError('Event delta state does not exist')
 		}
 	},
 
 	checkTagValidity: async (tagId: string) => {
-		if (!ValidationService.isTagValid(tagId)) {
+		const isValid = await ValidationService.isTagValid(tagId)
+		if (!isValid) {
 			throw new BadRequestError('Tag does not exist')
 		}
 	},

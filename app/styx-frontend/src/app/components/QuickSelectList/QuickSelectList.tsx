@@ -2,34 +2,36 @@ import { MentionedEntity } from '@api/types/worldTypes'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import { Editor } from '@tiptap/react'
 import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
+import { useQuickCreateActor } from '@/api/hooks/useQuickCreateActor'
+import { useQuickCreateEvent } from '@/api/hooks/useQuickCreateEvent'
+import { useQuickCreateTag } from '@/api/hooks/useQuickCreateTag'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useCreateArticle } from '@/app/views/world/views/wiki/api/useCreateArticle'
 
-import { useQuickCreateActor } from './api/useQuickCreateActor'
-import { useQuickCreateEvent } from './api/useQuickCreateEvent'
-import { useQuickCreateTag } from './api/useQuickCreateTag'
-import { MentionNodeName } from './components/MentionNode'
-import { Mention, useDisplayedMentions } from './hooks/useDisplayedMentions'
-import { MentionsListItem } from './MentionsListItem'
-import { MentionsListItemQuickCreate } from './MentionsListItemQuickCreate'
-import { MentionsListSectionHeader } from './MentionsListSectionHeader'
+import {
+	Mention,
+	useDisplayedMentions,
+} from '../../features/richTextEditor/extensions/mentions/hooks/useDisplayedMentions'
+import { QuickSelectListItem } from './QuickSelectListItem'
+import { QuickSelectListItemQuickCreate } from './QuickSelectListItemQuickCreate'
+import { QuickSelectListSectionHeader } from './QuickSelectListSectionHeader'
 
 type Props = {
-	editor: Editor | null
+	isFocused: boolean
+	onSelect: (params: { query: string; entity: { id: string; type: MentionedEntity; name: string } }) => void
 }
 
-type Pos = { top: number; bottom: number; left: number }
+type Position = { top: number; bottom: number; left: number }
 
-export const MentionsList = memo(MentionsListComponent)
+export const QuickSelectList = memo(QuickSelectListComponent)
 
-export function MentionsListComponent({ editor }: Props) {
+export function QuickSelectListComponent({ isFocused, onSelect }: Props) {
 	const [visible, setVisible] = useState(false)
-	const [pos, setPos] = useState<Pos>({ top: 0, bottom: 0, left: 0 })
+	const [pos, setPos] = useState<Position>({ top: 0, bottom: 0, left: 0 })
 	const [query, setQuery] = useState('')
 
 	useShortcut(
@@ -40,43 +42,42 @@ export function MentionsListComponent({ editor }: Props) {
 		visible && ShortcutPriorities.Mentions,
 	)
 
-	useEventBusSubscribe['richEditor/requestOpenMentions']({
+	useEventBusSubscribe['quickSelect/requestOpen']({
 		callback: ({ query, screenPosTop, screenPosBottom, screenPosLeft }) => {
-			if (!editor) {
-				return
-			}
 			setVisible(true)
 			setQuery(query)
 			setPos({ top: screenPosTop, bottom: screenPosBottom, left: screenPosLeft })
 		},
 	})
-	useEventBusSubscribe['richEditor/requestUpdateMentions']({
+	useEventBusSubscribe['quickSelect/requestUpdate']({
 		callback: ({ query, screenPosTop, screenPosBottom, screenPosLeft }) => {
 			setQuery(query)
 			setPos({ top: screenPosTop, bottom: screenPosBottom, left: screenPosLeft })
 		},
 	})
-	useEventBusSubscribe['richEditor/requestCloseMentions']({
+	useEventBusSubscribe['quickSelect/requestClose']({
 		callback: () => {
 			setVisible(false)
 		},
 	})
 
-	if (!visible) {
+	if (!visible || !isFocused) {
 		return null
 	}
 
-	return <MentionsListContent editor={editor} pos={pos} query={query} onClose={() => setVisible(false)} />
+	return (
+		<QuickSelectListContent pos={pos} query={query} onSelect={onSelect} onClose={() => setVisible(false)} />
+	)
 }
 
 type ContentProps = {
-	editor: Editor | null
-	pos: Pos
+	pos: Position
 	query: string
+	onSelect: (params: { query: string; entity: { id: string; type: MentionedEntity; name: string } }) => void
 	onClose: () => void
 }
 
-function MentionsListContent({ editor, pos, query, onClose }: ContentProps) {
+function QuickSelectListContent({ pos, query, onSelect, onClose }: ContentProps) {
 	const [selectedIndex, setSelectedIndex] = useState(0)
 
 	const { mentions, actorCount, eventCount, articleCount, tagCount } = useDisplayedMentions({ query })
@@ -98,59 +99,46 @@ function MentionsListContent({ editor, pos, query, onClose }: ContentProps) {
 		ShortcutPriorities.Mentions,
 	)
 
-	const selectEntity = async (editor: Editor | null, index: number) => {
-		const selectedMention = mentions[index]
-		if (!editor) {
-			return
-		}
+	const selectEntity = useCallback(
+		async (index: number) => {
+			const selectedMention = mentions[index]
 
-		let entityType: MentionedEntity = selectedMention?.type
-		let createdEntityId: string | undefined = undefined
-		if (!selectedMention && index === mentions.length) {
-			entityType = 'Actor'
-			createdEntityId = (await createActor({ query }))?.id
-		} else if (!selectedMention && index === mentions.length + 1) {
-			entityType = 'Event'
-			createdEntityId = (await createEvent({ query }))?.id
-		} else if (!selectedMention && index === mentions.length + 2) {
-			entityType = 'Article'
-			createdEntityId = (await createArticle({ name: query }))?.id
-		} else if (!selectedMention && index === mentions.length + 3) {
-			entityType = 'Tag'
-			createdEntityId = (await createTag({ query }))?.id
-		}
+			let entityType: MentionedEntity = selectedMention?.type
+			let createdEntityId: string | undefined = undefined
+			if (!selectedMention && index === mentions.length) {
+				entityType = 'Actor'
+				createdEntityId = (await createActor({ query }))?.id
+			} else if (!selectedMention && index === mentions.length + 1) {
+				entityType = 'Event'
+				createdEntityId = (await createEvent({ query }))?.id
+			} else if (!selectedMention && index === mentions.length + 2) {
+				entityType = 'Article'
+				createdEntityId = (await createArticle({ name: query }))?.id
+			} else if (!selectedMention && index === mentions.length + 3) {
+				entityType = 'Tag'
+				createdEntityId = (await createTag({ query }))?.id
+			}
 
-		if (!selectedMention && !createdEntityId) {
-			return
-		}
-
-		const entityId = createdEntityId ?? selectedMention.id
-
-		editor
-			.chain()
-			.focus()
-			.deleteRange({
-				from: editor.state.selection.from - query.length - 1,
-				to: editor.state.selection.from,
-			})
-			.insertContent({
-				type: MentionNodeName,
-				attrs: {
-					type: 'mention',
-					name: selectedMention?.name ?? query,
-					componentProps: {
-						[entityType.toLowerCase()]: entityId,
-					},
-				},
-			})
-			.run()
-	}
-
-	useEventBusSubscribe['richEditor/onKeyDown']({
-		callback: async ({ editor: targetEditor, key, shiftKey }) => {
-			if (targetEditor !== editor) {
+			if (!selectedMention && !createdEntityId) {
 				return
 			}
+
+			const entityId = createdEntityId ?? selectedMention.id
+
+			onSelect({
+				query,
+				entity: {
+					id: entityId,
+					type: entityType,
+					name: selectedMention?.name ?? query,
+				},
+			})
+		},
+		[createActor, createArticle, createEvent, createTag, mentions, onSelect, query],
+	)
+
+	const handleKeyPress = useCallback(
+		async (key: string, shiftKey: boolean) => {
 			if (key === 'ArrowUp' || (key === 'Tab' && shiftKey)) {
 				setSelectedIndex((prev) => {
 					return prev > 0 ? prev - 1 : lastItemIndex
@@ -162,12 +150,19 @@ function MentionsListContent({ editor, pos, query, onClose }: ContentProps) {
 					return targetIndex
 				})
 			} else if (key === 'Enter') {
-				await selectEntity(editor, selectedIndex)
+				await selectEntity(selectedIndex)
 			} else if (key === 'PageUp') {
 				setSelectedIndex(0)
 			} else if (key === 'PageDown') {
 				setSelectedIndex(lastItemIndex)
 			}
+		},
+		[lastItemIndex, mentions.length, query.length, selectEntity, selectedIndex],
+	)
+
+	useEventBusSubscribe['quickSelect/onKeyDown']({
+		callback: async ({ key, shiftKey }) => {
+			await handleKeyPress(key, shiftKey)
 		},
 	})
 
@@ -243,6 +238,7 @@ function MentionsListContent({ editor, pos, query, onClose }: ContentProps) {
 	return (
 		<Paper
 			ref={paperRef}
+			onMouseDown={(event) => event.preventDefault()}
 			sx={{
 				outline: `1px solid ${theme.material.palette.divider}`,
 				zIndex: 10,
@@ -256,7 +252,7 @@ function MentionsListContent({ editor, pos, query, onClose }: ContentProps) {
 				.filter((type) => type.mentions.length > 0)
 				.map((type) => (
 					<Stack gap={0} key={type.label}>
-						<MentionsListSectionHeader
+						<QuickSelectListSectionHeader
 							label={type.label}
 							key={type.label}
 							mentionCount={type.totalCount}
@@ -264,42 +260,42 @@ function MentionsListContent({ editor, pos, query, onClose }: ContentProps) {
 						/>
 						<Divider style={{ marginBottom: 0 }} />
 						{type.mentions.map((mention, index) => (
-							<MentionsListItem
+							<QuickSelectListItem
 								key={mention.id}
 								mention={mention}
 								query={query}
 								selected={selectedIndex === index + type.indexStart}
-								onClick={() => selectEntity(editor, index + type.indexStart)}
+								onClick={() => selectEntity(index + type.indexStart)}
 							/>
 						))}
 					</Stack>
 				))}
 			{query.trim().length > 0 && (
 				<>
-					<MentionsListSectionHeader label="Quick create" disableGutter={mentions.length === 0} />
+					<QuickSelectListSectionHeader label="Quick create" disableGutter={mentions.length === 0} />
 					<Divider style={{ marginBottom: 0 }} />
-					<MentionsListItemQuickCreate
+					<QuickSelectListItemQuickCreate
 						type="Actor"
 						selected={selectedIndex === mentions.length}
-						onClick={() => selectEntity(editor, mentions.length)}
+						onClick={() => selectEntity(mentions.length)}
 						query={query}
 					/>
-					<MentionsListItemQuickCreate
+					<QuickSelectListItemQuickCreate
 						type="Event"
 						selected={selectedIndex === mentions.length + 1}
-						onClick={() => selectEntity(editor, mentions.length + 1)}
+						onClick={() => selectEntity(mentions.length + 1)}
 						query={query}
 					/>
-					<MentionsListItemQuickCreate
+					<QuickSelectListItemQuickCreate
 						type="Article"
 						selected={selectedIndex === mentions.length + 2}
-						onClick={() => selectEntity(editor, mentions.length + 2)}
+						onClick={() => selectEntity(mentions.length + 2)}
 						query={query}
 					/>
-					<MentionsListItemQuickCreate
+					<QuickSelectListItemQuickCreate
 						type="Tag"
 						selected={selectedIndex === mentions.length + 3}
-						onClick={() => selectEntity(editor, mentions.length + 3)}
+						onClick={() => selectEntity(mentions.length + 3)}
 						query={query}
 					/>
 				</>

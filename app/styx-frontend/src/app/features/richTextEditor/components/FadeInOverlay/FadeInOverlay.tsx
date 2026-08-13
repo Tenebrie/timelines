@@ -87,9 +87,6 @@ export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) 
 		}
 	}, [isLoading])
 
-	const height = isReadMode ? 'calc(100% - 52px)' : 'calc(100% - 52px)'
-	const width = isReadMode ? 'calc(100%)' : 'calc(100% - 8px)'
-
 	return (
 		<>
 			<style>{`
@@ -112,11 +109,8 @@ export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) 
 					display: content.length === 0 && !isLoading ? 'none' : 'block',
 					pointerEvents: 'none',
 					position: 'absolute',
-					top: 52,
-					left: 0,
-					width,
-					height,
-					borderRadius: 6,
+					inset: 0,
+					borderRadius: isReadMode ? 6 : '0 0 6px 6px',
 				}}
 			>
 				<ProgressBar elementsRendering={progressElementsRendering} />

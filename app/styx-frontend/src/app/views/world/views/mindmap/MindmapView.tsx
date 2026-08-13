@@ -14,3 +14,36 @@ export const MindmapView = () => {
 		</Stack>
 	)
 }
+
+/**
+ * TODO: Migrate to the new outliner design
+ */
+
+// export const MindmapView = () => {
+// 	return (
+// 		<Stack direction="row" sx={{ width: '100%', height: '100%', overflowX: 'hidden' }}>
+// 			<WikiOutlinerDrawer>
+// 				<Stack
+// 					sx={{
+// 						width: '100%',
+// 						minWidth: 0,
+// 						height: '100%',
+// 					}}
+// 					data-testid="ArticleListWithHeader"
+// 				>
+// 					<Stack gap={1} height={1}>
+// 						<Stack gap={1}>
+// 							<ArticleListHeader />
+// 							<Divider />
+// 							<ArticleListEntityGroupButton />
+// 						</Stack>
+// 						<ArticleList parentId={null} depth={0} />
+// 					</Stack>
+// 				</Stack>
+// 			</WikiOutlinerDrawer>
+// 			<Box width={1} height={1} position="relative" overflow="auto">
+// 				<Mindmap />
+// 			</Box>
+// 		</Stack>
+// 	)
+// }

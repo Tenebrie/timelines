@@ -15,15 +15,17 @@ import { useBreadcrumbEntities } from './hooks/useBreadcrumbEntities'
 
 type EntityBreadcrumbsProps = {
 	entityStack: string[]
-	onBreadcrumbClick: (index: number) => void
 	onWorldClick: () => void
+	onBreadcrumbClick: (index: number) => void
+	onCurrentClick: () => void
 	onClose: () => void
 }
 
 export function EntityBreadcrumbs({
 	entityStack,
-	onBreadcrumbClick,
 	onWorldClick,
+	onBreadcrumbClick,
+	onCurrentClick,
 	onClose,
 }: EntityBreadcrumbsProps) {
 	const breadcrumbEntities = useBreadcrumbEntities(entityStack)
@@ -123,17 +125,41 @@ export function EntityBreadcrumbs({
 						{entity.name}
 					</Link>
 				))}
-				<Typography
-					color="text.primary"
-					sx={{
-						fontSize: '0.875rem',
-						fontWeight: 500,
-						display: 'flex',
-						alignItems: 'center',
-					}}
-				>
-					{currentItemName}
-				</Typography>
+				{creatingNew && (
+					<Typography
+						color="text.primary"
+						sx={{
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							display: 'flex',
+							alignItems: 'center',
+						}}
+					>
+						{currentItemName}
+					</Typography>
+				)}
+				{!creatingNew && (
+					<Link
+						key={'current'}
+						component="button"
+						underline="hover"
+						color="inherit"
+						onClick={() => onCurrentClick()}
+						sx={{
+							cursor: 'pointer',
+							fontSize: '0.875rem',
+							fontWeight: 500,
+							display: 'flex',
+							alignItems: 'center',
+							color: 'text.primary',
+							'&:hover': {
+								color: 'primary.main',
+							},
+						}}
+					>
+						{currentItemName}
+					</Link>
+				)}
 			</Breadcrumbs>
 			<IconButton
 				onClick={onClose}

@@ -1,4 +1,5 @@
-import { Editor, useEditor } from '@tiptap/react'
+import Box from '@mui/material/Box'
+import { useEditor } from '@tiptap/react'
 import throttle from 'lodash.throttle'
 import { memo, useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
@@ -8,12 +9,12 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { getWorldState } from '../../views/world/WorldSliceSelectors'
 import { useEventBusSubscribe } from '../eventBus'
 import { EditorContentBox } from './components/EditorContentBox'
+import { FadeInOverlay } from './components/FadeInOverlay/FadeInOverlay'
 import { useCollaboration } from './extensions/collaboration/useCollaboration'
 import { EditorExtensions } from './extensions/editorExtensions'
-import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/FadeInOverlay'
-import { MentionsList } from './extensions/mentions/MentionsList'
 import { useEditorPasteHandler } from './hooks/useEditorPasteHandler'
 import { RichTextEditorControls } from './RichTextEditorControls'
+import { RichTextEditorQuickSelect } from './RichTextEditorQuickSelect'
 import { StyledContainer } from './styles'
 
 type Props = {
@@ -67,13 +68,10 @@ export function RichTextEditorComponent({
 	}, [onChange])
 
 	const onChangeThrottled = useRef(
-		throttle((editor: Editor) => {
-			if (editor.isDestroyed) {
-				return
-			}
+		throttle(({ plainText, richText }: { plainText: string; richText: string }) => {
 			onChangeRef.current({
-				plainText: editor.getText(),
-				richText: editor.getHTML(),
+				plainText,
+				richText,
 			})
 		}, 100),
 	)
@@ -102,7 +100,10 @@ export function RichTextEditorComponent({
 				if (editor.getHTML() === value || transaction.steps.length === 0) {
 					return
 				}
-				onChangeThrottled.current(editor)
+				onChangeThrottled.current({
+					plainText: editor.getText(),
+					richText: editor.getHTML(),
+				})
 			},
 			onCreate({ editor }) {
 				if (!autoFocus) {
@@ -151,7 +152,8 @@ export function RichTextEditorComponent({
 				borderRadius: '6px',
 				minHeight: '128px',
 				background: isReadOnly ? '' : theme.custom.palette.background.textEditor,
-				position: 'relative',
+				display: 'flex',
+				flexDirection: 'column',
 			}}
 			data-testid="RichTextEditor"
 			$theme={theme}
@@ -161,15 +163,23 @@ export function RichTextEditorComponent({
 			}}
 		>
 			<RichTextEditorControls editor={editor} />
-			{editor && <EditorContentBox className="content" editor={editor} mode={isReadOnly ? 'read' : 'edit'} />}
-			<MentionsList editor={editor} />
-			<FadeInOverlay
-				key={softKey}
-				content={value}
-				isReadMode={isReadOnly}
-				color={fadeInOverlayColor}
-				isLoading={isLoading || !collabReady || false}
-			/>
+			<Box sx={{ position: 'relative', flex: 1, minHeight: 0 }}>
+				{editor && (
+					<EditorContentBox
+						className="content"
+						editor={editor}
+						mode={isReadOnly ? 'read' : 'edit'}
+					></EditorContentBox>
+				)}
+				<FadeInOverlay
+					key={softKey}
+					content={value}
+					isReadMode={isReadOnly}
+					color={fadeInOverlayColor}
+					isLoading={isLoading || !collabReady || false}
+				/>
+			</Box>
+			<RichTextEditorQuickSelect editor={editor} />
 		</StyledContainer>
 	)
 }

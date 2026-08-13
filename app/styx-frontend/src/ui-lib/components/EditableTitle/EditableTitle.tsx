@@ -65,17 +65,17 @@ export const EditableTitle = ({
 			alignItems="center"
 			justifyContent="center"
 			width="100%"
-			sx={{ height: '32px' }}
+			sx={{ height: '32px', minWidth: 0 }}
 		>
 			{startAdornment}
 			{!editing && (
-				<Stack direction="row" justifyContent="space-between" width="100%">
+				<Stack direction="row" justifyContent="space-between" sx={{ flex: 1, minWidth: 0 }}>
 					<Button
 						variant="text"
-						sx={{ padding: '0 8px', width: '100%', justifyContent: 'flex-start' }}
+						sx={{ padding: '0 8px', flex: 1, minWidth: 0, justifyContent: 'flex-start' }}
 						onClick={onStartEdit}
 					>
-						<Typography variant="h6" noWrap>
+						<Typography variant="h6" noWrap sx={{ minWidth: 0 }}>
 							{displayValue ?? value}
 						</Typography>
 					</Button>
@@ -91,7 +91,8 @@ export const EditableTitle = ({
 					placeholder={placeholder}
 					role="textbox"
 					sx={{
-						width: '100%',
+						flex: 1,
+						minWidth: 0,
 						marginBottom: '-7px',
 						fontSize: '20px',
 						fontWeight: 450,

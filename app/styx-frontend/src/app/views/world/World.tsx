@@ -70,7 +70,7 @@ export const World = () => {
 			>
 				<Stack direction="row" width="100%" height="100%">
 					{!isNarrow && <WorldSidebar />}
-					<div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+					<div style={{ flex: 1, minWidth: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
 						<Outlet />
 					</div>
 				</Stack>
