@@ -113,7 +113,7 @@ export function RichTextEditorComponent({
 				requestIdleCallback(
 					() => {
 						if (!editor.isDestroyed) {
-							editor.commands.focus('end')
+							editor.commands.focus('end', { scrollIntoView: false })
 						}
 					},
 					{ timeout: 100 },

@@ -1,7 +1,7 @@
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { Editor } from '@tiptap/react'
+import { Editor, useEditorState } from '@tiptap/react'
 import { useCallback, useRef, useState } from 'react'
 
 import { Button } from '@/ui-lib/components/Button/Button'
@@ -39,7 +39,10 @@ function matchFont(currentFont: string) {
 }
 
 export function FontFamilySelect({ editor }: Props) {
-	const currentFont = (editor.getAttributes('textStyle').fontFamily as string | undefined) ?? ''
+	const currentFont = useEditorState({
+		editor,
+		selector: (ctx) => (ctx.editor.getAttributes('textStyle').fontFamily as string | undefined) ?? '',
+	})
 	const matched = matchFont(currentFont)
 	const currentLabel = matched?.label ?? primaryFontName(currentFont)
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
