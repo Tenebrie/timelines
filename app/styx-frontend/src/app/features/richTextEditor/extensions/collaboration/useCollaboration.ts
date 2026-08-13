@@ -14,10 +14,15 @@ type UseCollaborationParams = {
 	enabled: boolean
 }
 
+type DocState = {
+	key: string
+	doc: Y.Doc | null
+	extension: ReturnType<typeof createCollaborationExtension> | null
+}
+
 type ConnectionState = {
 	doc: Y.Doc
 	provider: WebsocketProvider
-	extension: ReturnType<typeof createCollaborationExtension>
 	key: string
 	disableReconnect: () => void
 }
@@ -27,9 +32,15 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 	const [isReady, setIsReady] = useState(!enabled)
 	const connectionRef = useRef<ConnectionState | null>(null)
 	const cleanupTimeoutRef = useRef<number | null>(null)
-	const [resetCounter, setResetCounter] = useState(0)
+	const [generation, setGeneration] = useState(0)
 
-	const key = `${worldId}:${entityType}:${documentId}`
+	const key = enabled ? `${worldId}:${entityType}:${documentId}:${generation}` : ''
+
+	// Create the doc and extension synchronously so the editor mounts with collaboration already attached
+	const [docState, setDocState] = useState<DocState>(() => createDocState(key))
+	if (docState.key !== key) {
+		setDocState(createDocState(key))
+	}
 
 	const resetConnection = useCallback(() => {
 		if (connectionRef.current) {
@@ -37,7 +48,7 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 			connectionRef.current = null
 			setIsReady(false)
 		}
-		setResetCounter((c) => c + 1)
+		setGeneration((c) => c + 1)
 	}, [])
 
 	useEventBusSubscribe['calliope/documentReset']({
@@ -46,7 +57,8 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 	})
 
 	useEffect(() => {
-		if (!enabled) {
+		const doc = docState.doc
+		if (!enabled || !doc) {
 			setIsReady(true)
 			return
 		}
@@ -69,15 +81,15 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 
 		// Create new connection
 		setIsReady(false)
-		const { doc, provider, disableReconnect } = createCollaborationProvider({
+		const { provider, disableReconnect } = createCollaborationProvider({
+			doc,
 			worldId,
 			entityType,
 			documentId,
 			onReconnect: resetConnection,
 		})
-		const extension = createCollaborationExtension(doc)
 
-		connectionRef.current = { doc, provider, extension, key, disableReconnect }
+		connectionRef.current = { doc, provider, key, disableReconnect }
 		provider.on('sync', (synced: boolean) => {
 			if (synced) {
 				setIsReady(true)
@@ -102,14 +114,22 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 				}, 50)
 			}
 		}
-	}, [key, enabled, worldId, entityType, documentId, resetCounter, resetConnection])
+	}, [key, enabled, worldId, entityType, documentId, resetConnection, docState])
 
 	return {
-		doc: connectionRef.current?.doc ?? null,
+		doc: docState.doc,
 		provider: connectionRef.current?.provider ?? null,
-		extension: connectionRef.current?.extension ?? null,
+		extension: docState.extension,
 		isReady,
 	}
+}
+
+function createDocState(key: string): DocState {
+	if (!key) {
+		return { key, doc: null, extension: null }
+	}
+	const doc = new Y.Doc()
+	return { key, doc, extension: createCollaborationExtension(doc) }
 }
 
 function destroyConnection({ doc, provider, disableReconnect }: ConnectionState) {

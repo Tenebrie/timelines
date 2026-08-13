@@ -1,5 +1,5 @@
 import { memo, useEffect, useReducer, useRef } from 'react'
-import { createPortal } from 'react-dom'
+import { createPortal, flushSync } from 'react-dom'
 import { Provider as ReduxProvider, useSelector } from 'react-redux'
 
 import { ActorMentionChip } from '@/app/features/richTextEditor/components/chips/ActorMentionChip'
@@ -24,8 +24,7 @@ type MentionMount = {
 const mounts = new Map<string, MentionMount>()
 let forceUpdate: (() => void) | null = null
 
-const PROGRESSIVE_BATCH_SIZE = 25
-const PROGRESSIVE_THRESHOLD = 5
+const PROGRESSIVE_BATCH_SIZE = 10
 
 const pendingRegistrations: MentionMount[] = []
 let registrationFlushScheduled = false
@@ -41,21 +40,20 @@ const flushRegistrations = () => {
 		return
 	}
 
-	if (pendingRegistrations.length <= PROGRESSIVE_THRESHOLD) {
-		for (const mount of pendingRegistrations.splice(0)) {
-			mounts.set(mount.id, mount)
-		}
-		forceUpdate?.()
-		return
-	}
-
-	// Large batch — render progressively across frames
+	let isFirstBatch = true
 	const processNextBatch = () => {
 		const batch = pendingRegistrations.splice(0, PROGRESSIVE_BATCH_SIZE)
 		for (const mount of batch) {
 			mounts.set(mount.id, mount)
+			mount.element.replaceChildren()
 		}
-		forceUpdate?.()
+		if (isFirstBatch && forceUpdate) {
+			isFirstBatch = false
+			// eslint-disable-next-line @eslint-react/dom-no-flush-sync
+			flushSync(() => forceUpdate?.())
+		} else {
+			forceUpdate?.()
+		}
 		if (pendingRegistrations.length > 0) {
 			progressiveRafId = requestAnimationFrame(processNextBatch)
 		} else {

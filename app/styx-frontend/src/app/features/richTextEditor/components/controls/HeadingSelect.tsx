@@ -1,7 +1,7 @@
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { Editor } from '@tiptap/react'
+import { Editor, useEditorState } from '@tiptap/react'
 import { useCallback, useRef, useState } from 'react'
 
 import { Button } from '@/ui-lib/components/Button/Button'
@@ -24,7 +24,11 @@ const HeadingOptions: HeadingOption[] = [
 ] as const
 
 export function HeadingSelect({ editor }: Props) {
-	const activeLevel = ([1, 2, 3] as const).find((level) => editor.isActive('heading', { level })) ?? null
+	const activeLevel = useEditorState({
+		editor,
+		selector: (ctx) =>
+			([1, 2, 3] as const).find((level) => ctx.editor.isActive('heading', { level })) ?? null,
+	})
 	const activeOption = HeadingOptions.find((o) => o.level === activeLevel) ?? HeadingOptions[0]
 
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)

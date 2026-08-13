@@ -48,7 +48,7 @@ export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) 
 			return
 		}
 		let startTime: number = 0
-		const duration = 500 // duration in ms
+		const duration = 0 // duration in ms
 		const easing = createCubicBezier(0.4, 0, 0.2, 1)
 
 		const animate = (timestamp: number) => {

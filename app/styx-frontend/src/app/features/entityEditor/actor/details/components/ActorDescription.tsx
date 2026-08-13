@@ -4,7 +4,6 @@ import { useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
-import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 
 type Props = {
@@ -12,8 +11,6 @@ type Props = {
 }
 
 export const ActorDescription = ({ actor }: Props) => {
-	const theme = useCustomTheme()
-
 	const { updateActor } = worldSlice.actions
 	const dispatch = useDispatch()
 
@@ -31,13 +28,11 @@ export const ActorDescription = ({ actor }: Props) => {
 
 	return (
 		<RichTextEditorSummoner
-			softKey={actor.id}
 			value={actor.descriptionRich}
 			onChange={({ plainText, richText }) => {
 				debouncedUpdate.current(actor.id, plainText, richText)
 			}}
 			autoFocus
-			fadeInOverlayColor={theme.custom.palette.background.textEditor}
 			collaboration={{
 				entityType: 'actor',
 				documentId: actor.id,

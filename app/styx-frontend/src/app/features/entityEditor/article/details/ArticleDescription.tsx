@@ -5,7 +5,6 @@ import debounce from 'lodash.debounce'
 import { useCallback, useRef } from 'react'
 
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
-import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
 type Props = {
@@ -13,7 +12,6 @@ type Props = {
 }
 
 export const ArticleDescription = ({ article }: Props) => {
-	const theme = useCustomTheme()
 	const { updateCachedArticle } = useWikiApiCache()
 
 	const debouncedUpdate = useRef(
@@ -44,10 +42,8 @@ export const ArticleDescription = ({ article }: Props) => {
 	return (
 		<Box sx={{ ...scrollbars, height: '100%' }}>
 			<RichTextEditorSummoner
-				softKey={`${article.id}`}
 				value={article.contentRich}
 				onChange={handleChange}
-				fadeInOverlayColor={theme.custom.palette.background.textEditor}
 				allowReadMode
 				collaboration={{
 					entityType: 'article',
