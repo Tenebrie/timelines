@@ -9,7 +9,6 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { getWorldState } from '../../views/world/WorldSliceSelectors'
 import { useEventBusSubscribe } from '../eventBus'
 import { EditorContentBox } from './components/EditorContentBox'
-import { FadeInOverlay } from './components/FadeInOverlay/FadeInOverlay'
 import { useCollaboration } from './extensions/collaboration/useCollaboration'
 import { EditorExtensions } from './extensions/editorExtensions'
 import { useEditorPasteHandler } from './hooks/useEditorPasteHandler'
@@ -19,18 +18,15 @@ import { StyledContainer } from './styles'
 
 type Props = {
 	value: string
-	softKey: string | number
 	onChange: (params: OnChangeParams) => void
 	onBlur?: () => void
 	allowReadMode?: boolean
-	fadeInOverlayColor: string
 	// Collaboration params (optional)
 	collaboration?: {
 		entityType: 'actor' | 'event' | 'article'
 		documentId: string
 	}
 	autoFocus?: boolean
-	isLoading?: boolean
 }
 
 export type RichTextEditorProps = Props
@@ -42,16 +38,7 @@ export type OnChangeParams = {
 
 export const RichTextEditor = memo(RichTextEditorComponent)
 
-export function RichTextEditorComponent({
-	value,
-	softKey,
-	onChange,
-	onBlur,
-	fadeInOverlayColor,
-	collaboration,
-	autoFocus,
-	isLoading,
-}: Props) {
+export function RichTextEditorComponent({ value, onChange, onBlur, collaboration, autoFocus }: Props) {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 
@@ -172,13 +159,6 @@ export function RichTextEditorComponent({
 						mode={isReadOnly ? 'read' : 'edit'}
 					></EditorContentBox>
 				)}
-				<FadeInOverlay
-					key={softKey}
-					content={value}
-					isReadMode={isReadOnly}
-					color={fadeInOverlayColor}
-					isLoading={isLoading || !collabReady || false}
-				/>
 			</Box>
 			<RichTextEditorQuickSelect editor={editor} />
 		</StyledContainer>
