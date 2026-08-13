@@ -9,7 +9,6 @@ import { WebSocket } from 'ws'
 import { ClientMessageHandlerService } from './services/ClientMessageHandlerService.js'
 import { persistenceLeaderService } from './services/PersistenceLeaderService.js'
 import { initRedisConnection } from './services/RedisService.js'
-import { RheaService } from './services/RheaService.js'
 import { TokenService } from './services/TokenService.js'
 import { WebsocketService } from './services/WebsocketService.js'
 import { recordLastWritingUser, YjsSyncService } from './services/YjsSyncService.js'
@@ -89,20 +88,9 @@ app.ws.use(
 
 			const docName = `${worldId}:${documentId}`
 			const { id: userId } = TokenService.decodeUserToken(authCookie)
-			const accessLevel = await (async () => {
-				const userData = await RheaService.getUserAccessLevel({ worldId, userId })
-				if (userData.write) {
-					return 'write'
-				} else if (userData.read) {
-					return 'read'
-				} else {
-					throw new Error('User does not have required access level')
-				}
-			})()
 
-			await YjsSyncService.setupDocumentListener({
+			const { accessLevel } = await YjsSyncService.setupDocumentListener({
 				userId,
-				accessLevel,
 				worldId,
 				entityId: documentId,
 				entityType: entityType as 'actor' | 'event' | 'article',

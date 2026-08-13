@@ -4,7 +4,7 @@ import Divider from '@mui/material/Divider'
 import MenuItem from '@mui/material/MenuItem'
 import MenuList from '@mui/material/MenuList'
 import Typography from '@mui/material/Typography'
-import { Editor } from '@tiptap/react'
+import { Editor, useEditorState } from '@tiptap/react'
 import { useCallback, useState } from 'react'
 
 import { ActiveButtonIndicator } from '@/app/features/richTextEditor/extensions/mentions/components/ActiveButtonIndicator'
@@ -18,7 +18,10 @@ const GRID_ROWS = 6
 const GRID_COLS = 8
 
 export function TableInsertButton({ editor }: Props) {
-	const isInTable = editor.isActive('table')
+	const isInTable = useEditorState({
+		editor,
+		selector: (ctx) => ctx.editor.isActive('table'),
+	})
 
 	return (
 		<PopoverButton

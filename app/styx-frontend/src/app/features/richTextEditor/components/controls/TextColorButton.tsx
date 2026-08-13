@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { Editor } from '@tiptap/react'
+import { Editor, useEditorState } from '@tiptap/react'
 
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import {
 	DARK_LUMINANCE_THRESHOLD,
 	getColorLuminance,
@@ -9,7 +10,6 @@ import {
 } from '@/app/utils/colors/getColorLuminance'
 import { PopoverButton } from '@/ui-lib/components/PopoverButton/PopoverButton'
 
-import { useCustomTheme } from '../../theming/hooks/useCustomTheme'
 import { TextColorPickerBody } from './TextColorPickerBody'
 
 type Props = {
@@ -17,7 +17,10 @@ type Props = {
 }
 
 export function TextColorButton({ editor }: Props) {
-	const currentColor = (editor.getAttributes('textStyle').color as string | undefined) ?? null
+	const currentColor = useEditorState({
+		editor,
+		selector: (ctx) => (ctx.editor.getAttributes('textStyle').color as string | undefined) ?? null,
+	})
 
 	const theme = useCustomTheme()
 	const defaultColor = theme.material.palette.text.primary
