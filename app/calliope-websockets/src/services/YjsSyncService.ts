@@ -44,14 +44,12 @@ export const YjsSyncService = {
 	 */
 	async setupDocumentListener({
 		userId,
-		accessLevel,
 		worldId,
 		entityId,
 		entityType,
 		docName,
 	}: {
 		userId: string
-		accessLevel: 'write' | 'read'
 		worldId: string
 		entityId: string
 		entityType: 'actor' | 'event' | 'article'
@@ -61,17 +59,19 @@ export const YjsSyncService = {
 
 		if (attachedDocs.has(doc)) {
 			// Another connection is loading this document - attach to that promise.
-			await documentMetadata.get(docName)?.loadPromise
-			if (!documentMetadata.get(docName)?.isLoaded) {
-				throw new Error(`Failed to load document state`)
+			const metadata = documentMetadata.get(docName)
+			if (!metadata) {
+				throw new Error(`Document metadata not found`)
 			}
-			return
+
+			const accessLevel = await YjsSyncService.handleConnection({ userId, worldId, metadata })
+			return { accessLevel }
 		}
 		attachedDocs.add(doc)
 
 		const metadata: DocumentMetadata = {
 			docName,
-			lastWritingUserId: accessLevel === 'write' ? userId : null,
+			lastWritingUserId: null,
 			worldId,
 			entityId,
 			entityType,
@@ -83,11 +83,9 @@ export const YjsSyncService = {
 
 		// Load initial state
 		metadata.loadPromise = YjsSyncService.loadDocumentState({ userId, metadata, doc })
+		let userAccessLevel: 'read' | 'write'
 		try {
-			await metadata.loadPromise
-			if (!metadata.isLoaded) {
-				throw new Error(`Failed to load document state`)
-			}
+			userAccessLevel = await YjsSyncService.handleConnection({ userId, worldId, metadata })
 		} catch (error) {
 			Logger.yjsError(docName, `Failed to load initial state:`, error)
 			documentMetadata.delete(docName)
@@ -104,6 +102,7 @@ export const YjsSyncService = {
 		})
 
 		Logger.yjsInfo(docName, `Document ready`)
+		return { accessLevel: userAccessLevel }
 	},
 
 	loadDocumentState: async ({
@@ -172,6 +171,38 @@ export const YjsSyncService = {
 				await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
 			}
 		}
+	},
+
+	getUserAccessLevel: async ({ userId, worldId }: { userId: string; worldId: string }) => {
+		const userData = await RheaService.getUserAccessLevel({ worldId, userId })
+		if (userData.write) {
+			return 'write'
+		} else if (userData.read) {
+			return 'read'
+		}
+		throw new Error('User does not have required access level')
+	},
+
+	async handleConnection({
+		userId,
+		worldId,
+		metadata,
+	}: {
+		userId: string
+		worldId: string
+		metadata: DocumentMetadata
+	}) {
+		const accessLevelPromise = YjsSyncService.getUserAccessLevel({ userId, worldId })
+		const [accessLevel] = await Promise.all([accessLevelPromise, metadata.loadPromise])
+
+		if (!metadata.lastWritingUserId) {
+			metadata.lastWritingUserId = accessLevel === 'write' ? userId : null
+		}
+		const isInvalidated = documentMetadata.get(metadata.docName) !== metadata
+		if (!metadata.isLoaded || isInvalidated) {
+			throw new Error(`Failed to load document state`)
+		}
+		return accessLevel
 	},
 
 	/**

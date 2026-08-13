@@ -121,7 +121,7 @@ export function RichTextEditorComponent({
 				)
 			},
 		},
-		[collabReady],
+		[extensions],
 	)
 
 	const currentValue = useRef(value)
