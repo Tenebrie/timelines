@@ -1,0 +1,24 @@
+{
+	"name": "echo-desktop",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"description": "Standalone desktop shell for Neverkin",
+	"main": "src/electron-main.cjs",
+	"scripts": {
+		"build": "node scripts/build-upstream.mjs && node scripts/package.mjs",
+		"build:upstream": "node scripts/build-upstream.mjs",
+		"package": "node scripts/package.mjs",
+		"start:headless": "node src/launcher.mjs",
+		"start": "electron ."
+	},
+	"dependencies": {
+		"@electric-sql/pglite": "^0.5.4",
+		"pglite-prisma-adapter": "^0.7.2",
+		"wasmoon": "^1.16.0"
+	},
+	"devDependencies": {
+		"electron": "^43.4.0",
+		"esbuild": "^0.28.2"
+	}
+}
