@@ -65,10 +65,14 @@ cannot go below that. The path to a drastically smaller package is swapping
 the shell for a system-webview wrapper (Tauri-style) with a Node sidecar for
 the services — the launcher/bundles are already shell-agnostic.
 
-Data lives in `~/.neverkin` (override with `NEVERKIN_DESKTOP_DATA`). Port defaults to
-`8190` (`NEVERKIN_DESKTOP_PORT`). New migrations merged from other branches are applied
+Data lives in the platform's user-data location (override with `NEVERKIN_DESKTOP_DATA`):
+`$XDG_DATA_HOME/neverkin` (default `~/.local/share/neverkin`) on Linux,
+`%LOCALAPPDATA%\Neverkin` on Windows, `~/Library/Application Support/Neverkin` on macOS.
+Port defaults to `8190`
+(`NEVERKIN_DESKTOP_PORT`). New migrations merged from other branches are applied
 automatically on next launch. Console output is mirrored to `<data dir>/log.txt`, so shim
-drift warnings and crashes survive in packaged builds where nobody sees a console.
+drift warnings and crashes survive in packaged builds where nobody sees a console; the log
+rotates to `log.prev.txt` past 5 MB, with a 20 MB per-session cap as a runaway backstop.
 
 ### Single-connection concurrency
 

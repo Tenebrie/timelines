@@ -1,0 +1,114 @@
+# Builds the redistributable Neverkin Desktop packages (app/echo-desktop).
+#
+# Runs on every release tag push (parallel with the prod docker deployment
+# ritual) and on demand via workflow_dispatch. Every run uploads the archives
+# as workflow artifacts; tag runs additionally create a GitHub Release with
+# the archives attached.
+name: Desktop Build
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: windows-latest
+            platform: win32
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      # ts-shared is a real symlink in each service — without this, Windows
+      # checkout writes plain text files and every build fails cryptically
+      - name: Enable git symlinks
+        run: git config --global core.symlinks true
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history so git describe finds the release tag
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # The root postinstall uses POSIX env syntax (VAR=x cmd), which cmd.exe
+      # rejects — run npm lifecycle scripts through Git Bash instead
+      - name: Use bash for npm scripts
+        if: runner.os == 'Windows'
+        run: npm config set script-shell bash
+
+      - name: Install dependencies
+        run: npm install
+        env:
+          HUSKY: 0
+
+      - name: Build and package
+        run: npm run build
+        working-directory: app/echo-desktop
+
+      - name: Smoke test packaged app
+        if: runner.os == 'Linux'
+        working-directory: app/echo-desktop/dist/package/echo-desktop-linux-x64
+        run: |
+          export NEVERKIN_DESKTOP_DATA="$RUNNER_TEMP/smoke-data"
+          export NEVERKIN_DESKTOP_PORT=18190
+          xvfb-run -a ./neverkin --no-sandbox &
+          APP_PID=$!
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null http://127.0.0.1:18190/health && break
+            sleep 1
+          done
+          curl -sf -o /dev/null http://127.0.0.1:18190/health
+          curl -sf -X POST http://127.0.0.1:18190/api/auth/login \
+            -H 'content-type: application/json' \
+            -d '{"email":"admin@localhost","password":"q"}' | grep -q '"level":"Admin"'
+          echo "smoke test passed"
+          kill $APP_PID
+
+      - name: Stamp archives with release version
+        id: version
+        run: |
+          VERSION=$(git describe --tags --always)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          cd app/echo-desktop/dist/package
+          for archive in echo-desktop-*.zip echo-desktop-*.tar.gz; do
+            [ -e "$archive" ] || continue
+            mv "$archive" "neverkin-desktop-$VERSION-${archive#echo-desktop-}"
+          done
+          ls -la
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: neverkin-desktop-${{ steps.version.outputs.version }}-${{ matrix.platform }}-x64
+          path: app/echo-desktop/dist/package/neverkin-desktop-*
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4 # gh needs a repo context
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Create GitHub Release with archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" --generate-notes artifacts/* ||
+            gh release upload "$GITHUB_REF_NAME" artifacts/* --clobber

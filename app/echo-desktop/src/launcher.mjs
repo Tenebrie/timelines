@@ -1,5 +1,14 @@
 import { randomBytes } from 'node:crypto'
-import { createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import {
+	createWriteStream,
+	existsSync,
+	mkdirSync,
+	readFileSync,
+	renameSync,
+	rmSync,
+	statSync,
+	writeFileSync,
+} from 'node:fs'
 import { register } from 'node:module'
 import os from 'node:os'
 import { join } from 'node:path'
@@ -29,6 +38,9 @@ import { startS3Server } from './s3-shim.mjs'
 // The services are resolved as siblings of this package's directory. In the
 // repo that parent is <repo>/app; in a packaged build it is the staging dir
 // (resources/) with the same folder names — one layout rule for both.
+const LOG_ROTATE_BYTES = 5 * 1024 * 1024
+const LOG_SESSION_CAP_BYTES = 20 * 1024 * 1024
+
 const servicesRoot = join(fileURLToPath(new URL('.', import.meta.url)), '..', '..')
 const rheaDir = join(servicesRoot, 'rhea-backend')
 const calliopeDir = join(servicesRoot, 'calliope-websockets')
@@ -63,7 +75,7 @@ function ensureEnvironment(dataDir) {
 }
 
 export async function startDesktopServices() {
-	const dataDir = process.env.NEVERKIN_DESKTOP_DATA || join(os.homedir(), '.neverkin')
+	const dataDir = process.env.NEVERKIN_DESKTOP_DATA || defaultDataDir()
 	const port = Number(process.env.NEVERKIN_DESKTOP_PORT || 8190)
 
 	mkdirSync(dataDir, { recursive: true })
@@ -163,14 +175,39 @@ function failLoudly(kind) {
 	}
 }
 
+/** Per-platform user data location; overridable with NEVERKIN_DESKTOP_DATA. */
+function defaultDataDir() {
+	if (process.platform === 'win32') {
+		// Local, not Roaming: the database and assets can grow large and
+		// should not sync across domain profiles
+		return join(process.env.LOCALAPPDATA || join(os.homedir(), 'AppData', 'Local'), 'Neverkin')
+	}
+	if (process.platform === 'darwin') {
+		return join(os.homedir(), 'Library', 'Application Support', 'Neverkin')
+	}
+	return join(process.env.XDG_DATA_HOME || join(os.homedir(), '.local', 'share'), 'neverkin')
+}
+
 function mirrorConsoleToFile(logPath) {
+	if (existsSync(logPath) && statSync(logPath).size > LOG_ROTATE_BYTES) {
+		const previousPath = logPath.replace(/\.txt$/, '.prev.txt')
+		rmSync(previousPath, { force: true })
+		renameSync(logPath, previousPath)
+	}
 	const stream = createWriteStream(logPath, { flags: 'a' })
+	let written = 0
 	for (const level of ['log', 'info', 'warn', 'error']) {
 		const original = console[level].bind(console)
 		console[level] = (...args) => {
 			original(...args)
+			if (written > LOG_SESSION_CAP_BYTES) return
 			const line = args.map((arg) => (typeof arg === 'string' ? arg : inspect(arg))).join(' ')
-			stream.write(`${new Date().toISOString()} [${level}] ${line}\n`)
+			written += line.length
+			stream.write(
+				written > LOG_SESSION_CAP_BYTES
+					? `${new Date().toISOString()} [warn] [echo-desktop] log capped for this session\n`
+					: `${new Date().toISOString()} [${level}] ${line}\n`,
+			)
 		}
 	}
 }

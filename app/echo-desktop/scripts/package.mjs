@@ -90,7 +90,14 @@ if (process.platform === 'darwin') {
 }
 const electronDist = join(desktopDir, 'node_modules', 'electron', 'dist')
 if (!existsSync(electronDist)) {
-	throw new Error('[package] electron is not installed — run npm install in app/echo-desktop first')
+	// npm tree rewrites and CI caches restore the electron package without
+	// running its postinstall (which downloads the actual binary) — self-heal
+	const installScript = join(desktopDir, 'node_modules', 'electron', 'install.js')
+	if (!existsSync(installScript)) {
+		throw new Error('[package] electron is not installed — run npm install in app/echo-desktop first')
+	}
+	console.info('[package] electron binary missing, downloading...')
+	run(`node ${installScript}`, desktopDir)
 }
 copy(electronDist, stage)
 rmSync(join(resources, 'default_app.asar'), { force: true })
@@ -139,15 +146,20 @@ copy(join(repoRoot, 'app', 'styx-frontend', 'build'), join(resources, 'styx-fron
 
 // 6. User-facing readme + archive
 const runCommand = process.platform === 'win32' ? 'neverkin.exe' : './neverkin'
+const dataLocation = process.platform === 'win32' ? '%LOCALAPPDATA%\\Neverkin' : '~/.local/share/neverkin'
 writeFileSync(
 	join(stage, 'README.txt'),
 	[
 		'Neverkin Desktop',
 		'',
-		`Run ${runCommand} to start. All data is stored locally in ~/.neverkin`,
+		`Run ${runCommand} to start. All data is stored locally in ${dataLocation}`,
 		'— nothing leaves your machine.',
 		...(process.platform === 'linux'
-			? ['', 'If the app does not start (sandbox error on some Linux setups), run:', '  ./neverkin --no-sandbox']
+			? [
+					'',
+					'If the app does not start (sandbox error on some Linux setups), run:',
+					'  ./neverkin --no-sandbox',
+				]
 			: []),
 		'',
 	].join('\n'),
