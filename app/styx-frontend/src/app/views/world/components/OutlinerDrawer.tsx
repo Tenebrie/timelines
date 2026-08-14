@@ -12,7 +12,7 @@ import usePersistentState from '@/app/hooks/usePersistentState'
 
 export function OutlinerDrawer() {
 	const minHeight = 300
-	const maxHeight = window.innerWidth * 0.6
+	const maxHeight = window.innerWidth * 0.8
 	const [preferences, setPreferences] = usePersistentState(
 		'mainWorldState/v1',
 		ResizeGrabberPreferencesSchema,
