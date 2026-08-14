@@ -11,6 +11,8 @@ import { ActorDetails } from '@/app/features/entityEditor/actor/details/ActorDet
 import { ArticleDetails } from '@/app/features/entityEditor/article/details/ArticleDetails'
 import { EventDetails } from '@/app/features/entityEditor/event/details/EventDetails'
 import { TagDetails } from '@/app/features/entityEditor/tag/details/TagDetails'
+import { useDocumentScrollMemory } from '@/app/features/richTextEditor/hooks/useDocumentScrollMemory'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useMobileLayout } from '@/app/hooks/useMobileLayout'
 import { WikiOutlinerDrawer } from '@/app/views/world/components/WikiOutlinerDrawer'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
@@ -22,6 +24,7 @@ import { ArticleListHeader } from './articleList/ArticleListHeader'
 import { useCurrentArticle } from './hooks/useCurrentArticle'
 
 export const Wiki = () => {
+	const theme = useCustomTheme()
 	const isArticle = useCheckRouteMatch('/world/$worldId/wiki/$articleId')
 	const { isMobile } = useMobileLayout()
 
@@ -85,19 +88,12 @@ export const Wiki = () => {
 				<Stack
 					sx={{
 						flex: 1,
-						paddingTop: isMobile ? '12px' : '24px',
-						paddingX: isMobile ? '8px' : 2,
-						alignItems: 'center',
-						height: isMobile ? '100%' : 'calc(100% - 24px)',
+						height: '100%',
 						width: isMobile ? 'calc(100% - 16px)' : undefined,
-						overflowY: 'auto',
+						background: theme.custom.palette.background.textEditor,
 					}}
 				>
-					{isArticle && (
-						<Stack gap={1} height={'calc(100%)'} sx={{ maxWidth: 1278, width: '100%', flex: 1 }}>
-							<Box height={'calc(100% - 1px)'}>{<Outlet />}</Box>
-						</Stack>
-					)}
+					{isArticle && <Outlet />}
 				</Stack>
 			)}
 		</Stack>
@@ -108,6 +104,15 @@ export function CurrentArticleDetails() {
 	const { article } = useCurrentArticle()
 	const navigate = useStableNavigate({ from: '/world/$worldId/wiki/$articleId' })
 	const { isMobile } = useMobileLayout()
+
+	// Called unconditionally (before the `!article` return below) so the
+	// container ref only ever attaches to a DOM node once this component is
+	// actually rendering the real content it belongs to — that's what
+	// guarantees the restore effect can't fire against stale/absent content.
+	const { containerRef, onScroll } = useDocumentScrollMemory(
+		article ? `wiki-page:${article.id}` : undefined,
+		article?.id,
+	)
 
 	if (!article) {
 		return null
@@ -129,17 +134,48 @@ export function CurrentArticleDetails() {
 		</Stack>
 	) : undefined
 
-	switch (article.type) {
-		case 'article':
-			return (
-				<ArticleDetails article={article.entity} isWikiTab titleProps={{ startAdornment }} surface="wiki" />
-			)
-		case 'actor':
-			return <ActorDetails editedActor={article.entity} surface="wiki" />
-		case 'event':
-			return <EventDetails editedEvent={article.entity} surface="wiki" />
-		case 'tag':
-			return <TagDetails editedTag={article.entity} />
-	}
-	return null
+	const content = (() => {
+		switch (article.type) {
+			case 'article':
+				return (
+					<ArticleDetails article={article.entity} isWikiTab titleProps={{ startAdornment }} surface="wiki" />
+				)
+			case 'actor':
+				return <ActorDetails editedActor={article.entity} surface="wiki" />
+			case 'event':
+				return <EventDetails editedEvent={article.entity} surface="wiki" />
+			case 'tag':
+				return <TagDetails editedTag={article.entity} />
+		}
+		return null
+	})()
+
+	return (
+		<Box
+			ref={containerRef}
+			onScroll={onScroll}
+			sx={{
+				height: '100%',
+				width: '100%',
+				paddingX: isMobile ? '8px' : 2,
+				boxSizing: 'border-box',
+				overflowY: 'auto',
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+			}}
+		>
+			<Stack
+				gap={1}
+				sx={{
+					maxWidth: 1278,
+					width: '100%',
+					flex: 1,
+					paddingTop: isMobile ? '12px' : '24px',
+				}}
+			>
+				{content}
+			</Stack>
+		</Box>
+	)
 }

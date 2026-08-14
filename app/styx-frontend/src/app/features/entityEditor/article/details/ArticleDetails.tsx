@@ -27,22 +27,24 @@ export const ArticleDetails = ({ article, titleProps, isWikiTab, surface }: Prop
 	})
 
 	const scrollbars = useBrowserSpecificScrollbars()
+	const fluidHeight = surface === 'wiki'
 
 	return (
 		<Stack
 			gap={1}
 			sx={{
-				height: 'calc(100% - 1px)',
+				height: fluidHeight ? 'auto' : 'calc(100% - 1px)',
 				...scrollbars,
 			}}
 		>
 			<EditableTitle value={article.name} onSave={onSave} {...titleProps} />
 			<Divider />
-			<Box flexGrow={1} height={0}>
+			<Box flexGrow={1} height={fluidHeight ? 'auto' : 0}>
 				<EntityEditorTabs
 					contentTab={<ArticleDescription article={article} surface={surface} />}
 					backlinksTab={<ArticleBacklinks articleId={article.id} />}
 					isWikiTab={isWikiTab}
+					fluidHeight={fluidHeight}
 				/>
 			</Box>
 		</Stack>

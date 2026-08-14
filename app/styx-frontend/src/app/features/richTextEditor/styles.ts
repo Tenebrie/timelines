@@ -3,9 +3,9 @@ import styled from 'styled-components'
 
 import { CustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
-export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
+export const StyledContainer = styled(Box)<{ $theme: CustomTheme; $fluid?: boolean }>`
 	flex: 0;
-	height: 100%;
+	height: ${({ $fluid }) => ($fluid ? 'auto' : '100%')};
 
 	.tiptap p.is-editor-empty:first-child::before {
 		position: absolute;

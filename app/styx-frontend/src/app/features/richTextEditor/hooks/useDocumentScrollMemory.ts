@@ -7,7 +7,6 @@ const SAVE_THROTTLE_MS = 300
 
 export function useDocumentScrollMemory(documentId: string | undefined, restoreKey: unknown) {
 	const containerRef = useRef<HTMLDivElement | null>(null)
-
 	const isRestoring = useRef(false)
 
 	useLayoutEffect(() => {

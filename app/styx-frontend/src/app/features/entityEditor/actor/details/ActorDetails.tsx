@@ -40,19 +40,22 @@ export function ActorDetailsComponent({ editedActor, surface }: Props) {
 		},
 	})
 
+	const fluidHeight = surface === 'wiki'
+
 	return (
 		<Stack
 			gap={1}
 			sx={{
-				height: '100%',
+				height: fluidHeight ? 'auto' : '100%',
 				...useBrowserSpecificScrollbars(),
 			}}
 		>
 			<ActorTitle draft={draft} />
 			<Divider />
-			<Box flexGrow={1} height={0} sx={{ marginRight: 0 }}>
+			<Box flexGrow={1} height={fluidHeight ? 'auto' : 0} sx={{ marginRight: 0 }}>
 				<EntityEditorTabs
 					contentTab={<ActorDescription actor={actor} surface={surface} />}
+					fluidHeight={fluidHeight}
 					illustrationTab={
 						<Stack gap={2} sx={{ height: '100%', overflow: 'auto', marginRight: -0.5 }}>
 							<Stack gap={2} sx={{ marginRight: 2 }}>

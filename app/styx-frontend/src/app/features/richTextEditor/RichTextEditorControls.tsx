@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { Editor } from '@tiptap/react'
@@ -5,6 +6,7 @@ import { memo } from 'react'
 
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 
+import { useCustomTheme } from '../theming/hooks/useCustomTheme'
 import { BlockquoteButton } from './components/controls/BlockquoteButton'
 import { BoldButton } from './components/controls/BoldButton'
 import { BulletListButton } from './components/controls/BulletListButton'
@@ -23,29 +25,31 @@ import { UnderlineButton } from './components/controls/UnderlineButton'
 type Props = {
 	editor: Editor | null
 	allowReadMode?: boolean
+	sticky?: boolean
 }
 
 export const RichTextEditorControls = memo(RichTextEditorControlsComponent)
 
-export function RichTextEditorControlsComponent({ editor }: Props) {
+export function RichTextEditorControlsComponent({ editor, sticky }: Props) {
 	const { isReadOnly } = useIsReadOnly()
+	const theme = useCustomTheme()
 
 	if (!editor) {
 		return null
 	}
 
-	return (
+	const controls = (
 		<Paper
 			sx={{
-				borderRadius: '6px 6px 0 0',
+				borderRadius: '6px 6px 6px 6px',
 				backgroundImage: (theme) =>
 					theme.palette.mode === 'dark'
 						? 'linear-gradient(rgba(255,255,255,0.043), rgba(255,255,255,0.043))'
 						: 'none',
 				boxShadow: (theme) =>
 					theme.palette.mode === 'light'
-						? '0 2px 4px -1px rgba(0,0,0,0.07), 0 1px 2px -1px rgba(0,0,0,0.02)'
-						: 'none',
+						? '0 2px 4px -1px rgba(0,0,0,0.4)'
+						: '0 2px 4px -1px rgba(0,0,0,0.4)',
 			}}
 		>
 			<Stack direction="row" justifyContent="space-between">
@@ -72,5 +76,24 @@ export function RichTextEditorControlsComponent({ editor }: Props) {
 				</Stack>
 			</Stack>
 		</Paper>
+	)
+
+	if (!sticky) {
+		return controls
+	}
+
+	return (
+		<Box
+			sx={{
+				position: 'sticky',
+				top: 0,
+				zIndex: 2,
+				marginTop: '-8px',
+				paddingTop: '8px',
+				background: theme.custom.palette.background.textEditor,
+			}}
+		>
+			{controls}
+		</Box>
 	)
 }

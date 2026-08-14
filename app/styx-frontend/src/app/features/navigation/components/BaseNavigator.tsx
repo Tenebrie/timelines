@@ -28,7 +28,7 @@ import { WorldSelectorButton } from './WorldSelectorButton'
 const Container = styled(Paper)<{ $theme: CustomTheme }>`
 	width: calc(100% - 16px);
 	background: ${(props) => props.$theme.custom.palette.background.navigator};
-	box-shadow: 0 4px 2px -2px ${(props) => props.$theme.custom.palette.background.navigator};
+	box-shadow: 'none';
 	display: flex;
 	justify-content: space-between;
 	border-radius: 0 !important;

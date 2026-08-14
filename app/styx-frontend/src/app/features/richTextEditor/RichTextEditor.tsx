@@ -89,14 +89,22 @@ export function RichTextEditorComponent({
 	const { handlePaste } = useEditorPasteHandler()
 
 	const showPreview = !!collaboration && !collabReady
-	const previewEditor = useEditor(
-		{
-			content: value,
-			editable: false,
-			extensions: EditorExtensions,
-		},
-		[collaboration?.documentId],
-	)
+	const previewEditor = useEditor({
+		content: value,
+		editable: false,
+		extensions: EditorExtensions,
+	})
+
+	const previewSyncedDocId = useRef(collaboration?.documentId)
+	if (
+		previewEditor &&
+		!previewEditor.isDestroyed &&
+		collaboration?.documentId &&
+		previewSyncedDocId.current !== collaboration.documentId
+	) {
+		previewEditor.chain().setContent(value).setTextSelection(0).run()
+		previewSyncedDocId.current = collaboration.documentId
+	}
 
 	const editor = useEditor(
 		{
@@ -149,10 +157,12 @@ export function RichTextEditorComponent({
 		},
 	})
 
+	const isPageScroll = surface === 'wiki'
+
 	return (
 		<StyledContainer
 			sx={{
-				borderRadius: '6px',
+				borderRadius: isPageScroll ? 0 : '6px',
 				minHeight: '128px',
 				background: isReadOnly ? '' : theme.custom.palette.background.textEditor,
 				display: 'flex',
@@ -160,16 +170,21 @@ export function RichTextEditorComponent({
 			}}
 			data-testid="RichTextEditor"
 			$theme={theme}
+			$fluid={isPageScroll}
 			onBlur={() => {
 				onBlur?.()
 				onChangeThrottled.current.cancel()
 			}}
 		>
-			<RichTextEditorControls editor={displayedEditor} />
+			<RichTextEditorControls editor={displayedEditor} sticky={isPageScroll} />
 			<Box
-				ref={scrollContainerRef}
-				onScroll={onScroll}
-				sx={{ position: 'relative', flex: 1, minHeight: 0, overflowY: 'auto', ...scrollbars }}
+				ref={isPageScroll ? undefined : scrollContainerRef}
+				onScroll={isPageScroll ? undefined : onScroll}
+				sx={
+					isPageScroll
+						? { position: 'relative' }
+						: { position: 'relative', flex: 1, minHeight: 0, overflowY: 'auto', ...scrollbars }
+				}
 			>
 				{showPreview && previewEditor ? (
 					<EditorContentBox

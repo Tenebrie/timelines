@@ -32,19 +32,22 @@ export function EventDetailsComponent({ editedEvent, autoFocus, surface }: Props
 		draft,
 	})
 
+	const fluidHeight = surface === 'wiki'
+
 	return (
 		<Stack
 			gap={1}
 			sx={{
-				height: '100%',
+				height: fluidHeight ? 'auto' : '100%',
 				...useBrowserSpecificScrollbars(),
 			}}
 		>
 			<EventTitle event={event} draft={draft} />
 			<Divider />
-			<Box flexGrow={1} height={0}>
+			<Box flexGrow={1} height={fluidHeight ? 'auto' : 0}>
 				<EntityEditorTabs
 					contentTab={<EventDescription event={event} autoFocus={autoFocus} surface={surface} />}
+					fluidHeight={fluidHeight}
 					illustrationTab={
 						<Stack gap={2} sx={{ height: '100%', overflow: 'auto', marginLeft: 1, marginRight: -0.5 }}>
 							<Stack gap={2} sx={{ marginRight: 2 }}>
