@@ -8,11 +8,10 @@ import { worldSlice } from '@/app/views/world/WorldSlice'
 
 type Props = {
 	event: WorldEvent
-	autoFocus?: boolean
 	surface?: string
 }
 
-export const EventDescription = ({ event, autoFocus, surface }: Props) => {
+export const EventDescription = ({ event, surface }: Props) => {
 	const { updateEvent } = worldSlice.actions
 	const dispatch = useDispatch()
 
@@ -34,7 +33,6 @@ export const EventDescription = ({ event, autoFocus, surface }: Props) => {
 			onChange={({ plainText, richText }) => {
 				debouncedUpdate.current(event.id, plainText, richText)
 			}}
-			autoFocus={autoFocus}
 			surface={surface}
 			collaboration={{
 				documentId: event.id,

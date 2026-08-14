@@ -29,10 +29,6 @@ type Props = {
 		documentId: string
 	}
 	autoFocus?: boolean
-	// Identifies which differently-sized UI surface this editor is mounted in
-	// (e.g. the full-page Wiki layout vs. the EditEventModal popup) — the same
-	// document can be rendered in both, and per-surface state (like remembered
-	// scroll position) isn't meaningful across containers of different sizes.
 	surface?: string
 }
 

@@ -33,7 +33,6 @@ export const ActorDescription = ({ actor, surface }: Props) => {
 			onChange={({ plainText, richText }) => {
 				debouncedUpdate.current(actor.id, plainText, richText)
 			}}
-			autoFocus
 			surface={surface}
 			collaboration={{
 				entityType: 'actor',

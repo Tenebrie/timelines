@@ -30,6 +30,8 @@ test.describe('Timeline View', () => {
 
 		// Edit event
 		await page.waitForTimeout(250)
+		await textbox.click()
+		await textbox.press('End')
 		await textbox.pressSequentially(' - extra text', { delay: 100 })
 		await expect(textbox).toHaveText('Hello world - extra text')
 		await page.waitForTimeout(250)

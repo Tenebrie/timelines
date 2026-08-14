@@ -105,10 +105,6 @@ export function CurrentArticleDetails() {
 	const navigate = useStableNavigate({ from: '/world/$worldId/wiki/$articleId' })
 	const { isMobile } = useMobileLayout()
 
-	// Called unconditionally (before the `!article` return below) so the
-	// container ref only ever attaches to a DOM node once this component is
-	// actually rendering the real content it belongs to — that's what
-	// guarantees the restore effect can't fire against stale/absent content.
 	const { containerRef, onScroll } = useDocumentScrollMemory(
 		article ? `wiki-page:${article.id}` : undefined,
 		article?.id,

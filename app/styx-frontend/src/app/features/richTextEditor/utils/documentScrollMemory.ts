@@ -19,7 +19,7 @@ function writeEntries(entries: ScrollEntry[]) {
 	try {
 		sessionStorage.setItem(STORAGE_KEY, JSON.stringify(entries))
 	} catch {
-		// sessionStorage can not available
+		// sessionStorage can be unavailable
 	}
 }
 
