@@ -201,7 +201,7 @@ export const customDarkTheme: typeof customLightTheme = {
 			soft: 'rgb(180 170 220 / 8%)',
 			softer: 'rgb(180 170 220 / 4%)',
 			softest: 'rgb(180 170 220 / 2%)',
-			textEditor: 'hsl(252, 17%, 14%)',
+			textEditor: 'hsl(252, 25%, 14%)',
 			timeline: '#0f0e1a',
 			timelineHeader: '#16142a',
 			navigator: '#16142a',
