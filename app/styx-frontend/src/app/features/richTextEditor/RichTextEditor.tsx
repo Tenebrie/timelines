@@ -5,6 +5,7 @@ import { memo, useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
 import { getWorldState } from '../../views/world/WorldSliceSelectors'
 import { useEventBusSubscribe } from '../eventBus'
@@ -40,9 +41,9 @@ export const RichTextEditor = memo(RichTextEditorComponent)
 
 export function RichTextEditorComponent({ value, onChange, onBlur, collaboration, autoFocus }: Props) {
 	const theme = useCustomTheme()
+	const scrollbars = useBrowserSpecificScrollbars()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 
-	// Enable collaboration if params provided
 	const { extension: collaborationExtension, isReady: collabReady } = useCollaboration({
 		enabled: !!collaboration,
 		documentId: collaboration?.documentId ?? '',
@@ -74,12 +75,20 @@ export function RichTextEditorComponent({ value, onChange, onBlur, collaboration
 
 	const { handlePaste } = useEditorPasteHandler()
 
+	const showPreview = !!collaboration && !collabReady
+	const previewEditor = useEditor(
+		{
+			content: value,
+			editable: false,
+			extensions: EditorExtensions,
+		},
+		[collaboration?.documentId],
+	)
+
 	const editor = useEditor(
 		{
-			// content: value,
-			// editable: !isReadOnly && (!collaboration || collabReady),
 			extensions,
-			autofocus: false,
+			autofocus: autoFocus,
 			editorProps: {
 				handlePaste,
 			},
@@ -93,23 +102,11 @@ export function RichTextEditorComponent({ value, onChange, onBlur, collaboration
 					richText,
 				})
 			},
-			onCreate({ editor }) {
-				if (!autoFocus) {
-					return
-				}
-
-				requestIdleCallback(
-					() => {
-						if (!editor.isDestroyed) {
-							editor.commands.focus('end', { scrollIntoView: false })
-						}
-					},
-					{ timeout: 100 },
-				)
-			},
 		},
 		[extensions],
 	)
+
+	const displayedEditor = showPreview && previewEditor ? previewEditor : editor
 
 	const currentValue = useRef(value)
 
@@ -150,14 +147,23 @@ export function RichTextEditorComponent({ value, onChange, onBlur, collaboration
 				onChangeThrottled.current.cancel()
 			}}
 		>
-			<RichTextEditorControls editor={editor} />
-			<Box sx={{ position: 'relative', flex: 1, minHeight: 0 }}>
-				{editor && (
+			<RichTextEditorControls editor={displayedEditor} />
+			<Box sx={{ position: 'relative', flex: 1, minHeight: 0, overflowY: 'auto', ...scrollbars }}>
+				{showPreview && previewEditor ? (
 					<EditorContentBox
 						className="content"
-						editor={editor}
+						editor={previewEditor}
 						mode={isReadOnly ? 'read' : 'edit'}
+						readOnly={isReadOnly}
 					></EditorContentBox>
+				) : (
+					editor && (
+						<EditorContentBox
+							className="content"
+							editor={editor}
+							mode={isReadOnly ? 'read' : 'edit'}
+						></EditorContentBox>
+					)
 				)}
 			</Box>
 			<RichTextEditorQuickSelect editor={editor} />

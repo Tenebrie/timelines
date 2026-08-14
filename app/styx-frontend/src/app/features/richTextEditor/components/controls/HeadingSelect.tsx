@@ -29,6 +29,7 @@ export function HeadingSelect({ editor }: Props) {
 		selector: (ctx) =>
 			([1, 2, 3] as const).find((level) => ctx.editor.isActive('heading', { level })) ?? null,
 	})
+
 	const activeOption = HeadingOptions.find((o) => o.level === activeLevel) ?? HeadingOptions[0]
 
 	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)

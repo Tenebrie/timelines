@@ -24,7 +24,6 @@ import { useCloseMenusOnRightClick } from './hooks/useCloseMenusOnRightClick'
 import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
 import { DeleteAccountModal } from './views/profile/modals/DeleteAccountModal'
 import { DeleteAssetModal } from './views/profile/modals/DeleteAssetModal'
-import { MentionPortalHost } from './views/world/components/MentionPortalHost'
 import { TimelineZoomReporter } from './views/world/views/timeline/components/TimelineZoomReporter'
 
 const Container = styled.div`
@@ -93,7 +92,6 @@ const App = () => {
 							<LostConnectionAlert server="rhea" />
 							<LostConnectionAlert server="calliope" />
 							<AnnouncementSnackbar />
-							<MentionPortalHost />
 						</CustomThemeOverrides>
 					</CustomThemeProvider>
 					<NavigationReceiverWrapper />
