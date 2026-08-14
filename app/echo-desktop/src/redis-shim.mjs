@@ -1,5 +1,9 @@
 import { EventEmitter } from 'node:events'
 
+import fengari from 'fengari'
+
+const { lua, lauxlib, lualib, to_luastring } = fengari
+
 /**
  * In-memory drop-in replacement for the `redis` package, injected via the ESM
  * loader hook (see loader-hooks.mjs). Rhea and Calliope run in the same process
@@ -172,198 +176,56 @@ function dispatch(store, command, args) {
 }
 
 /**
- * EVAL support. Primary path: a pure-JS interpreter for the Lua subset the
- * upstream scripts use (redis.call statements, local assignments, if/then
- * blocks, == comparisons, tonumber, return). WASM Lua (wasmoon) is only a
- * lazy fallback for scripts outside that subset — sustained wasmoon
- * invocation segfaults Electron's V8, so it must stay off the hot path.
+ * EVAL support: fengari, a complete Lua VM written in pure JavaScript, so
+ * upstream scripts run verbatim with no subset restrictions. Pure JS is a
+ * hard requirement here — EVAL sits on the per-keystroke Yjs path, and
+ * sustained WASM-Lua invocation (wasmoon) segfaulted Electron's V8. Each
+ * call gets a fresh Lua state with KEYS/ARGV globals and a redis.call
+ * bridge into the synchronous dispatcher above, mirroring Redis's reply
+ * conversions (nil reply -> Lua false; Lua false -> nil, true -> 1,
+ * numbers truncated to integers).
  */
-const UNSUPPORTED = Symbol('unsupported-lua')
-const RETURN = Symbol('lua-return')
-
-function evalLuaSubset(store, script, keys, argv) {
-	const lines = script
-		.split('\n')
-		.map((line) => line.replace(/--.*$/, '').trim())
-		.filter((line) => line.length > 0)
-
-	const call = (command, args) => {
-		const result = dispatch(store, command, args)
-		// Redis maps nil replies to Lua false
-		return result === null ? false : result
-	}
-
-	const vars = new Map()
-
-	function splitTopLevel(text, separator) {
-		const parts = []
-		let depth = 0
-		let inString = false
-		let current = ''
-		for (let i = 0; i < text.length; i++) {
-			const ch = text[i]
-			if (inString) {
-				current += ch
-				if (ch === "'") inString = false
-				continue
-			}
-			if (ch === "'") inString = true
-			else if (ch === '(' || ch === '[') depth++
-			else if (ch === ')' || ch === ']') depth--
-			if (depth === 0 && text.startsWith(separator, i)) {
-				parts.push(current)
-				current = ''
-				i += separator.length - 1
-				continue
-			}
-			current += ch
-		}
-		parts.push(current)
-		return parts
-	}
-
-	function evalExpr(raw) {
-		const text = raw.trim()
-		const equality = splitTopLevel(text, '==')
-		if (equality.length === 2) {
-			const left = evalExpr(equality[0])
-			const right = evalExpr(equality[1])
-			if (left === UNSUPPORTED || right === UNSUPPORTED) return UNSUPPORTED
-			return left === right
-		}
-		if (equality.length > 2) return UNSUPPORTED
-		if (text === 'false') return false
-		if (text === 'true') return true
-		if (text === 'nil') return false
-		if (/^-?\d+(\.\d+)?$/.test(text)) return Number(text)
-		const stringMatch = text.match(/^'([^']*)'$/)
-		if (stringMatch) return stringMatch[1]
-		const indexMatch = text.match(/^(KEYS|ARGV)\[(\d+)\]$/)
-		if (indexMatch) {
-			const source = indexMatch[1] === 'KEYS' ? keys : argv
-			return source[Number(indexMatch[2]) - 1]
-		}
-		const tonumberMatch = text.match(/^tonumber\((.+)\)$/)
-		if (tonumberMatch) {
-			const inner = evalExpr(tonumberMatch[1])
-			return inner === UNSUPPORTED ? UNSUPPORTED : Number(inner)
-		}
-		const callMatch = text.match(/^redis\.call\((.+)\)$/)
-		if (callMatch) {
-			const args = splitTopLevel(callMatch[1], ',').map((arg) => evalExpr(arg))
-			if (args.some((arg) => arg === UNSUPPORTED)) return UNSUPPORTED
-			return call(args[0], args.slice(1))
-		}
-		if (/^[a-zA-Z_]\w*$/.test(text) && vars.has(text)) return vars.get(text)
-		return UNSUPPORTED
-	}
-
-	// Executes statements from `index` until an `end`/EOF; returns
-	// { next } or { next, result: [value] } on return, or UNSUPPORTED.
-	function execBlock(index, stopAtEnd) {
-		let i = index
-		while (i < lines.length) {
-			const line = lines[i]
-			if (stopAtEnd && line === 'end') return { next: i + 1 }
-
-			const localMatch = line.match(/^local ([a-zA-Z_]\w*) = (.+)$/)
-			if (localMatch) {
-				const value = evalExpr(localMatch[2])
-				if (value === UNSUPPORTED) return UNSUPPORTED
-				vars.set(localMatch[1], value)
-				i++
-				continue
-			}
-			const ifMatch = line.match(/^if (.+) then$/)
-			if (ifMatch) {
-				const condition = evalExpr(ifMatch[1])
-				if (condition === UNSUPPORTED) return UNSUPPORTED
-				if (condition !== false && condition !== undefined) {
-					const body = execBlock(i + 1, true)
-					if (body === UNSUPPORTED) return UNSUPPORTED
-					if (body.result) return body
-					i = body.next
-				} else {
-					// skip to the matching end
-					let depth = 1
-					let j = i + 1
-					while (j < lines.length && depth > 0) {
-						if (/^if .+ then$/.test(lines[j])) depth++
-						if (lines[j] === 'end') depth--
-						j++
-					}
-					if (depth !== 0) return UNSUPPORTED
-					i = j
-				}
-				continue
-			}
-			const returnMatch = line.match(/^return(?: (.+))?$/)
-			if (returnMatch) {
-				if (returnMatch[1] === undefined) return { next: i + 1, result: [null], [RETURN]: true }
-				const value = evalExpr(returnMatch[1])
-				if (value === UNSUPPORTED) return UNSUPPORTED
-				return { next: i + 1, result: [value === false ? null : value] }
-			}
-			if (/^redis\.call\(/.test(line)) {
-				const value = evalExpr(line)
-				if (value === UNSUPPORTED) return UNSUPPORTED
-				i++
-				continue
-			}
-			return UNSUPPORTED
-		}
-		return { next: i }
-	}
-
-	const outcome = execBlock(0, false)
-	if (outcome === UNSUPPORTED) return UNSUPPORTED
-	return outcome.result ? outcome.result[0] : null
-}
-
-/** wasmoon fallback for scripts outside the JS-interpreted subset. */
-let luaEnginePromise = null
-let luaQueue = Promise.resolve()
-let warnedWasmFallback = false
-
-async function getLuaEngine() {
-	if (!luaEnginePromise) {
-		luaEnginePromise = import('wasmoon').then(({ LuaFactory }) => new LuaFactory().createEngine())
-	}
-	return luaEnginePromise
-}
-
 function evalLua(store, script, options = {}) {
 	const keys = options.keys ?? []
 	const argv = (options.arguments ?? []).map(String)
 
-	const subsetResult = evalLuaSubset(store, script, keys, argv)
-	if (subsetResult !== UNSUPPORTED) return Promise.resolve(subsetResult)
+	const L = lauxlib.luaL_newstate()
+	try {
+		lualib.luaL_openlibs(L)
+		pushStringArray(L, keys)
+		lua.lua_setglobal(L, to_luastring('KEYS'))
+		pushStringArray(L, argv)
+		lua.lua_setglobal(L, to_luastring('ARGV'))
 
-	if (!warnedWasmFallback) {
-		warnedWasmFallback = true
-		console.warn(
-			'[echo-desktop] redis shim: EVAL script outside the JS-interpreted Lua subset, falling back to wasmoon. ' +
-				'Extend evalLuaSubset in redis-shim.mjs — sustained wasmoon use is unstable under Electron.',
-		)
-	}
-	const run = async () => {
-		const lua = await getLuaEngine()
-		lua.global.set('KEYS', keys)
-		lua.global.set('ARGV', argv)
-		lua.global.set('redis', {
-			call: (command, ...args) => {
-				const result = dispatch(store, command, args)
-				return result === null ? false : result
-			},
+		lua.lua_createtable(L, 0, 1)
+		lua.lua_pushcfunction(L, (state) => {
+			const args = []
+			for (let i = 1; i <= lua.lua_gettop(state); i++) {
+				args.push(
+					lua.lua_type(state, i) === lua.LUA_TNUMBER
+						? lua.lua_tonumber(state, i)
+						: lua.lua_tojsstring(state, i),
+				)
+			}
+			let reply
+			try {
+				reply = dispatch(store, args[0], args.slice(1))
+			} catch (error) {
+				return lauxlib.luaL_error(state, to_luastring(String(error?.message ?? error)))
+			}
+			pushReply(state, reply)
+			return 1
 		})
-		return await lua.doString(script)
+		lua.lua_setfield(L, -2, to_luastring('call'))
+		lua.lua_setglobal(L, to_luastring('redis'))
+
+		if (lauxlib.luaL_dostring(L, to_luastring(script)) !== lua.LUA_OK) {
+			throw new Error(`echo-desktop redis shim: EVAL failed: ${lua.lua_tojsstring(L, -1)}`)
+		}
+		return lua.lua_gettop(L) > 0 ? toRedisReply(L, lua.lua_gettop(L)) : null
+	} finally {
+		lua.lua_close(L)
 	}
-	const chained = luaQueue.then(run, run)
-	luaQueue = chained.then(
-		() => undefined,
-		() => undefined,
-	)
-	return chained
 }
 
 function createClientInstance() {
@@ -504,3 +366,54 @@ export function createCluster() {
 }
 
 export default { createClient, createCluster }
+
+function pushStringArray(L, values) {
+	lua.lua_createtable(L, values.length, 0)
+	values.forEach((value, index) => {
+		lua.lua_pushliteral(L, value)
+		lua.lua_rawseti(L, -2, index + 1)
+	})
+}
+
+// Redis command reply -> Lua value (nil reply arrives here as null -> false)
+function pushReply(L, reply) {
+	if (reply === null) {
+		lua.lua_pushboolean(L, false)
+	} else if (typeof reply === 'number') {
+		lua.lua_pushinteger(L, Math.trunc(reply))
+	} else if (Array.isArray(reply)) {
+		lua.lua_createtable(L, reply.length, 0)
+		reply.forEach((item, index) => {
+			pushReply(L, item)
+			lua.lua_rawseti(L, -2, index + 1)
+		})
+	} else {
+		lua.lua_pushliteral(L, String(reply))
+	}
+}
+
+// Lua return value -> Redis reply (false -> nil, true -> 1, numbers truncate)
+function toRedisReply(L, index) {
+	switch (lua.lua_type(L, index)) {
+		case lua.LUA_TBOOLEAN:
+			return lua.lua_toboolean(L, index) ? 1 : null
+		case lua.LUA_TNUMBER:
+			return Math.trunc(lua.lua_tonumber(L, index))
+		case lua.LUA_TSTRING:
+			return lua.lua_tojsstring(L, index)
+		case lua.LUA_TTABLE: {
+			const items = []
+			for (let n = 1; ; n++) {
+				lua.lua_rawgeti(L, index, n)
+				if (lua.lua_type(L, -1) === lua.LUA_TNIL) {
+					lua.lua_pop(L, 1)
+					return items
+				}
+				items.push(toRedisReply(L, lua.lua_gettop(L)))
+				lua.lua_pop(L, 1)
+			}
+		}
+		default:
+			return null
+	}
+}

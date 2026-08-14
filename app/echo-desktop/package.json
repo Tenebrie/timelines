@@ -14,8 +14,8 @@
 	},
 	"dependencies": {
 		"@electric-sql/pglite": "^0.5.4",
-		"pglite-prisma-adapter": "^0.7.2",
-		"wasmoon": "^1.16.0"
+		"fengari": "^0.1.5",
+		"pglite-prisma-adapter": "^0.7.2"
 	},
 	"devDependencies": {
 		"electron": "^43.4.0",

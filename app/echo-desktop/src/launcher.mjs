@@ -7,18 +7,20 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { inspect } from 'node:util'
 
 import { installDnsRemap } from './dns-remap.mjs'
-import { runMigrations } from './migrate.mjs'
+import { prepareDatabase } from './migrate.mjs'
+import { installPortRemap } from './port-remap.mjs'
 import { startRouter } from './router.mjs'
 
 /**
  * Boots the full Neverkin stack standalone in a single process:
  *
- *   1. Point the docker service hostnames at loopback (DNS remap).
+ *   1. Point the docker service hostnames at loopback (DNS remap) and
+ *      virtualize their hardcoded ports (port remap) so nothing collides
+ *      with other software on the machine.
  *   2. Apply Rhea's Prisma migrations to the embedded PGlite database.
  *   3. Register the ESM loader hook that swaps `redis` and
  *      `@prisma/adapter-pg` for the desktop shims.
- *   4. Import the unmodified Rhea and Calliope production builds
- *      (they bind ports 3000/3001 exactly as in docker).
+ *   4. Import the unmodified Rhea and Calliope production builds.
  *   5. Serve the Styx static build + proxy /api and /live on one origin.
  *
  * Usable headless (`node src/launcher.mjs`) or from the Electron shell.
@@ -79,9 +81,12 @@ export async function startDesktopServices() {
 	process.on('uncaughtException', failLoudly('uncaught exception'))
 	ensureEnvironment(dataDir)
 	installDnsRemap()
+	// Rhea and Calliope hardcode ports 3000/3001; bind random loopback ports
+	// instead so the desktop app coexists with dev stacks and other software
+	const services = installPortRemap([3000, 3001])
 
-	console.info('[echo-desktop] applying database migrations...')
-	const migrationResult = await runMigrations(
+	console.info('[echo-desktop] preparing database...')
+	const migrationResult = await prepareDatabase(
 		join(rheaDir, 'prisma', 'migrations'),
 		process.env.NEVERKIN_PGDATA,
 	)
@@ -100,7 +105,7 @@ export async function startDesktopServices() {
 	// Rhea resolves ./dist/apiSpec.json relative to the working directory
 	process.chdir(rheaDir)
 
-	console.info(`[echo-desktop] starting Rhea (API) on :3000${useBundles ? ' [bundled]' : ''}...`)
+	console.info(`[echo-desktop] starting Rhea (API)${useBundles ? ' [bundled]' : ''}...`)
 	await import(
 		pathToFileURL(useBundles ? join(bundleDir, 'rhea.mjs') : join(rheaDir, 'dist', 'src', 'index.js'))
 	)
@@ -111,16 +116,26 @@ export async function startDesktopServices() {
 				'loader-hooks.mjs and bundle-backends.mjs (see prisma-client-wrap.mjs)',
 		)
 	}
+	const rheaPort = await services.whenBound(3000)
+	console.info(`[echo-desktop] Rhea listening on 127.0.0.1:${rheaPort}`)
 
-	console.info('[echo-desktop] starting Calliope (realtime) on :3001...')
+	console.info('[echo-desktop] starting Calliope (realtime)...')
 	await import(
 		pathToFileURL(useBundles ? join(bundleDir, 'calliope.mjs') : join(calliopeDir, 'dist', 'index.js'))
 	)
+	const calliopePort = await services.whenBound(3001)
+	console.info(`[echo-desktop] Calliope listening on 127.0.0.1:${calliopePort}`)
 
-	await startRouter({ staticRoot: styxBuildDir, port })
-	const url = `http://127.0.0.1:${port}`
+	const server = await startRouter({
+		staticRoot: styxBuildDir,
+		port,
+		rheaPort,
+		calliopePort,
+		fallbackToRandomPort: !process.env.NEVERKIN_DESKTOP_PORT,
+	})
+	const url = `http://127.0.0.1:${server.address().port}`
 	console.info(`[echo-desktop] ready: ${url}`)
-	return { url, port, dataDir }
+	return { url, port: server.address().port, dataDir }
 }
 
 const isDirectRun = process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url

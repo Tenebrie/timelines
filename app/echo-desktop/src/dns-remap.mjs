@@ -7,7 +7,7 @@ import dns from 'node:dns'
  * loopback, so resolve those hostnames to 127.0.0.1 at the DNS layer —
  * no upstream code needs to change and the docker deployment is untouched.
  */
-const LOOPBACK_HOSTS = new Set(['rhea', 'calliope', 'redis', 's3-minio', 'gatekeeper'])
+export const LOOPBACK_HOSTS = new Set(['rhea', 'calliope', 'redis', 's3-minio', 'gatekeeper'])
 
 export function installDnsRemap() {
 	const originalLookup = dns.lookup

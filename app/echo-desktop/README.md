@@ -13,10 +13,12 @@ well-defined seams:
 | Docker deployment | Desktop mode | Mechanism |
 |---|---|---|
 | PostgreSQL server | PGlite (Postgres-in-WASM) in a local data dir | ESM loader hook: `@prisma/adapter-pg` → `src/adapter-pg-shim.mjs` |
-| Redis server | In-process store + EventEmitter pub/sub, Lua via wasmoon | ESM loader hook: `redis` → `src/redis-shim.mjs` |
+| Redis server | In-process store + EventEmitter pub/sub, Lua via fengari | ESM loader hook: `redis` → `src/redis-shim.mjs` |
 | Docker DNS (`rhea`, `s3-minio`, …) | `dns.lookup` remap to 127.0.0.1 | `src/dns-remap.mjs` |
+| Fixed service ports (`:3000`, `:3001`) | Virtualized: random free loopback ports, outgoing calls rewritten to match | `src/port-remap.mjs` |
 | Gatekeeper nginx | Tiny local router: SPA + `/api` + `/live` (WS) on one origin | `src/router.mjs` |
 | `prisma migrate deploy` | Migration replayer with `_prisma_migrations` bookkeeping | `src/migrate.mjs` |
+| `prisma db seed` | Seed replica: default Admin account (admin@localhost / q), DatabaseSeeded-guarded | `src/migrate.mjs` |
 | Docker secrets | Env defaults + per-install generated JWT secret | `src/launcher.mjs` |
 
 Because PGlite is real Postgres, the entire Prisma schema (enums, arrays, BIGINT) and the full
@@ -35,6 +37,7 @@ npm run build:upstream
 npm start
 
 # 2b. Or run headless and open http://127.0.0.1:8190 in a browser
+#    (if 8190 is taken, a random free port is picked and printed)
 npm run start:headless
 
 # 3. Produce a redistributable build (folder + archive) for THIS platform
@@ -46,7 +49,7 @@ npm run package
 The packaged folder is fully self-contained (~320 MB unpacked, ~125 MB
 compressed): Electron runtime (single locale), the two backends as esbuild
 bundles with the shims compiled in, the SPA build, the migrations, and the few
-packages that must stay external (bcrypt native, PGlite/wasmoon WASM). sharp
+packages that must stay external (bcrypt native, PGlite WASM). sharp
 and y-leveldb are stubbed out at bundle time — both serve features that are
 disabled in desktop mode. The recipient just runs `./neverkin` (see the
 README.txt inside; `--no-sandbox` fallback for some Linux setups). Native
@@ -81,16 +84,18 @@ writes/reads per burst: zero failures, sub-second completion.
 
 - **Kept automatically by design:** new entities, routes, migrations, frontend features —
   everything that flows through Prisma, the REST API, or the existing Redis command surface.
+- **Ports:** Rhea/Calliope's hardcoded ports are virtualized to random loopback ports
+  (`port-remap.mjs`), so the desktop app coexists with the docker dev stack. If a service
+  ever hardcodes a NEW port, add it to the `installPortRemap` list in `launcher.mjs`.
 - **The one drift point:** if upstream code starts using a Redis command the shim does not
   implement, the call rejects with an `unimplemented client method` error naming the command.
   Extend `redis-shim.mjs` (usually a few lines) when that happens. Beta error policy applies
   throughout: escaped errors show a system dialog and exit — a crash is recoverable, silently
   degraded or corrupted state is not.
-- **EVAL runs on a pure-JS Lua-subset interpreter** (redis.call statements, locals, if/then,
-  `==`, tonumber, return — covers all upstream scripts). Scripts outside the subset fall back
-  to wasmoon with a loud warning. Do NOT move wasmoon back onto the hot path: sustained
-  WASM-Lua invocation segfaults Electron's V8 (SIGSEGV, reproduced and fixed 2026-08-13);
-  extend the JS interpreter instead.
+- **EVAL runs on fengari**, a complete Lua VM in pure JavaScript — upstream scripts run
+  verbatim, no subset restrictions. Do NOT swap in a WASM-based Lua runtime: sustained
+  WASM-Lua invocation segfaults Electron's V8 (SIGSEGV, reproduced with wasmoon 2026-08-13),
+  and EVAL sits on the per-keystroke Yjs path.
 
 ## Scope / known limitations (POC)
 
@@ -102,7 +107,5 @@ writes/reads per burst: zero failures, sub-second completion.
   the whole app recursively and steal keyboard focus on the login page. Note the same
   recursion exists upstream on any origin without the `app.` prefix (localhost, staging).
 - Icon search (Iconify) and Google Fonts require network; both degrade gracefully offline.
-- Rhea/Calliope bind their hardcoded ports 3000/3001 on all interfaces; a hardened build
-  should firewall or patch them to loopback.
 - Builds are unsigned (Windows SmartScreen / macOS Gatekeeper will complain) and there is
   no installer or auto-update — the package is a plain runnable folder.

@@ -35,9 +35,6 @@ const MIME_TYPES = {
 	'.wasm': 'application/wasm',
 }
 
-const RHEA_PORT = 3000
-const CALLIOPE_PORT = 3001
-
 function proxyHttp(req, res, targetPort) {
 	const upstream = http.request(
 		{
@@ -96,13 +93,20 @@ function serveStatic(staticRoot, pathname, res) {
 		.pipe(res)
 }
 
-export function startRouter({ staticRoot, port, host = '127.0.0.1' }) {
+export function startRouter({
+	staticRoot,
+	port,
+	rheaPort,
+	calliopePort,
+	host = '127.0.0.1',
+	fallbackToRandomPort = false,
+}) {
 	const server = http.createServer((req, res) => {
 		const pathname = new URL(req.url ?? '/', 'http://localhost').pathname
 		if (hasPrefix(pathname, '/api') || pathname === '/health') {
-			proxyHttp(req, res, RHEA_PORT)
+			proxyHttp(req, res, rheaPort)
 		} else if (hasPrefix(pathname, '/calliope')) {
-			proxyHttp(req, res, CALLIOPE_PORT)
+			proxyHttp(req, res, calliopePort)
 		} else if (hasPrefix(pathname, '/bucket')) {
 			// Asset storage (S3/MinIO) is out of scope for desktop mode
 			res.writeHead(501, { 'content-type': 'application/json' })
@@ -118,7 +122,7 @@ export function startRouter({ staticRoot, port, host = '127.0.0.1' }) {
 			clientSocket.destroy()
 			return
 		}
-		const upstreamSocket = net.connect(CALLIOPE_PORT, '127.0.0.1', () => {
+		const upstreamSocket = net.connect(calliopePort, '127.0.0.1', () => {
 			const headerLines = [`${req.method} ${req.url} HTTP/${req.httpVersion}`]
 			for (let i = 0; i < req.rawHeaders.length; i += 2) {
 				headerLines.push(`${req.rawHeaders[i]}: ${req.rawHeaders[i + 1]}`)
@@ -137,7 +141,14 @@ export function startRouter({ staticRoot, port, host = '127.0.0.1' }) {
 	})
 
 	return new Promise((resolve, reject) => {
-		server.on('error', reject)
+		server.on('error', (error) => {
+			if (error.code === 'EADDRINUSE' && fallbackToRandomPort) {
+				console.warn(`[echo-desktop] port ${port} is taken, picking a random free port`)
+				server.listen(0, host)
+				return
+			}
+			reject(error)
+		})
 		server.listen(port, host, () => resolve(server))
 	})
 }
