@@ -3,10 +3,7 @@ import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 /**
- * Rebuilds every upstream artifact the desktop mode consumes, using each
- * app's own unmodified build pipeline. Run this after pulling or merging —
- * the desktop mode picks up new features, migrations and API changes with
- * no changes of its own.
+ * Rebuilds every upstream artifact the desktop mode consumes
  */
 const repoRoot = join(fileURLToPath(new URL('.', import.meta.url)), '..', '..', '..')
 

@@ -1,10 +1,4 @@
-# Builds the redistributable Neverkin Desktop packages (app/echo-desktop).
-#
-# Runs on every release tag push (parallel with the prod docker deployment
-# ritual) and on demand via workflow_dispatch. Every run uploads the archives
-# as workflow artifacts; tag runs additionally create a GitHub Release with
-# the archives attached.
-name: Desktop Build
+name: Build Desktop
 
 on:
   push:
@@ -22,26 +16,22 @@ jobs:
           - os: windows-latest
             platform: win32
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 45
     defaults:
       run:
         shell: bash
     steps:
-      # ts-shared is a real symlink in each service — without this, Windows
-      # checkout writes plain text files and every build fails cryptically
       - name: Enable git symlinks
         run: git config --global core.symlinks true
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # full history so git describe finds the release tag
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
 
-      # The root postinstall uses POSIX env syntax (VAR=x cmd), which cmd.exe
-      # rejects — run npm lifecycle scripts through Git Bash instead
+      # Run through git bash to avoid messing with cmd.exe
       - name: Use bash for npm scripts
         if: runner.os == 'Windows'
         run: npm config set script-shell bash
@@ -86,7 +76,7 @@ jobs:
           done
           ls -la
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: neverkin-desktop-${{ steps.version.outputs.version }}-${{ matrix.platform }}-x64
           path: app/echo-desktop/dist/package/neverkin-desktop-*
@@ -99,9 +89,9 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4 # gh needs a repo context
+      - uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           path: artifacts
           merge-multiple: true

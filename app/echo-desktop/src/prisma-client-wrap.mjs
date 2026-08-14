@@ -15,7 +15,6 @@
  * bypass the transaction client (see adapter-pg-shim.mjs).
  */
 import * as original from '../../rhea-backend/dist/prisma/client/client.js?nkd-original'
-
 import { interactiveTransactionContext } from './adapter-pg-shim.mjs'
 
 export * from '../../rhea-backend/dist/prisma/client/client.js?nkd-original'

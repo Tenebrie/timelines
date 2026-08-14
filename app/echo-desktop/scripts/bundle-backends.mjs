@@ -8,11 +8,7 @@ import { BUNDLE_STUBS, RUNTIME_SHIMS } from '../src/substitutions.mjs'
 
 /**
  * Bundles Rhea and Calliope's built output into two self-contained ESM files,
- * applying the same substitutions the dev-mode ESM loader hooks apply at
- * runtime (`redis` → shim, `@prisma/adapter-pg` → PGlite shim, generated
- * Prisma client → transaction-limits wrapper). Only genuinely native/WASM
- * packages stay external; the packaged app ships those few node_modules
- * instead of the services' full dependency trees.
+ * applying the package substitutions as necessary.
  */
 const desktopDir = join(fileURLToPath(new URL('.', import.meta.url)), '..')
 const repoRoot = join(desktopDir, '..', '..')

@@ -15,6 +15,7 @@ test/e2e/test-report
 # production
 build
 dist
+test-results/
 
 # misc
 .DS_Store

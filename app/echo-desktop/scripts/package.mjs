@@ -15,18 +15,10 @@ import { fileURLToPath } from 'node:url'
 import { bundleBackends, EXTERNALS } from './bundle-backends.mjs'
 
 /**
- * Produces a self-contained, redistributable desktop build:
+ * Produces a self-contained desktop build:
  *
- *   dist/package/echo-desktop-<platform>-<arch>/   (runnable folder)
+ *   dist/package/echo-desktop-<platform>-<arch>/
  *   dist/package/echo-desktop-<platform>-<arch>.zip|.tar.gz
- *
- * The backends ship as esbuild bundles (shims compiled in), so the package
- * carries no service node_modules — only the Electron runtime, the SPA build,
- * the migrations, and the handful of native/WASM packages that cannot be
- * bundled. Native modules are taken from the local install, so stage each
- * target OS on that OS.
- *
- * Run `npm run build:upstream` first; this script only stages built outputs.
  */
 const desktopDir = join(fileURLToPath(new URL('.', import.meta.url)), '..')
 const repoRoot = join(desktopDir, '..', '..')
@@ -46,8 +38,7 @@ function copy(from, to) {
 }
 
 /**
- * Copies `rootDeps` and their full runtime dependency closure (including
- * present optional deps, e.g. the platform's @img/sharp-* prebuilds) from
+ * Copies `rootDeps` and their full runtime dependency closure from
  * `baseModules` into `destModules`.
  */
 function copyDependencyClosure(baseModules, rootDeps, destModules) {
@@ -153,7 +144,6 @@ writeFileSync(
 		'Neverkin Desktop',
 		'',
 		`Run ${runCommand} to start. All data is stored locally in ${dataLocation}`,
-		'— nothing leaves your machine.',
 		...(process.platform === 'linux'
 			? [
 					'',
