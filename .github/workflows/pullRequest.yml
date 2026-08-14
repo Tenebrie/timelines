@@ -107,7 +107,7 @@ jobs:
         run: npm run build
 
       - name: Start desktop app
-        working-directory: app/echo-desktop/dist/package/echo-desktop-linux-x64
+        working-directory: app/echo-desktop/dist/package/neverkin-desktop-linux-x64
         run: |
           export NEVERKIN_DESKTOP_DATA="$RUNNER_TEMP/echo-data"
           export NEVERKIN_DESKTOP_PORT=8190

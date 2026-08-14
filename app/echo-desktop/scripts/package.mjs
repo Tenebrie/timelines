@@ -17,12 +17,12 @@ import { bundleBackends, EXTERNALS } from './bundle-backends.mjs'
 /**
  * Produces a self-contained desktop build:
  *
- *   dist/package/echo-desktop-<platform>-<arch>/
- *   dist/package/echo-desktop-<platform>-<arch>.zip|.tar.gz
+ *   dist/package/neverkin-desktop-<platform>-<arch>/
+ *   dist/package/neverkin-desktop-<platform>-<arch>.zip|.tar.gz
  */
 const desktopDir = join(fileURLToPath(new URL('.', import.meta.url)), '..')
 const repoRoot = join(desktopDir, '..', '..')
-const target = `echo-desktop-${process.platform}-${process.arch}`
+const target = `neverkin-desktop-${process.platform}-${process.arch}`
 const outRoot = join(desktopDir, 'dist/package')
 const stage = join(outRoot, target)
 const resources = join(stage, 'resources')
@@ -162,13 +162,8 @@ if (process.platform === 'win32') {
 	// bsdtar ships with Windows 10+; -a picks the zip format from the extension
 	run(`tar -a -c -f ${target}.zip ${target}`, outRoot)
 } else {
-	try {
-		run(`zip -ryq ${target}.zip ${target}`, outRoot)
-	} catch {
-		console.warn('[package] zip unavailable, creating tar.gz instead')
-		run(`tar -czf ${target}.tar.gz ${target}`, outRoot)
-	}
-	run(`du -sh ${target} ${target}.zip ${target}.tar.gz 2>/dev/null || true`, outRoot)
+	run(`tar -czf ${target}.tar.gz ${target}`, outRoot)
+	run(`du -sh ${target} ${target}.tar.gz`, outRoot)
 }
 console.info(`\n[package] done: ${join(outRoot, target)}`)
 
