@@ -165,7 +165,7 @@ export function CurrentArticleDetails() {
 			<Stack
 				gap={1}
 				sx={{
-					maxWidth: 1278,
+					maxWidth: 900,
 					width: '100%',
 					flex: 1,
 					paddingTop: isMobile ? '12px' : '24px',
