@@ -48,8 +48,8 @@ export const MentionsService = {
 		const dataWithWorldIds = await Promise.all(
 			data.map(async (mention) => ({
 				...mention,
-				sourceWorldId: await getEntityWorldId(mention.sourceId, mention.sourceType),
-				targetWorldId: await getEntityWorldId(mention.targetId, mention.targetType),
+				sourceWorldId: await getEntityWorldId(mention.sourceId, mention.sourceType, prisma),
+				targetWorldId: await getEntityWorldId(mention.targetId, mention.targetType, prisma),
 			})),
 		)
 
@@ -102,15 +102,20 @@ export function dedupeMentions<T extends Pick<Mention, 'sourceId' | 'targetId'>>
 	return Array.from(unique.values())
 }
 
-async function getEntityWorldId(entityId: string, entityType: MentionedEntity) {
+async function getEntityWorldId(
+	entityId: string,
+	entityType: MentionedEntity,
+	prisma?: Prisma.TransactionClient,
+) {
+	const client = getPrismaClient(prisma)
 	switch (entityType) {
 		case MentionedEntity.Actor:
-			return (await getPrismaClient().actor.findUnique({ where: { id: entityId } }))?.worldId
+			return (await client.actor.findUnique({ where: { id: entityId } }))?.worldId
 		case MentionedEntity.Event:
-			return (await getPrismaClient().worldEvent.findUnique({ where: { id: entityId } }))?.worldId
+			return (await client.worldEvent.findUnique({ where: { id: entityId } }))?.worldId
 		case MentionedEntity.Article:
-			return (await getPrismaClient().wikiArticle.findUnique({ where: { id: entityId } }))?.worldId
+			return (await client.wikiArticle.findUnique({ where: { id: entityId } }))?.worldId
 		case MentionedEntity.Tag:
-			return (await getPrismaClient().tag.findUnique({ where: { id: entityId } }))?.worldId
+			return (await client.tag.findUnique({ where: { id: entityId } }))?.worldId
 	}
 }

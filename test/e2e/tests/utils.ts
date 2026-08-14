@@ -8,6 +8,8 @@ export const baseUrl = (() => {
 		return 'http://app.gatekeeper:80'
 	} else if (env === 'local_ui') {
 		return 'http://app.localhost'
+	} else if (env === 'desktop') {
+		return process.env.DESKTOP_URL ?? 'http://127.0.0.1:8190'
 	}
 	throw new Error(`Unknown TARGET_ENV: ${env}`)
 })()
