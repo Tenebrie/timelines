@@ -4,8 +4,6 @@ import { Editor } from '@tiptap/core'
 import { EditorContent } from '@tiptap/react'
 import { memo } from 'react'
 
-import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
-
 type Props = {
 	editor: Editor
 	mode: 'read' | 'edit'
@@ -30,7 +28,7 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly, children
 				fontFamily: '"Roboto", sans-serif',
 				outline: 'none',
 				height: mode === 'edit' ? '100%' : 'unset',
-				overflowY: 'auto',
+				overflowY: 'visible',
 				display: 'flex',
 				flexDirection: 'column',
 
@@ -54,10 +52,15 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly, children
 
 				'& p': {
 					margin: 0,
-					padding: '6px 0px',
-					lineHeight: 1.5,
+					padding: '10px 0px',
+					lineHeight: 1.55,
 					wordBreak: 'break-word',
-					color: 'text.primary',
+					color: isDark ? '#D8D8E0' : 'text.primary',
+				},
+
+				'& h1, & h2, & h3, & h4, & h5, & h6': {
+					marginBottom: '0.4em',
+					...(isDark ? { color: '#ECECF2' } : {}),
 				},
 
 				'& li > p': {
@@ -69,7 +72,6 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly, children
 					borderRadius: '4px',
 					background: '#00000033',
 				},
-				...useBrowserSpecificScrollbars(),
 
 				'& span[data-luminance="dark"]': isDark
 					? { color: 'oklch(from var(--text-color) calc(1 - l) c h) !important' }

@@ -50,7 +50,7 @@ function WorldSelectorButtonComponent() {
 				onClick={handleClick}
 				disabled={!hasWorlds || !user}
 				sx={{
-					padding: '8px 15px',
+					padding: '6px 15px',
 					minWidth: isNarrow ? 'auto' : undefined,
 				}}
 			>

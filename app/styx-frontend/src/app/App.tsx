@@ -24,7 +24,6 @@ import { useCloseMenusOnRightClick } from './hooks/useCloseMenusOnRightClick'
 import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
 import { DeleteAccountModal } from './views/profile/modals/DeleteAccountModal'
 import { DeleteAssetModal } from './views/profile/modals/DeleteAssetModal'
-import { MentionPortalHost } from './views/world/components/MentionPortalHost'
 import { TimelineZoomReporter } from './views/world/views/timeline/components/TimelineZoomReporter'
 
 const Container = styled.div`
@@ -32,7 +31,7 @@ const Container = styled.div`
 	flex-direction: column;
 	align-items: center;
 	width: 100vw;
-	min-height: 100dvh;
+	height: 100dvh;
 `
 
 const App = () => {
@@ -78,7 +77,8 @@ const App = () => {
 								<Box
 									sx={{
 										width: '100%',
-										height: 'calc(100dvh - 50.5px)',
+										flex: 1,
+										minHeight: 0,
 										overflowY: 'auto',
 										...scrollbars,
 									}}
@@ -93,7 +93,6 @@ const App = () => {
 							<LostConnectionAlert server="rhea" />
 							<LostConnectionAlert server="calliope" />
 							<AnnouncementSnackbar />
-							<MentionPortalHost />
 						</CustomThemeOverrides>
 					</CustomThemeProvider>
 					<NavigationReceiverWrapper />

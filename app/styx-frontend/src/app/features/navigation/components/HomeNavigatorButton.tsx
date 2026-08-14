@@ -45,7 +45,7 @@ export function HomeNavigatorButton({ disabled, iconOnly }: Props) {
 						aria-label="Navigate to home"
 						sx={{
 							gap: 0.5,
-							padding: iconOnly ? '8px' : '8px 15px',
+							padding: iconOnly ? '6px' : '6px 15px',
 							minWidth: iconOnly ? 'auto' : undefined,
 						}}
 					>
@@ -58,7 +58,7 @@ export function HomeNavigatorButton({ disabled, iconOnly }: Props) {
 					aria-label="Home navigation menu"
 					onClick={handleMenuOpen}
 					sx={{
-						padding: '8px 4px',
+						padding: '6px 4px',
 					}}
 				>
 					<ArrowDropDown />

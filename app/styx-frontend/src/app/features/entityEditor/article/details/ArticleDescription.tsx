@@ -9,9 +9,10 @@ import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScro
 
 type Props = {
 	article: WikiArticle
+	surface?: string
 }
 
-export const ArticleDescription = ({ article }: Props) => {
+export const ArticleDescription = ({ article, surface }: Props) => {
 	const { updateCachedArticle } = useWikiApiCache()
 
 	const debouncedUpdate = useRef(
@@ -45,6 +46,7 @@ export const ArticleDescription = ({ article }: Props) => {
 				value={article.contentRich}
 				onChange={handleChange}
 				allowReadMode
+				surface={surface}
 				collaboration={{
 					entityType: 'article',
 					documentId: article.id,

@@ -29,7 +29,7 @@ export function LastWorldNavigatorButton({ icon, label, iconOnly }: Props) {
 			disabled={!canNavigate}
 			sx={{
 				gap: 0.5,
-				padding: '8px 15px',
+				padding: '6px 15px',
 				minWidth: iconOnly ? 'auto' : undefined,
 			}}
 		>

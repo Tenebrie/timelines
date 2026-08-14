@@ -31,9 +31,9 @@ export function GuestDropdown() {
 	return (
 		<Stack direction="row" alignItems="center" spacing={1}>
 			<Button
-				startIcon={<Avatar sx={{ height: 32, width: 32 }} />}
+				startIcon={<Avatar sx={{ height: 28, width: 28 }} />}
 				{...bindTrigger(popupState)}
-				sx={{ padding: '5px 15px' }}
+				sx={{ padding: '4px 15px' }}
 			>
 				Anonymous
 			</Button>

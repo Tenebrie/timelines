@@ -32,7 +32,7 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 		if (reduceAnimations) {
 			return 0
 		}
-		return 300
+		return 0
 	}, [reduceAnimations])
 
 	useEffect(() => {
