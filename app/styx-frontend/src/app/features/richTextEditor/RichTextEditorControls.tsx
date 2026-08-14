@@ -41,6 +41,7 @@ export function RichTextEditorControlsComponent({ editor, sticky }: Props) {
 	const controls = (
 		<Paper
 			sx={{
+				minWidth: 0,
 				borderRadius: '6px 6px 6px 6px',
 				backgroundImage: (theme) =>
 					theme.palette.mode === 'dark'

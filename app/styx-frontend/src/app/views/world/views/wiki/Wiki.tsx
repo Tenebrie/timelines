@@ -88,8 +88,8 @@ export const Wiki = () => {
 				<Stack
 					sx={{
 						flex: 1,
+						minWidth: 0,
 						height: '100%',
-						width: isMobile ? 'calc(100% - 16px)' : undefined,
 						background: theme.custom.palette.background.textEditor,
 					}}
 				>
@@ -116,7 +116,7 @@ export function CurrentArticleDetails() {
 
 	const startAdornment = isMobile ? (
 		<Stack direction="row" gap={0.5} marginRight={0.5} alignItems="center">
-			<Tooltip title="Back to articles" disableInteractive enterDelay={400}>
+			<Tooltip title="Back to list" disableInteractive enterDelay={400}>
 				<IconButton
 					size="small"
 					onClick={() => navigate({ to: '/world/$worldId/wiki', search: true })}
@@ -137,11 +137,11 @@ export function CurrentArticleDetails() {
 					<ArticleDetails article={article.entity} isWikiTab titleProps={{ startAdornment }} surface="wiki" />
 				)
 			case 'actor':
-				return <ActorDetails editedActor={article.entity} surface="wiki" />
+				return <ActorDetails editedActor={article.entity} surface="wiki" titleProps={{ startAdornment }} />
 			case 'event':
-				return <EventDetails editedEvent={article.entity} surface="wiki" />
+				return <EventDetails editedEvent={article.entity} surface="wiki" titleProps={{ startAdornment }} />
 			case 'tag':
-				return <TagDetails editedTag={article.entity} />
+				return <TagDetails editedTag={article.entity} titleProps={{ startAdornment }} />
 		}
 		return null
 	})()
@@ -153,7 +153,7 @@ export function CurrentArticleDetails() {
 			sx={{
 				height: '100%',
 				width: '100%',
-				paddingX: isMobile ? '8px' : 2,
+				paddingX: 2,
 				boxSizing: 'border-box',
 				overflowY: 'auto',
 				display: 'flex',
@@ -168,6 +168,9 @@ export function CurrentArticleDetails() {
 					width: '100%',
 					flex: 1,
 					paddingTop: isMobile ? '12px' : '24px',
+					'& > *': {
+						flexGrow: 1,
+					},
 				}}
 			>
 				{content}

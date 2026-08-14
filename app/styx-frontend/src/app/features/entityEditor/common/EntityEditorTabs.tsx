@@ -54,10 +54,10 @@ export function EntityEditorTabs({
 	}, [defaultTab])
 
 	return (
-		<Stack direction="row" width="100%" height={fluidHeight ? 'auto' : '100%'} gap={1} sx={{ flex: 1 }}>
+		<Stack direction="row" width="100%" height="100%" gap={1} sx={{ flex: 1 }}>
 			<Box
 				sx={{
-					height: fluidHeight ? 'auto' : '100%',
+					height: '100%',
 					width: '100%',
 					display: tab === 0 ? 'block' : 'none',
 				}}
@@ -66,7 +66,7 @@ export function EntityEditorTabs({
 			</Box>
 			<Box
 				sx={{
-					height: fluidHeight ? 'auto' : '100%',
+					height: '100%',
 					width: 'calc(100%)',
 					display: tab === 1 ? 'block' : 'none',
 				}}
@@ -75,7 +75,7 @@ export function EntityEditorTabs({
 			</Box>
 			<Box
 				sx={{
-					height: fluidHeight ? 'auto' : '100%',
+					height: '100%',
 					width: 'calc(100%)',
 					display: tab === 2 ? 'block' : 'none',
 				}}

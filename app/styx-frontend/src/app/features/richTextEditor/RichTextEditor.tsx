@@ -178,7 +178,7 @@ export function RichTextEditorComponent({
 				onScroll={isPageScroll ? undefined : onScroll}
 				sx={
 					isPageScroll
-						? { position: 'relative' }
+						? { position: 'relative', flex: 1 }
 						: { position: 'relative', flex: 1, minHeight: 0, overflowY: 'auto', ...scrollbars }
 				}
 			>

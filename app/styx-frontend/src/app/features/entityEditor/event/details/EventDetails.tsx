@@ -10,6 +10,7 @@ import { EntityEditorTabs } from '@/app/features/entityEditor/common/EntityEdito
 import { useUpsertEvent } from '@/app/features/entityEditor/event/details/draft/useUpsertEvent'
 import { useCurrentOrNewEvent } from '@/app/features/entityEditor/event/details/hooks/useCurrentOrNewEvent'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
+import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 
 import { EventBacklinks } from './components/EventBacklinks'
 import { EventDescription } from './components/EventDescription'
@@ -18,12 +19,13 @@ import { useEventDraft } from './draft/useEventDraft'
 
 type Props = {
 	editedEvent: WorldEvent
+	titleProps?: Partial<Parameters<typeof EditableTitle>[0]>
 	surface?: string
 }
 
 export const EventDetails = memo(EventDetailsComponent)
 
-export function EventDetailsComponent({ editedEvent, surface }: Props) {
+export function EventDetailsComponent({ editedEvent, titleProps, surface }: Props) {
 	const { event } = useCurrentOrNewEvent({ event: editedEvent })
 	const draft = useEventDraft({ event })
 
@@ -41,7 +43,7 @@ export function EventDetailsComponent({ editedEvent, surface }: Props) {
 				...useBrowserSpecificScrollbars(),
 			}}
 		>
-			<EventTitle event={event} draft={draft} />
+			<EventTitle event={event} draft={draft} titleProps={titleProps} />
 			<Divider />
 			<Box flexGrow={1} height={fluidHeight ? 'auto' : 0}>
 				<EntityEditorTabs
