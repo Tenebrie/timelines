@@ -4,13 +4,9 @@ const { pathToFileURL } = require('node:url')
 const { app, BrowserWindow, dialog, shell } = require('electron')
 
 /**
- * Electron shell: boots the standalone stack in the main process (Electron's
- * Node runtime), then opens a window on the local origin. External links and
- * window.open calls are routed to the system browser.
- *
- * Single-instance: a second launch would open a second PGlite on the same
- * data directory and collide on every port, so it focuses the first window
- * and exits instead.
+ * Electron shell: boots the standalone stack in the main process, then opens
+ * a window on the local origin. Single-instance — a second launch would open
+ * a second PGlite on the same data directory.
  */
 let mainWindow = null
 

@@ -1,12 +1,6 @@
 /**
- * ESM resolve hook (registered via node:module `register` in launcher.mjs).
- * Redirects two bare specifiers to desktop shims for every module in the
- * process, which is exactly the surface the standalone mode needs to replace:
- *
- *   redis              -> in-memory store + pub/sub (redis-shim.mjs)
- *   @prisma/adapter-pg -> embedded PGlite driver adapter (adapter-pg-shim.mjs)
- *
- * Everything else resolves normally, from each app's own node_modules.
+ * ESM resolve hook applying the runtime substitutions in dev mode (packaged
+ * builds compile them in via esbuild aliases instead).
  */
 import { RUNTIME_SHIMS } from './substitutions.mjs'
 
@@ -25,9 +19,6 @@ export async function resolve(specifier, context, nextResolve) {
 		return { url: target, shortCircuit: true }
 	}
 	const resolved = await nextResolve(specifier, context)
-	// Route every import of Rhea's generated Prisma client through the wrap
-	// that raises the interactive-transaction limits (see prisma-client-wrap).
-	// The ?nkd-original import inside the wrap itself passes through.
 	if (
 		resolved.url.endsWith('/rhea-backend/dist/prisma/client/client.js') &&
 		!specifier.includes('nkd-original')

@@ -22,25 +22,13 @@ import { startRouter } from './router.mjs'
 import { startS3Server } from './s3-shim.mjs'
 
 /**
- * Boots the full Neverkin stack standalone in a single process:
- *
- *   1. Point the docker service hostnames at loopback (DNS remap) and
- *      virtualize their hardcoded ports (port remap) so nothing collides
- *      with other software on the machine.
- *   2. Apply Rhea's Prisma migrations to the embedded PGlite database.
- *   3. Register the ESM loader hook that swaps `redis` and
- *      `@prisma/adapter-pg` for the desktop shims.
- *   4. Import the unmodified Rhea and Calliope production builds.
- *   5. Serve the Styx static build + proxy /api and /live on one origin.
- *
+ * Boots the full Neverkin stack standalone in a single process.
  * Usable headless (`node src/launcher.mjs`) or from the Electron shell.
  */
-// The services are resolved as siblings of this package's directory. In the
-// repo that parent is <repo>/app; in a packaged build it is the staging dir
-// (resources/) with the same folder names — one layout rule for both.
 const LOG_ROTATE_BYTES = 5 * 1024 * 1024
 const LOG_SESSION_CAP_BYTES = 20 * 1024 * 1024
 
+// Services are siblings of this package: <repo>/app in the repo, resources/ in a packaged build
 const servicesRoot = join(fileURLToPath(new URL('.', import.meta.url)), '..', '..')
 const rheaDir = join(servicesRoot, 'rhea-backend')
 const calliopeDir = join(servicesRoot, 'calliope-websockets')
@@ -49,7 +37,6 @@ const styxBuildDir = join(servicesRoot, 'styx-frontend', 'build')
 function ensureEnvironment(dataDir) {
 	mkdirSync(dataDir, { recursive: true })
 
-	// Stable per-installation JWT secret so sessions survive restarts
 	const secretPath = join(dataDir, 'jwt-secret')
 	if (!existsSync(secretPath)) {
 		writeFileSync(secretPath, randomBytes(32).toString('hex'), { mode: 0o600 })
@@ -59,8 +46,6 @@ function ensureEnvironment(dataDir) {
 		NODE_ENV: 'production',
 		jwt_secret: readFileSync(secretPath, 'utf8').trim(),
 		environment: 'development',
-		// Read at module load; dns-remap + port-remap route this hostname to
-		// the local filesystem-backed S3 shim (s3-shim.mjs)
 		s3_endpoint: 'http://s3-minio:9000',
 		s3_bucket_id: 'bucket',
 		s3_access_key_id: 'desktop',
@@ -79,23 +64,15 @@ export async function startDesktopServices() {
 	const port = Number(process.env.NEVERKIN_DESKTOP_PORT || 8190)
 
 	mkdirSync(dataDir, { recursive: true })
-	// In a packaged app nobody sees the console; the shims' drift warnings and
-	// crash logs must survive somewhere a bug report can quote.
 	mirrorConsoleToFile(join(dataDir, 'log.txt'))
 
 	console.info(`[echo-desktop] data directory: ${dataDir}`)
 	console.info(`[echo-desktop] services root: ${servicesRoot}`)
 
-	// Beta policy: any error that escapes to the process level is critical —
-	// surface it in the user's face and exit rather than continue in an
-	// unknown state. A crash is recoverable; corrupted data is not.
 	process.on('unhandledRejection', failLoudly('unhandled rejection'))
 	process.on('uncaughtException', failLoudly('uncaught exception'))
 	ensureEnvironment(dataDir)
 	installDnsRemap()
-	// Rhea, Calliope and the S3 config hardcode ports 3000/3001/9000; bind
-	// random loopback ports instead so the desktop app coexists with dev
-	// stacks and other software
 	const services = installPortRemap([3000, 3001, 9000])
 
 	console.info('[echo-desktop] starting local asset storage (S3)...')
@@ -111,15 +88,13 @@ export async function startDesktopServices() {
 		`[echo-desktop] migrations: ${migrationResult.applied} applied, ${migrationResult.total} total`,
 	)
 
-	// Packaged builds ship esbuild bundles with the shims compiled in; the
-	// dev/headless mode runs the raw dist output through ESM loader hooks.
 	const bundleDir = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'bundles')
 	const useBundles = existsSync(join(bundleDir, 'rhea.mjs'))
 	if (!useBundles) {
 		register(pathToFileURL(join(fileURLToPath(new URL('.', import.meta.url)), 'loader-hooks.mjs')))
 	}
 
-	// Rhea resolves ./dist/apiSpec.json relative to the working directory
+	// Rhea resolves ./dist/* relative to the working directory
 	process.chdir(rheaDir)
 
 	console.info(`[echo-desktop] starting Rhea (API)${useBundles ? ' [bundled]' : ''}...`)
@@ -175,11 +150,8 @@ function failLoudly(kind) {
 	}
 }
 
-/** Per-platform user data location; overridable with NEVERKIN_DESKTOP_DATA. */
 function defaultDataDir() {
 	if (process.platform === 'win32') {
-		// Local, not Roaming: the database and assets can grow large and
-		// should not sync across domain profiles
 		return join(process.env.LOCALAPPDATA || join(os.homedir(), 'AppData', 'Local'), 'Neverkin')
 	}
 	if (process.platform === 'darwin') {

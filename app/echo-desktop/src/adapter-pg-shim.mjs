@@ -4,33 +4,12 @@ import { PGlite } from '@electric-sql/pglite'
 import { PrismaPGlite } from 'pglite-prisma-adapter'
 
 /**
- * Drop-in replacement for `@prisma/adapter-pg`, injected via the ESM loader
- * hook. Rhea constructs `new PrismaPg({ connectionString })` exactly once in
- * DatabaseClient.ts and hands it to PrismaClient; here that construction
- * returns a PGlite-backed driver adapter over the desktop data directory
- * instead, so the app talks to an embedded Postgres with zero code changes.
- * PGlite is real Postgres compiled to WASM: enums, arrays, BIGINT and the
- * whole migration history behave identically.
- *
- * PGlite is single-connection, which needs two behaviors a pooled server
- * never needed:
- *
- * 1. Interactive transactions are serialized through a FIFO gate BEFORE
- *    they reach PGlite. Concurrent transactions queued on PGlite's internal
- *    mutex blow through Prisma's maxWait and, if abandoned mid-queue, can
- *    leave an orphaned open transaction that wedges the database.
- *
- * 2. A main-client query issued from INSIDE a $transaction callback fails
- *    loudly. By contract that is an upstream bug: on a pooled server it
- *    silently escapes the transaction's atomicity, and on PGlite it queues
- *    behind the transaction the callback itself is holding — a
- *    self-deadlock. The prisma-client wrapper marks interactive callbacks
- *    via AsyncLocalStorage so the bug surfaces as an immediate, actionable
- *    error. Main-client queries from OTHER requests are untouched — they
- *    queue on PGlite's internal mutex until the transaction commits, which
- *    is ordinary isolation, not a deadlock.
- *
- * A watchdog rolls back any transaction abandoned without commit/rollback.
+ * Drop-in replacement for `@prisma/adapter-pg`, backed by embedded PGlite.
+ * PGlite is single-connection, so interactive transactions are serialized
+ * through a FIFO gate, and a main-client query issued from inside a
+ * $transaction callback (marked via AsyncLocalStorage by prisma-client-wrap)
+ * fails loudly — that is an upstream bug that escapes atomicity on pooled
+ * Postgres and self-deadlocks on PGlite.
  */
 export const interactiveTransactionContext = new AsyncLocalStorage()
 

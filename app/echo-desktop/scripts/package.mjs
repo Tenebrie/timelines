@@ -124,13 +124,11 @@ copyDependencyClosure(
 	appModules,
 )
 
-// 4. Rhea runtime files read from disk (spec, assets) + migrations
+// 4. Rhea's build output and database definitions, wholesale — Rhea resolves
+// ./dist/* from its working directory and the launcher replays the migrations
 const rheaStage = join(resources, 'rhea-backend')
-copy(join(rheaSource, 'dist', 'apiSpec.json'), join(rheaStage, 'dist', 'apiSpec.json'))
-if (existsSync(join(rheaSource, 'dist', 'assets'))) {
-	copy(join(rheaSource, 'dist', 'assets'), join(rheaStage, 'dist', 'assets'))
-}
-copy(join(rheaSource, 'prisma', 'migrations'), join(rheaStage, 'prisma', 'migrations'))
+copy(join(rheaSource, 'dist'), join(rheaStage, 'dist'))
+copy(join(rheaSource, 'prisma'), join(rheaStage, 'prisma'))
 
 // 5. Styx static build
 copy(join(repoRoot, 'app', 'styx-frontend', 'build'), join(resources, 'styx-frontend', 'build'))

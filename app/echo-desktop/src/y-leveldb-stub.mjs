@@ -1,9 +1,7 @@
 /**
- * Bundle-time stand-in for y-leveldb. @y/websocket-server imports it
- * statically but only constructs it when a YPERSISTENCE directory is
- * configured — which desktop mode never does (Calliope persists Yjs state
- * through Redis + Rhea instead). Stubbing it keeps the native LevelDB
- * dependency chain (leveldown) out of the bundle entirely.
+ * Bundle-time stand-in for y-leveldb: imported statically by
+ * @y/websocket-server but only constructed when YPERSISTENCE is configured,
+ * which desktop mode never does.
  */
 export class LeveldbPersistence {
 	constructor() {

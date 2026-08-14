@@ -3,15 +3,11 @@ import { createRequire } from 'node:module'
 import stub from './sharp-stub.mjs'
 
 /**
- * Bundle-time entry for `sharp`: prefer the real native module (full
- * conversion pipeline, ~18 MB of platform prebuilds shipped in the package),
- * fall back to the header-parsing stub if it fails to load — sharp warns
- * that Electron-on-Linux library conflicts are possible on some setups, and
- * a desktop app with image conversion disabled beats one that won't boot.
- *
- * The shadowed `require` keeps esbuild from resolving 'sharp' at bundle time
- * (the alias would loop back here); it resolves at runtime from the packaged
- * node_modules instead.
+ * Bundle-time entry for `sharp`: the real native module, with the
+ * header-parsing stub as fallback (sharp warns Electron-on-Linux library
+ * conflicts are possible; a disabled converter beats an app that won't
+ * boot). The shadowed `require` keeps esbuild from resolving 'sharp' at
+ * bundle time — the alias would loop back here.
  */
 const require = createRequire(import.meta.url)
 

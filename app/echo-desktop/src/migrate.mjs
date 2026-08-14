@@ -5,23 +5,12 @@ import { join } from 'node:path'
 import { PGlite } from '@electric-sql/pglite'
 
 /**
- * Pre-boot database preparation: replays Rhea's Prisma migration history into
- * the embedded PGlite database, then applies the desktop defaults. Runs to
- * completion and closes the database before Rhea boots, so the adapter's own
- * PGlite instance opens the data directory alone.
- *
- * The migration files are plain Postgres SQL, and PGlite is real Postgres, so
- * they apply unchanged. Bookkeeping mirrors Prisma's own `_prisma_migrations`
- * table, so already-applied migrations are skipped and migrations added by
- * future branches are picked up automatically on the next launch.
- *
- * The seed step mirrors Rhea's `prisma/seed.ts` for parity with the cloud
- * deployment: one default Admin account (admin@localhost / q), guarded by
- * the DatabaseSeeded flag; every other account registers as a normal user
- * and the admin promotes as needed. Keep it in sync with seed.ts if that
- * ever changes — the password hash here is a precomputed bcrypt(cost 12)
- * of the same 'q'.
+ * Pre-boot database preparation: replays Rhea's migration history into the
+ * embedded PGlite database (with `_prisma_migrations` bookkeeping), then
+ * seeds it. Closes the database before Rhea's own PGlite opens it.
  */
+
+// Precomputed bcrypt(12) of 'q'.
 const SEED_ADMIN_PASSWORD_HASH = '$2b$12$yOVLWhUtcIgyLxs0Z0TIZekbZAtqmSfVmz7o1DakZu3Q/Lp/KVMYK'
 
 export async function prepareDatabase(migrationsDir, dataDir) {
@@ -81,9 +70,7 @@ async function applyMigrations(db, migrationsDir) {
 		try {
 			await db.exec(sql)
 		} catch (error) {
-			// Multi-statement exec runs as one implicit transaction; a few
-			// Postgres DDL forms (e.g. ALTER TYPE ... ADD VALUE) refuse
-			// that. Fall back to statement-by-statement execution.
+			// Some DDL forms refuse to run in exec's implicit transaction
 			await applyStatementByStatement(db, sql, migration, error)
 		}
 		await db.query(
@@ -99,9 +86,8 @@ async function applyStatementByStatement(db, sql, migration, originalError) {
 	console.warn(
 		`[echo-desktop] migration ${migration}: batch apply failed (${originalError.message}), retrying statement-by-statement`,
 	)
-	// Prisma-generated migration files hold newline-terminated statements,
-	// each prefixed with `-- Comment` lines that must be stripped per line —
-	// a chunk-level comment filter would discard the statement beneath it.
+	// Comments must be stripped per line — Prisma prefixes every statement
+	// with one, so a chunk-level filter would discard the statement itself
 	const statements = sql
 		.split(/;\s*[\r\n]/)
 		.map((chunk) =>

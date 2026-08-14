@@ -3,21 +3,10 @@ import net from 'node:net'
 import { LOOPBACK_HOSTS } from './dns-remap.mjs'
 
 /**
- * In docker every service binds a fixed port inside its own network
- * namespace (Rhea :3000, Calliope :3001) and peers reach it by docker DNS
- * name. In desktop mode all services share the host, so those fixed ports
- * collide with anything else on the machine — including the docker dev
- * stack itself. This patch virtualizes them at the net layer:
- *
- *   - a listen() on a virtual port binds a random free port on 127.0.0.1
- *     instead (which also undoes the all-interfaces exposure of the docker
- *     builds), and
- *   - outgoing connections to a docker hostname on a virtual port are
- *     rewritten to the port that service actually bound.
- *
- * Upstream keeps its hardcoded ports; only the returned map knows the real
- * ones. If a service ever hardcodes a NEW port, add it to the list the
- * launcher passes in — an unmapped port simply binds as-is.
+ * Virtualizes the services' hardcoded ports at the net layer: a listen() on
+ * a virtual port binds a random free loopback port instead, and outgoing
+ * connections to it are rewritten to the port actually bound. A service
+ * hardcoding a NEW port needs an entry in the launcher's list.
  */
 export function installPortRemap(virtualPorts) {
 	const actualPorts = new Map()
@@ -44,18 +33,14 @@ export function installPortRemap(virtualPorts) {
 		return originalListen.call(this, { port: 0, host: '127.0.0.1' }, callback)
 	}
 
-	// Callers reach services by docker hostname, but some clients (undici's
-	// fetch) resolve DNS themselves and connect by IP — inside this process a
-	// loopback connection to a virtual port can only mean that service, so
-	// loopback addresses remap too.
+	// undici's fetch resolves DNS itself and connects by IP, so loopback
+	// addresses on a virtual port count as service traffic too
 	const isServiceHost = (host) =>
 		LOOPBACK_HOSTS.has(host) || host === '127.0.0.1' || host === 'localhost' || host === '::1' || host === undefined
 
 	const originalConnect = net.Socket.prototype.connect
 	net.Socket.prototype.connect = function (...args) {
-		// net.connect() pre-normalizes its arguments and calls this with a
-		// marked [options, callback] array; direct callers pass (options, cb)
-		// or (port, host, cb).
+		// net.connect() pre-normalizes its arguments into an [options, callback] array
 		const normalized = Array.isArray(args[0]) ? args[0] : undefined
 		const options = normalized
 			? normalized[0]

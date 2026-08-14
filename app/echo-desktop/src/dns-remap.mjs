@@ -1,11 +1,8 @@
 import dns from 'node:dns'
 
 /**
- * The services reference each other by their docker-compose hostnames
- * (Calliope calls `http://rhea:3000`, Rhea's storage service rewrites
- * `http://s3-minio:9000` URLs). In desktop mode everything listens on
- * loopback, so resolve those hostnames to 127.0.0.1 at the DNS layer —
- * no upstream code needs to change and the docker deployment is untouched.
+ * Resolves the docker-compose hostnames the services use to reach each other
+ * (`rhea`, `s3-minio`, …) to 127.0.0.1 at the DNS layer.
  */
 export const LOOPBACK_HOSTS = new Set(['rhea', 'calliope', 'redis', 's3-minio', 'gatekeeper'])
 

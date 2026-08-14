@@ -4,22 +4,11 @@ import http from 'node:http'
 import { dirname, join, normalize, sep } from 'node:path'
 
 /**
- * Filesystem-backed stand-in for the S3/MinIO server, listening on the
- * virtual port 9000 (the port remap assigns the real one). Rhea's AWS SDK
- * client and its presigned URLs both use path-style addressing against
- * `http://s3-minio:9000`, so this implements the S3 REST subset that
- * CloudStorageService and the browser upload flow actually exercise:
- *
- *   PUT    /<bucket>/<key>   SDK PutObject (asset + export uploads)
- *   GET    /<bucket>/<key>   SDK GetObject + presigned downloads
- *                            (Range, response-content-* query overrides)
- *   HEAD   /<bucket>/<key>   SDK HeadObject (upload finalize check)
- *   DELETE /<bucket>/<key>   SDK DeleteObject
- *   POST   /<bucket>         presigned-post browser upload (multipart form)
- *
- * Signatures and expiry on presigned URLs are deliberately not validated:
- * the server is loopback-only and guards nothing the filesystem itself
- * doesn't. Objects live under <storageRoot>/<bucket>/<key>.
+ * Filesystem-backed stand-in for the S3/MinIO server, implementing the
+ * path-style REST subset CloudStorageService and the presigned browser
+ * flows exercise. Presigned signatures and expiry are deliberately not
+ * validated: the server is loopback-only and guards nothing the filesystem
+ * itself doesn't. Objects live under <storageRoot>/<bucket>/<key>.
  */
 export function startS3Server({ storageRoot }) {
 	const server = http.createServer(async (req, res) => {
@@ -71,8 +60,6 @@ async function handleRequest(storageRoot, req, res) {
 			return
 		}
 		case 'POST': {
-			// Presigned-post upload: multipart form with a `key` field and the
-			// file content as the final `file` field (S3 contract).
 			const form = parseMultipart(await readBody(req), req.headers['content-type'] ?? '')
 			if (!form || !form.fields.key || !form.file) {
 				res.writeHead(400, { 'content-type': 'application/xml' })
@@ -145,7 +132,6 @@ function parseMultipart(body, contentType) {
 	while (offset !== -1) {
 		const next = body.indexOf(boundary, offset + boundary.length)
 		if (next === -1) break
-		// part = headers + \r\n\r\n + content + \r\n
 		const part = body.subarray(offset + boundary.length + 2, next - 2)
 		const headerEnd = part.indexOf('\r\n\r\n')
 		if (headerEnd !== -1) {

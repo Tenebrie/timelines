@@ -5,14 +5,9 @@ import fengari from 'fengari'
 const { lua, lauxlib, lualib, to_luastring } = fengari
 
 /**
- * In-memory drop-in replacement for the `redis` package, injected via the ESM
- * loader hook (see loader-hooks.mjs). Rhea and Calliope run in the same process
- * in desktop mode, so a process-wide store stands in for the Redis server:
- * pub/sub between the two apps, the presigned-URL cache, and the Yjs hot store
- * all keep their existing semantics.
- *
- * The store lives on globalThis so every importer shares one instance even if
- * this module is ever evaluated under two different URLs.
+ * In-memory drop-in replacement for the `redis` package. Rhea and Calliope
+ * share one process in desktop mode, so a process-wide store (on globalThis,
+ * shared across module instances) stands in for the Redis server.
  */
 function getStore() {
 	if (!globalThis.__NEVERKIN_DESKTOP_REDIS__) {
@@ -39,11 +34,7 @@ function liveEntry(store, key) {
 	return entry
 }
 
-/**
- * Synchronous command dispatcher shared by the client API and the Lua bridge.
- * Mirrors real Redis return values so `redis.call(...)` comparisons in the
- * upstream Lua scripts keep working (missing GET -> null, mapped to Lua false).
- */
+/** Synchronous command dispatcher shared by the client API and the Lua bridge. */
 function dispatch(store, command, args) {
 	const cmd = String(command).toUpperCase()
 	switch (cmd) {
@@ -176,14 +167,9 @@ function dispatch(store, command, args) {
 }
 
 /**
- * EVAL support: fengari, a complete Lua VM written in pure JavaScript, so
- * upstream scripts run verbatim with no subset restrictions. Pure JS is a
- * hard requirement here — EVAL sits on the per-keystroke Yjs path, and
- * sustained WASM-Lua invocation (wasmoon) segfaulted Electron's V8. Each
- * call gets a fresh Lua state with KEYS/ARGV globals and a redis.call
- * bridge into the synchronous dispatcher above, mirroring Redis's reply
- * conversions (nil reply -> Lua false; Lua false -> nil, true -> 1,
- * numbers truncated to integers).
+ * EVAL runs on fengari, a pure-JS Lua VM. Pure JS is a hard requirement:
+ * EVAL sits on the per-keystroke Yjs path, and sustained WASM-Lua
+ * invocation (wasmoon) segfaulted Electron's V8.
  */
 function evalLua(store, script, options = {}) {
 	const keys = options.keys ?? []
@@ -297,8 +283,6 @@ function createClientInstance() {
 		set: async (key, value, options) => {
 			const args = [key, value]
 			if (options) {
-				// node-redis supports both the flat option object ({ NX, EX, PX })
-				// and the nested form ({ expiration: { type: 'EX', value: n } })
 				if (options.expiration && options.expiration.type) {
 					args.push(options.expiration.type, options.expiration.value)
 				}
@@ -337,12 +321,8 @@ function createClientInstance() {
 		sendCommand: async (args) => dispatch(store, args[0], args.slice(1)),
 	}
 
-	// Unknown-method fallback: future upstream code that calls a command this
-	// shim does not implement gets a rejection with an actionable message —
-	// beta policy is to fail loudly rather than degrade silently. Promise-
-	// introspection props must stay undefined. Caveat: unknown *data
-	// properties* (e.g. client.options) also come back as a function — add
-	// them to the client object above if upstream reads one.
+	// Unimplemented methods reject with an actionable message. Promise
+	// introspection props must stay undefined.
 	return new Proxy(client, {
 		get(target, prop, receiver) {
 			if (prop in target || typeof prop === 'symbol') return Reflect.get(target, prop, receiver)
@@ -375,7 +355,6 @@ function pushStringArray(L, values) {
 	})
 }
 
-// Redis command reply -> Lua value (nil reply arrives here as null -> false)
 function pushReply(L, reply) {
 	if (reply === null) {
 		lua.lua_pushboolean(L, false)
@@ -392,7 +371,7 @@ function pushReply(L, reply) {
 	}
 }
 
-// Lua return value -> Redis reply (false -> nil, true -> 1, numbers truncate)
+// Mirrors Redis's Lua conversions: false -> nil, true -> 1, numbers truncate
 function toRedisReply(L, index) {
 	switch (lua.lua_type(L, index)) {
 		case lua.LUA_TBOOLEAN:

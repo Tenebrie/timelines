@@ -4,14 +4,10 @@ import net from 'node:net'
 import { extname, join, normalize, sep } from 'node:path'
 
 /**
- * Local stand-in for the Gatekeeper nginx: serves the Styx static build with
- * SPA fallback and proxies the same URL contract the frontend expects —
- * `/api` to Rhea, `/live` (WebSocket) to Calliope. The SPA derives both its
- * API base and WebSocket URLs from window.location, so serving everything
- * from one 127.0.0.1 origin makes the client work without configuration.
- *
- * The route prefixes mirror app/gatekeeper-proxy/nginx/default.conf — a new
- * top-level location added there needs a matching branch here.
+ * Local stand-in for the Gatekeeper nginx: Styx static build with SPA
+ * fallback, `/api` and `/bucket` proxies, `/live` WebSocket splice. Route
+ * prefixes mirror app/gatekeeper-proxy/nginx/default.conf — a new top-level
+ * location there needs a matching branch here.
  */
 const MIME_TYPES = {
 	'.html': 'text/html; charset=utf-8',
@@ -58,10 +54,8 @@ function proxyHttp(req, res, targetPort) {
 }
 
 function serveStatic(staticRoot, pathname, res) {
-	// In the cloud deployment this path is a real page on the marketing host
-	// (Google sign-in bridge). Under the SPA fallback it would recursively
-	// embed the whole app inside the login page's hidden iframe — each nested
-	// copy stealing focus via autoFocus. Serve an inert page instead.
+	// Under the SPA fallback the Google sign-in iframe would recursively embed
+	// the whole app and steal focus — serve an inert page instead
 	if (pathname === '/google-signin.html') {
 		res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
 		res.end('<!doctype html><title>Unavailable</title><!-- Google sign-in is not available in desktop mode -->')
@@ -115,7 +109,6 @@ export function startRouter({
 		}
 	})
 
-	// Raw TCP splice for WebSocket upgrades on /live (live updates + Yjs)
 	server.on('upgrade', (req, clientSocket, head) => {
 		if (!hasPrefix(new URL(req.url ?? '/', 'http://localhost').pathname, '/live')) {
 			clientSocket.destroy()

@@ -1,16 +1,7 @@
 /**
- * Fallback for sharp (native libvips image processing), used by
- * sharp-loader.mjs only when the real module fails to load on the user's
- * system. Two upstream callers exist (ImageService):
- *
- *   - validateImage → sharp(buffer).metadata() — needed by every image
- *     upload's finalize step. Implemented here by parsing the headers of
- *     the formats upstream supports (png/jpeg/gif/webp/svg). Unrecognized
- *     input throws, which validateImage maps to its "not an image" error —
- *     same contract as sharp.
- *   - convertImage → resize/format pipeline — not implementable without
- *     libvips; those methods throw a catchable error and the image
- *     conversion feature is unavailable in desktop mode.
+ * Fallback for sharp, used by sharp-loader.mjs when the native module fails
+ * to load. Provides `.metadata()` via header parsing so image uploads still
+ * finalize; the conversion pipeline throws a catchable error.
  */
 export default function sharpStub(input) {
 	return {
@@ -49,7 +40,6 @@ function parseGif(buffer) {
 
 function parseJpeg(buffer) {
 	if (buffer.length < 4 || buffer.readUInt16BE(0) !== 0xffd8) return null
-	// Walk the segment chain to the first SOFn frame header
 	let offset = 2
 	while (offset + 9 < buffer.length) {
 		if (buffer[offset] !== 0xff) return null
