@@ -215,6 +215,20 @@ export const lightTheme = (props: Props): Theme => {
 	const base = baseThemeOptions(props)
 	const options: ThemeOptions = {
 		...base,
+		components: {
+			...base.components,
+			MuiButton: {
+				styleOverrides: {
+					...(base.components?.MuiButton?.styleOverrides ?? {}),
+					containedPrimary: {
+						backgroundColor: 'hsl(258, 100%, 70%)',
+						'&:hover': {
+							backgroundColor: 'hsl(258, 100%, 75%)',
+						},
+					},
+				},
+			},
+		},
 		palette: {
 			mode: 'light',
 			background: {

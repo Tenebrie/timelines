@@ -1,11 +1,13 @@
+import Add from '@mui/icons-material/Add'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { Editor } from '@tiptap/react'
-import debounce from 'lodash.debounce'
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 
-import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
+import { SavedColors } from '@/app/components/ColorPicker/SavedColors'
+import { useModal } from '@/app/features/modals/ModalsSlice'
+import { Header } from '@/ui-lib/components/Header/Header'
 
 type Props = {
 	editor: Editor
@@ -14,32 +16,18 @@ type Props = {
 }
 
 export function TextColorPickerBody({ editor, currentColor, onClose }: Props) {
-	const openedRef = useRef(true)
 	const savedSelection = useRef({ from: editor.state.selection.from, to: editor.state.selection.to })
+	const { open: openCreateColorModal } = useModal('createColorModal')
 
-	const applyColor = useMemo(
-		() =>
-			debounce((hex: string) => {
-				if (!openedRef.current) {
-					return
-				}
-				editor.chain().focus().setColor(hex).run()
-			}, 250),
-		[editor],
-	)
-
-	const onChangeHex = useCallback(
+	const onSelectColor = useCallback(
 		(hex: string) => {
-			if (!openedRef.current) {
-				return
-			}
-			applyColor(hex)
+			editor.chain().focus().setColor(hex).run()
+			onClose()
 		},
-		[applyColor],
+		[editor, onClose],
 	)
 
 	const onClearColor = useCallback(() => {
-		applyColor.cancel()
 		const { from, to } = savedSelection.current
 		const { tr, schema } = editor.state
 		const textStyleType = schema.marks.textStyle
@@ -61,16 +49,32 @@ export function TextColorPickerBody({ editor, currentColor, onClose }: Props) {
 
 		editor.view.dispatch(tr)
 		onClose()
-		openedRef.current = false
-	}, [editor, onClose, applyColor])
+	}, [editor, onClose])
 
 	return (
-		<Stack direction="column" gap={1} sx={{ minWidth: 600 }}>
-			<ColorPicker initialValue={currentColor ?? undefined} onChangeHex={onChangeHex} luminanceCorrection />
-			<Stack direction="row" justifyContent="space-between" alignItems="center">
-				<Typography variant="body2" color="text.secondary">
-					Colors may change to stay readable in light and dark modes.
-				</Typography>
+		<Stack direction="column" gap={1.5} sx={{ padding: '6px 12px', width: 280 }}>
+			<Header
+				endAdornment={
+					<Button
+						size="small"
+						sx={{ minWidth: 0, borderRadius: '50%', padding: 0.35, margin: 0 }}
+						color="secondary"
+						onClick={() => {
+							openCreateColorModal({})
+							onClose()
+						}}
+					>
+						<Add />
+					</Button>
+				}
+				variant="h3"
+			>
+				Text color
+			</Header>
+			<Stack direction="row" gap={1} flexWrap="wrap" sx={{ maxWidth: 312 }}>
+				<SavedColors currentColor={currentColor ?? undefined} onSelectColor={onSelectColor} size={24} />
+			</Stack>
+			<Stack justifyContent="space-between" alignItems="center" gap={1}>
 				<Button
 					variant="text"
 					color="secondary"
@@ -80,6 +84,9 @@ export function TextColorPickerBody({ editor, currentColor, onClose }: Props) {
 				>
 					Clear color
 				</Button>
+				<Typography variant="body2" color="text.secondary">
+					Colors may change to stay readable in light and dark modes.
+				</Typography>
 			</Stack>
 		</Stack>
 	)

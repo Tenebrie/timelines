@@ -19,7 +19,7 @@ export function LandingPageNavigatorButton({ icon, label }: Props) {
 					height: 1,
 					gap: 0.5,
 					border: 'none',
-					padding: '8px 15px',
+					padding: '6px 15px',
 					marginTop: '0px',
 					textDecoration: 'none',
 				}}

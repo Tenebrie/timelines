@@ -52,10 +52,15 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly, children
 
 				'& p': {
 					margin: 0,
-					padding: '6px 0px',
-					lineHeight: 1.5,
+					padding: '10px 0px',
+					lineHeight: 1.55,
 					wordBreak: 'break-word',
-					color: 'text.primary',
+					color: isDark ? '#D8D8E0' : 'text.primary',
+				},
+
+				'& h1, & h2, & h3, & h4, & h5, & h6': {
+					marginBottom: '0.4em',
+					...(isDark ? { color: '#ECECF2' } : {}),
 				},
 
 				'& li > p': {
