@@ -1,4 +1,4 @@
-name: Build Desktop
+name: Echo
 
 on:
   workflow_dispatch:
@@ -70,7 +70,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    name: Attach artifacts to release
+    name: Publish Artifacts
     if: startsWith(github.ref, 'refs/tags/v') || inputs.version != ''
     needs: build
     runs-on: ubuntu-latest
