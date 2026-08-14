@@ -89,5 +89,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ inputs.version || github.ref_name }}
         run: |
+          for archive in artifacts/*; do
+            mv "$archive" "${archive/-$RELEASE_TAG/}"
+          done
           gh release create "$RELEASE_TAG" --generate-notes artifacts/* ||
             gh release upload "$RELEASE_TAG" artifacts/* --clobber

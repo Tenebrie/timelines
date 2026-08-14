@@ -105,7 +105,7 @@ jobs:
           title: Release ${{ needs.check-commits.outputs.version }}
 
   build-desktop:
-    name: Build Desktop
+    name: Echo
     needs: [check-commits, create-release]
     if: ${{ github.ref_name == 'dev' }}
     permissions:
