@@ -13,7 +13,7 @@ type Props = {
 
 export function WikiOutlinerDrawer({ children }: Props) {
 	const minWidth = 250
-	const maxWidth = window.innerWidth * 0.4
+	const maxWidth = window.innerWidth * 0.8
 	const [preferences, setPreferences] = usePersistentState(
 		'wikiOutlinerState/v1',
 		ResizeGrabberPreferencesSchema,

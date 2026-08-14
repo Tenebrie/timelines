@@ -13,6 +13,7 @@ import { EventDetails } from '@/app/features/entityEditor/event/details/EventDet
 import { TagDetails } from '@/app/features/entityEditor/tag/details/TagDetails'
 import { useDocumentScrollMemory } from '@/app/features/richTextEditor/hooks/useDocumentScrollMemory'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useMobileLayout } from '@/app/hooks/useMobileLayout'
 import { WikiOutlinerDrawer } from '@/app/views/world/components/WikiOutlinerDrawer'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
@@ -22,6 +23,7 @@ import { ArticleList } from './articleList/ArticleList'
 import { ArticleListEntityGroupButton } from './articleList/ArticleListEntityGroupButton'
 import { ArticleListHeader } from './articleList/ArticleListHeader'
 import { useCurrentArticle } from './hooks/useCurrentArticle'
+import { useScreenCenteredColumn, WIKI_COLUMN_MAX_WIDTH } from './hooks/useScreenCenteredColumn'
 
 export const Wiki = () => {
 	const theme = useCustomTheme()
@@ -105,11 +107,13 @@ export function CurrentArticleDetails() {
 	const { article } = useCurrentArticle()
 	const navigate = useStableNavigate({ from: '/world/$worldId/wiki/$articleId' })
 	const { isMobile } = useMobileLayout()
+	const scrollbars = useBrowserSpecificScrollbars()
 
 	const { containerRef, onScroll } = useDocumentScrollMemory(
 		article ? `wiki-page:${article.id}` : undefined,
 		article?.id,
 	)
+	const columnRef = useScreenCenteredColumn(!isMobile)
 
 	if (!article) {
 		return null
@@ -159,13 +163,14 @@ export function CurrentArticleDetails() {
 				overflowY: 'auto',
 				display: 'flex',
 				flexDirection: 'row',
+				...scrollbars,
 			}}
 		>
-			{!isMobile && <Box sx={{ flex: '1 1 0', maxWidth: (theme) => theme.spacing(12) }} />}
 			<Stack
+				ref={columnRef}
 				gap={1}
 				sx={{
-					maxWidth: 900,
+					maxWidth: WIKI_COLUMN_MAX_WIDTH,
 					width: '100%',
 					minWidth: 0,
 					paddingTop: isMobile ? '12px' : '24px',

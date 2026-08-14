@@ -88,3 +88,49 @@ jobs:
       - name: Stop services
         if: always()
         run: docker compose -f docker-compose.ci.yml down -v
+
+  run-e2e-echo:
+    name: Playwright (Echo)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.x
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build desktop package
+        working-directory: app/echo-desktop
+        run: npm run build
+
+      - name: Start desktop app
+        working-directory: app/echo-desktop/dist/package/neverkin-desktop-linux-x64
+        run: |
+          export NEVERKIN_DESKTOP_DATA="$RUNNER_TEMP/echo-data"
+          export NEVERKIN_DESKTOP_PORT=8190
+          xvfb-run -a ./neverkin --no-sandbox &
+          timeout 60 bash -c 'until curl -sf http://127.0.0.1:8190/health; do sleep 1; done'
+
+      - name: Build Playwright container
+        working-directory: test/e2e
+        run: docker build -t playwright-e2e .
+
+      - name: Run E2E tests
+        working-directory: test/e2e
+        run: |
+          docker run --rm \
+            --network host \
+            -e TARGET_ENV=desktop \
+            -v $(pwd)/test-report:/app/test-report \
+            playwright-e2e \
+            npx playwright test --config=playwright.ci.config.ts --project=chromium
+
+      - name: Upload test report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report-echo
+          path: test/e2e/test-report/
