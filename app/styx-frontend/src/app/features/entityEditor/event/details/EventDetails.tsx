@@ -19,11 +19,12 @@ import { useEventDraft } from './draft/useEventDraft'
 type Props = {
 	editedEvent: WorldEvent
 	autoFocus?: boolean
+	surface?: string
 }
 
 export const EventDetails = memo(EventDetailsComponent)
 
-export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
+export function EventDetailsComponent({ editedEvent, autoFocus, surface }: Props) {
 	const { event } = useCurrentOrNewEvent({ event: editedEvent })
 	const draft = useEventDraft({ event })
 
@@ -43,7 +44,7 @@ export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
 			<Divider />
 			<Box flexGrow={1} height={0}>
 				<EntityEditorTabs
-					contentTab={<EventDescription event={event} autoFocus={autoFocus} />}
+					contentTab={<EventDescription event={event} autoFocus={autoFocus} surface={surface} />}
 					illustrationTab={
 						<Stack gap={2} sx={{ height: '100%', overflow: 'auto', marginLeft: 1, marginRight: -0.5 }}>
 							<Stack gap={2} sx={{ marginRight: 2 }}>

@@ -131,11 +131,13 @@ export function CurrentArticleDetails() {
 
 	switch (article.type) {
 		case 'article':
-			return <ArticleDetails article={article.entity} isWikiTab titleProps={{ startAdornment }} />
+			return (
+				<ArticleDetails article={article.entity} isWikiTab titleProps={{ startAdornment }} surface="wiki" />
+			)
 		case 'actor':
-			return <ActorDetails editedActor={article.entity} />
+			return <ActorDetails editedActor={article.entity} surface="wiki" />
 		case 'event':
-			return <EventDetails editedEvent={article.entity} />
+			return <EventDetails editedEvent={article.entity} surface="wiki" />
 		case 'tag':
 			return <TagDetails editedTag={article.entity} />
 	}

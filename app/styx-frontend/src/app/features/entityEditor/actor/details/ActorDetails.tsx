@@ -19,11 +19,12 @@ import { useUpsertActor } from './draft/useUpsertActor'
 
 type Props = {
 	editedActor: Actor
+	surface?: string
 }
 
 export const ActorDetails = memo(ActorDetailsComponent)
 
-export function ActorDetailsComponent({ editedActor }: Props) {
+export function ActorDetailsComponent({ editedActor, surface }: Props) {
 	const { mode, actor } = useCurrentOrNewActor({ editedActor })
 	const draft = useActorDraft({ actor })
 	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
@@ -51,7 +52,7 @@ export function ActorDetailsComponent({ editedActor }: Props) {
 			<Divider />
 			<Box flexGrow={1} height={0} sx={{ marginRight: 0 }}>
 				<EntityEditorTabs
-					contentTab={<ActorDescription actor={actor} />}
+					contentTab={<ActorDescription actor={actor} surface={surface} />}
 					illustrationTab={
 						<Stack gap={2} sx={{ height: '100%', overflow: 'auto', marginRight: -0.5 }}>
 							<Stack gap={2} sx={{ marginRight: 2 }}>

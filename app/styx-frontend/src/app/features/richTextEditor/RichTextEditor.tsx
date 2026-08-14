@@ -12,6 +12,7 @@ import { useEventBusSubscribe } from '../eventBus'
 import { EditorContentBox } from './components/EditorContentBox'
 import { useCollaboration } from './extensions/collaboration/useCollaboration'
 import { EditorExtensions } from './extensions/editorExtensions'
+import { useDocumentScrollMemory } from './hooks/useDocumentScrollMemory'
 import { useEditorPasteHandler } from './hooks/useEditorPasteHandler'
 import { RichTextEditorControls } from './RichTextEditorControls'
 import { RichTextEditorQuickSelect } from './RichTextEditorQuickSelect'
@@ -28,6 +29,11 @@ type Props = {
 		documentId: string
 	}
 	autoFocus?: boolean
+	// Identifies which differently-sized UI surface this editor is mounted in
+	// (e.g. the full-page Wiki layout vs. the EditEventModal popup) — the same
+	// document can be rendered in both, and per-surface state (like remembered
+	// scroll position) isn't meaningful across containers of different sizes.
+	surface?: string
 }
 
 export type RichTextEditorProps = Props
@@ -39,7 +45,14 @@ export type OnChangeParams = {
 
 export const RichTextEditor = memo(RichTextEditorComponent)
 
-export function RichTextEditorComponent({ value, onChange, onBlur, collaboration, autoFocus }: Props) {
+export function RichTextEditorComponent({
+	value,
+	onChange,
+	onBlur,
+	collaboration,
+	autoFocus,
+	surface = 'default',
+}: Props) {
 	const theme = useCustomTheme()
 	const scrollbars = useBrowserSpecificScrollbars()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
@@ -108,6 +121,11 @@ export function RichTextEditorComponent({ value, onChange, onBlur, collaboration
 
 	const displayedEditor = showPreview && previewEditor ? previewEditor : editor
 
+	const { containerRef: scrollContainerRef, onScroll } = useDocumentScrollMemory(
+		collaboration?.documentId ? `${surface}:${collaboration.documentId}` : undefined,
+		displayedEditor,
+	)
+
 	const currentValue = useRef(value)
 
 	useEffect(() => {
@@ -148,7 +166,11 @@ export function RichTextEditorComponent({ value, onChange, onBlur, collaboration
 			}}
 		>
 			<RichTextEditorControls editor={displayedEditor} />
-			<Box sx={{ position: 'relative', flex: 1, minHeight: 0, overflowY: 'auto', ...scrollbars }}>
+			<Box
+				ref={scrollContainerRef}
+				onScroll={onScroll}
+				sx={{ position: 'relative', flex: 1, minHeight: 0, overflowY: 'auto', ...scrollbars }}
+			>
 				{showPreview && previewEditor ? (
 					<EditorContentBox
 						className="content"

@@ -16,9 +16,10 @@ type Props = {
 	article: WikiArticle
 	titleProps?: Partial<Parameters<typeof EditableTitle>[0]>
 	isWikiTab?: boolean
+	surface?: string
 }
 
-export const ArticleDetails = ({ article, titleProps, isWikiTab }: Props) => {
+export const ArticleDetails = ({ article, titleProps, isWikiTab, surface }: Props) => {
 	const [editArticle] = useEditArticle()
 
 	const onSave = useEvent((name: string) => {
@@ -39,7 +40,7 @@ export const ArticleDetails = ({ article, titleProps, isWikiTab }: Props) => {
 			<Divider />
 			<Box flexGrow={1} height={0}>
 				<EntityEditorTabs
-					contentTab={<ArticleDescription article={article} />}
+					contentTab={<ArticleDescription article={article} surface={surface} />}
 					backlinksTab={<ArticleBacklinks articleId={article.id} />}
 					isWikiTab={isWikiTab}
 				/>

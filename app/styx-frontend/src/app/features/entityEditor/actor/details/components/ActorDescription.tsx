@@ -8,9 +8,10 @@ import { worldSlice } from '@/app/views/world/WorldSlice'
 
 type Props = {
 	actor: ActorDetails
+	surface?: string
 }
 
-export const ActorDescription = ({ actor }: Props) => {
+export const ActorDescription = ({ actor, surface }: Props) => {
 	const { updateActor } = worldSlice.actions
 	const dispatch = useDispatch()
 
@@ -33,6 +34,7 @@ export const ActorDescription = ({ actor }: Props) => {
 				debouncedUpdate.current(actor.id, plainText, richText)
 			}}
 			autoFocus
+			surface={surface}
 			collaboration={{
 				entityType: 'actor',
 				documentId: actor.id,
