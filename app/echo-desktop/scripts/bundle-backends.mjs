@@ -70,6 +70,11 @@ export async function bundleBackends() {
 		entryPoints: [join(repoRoot, 'app', 'calliope-websockets', 'dist', 'index.js')],
 		outfile: join(outDir, 'calliope.mjs'),
 	})
+	await esbuild.build({
+		...shared,
+		entryPoints: [join(repoRoot, 'app', 'orpheus-mcp', 'dist', 'index.js')],
+		outfile: join(outDir, 'orpheus.mjs'),
+	})
 	console.info(`[bundle] backends bundled to ${outDir}`)
 	return outDir
 }

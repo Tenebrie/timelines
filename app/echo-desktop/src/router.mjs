@@ -87,11 +87,14 @@ function serveStatic(staticRoot, pathname, res) {
 		.pipe(res)
 }
 
+const ORPHEUS_PREFIXES = ['/mcp', '/orpheus', '/.well-known/oauth-authorization-server', '/authorize', '/token', '/register']
+
 export function startRouter({
 	staticRoot,
 	port,
 	rheaPort,
 	calliopePort,
+	orpheusPort,
 	bucketPort,
 	host = '127.0.0.1',
 	fallbackToRandomPort = false,
@@ -102,6 +105,8 @@ export function startRouter({
 			proxyHttp(req, res, rheaPort)
 		} else if (hasPrefix(pathname, '/calliope')) {
 			proxyHttp(req, res, calliopePort)
+		} else if (ORPHEUS_PREFIXES.some((prefix) => hasPrefix(pathname, prefix))) {
+			proxyHttp(req, res, orpheusPort)
 		} else if (hasPrefix(pathname, '/bucket')) {
 			proxyHttp(req, res, bucketPort)
 		} else {

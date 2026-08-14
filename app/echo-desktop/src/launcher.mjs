@@ -32,6 +32,7 @@ const LOG_SESSION_CAP_BYTES = 20 * 1024 * 1024
 const servicesRoot = join(fileURLToPath(new URL('.', import.meta.url)), '..', '..')
 const rheaDir = join(servicesRoot, 'rhea-backend')
 const calliopeDir = join(servicesRoot, 'calliope-websockets')
+const orpheusDir = join(servicesRoot, 'orpheus-mcp')
 const styxBuildDir = join(servicesRoot, 'styx-frontend', 'build')
 
 function ensureEnvironment(dataDir) {
@@ -73,7 +74,7 @@ export async function startDesktopServices() {
 	process.on('uncaughtException', failLoudly('uncaught exception'))
 	ensureEnvironment(dataDir)
 	installDnsRemap()
-	const services = installPortRemap([3000, 3001, 9000])
+	const services = installPortRemap([3000, 3001, 3002, 9000])
 
 	console.info('[echo-desktop] starting local asset storage (S3)...')
 	await startS3Server({ storageRoot: join(dataDir, 's3') })
@@ -118,11 +119,19 @@ export async function startDesktopServices() {
 	const calliopePort = await services.whenBound(3001)
 	console.info(`[echo-desktop] Calliope listening on 127.0.0.1:${calliopePort}`)
 
+	console.info('[echo-desktop] starting Orpheus (MCP)...')
+	await import(
+		pathToFileURL(useBundles ? join(bundleDir, 'orpheus.mjs') : join(orpheusDir, 'dist', 'index.js'))
+	)
+	const orpheusPort = await services.whenBound(3002)
+	console.info(`[echo-desktop] Orpheus listening on 127.0.0.1:${orpheusPort}`)
+
 	const server = await startRouter({
 		staticRoot: styxBuildDir,
 		port,
 		rheaPort,
 		calliopePort,
+		orpheusPort,
 		bucketPort,
 		fallbackToRandomPort: !process.env.NEVERKIN_DESKTOP_PORT,
 	})

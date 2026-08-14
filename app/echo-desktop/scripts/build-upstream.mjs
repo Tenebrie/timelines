@@ -16,6 +16,7 @@ run('node library/ci-build.mjs', repoRoot)
 run('npm run build', join(repoRoot, 'app', 'rhea-backend'))
 run('npx moonflower openapi dist/apiSpec.json', join(repoRoot, 'app', 'rhea-backend'))
 run('npm run build', join(repoRoot, 'app', 'calliope-websockets'))
+run('npm run build', join(repoRoot, 'app', 'orpheus-mcp'))
 run('npm run build', join(repoRoot, 'app', 'styx-frontend'))
 
 console.info('\n[build-upstream] done')

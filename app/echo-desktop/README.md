@@ -1,6 +1,6 @@
 # Neverkin Desktop
 
-Standalone desktop mode: the full Neverkin stack (Rhea API, Calliope realtime, Styx frontend)
+Standalone desktop mode: the full Neverkin stack (Rhea API, Calliope realtime, Orpheus MCP, Styx frontend)
 running as a single local process with an embedded database. No Docker, no Postgres, no Redis,
 no S3, no network — a writer's data never leaves their machine.
 
