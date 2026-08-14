@@ -92,13 +92,13 @@ export const EditEventModal = () => {
 
 				<Stack direction="row" width="100%" height="100%" flexDirection="column">
 					{currentEntity?.type === 'event' && currentEntity.entity && (
-						<EventDetails editedEvent={currentEntity.entity} autoFocus={isOpen} />
+						<EventDetails editedEvent={currentEntity.entity} surface="editEventModal" />
 					)}
 					{currentEntity?.type === 'actor' && currentEntity.entity && (
-						<ActorDetails editedActor={currentEntity.entity} />
+						<ActorDetails editedActor={currentEntity.entity} surface="editEventModal" />
 					)}
 					{currentEntity?.type === 'article' && currentEntity.entity && (
-						<ArticleDetails article={currentEntity.entity} />
+						<ArticleDetails article={currentEntity.entity} surface="editEventModal" />
 					)}
 					{currentEntity?.type === 'tag' && currentEntity.entity && (
 						<TagDetails editedTag={currentEntity.entity} />

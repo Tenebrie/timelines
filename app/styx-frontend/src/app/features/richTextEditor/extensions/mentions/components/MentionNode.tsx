@@ -1,17 +1,13 @@
-import { MentionNode as MentionNodeBase, MentionNodeName, MentionPropsType } from '@neverkin/tiptap-schema'
+import { MentionNode as MentionNodeBase, MentionNodeName } from '@neverkin/tiptap-schema'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { Plugin, PluginKey, TextSelection } from '@tiptap/pm/state'
 import { Decoration, DecorationSet } from '@tiptap/pm/view'
+import { ReactNodeViewRenderer } from '@tiptap/react'
 
-import { dispatchGlobalEvent } from '@/app/features/eventBus'
 import { store } from '@/app/store'
-import {
-	registerMentionMount,
-	unregisterMentionMount,
-	updateMentionMount,
-} from '@/app/views/world/components/MentionPortalHost'
 
-import { resolveEntityName } from '../utils/resolveEntityName'
+import { assimilate } from '../../../utils/assimilate'
+import { MentionView } from './MentionView'
 
 export { MentionNodeName }
 
@@ -41,10 +37,7 @@ const getTagName = (node: ProseMirrorNode) => {
 
 const mentionSelectionKey = new PluginKey('mentionSelectionDecoration')
 
-let mentionIdCounter = 0
-const nextMentionId = () => `mention-${++mentionIdCounter}`
-
-export const MentionNode = MentionNodeBase.extend({
+export const MentionNode = assimilate(MentionNodeBase).extend({
 	renderText({ node }) {
 		const name =
 			getActorName(node) ?? getEventName(node) ?? getArticleName(node) ?? getTagName(node) ?? 'Unknown entity'
@@ -91,86 +84,6 @@ export const MentionNode = MentionNodeBase.extend({
 	},
 
 	addNodeView() {
-		return ({ node: initialNode }) => {
-			const id = nextMentionId()
-			const dom = document.createElement('span')
-			dom.setAttribute('data-type', 'mention')
-
-			const caretAnchor = document.createTextNode('\u200B')
-			const mountPoint = document.createElement('span')
-			const caretAnchorAfter = document.createTextNode('\u200B')
-
-			dom.appendChild(caretAnchor)
-			dom.appendChild(mountPoint)
-			dom.appendChild(caretAnchorAfter)
-
-			let lastNode: ProseMirrorNode = initialNode
-			let lastProps: MentionPropsType = initialNode.attrs.componentProps as MentionPropsType
-
-			const buildMount = (node: ProseMirrorNode) => {
-				const props = node.attrs.componentProps as MentionPropsType
-				const actorId = typeof props.actor === 'string' ? props.actor : undefined
-				const eventId = typeof props.event === 'string' ? props.event : undefined
-				const articleId = typeof props.article === 'string' ? props.article : undefined
-				const tagId = typeof props.tag === 'string' ? props.tag : undefined
-
-				const entityId = actorId ?? eventId ?? articleId ?? tagId
-				if (entityId) {
-					const entityName = resolveEntityName({ entityId })
-					dom.setAttribute('data-name', entityName)
-				}
-
-				return {
-					id,
-					element: mountPoint,
-					actorId,
-					eventId,
-					articleId,
-					tagId,
-					fallbackName: node.attrs.name as string | undefined,
-				}
-			}
-
-			const propsChanged = (a: MentionPropsType, b: MentionPropsType) =>
-				a.actor !== b.actor || a.event !== b.event || a.article !== b.article || a.tag !== b.tag
-
-			registerMentionMount(buildMount(initialNode))
-			dispatchGlobalEvent['richEditor/mentionRender/onStart']({ node: initialNode })
-
-			// The portal host commits asynchronously on its next React render.
-			// Fire onEnd after a microtask so listeners observe the mount.
-			queueMicrotask(() => {
-				dispatchGlobalEvent['richEditor/mentionRender/onEnd']({ node: initialNode })
-			})
-
-			return {
-				dom,
-				update: (node) => {
-					if (node.type !== initialNode.type) return false
-					if (node === lastNode) return true
-
-					const newProps = node.attrs.componentProps as MentionPropsType
-					const changed = propsChanged(lastProps, newProps) || node.attrs.name !== lastNode.attrs.name
-					lastNode = node
-					lastProps = newProps
-
-					if (!changed) return true
-
-					dispatchGlobalEvent['richEditor/mentionRender/onEnd']({ node: lastNode })
-					dispatchGlobalEvent['richEditor/mentionRender/onStart']({ node })
-
-					updateMentionMount(buildMount(node))
-
-					queueMicrotask(() => {
-						dispatchGlobalEvent['richEditor/mentionRender/onEnd']({ node })
-					})
-					return true
-				},
-				destroy: () => {
-					dispatchGlobalEvent['richEditor/mentionRender/onEnd']({ node: lastNode })
-					unregisterMentionMount(id)
-				},
-			}
-		}
+		return ReactNodeViewRenderer(MentionView)
 	},
 })

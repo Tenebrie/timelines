@@ -1,9 +1,10 @@
+import CircularProgress from '@mui/material/CircularProgress'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { usePopupState } from 'material-ui-popup-state/hooks'
 import { memo, useCallback, useRef, useState } from 'react'
 import { MouseEvent } from 'react'
-import { useDispatch, useStore } from 'react-redux'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 
 import { DragDropState } from '@/app/features/dragDrop/DragDropState'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
@@ -14,11 +15,12 @@ import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScro
 import { RootState } from '@/app/store'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 
+import { getWorldStateLoaded } from '../../../WorldSliceSelectors'
 import { useBulkWikiMove } from '../api/useBulkWikiMove'
 import { useMoveArticle } from '../api/useMoveArticle'
 import { WikiContextMenu } from '../components/WikiContextMenu'
 import { BoxedWikiEntity, useBoxedWikiContent } from '../hooks/useBoxedWikiContent'
-import { getWikiState } from '../WikiSliceSelectors'
+import { getWikiState, getWikiStateLoaded } from '../WikiSliceSelectors'
 import { ArticleListItem } from './ArticleListItem'
 
 type Props = {
@@ -29,7 +31,6 @@ type Props = {
 
 /**
  * TODO:
- * - Event moving from the wiki view
  * - Event moving after clicking "Edit" without selection (Timeline view)
  * - Deletion modal invalid text
  * - Mentions to navigate within wiki view (if in wiki view)
@@ -99,6 +100,24 @@ export function ArticleListComponent({ parentId, color, depth }: Props) {
 		},
 		[collapseWikiFolderById, dispatch, parentId],
 	)
+
+	const isWorldLoaded = useSelector(getWorldStateLoaded)
+	const isWikiLoaded = useSelector(getWikiStateLoaded)
+
+	if (!isWorldLoaded || !isWikiLoaded) {
+		return (
+			<Stack
+				sx={{
+					width: '100%',
+					height: '100%',
+				}}
+				alignItems="center"
+				justifyContent="center"
+			>
+				<CircularProgress aria-label="Loading…" />
+			</Stack>
+		)
+	}
 
 	return (
 		<Stack

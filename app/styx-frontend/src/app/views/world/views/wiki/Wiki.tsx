@@ -11,6 +11,8 @@ import { ActorDetails } from '@/app/features/entityEditor/actor/details/ActorDet
 import { ArticleDetails } from '@/app/features/entityEditor/article/details/ArticleDetails'
 import { EventDetails } from '@/app/features/entityEditor/event/details/EventDetails'
 import { TagDetails } from '@/app/features/entityEditor/tag/details/TagDetails'
+import { useDocumentScrollMemory } from '@/app/features/richTextEditor/hooks/useDocumentScrollMemory'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useMobileLayout } from '@/app/hooks/useMobileLayout'
 import { WikiOutlinerDrawer } from '@/app/views/world/components/WikiOutlinerDrawer'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
@@ -22,6 +24,7 @@ import { ArticleListHeader } from './articleList/ArticleListHeader'
 import { useCurrentArticle } from './hooks/useCurrentArticle'
 
 export const Wiki = () => {
+	const theme = useCustomTheme()
 	const isArticle = useCheckRouteMatch('/world/$worldId/wiki/$articleId')
 	const { isMobile } = useMobileLayout()
 
@@ -85,19 +88,13 @@ export const Wiki = () => {
 				<Stack
 					sx={{
 						flex: 1,
-						paddingTop: isMobile ? '12px' : '24px',
-						paddingX: isMobile ? '8px' : 2,
-						alignItems: 'center',
-						height: isMobile ? '100%' : 'calc(100% - 24px)',
-						width: isMobile ? 'calc(100% - 16px)' : undefined,
-						overflowY: 'auto',
+						minWidth: 0,
+						width: '100%',
+						height: '100%',
+						background: theme.custom.palette.background.textEditor,
 					}}
 				>
-					{isArticle && (
-						<Stack gap={1} height={'calc(100%)'} sx={{ maxWidth: 1278, width: '100%', flex: 1 }}>
-							<Box height={'calc(100% - 1px)'}>{<Outlet />}</Box>
-						</Stack>
-					)}
+					{isArticle && <Outlet />}
 				</Stack>
 			)}
 		</Stack>
@@ -109,13 +106,18 @@ export function CurrentArticleDetails() {
 	const navigate = useStableNavigate({ from: '/world/$worldId/wiki/$articleId' })
 	const { isMobile } = useMobileLayout()
 
+	const { containerRef, onScroll } = useDocumentScrollMemory(
+		article ? `wiki-page:${article.id}` : undefined,
+		article?.id,
+	)
+
 	if (!article) {
 		return null
 	}
 
 	const startAdornment = isMobile ? (
 		<Stack direction="row" gap={0.5} marginRight={0.5} alignItems="center">
-			<Tooltip title="Back to articles" disableInteractive enterDelay={400}>
+			<Tooltip title="Back to list" disableInteractive enterDelay={400}>
 				<IconButton
 					size="small"
 					onClick={() => navigate({ to: '/world/$worldId/wiki', search: true })}
@@ -129,15 +131,51 @@ export function CurrentArticleDetails() {
 		</Stack>
 	) : undefined
 
-	switch (article.type) {
-		case 'article':
-			return <ArticleDetails article={article.entity} isWikiTab titleProps={{ startAdornment }} />
-		case 'actor':
-			return <ActorDetails editedActor={article.entity} />
-		case 'event':
-			return <EventDetails editedEvent={article.entity} />
-		case 'tag':
-			return <TagDetails editedTag={article.entity} />
-	}
-	return null
+	const content = (() => {
+		switch (article.type) {
+			case 'article':
+				return (
+					<ArticleDetails article={article.entity} isWikiTab titleProps={{ startAdornment }} surface="wiki" />
+				)
+			case 'actor':
+				return <ActorDetails editedActor={article.entity} surface="wiki" titleProps={{ startAdornment }} />
+			case 'event':
+				return <EventDetails editedEvent={article.entity} surface="wiki" titleProps={{ startAdornment }} />
+			case 'tag':
+				return <TagDetails editedTag={article.entity} titleProps={{ startAdornment }} />
+		}
+		return null
+	})()
+
+	return (
+		<Box
+			ref={containerRef}
+			onScroll={onScroll}
+			sx={{
+				height: '100%',
+				width: '100%',
+				paddingX: 2,
+				boxSizing: 'border-box',
+				overflowY: 'auto',
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+			}}
+		>
+			<Stack
+				gap={1}
+				sx={{
+					maxWidth: 1278,
+					width: '100%',
+					flex: 1,
+					paddingTop: isMobile ? '12px' : '24px',
+					'& > *': {
+						flexGrow: 1,
+					},
+				}}
+			>
+				{content}
+			</Stack>
+		</Box>
+	)
 }

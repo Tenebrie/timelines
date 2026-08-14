@@ -1,92 +1,40 @@
-import Button from '@mui/material/Button'
-import Input from '@mui/material/Input'
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import { useEffect, useState } from 'react'
+import useEvent from 'react-use-event-hook'
 
 import { ColorIconPicker } from '@/app/components/ColorIconPicker/ColorIconPicker'
-import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 
 import { TagDraft } from '../draft/useTagDraft'
 
 type Props = {
 	draft: TagDraft
+	titleProps?: Partial<Parameters<typeof EditableTitle>[0]>
 }
 
-export const TagTitle = ({ draft }: Props) => {
-	const [editing, setEditing] = useState(false)
-	const [name, setName] = useState(draft.name)
-
-	const applyChanges = () => {
-		setEditing(false)
-		const trimmedName = name.trim()
-		draft.setName(trimmedName)
-	}
-
-	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], applyChanges, editing)
-	useShortcut(
-		[Shortcut.Escape],
-		() => {
-			setEditing(false)
-			setName(draft.name)
-		},
-		editing && ShortcutPriorities.InputField,
-	)
-
-	useEffect(() => {
-		setName(draft.name)
-	}, [draft.name])
-
-	if (!draft) {
-		return null
-	}
+export const TagTitle = ({ draft, titleProps }: Props) => {
+	const onSave = useEvent((name: string) => {
+		draft.setName(name.trim())
+	})
 
 	return (
-		<Stack
-			gap={1}
-			direction="row"
-			alignContent="center"
-			width="100%"
-			sx={{ height: '32px' }}
+		<EditableTitle
 			data-testid="TagTitle"
-		>
-			{!editing && (
-				<Stack direction="row" justifyContent="space-between" width="100%">
+			value={draft.name}
+			displayValue={draft.name || '<Name>'}
+			onSave={onSave}
+			placeholder="Tag name"
+			{...titleProps}
+			startAdornment={
+				<Stack sx={{ height: 1 }} direction="row">
+					{titleProps?.startAdornment}
 					<ColorIconPicker
 						icon="default"
 						defaultIcon="mdi:tag-outline"
 						color={'#9f2261'}
 						onClick={() => {}}
 					/>
-					<Button
-						variant="text"
-						sx={{ padding: '0 8px', flexGrow: 1, justifyContent: 'flex-start' }}
-						onClick={() => setEditing(true)}
-					>
-						<Typography variant="h6" noWrap>
-							{name || '<Name>'}
-						</Typography>
-					</Button>
 				</Stack>
-			)}
-			{editing && (
-				<Input
-					autoFocus
-					value={name}
-					onChange={(event) => setName(event.target.value)}
-					onBlur={() => applyChanges()}
-					placeholder={'Tag name'}
-					role="textbox"
-					sx={{
-						width: '100%',
-						marginBottom: '-9px',
-						fontSize: '20px',
-						fontWeight: 450,
-						paddingLeft: '8px',
-						paddingBottom: '8px',
-					}}
-				/>
-			)}
-		</Stack>
+			}
+		/>
 	)
 }

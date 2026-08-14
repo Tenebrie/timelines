@@ -5,12 +5,14 @@ import { memo, useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
 import { getWorldState } from '../../views/world/WorldSliceSelectors'
 import { useEventBusSubscribe } from '../eventBus'
 import { EditorContentBox } from './components/EditorContentBox'
 import { useCollaboration } from './extensions/collaboration/useCollaboration'
 import { EditorExtensions } from './extensions/editorExtensions'
+import { useDocumentScrollMemory } from './hooks/useDocumentScrollMemory'
 import { useEditorPasteHandler } from './hooks/useEditorPasteHandler'
 import { RichTextEditorControls } from './RichTextEditorControls'
 import { RichTextEditorQuickSelect } from './RichTextEditorQuickSelect'
@@ -27,6 +29,7 @@ type Props = {
 		documentId: string
 	}
 	autoFocus?: boolean
+	surface?: string
 }
 
 export type RichTextEditorProps = Props
@@ -38,11 +41,18 @@ export type OnChangeParams = {
 
 export const RichTextEditor = memo(RichTextEditorComponent)
 
-export function RichTextEditorComponent({ value, onChange, onBlur, collaboration, autoFocus }: Props) {
+export function RichTextEditorComponent({
+	value,
+	onChange,
+	onBlur,
+	collaboration,
+	autoFocus,
+	surface = 'default',
+}: Props) {
 	const theme = useCustomTheme()
+	const scrollbars = useBrowserSpecificScrollbars()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 
-	// Enable collaboration if params provided
 	const { extension: collaborationExtension, isReady: collabReady } = useCollaboration({
 		enabled: !!collaboration,
 		documentId: collaboration?.documentId ?? '',
@@ -74,12 +84,28 @@ export function RichTextEditorComponent({ value, onChange, onBlur, collaboration
 
 	const { handlePaste } = useEditorPasteHandler()
 
+	const showPreview = !!collaboration && !collabReady
+	const previewEditor = useEditor({
+		content: value,
+		editable: false,
+		extensions: EditorExtensions,
+	})
+
+	const previewSyncedDocId = useRef(collaboration?.documentId)
+	if (
+		previewEditor &&
+		!previewEditor.isDestroyed &&
+		collaboration?.documentId &&
+		previewSyncedDocId.current !== collaboration.documentId
+	) {
+		previewEditor.chain().setContent(value).setTextSelection(0).run()
+		previewSyncedDocId.current = collaboration.documentId
+	}
+
 	const editor = useEditor(
 		{
-			// content: value,
-			// editable: !isReadOnly && (!collaboration || collabReady),
 			extensions,
-			autofocus: false,
+			autofocus: autoFocus,
 			editorProps: {
 				handlePaste,
 			},
@@ -93,22 +119,15 @@ export function RichTextEditorComponent({ value, onChange, onBlur, collaboration
 					richText,
 				})
 			},
-			onCreate({ editor }) {
-				if (!autoFocus) {
-					return
-				}
-
-				requestIdleCallback(
-					() => {
-						if (!editor.isDestroyed) {
-							editor.commands.focus('end', { scrollIntoView: false })
-						}
-					},
-					{ timeout: 100 },
-				)
-			},
 		},
 		[extensions],
+	)
+
+	const displayedEditor = showPreview && previewEditor ? previewEditor : editor
+
+	const { containerRef: scrollContainerRef, onScroll } = useDocumentScrollMemory(
+		collaboration?.documentId ? `${surface}:${collaboration.documentId}` : undefined,
+		displayedEditor,
 	)
 
 	const currentValue = useRef(value)
@@ -134,10 +153,12 @@ export function RichTextEditorComponent({ value, onChange, onBlur, collaboration
 		},
 	})
 
+	const isPageScroll = surface === 'wiki'
+
 	return (
 		<StyledContainer
 			sx={{
-				borderRadius: '6px',
+				borderRadius: isPageScroll ? 0 : '6px',
 				minHeight: '128px',
 				background: isReadOnly ? '' : theme.custom.palette.background.textEditor,
 				display: 'flex',
@@ -145,19 +166,37 @@ export function RichTextEditorComponent({ value, onChange, onBlur, collaboration
 			}}
 			data-testid="RichTextEditor"
 			$theme={theme}
+			$fluid={isPageScroll}
 			onBlur={() => {
 				onBlur?.()
 				onChangeThrottled.current.cancel()
 			}}
 		>
-			<RichTextEditorControls editor={editor} />
-			<Box sx={{ position: 'relative', flex: 1, minHeight: 0 }}>
-				{editor && (
+			<RichTextEditorControls editor={displayedEditor} sticky={isPageScroll} />
+			<Box
+				ref={isPageScroll ? undefined : scrollContainerRef}
+				onScroll={isPageScroll ? undefined : onScroll}
+				sx={
+					isPageScroll
+						? { position: 'relative', flex: 1 }
+						: { position: 'relative', flex: 1, minHeight: 0, overflowY: 'auto', ...scrollbars }
+				}
+			>
+				{showPreview && previewEditor ? (
 					<EditorContentBox
 						className="content"
-						editor={editor}
+						editor={previewEditor}
 						mode={isReadOnly ? 'read' : 'edit'}
+						readOnly={isReadOnly}
 					></EditorContentBox>
+				) : (
+					editor && (
+						<EditorContentBox
+							className="content"
+							editor={editor}
+							mode={isReadOnly ? 'read' : 'edit'}
+						></EditorContentBox>
+					)
 				)}
 			</Box>
 			<RichTextEditorQuickSelect editor={editor} />

@@ -5,6 +5,10 @@ import { getWikiPreferences } from '@/app/features/preferences/PreferencesSliceS
 import { RootState } from '@/app/store'
 
 export const getWikiState = (state: RootState) => state.wiki
+export const getWikiStateLoaded = createSelector(
+	[getWikiState],
+	(state) => state.articlesLoaded && state.foldersLoaded,
+)
 
 export type WikiFolderCounts = Record<WikiEntityType, number> & { total: number }
 

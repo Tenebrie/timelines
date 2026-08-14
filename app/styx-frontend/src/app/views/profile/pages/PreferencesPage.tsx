@@ -51,7 +51,9 @@ export function PreferencesPage() {
 					control={
 						<Checkbox
 							checked={reduceAnimations}
-							onChange={(e) => dispatch(setReduceAnimations(e.target.checked))}
+							onChange={(e) => {
+								dispatch(setReduceAnimations(e.target.checked))
+							}}
 						/>
 					}
 					label="Reduce animations"

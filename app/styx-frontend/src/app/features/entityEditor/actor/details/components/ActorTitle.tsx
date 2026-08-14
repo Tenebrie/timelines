@@ -1,3 +1,4 @@
+import Stack from '@mui/material/Stack'
 import useEvent from 'react-use-event-hook'
 
 import { ActorColorIconPicker } from '@/app/components/ColorIconPicker/ActorColorIconPicker'
@@ -7,9 +8,10 @@ import { ActorDraft } from '../draft/useActorDraft'
 
 type Props = {
 	draft: ActorDraft
+	titleProps?: Partial<Parameters<typeof EditableTitle>[0]>
 }
 
-export const ActorTitle = ({ draft }: Props) => {
+export const ActorTitle = ({ draft, titleProps }: Props) => {
 	const value = draft.title ? `${draft.name}, ${draft.title}` : draft.name
 
 	const onSave = useEvent((name: string) => {
@@ -23,8 +25,14 @@ export const ActorTitle = ({ draft }: Props) => {
 			value={value}
 			displayValue={value || '<Name>'}
 			onSave={onSave}
-			startAdornment={<ActorColorIconPicker draft={draft} />}
 			placeholder="Actor name, Actor title"
+			{...titleProps}
+			startAdornment={
+				<Stack sx={{ height: 1 }} direction="row">
+					{titleProps?.startAdornment}
+					<ActorColorIconPicker draft={draft} />
+				</Stack>
+			}
 		/>
 	)
 }

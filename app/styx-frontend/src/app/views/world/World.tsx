@@ -75,7 +75,7 @@ export const World = () => {
 					</div>
 				</Stack>
 			</div>
-			{Array(3)
+			{Array(2)
 				.fill(0)
 				.map((_, index) => (
 					<SummonableRichTextEditor key={index}>
