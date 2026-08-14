@@ -61,6 +61,7 @@ export const Wiki = () => {
 				gap: isMobile ? 2 : 0,
 				overflowX: 'hidden',
 				overflowY: isMobile ? 'auto' : undefined,
+				background: theme.custom.palette.background.textEditor,
 			}}
 		>
 			{isMobile && showList && (
@@ -91,7 +92,6 @@ export const Wiki = () => {
 						minWidth: 0,
 						width: '100%',
 						height: '100%',
-						background: theme.custom.palette.background.textEditor,
 					}}
 				>
 					{isArticle && <Outlet />}
@@ -158,16 +158,16 @@ export function CurrentArticleDetails() {
 				boxSizing: 'border-box',
 				overflowY: 'auto',
 				display: 'flex',
-				flexDirection: 'column',
-				alignItems: 'center',
+				flexDirection: 'row',
 			}}
 		>
+			{!isMobile && <Box sx={{ flex: '1 1 0', maxWidth: (theme) => theme.spacing(12) }} />}
 			<Stack
 				gap={1}
 				sx={{
 					maxWidth: 900,
 					width: '100%',
-					flex: 1,
+					minWidth: 0,
 					paddingTop: isMobile ? '12px' : '24px',
 					'& > *': {
 						flexGrow: 1,
