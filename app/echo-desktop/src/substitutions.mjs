@@ -14,6 +14,6 @@ export const RUNTIME_SHIMS = {
 }
 
 export const BUNDLE_STUBS = {
-	sharp: './sharp-stub.mjs',
+	sharp: './sharp-loader.mjs',
 	'y-leveldb': './y-leveldb-stub.mjs',
 }

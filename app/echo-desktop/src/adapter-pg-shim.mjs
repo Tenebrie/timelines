@@ -1,3 +1,5 @@
+import { AsyncLocalStorage } from 'node:async_hooks'
+
 import { PGlite } from '@electric-sql/pglite'
 import { PrismaPGlite } from 'pglite-prisma-adapter'
 
@@ -18,44 +20,40 @@ import { PrismaPGlite } from 'pglite-prisma-adapter'
  *    mutex blow through Prisma's maxWait and, if abandoned mid-queue, can
  *    leave an orphaned open transaction that wedges the database.
  *
- * 2. While a transaction is open, queries on the main (non-transactional)
- *    client are routed INTO it. On a pooled server such queries run on a
- *    separate connection; on PGlite they would queue behind the open
- *    transaction — and when the transaction callback itself awaits one
- *    (e.g. makeTouchWorldQuery(worldId) without the tx client), that is a
- *    self-deadlock. Joining the open transaction preserves liveness and is
- *    at least as atomic as the pooled behavior.
+ * 2. A main-client query issued from INSIDE a $transaction callback fails
+ *    loudly. By contract that is an upstream bug: on a pooled server it
+ *    silently escapes the transaction's atomicity, and on PGlite it queues
+ *    behind the transaction the callback itself is holding — a
+ *    self-deadlock. The prisma-client wrapper marks interactive callbacks
+ *    via AsyncLocalStorage so the bug surfaces as an immediate, actionable
+ *    error. Main-client queries from OTHER requests are untouched — they
+ *    queue on PGlite's internal mutex until the transaction commits, which
+ *    is ordinary isolation, not a deadlock.
  *
  * A watchdog rolls back any transaction abandoned without commit/rollback.
  */
+export const interactiveTransactionContext = new AsyncLocalStorage()
+
 const LEAKED_TRANSACTION_TIMEOUT_MS = 60_000
 
 function serializeTransactions(adapter) {
 	let tail = Promise.resolve()
-	// Set while a Prisma interactive transaction is open on PGlite:
-	// { queryable, finished } — cleared in finish().
-	let active = null
+	let transactionOpen = false
 
-	const routeToOpenTransaction = (method) => async (query) => {
-		const current = active
-		if (current && !current.finished) {
-			try {
-				return await current.queryable[method](query)
-			} catch (error) {
-				// The transaction may have closed while this query was in
-				// flight; only then is a retry on the main client safe.
-				if (current.finished) {
-					return adapter[method](query)
-				}
-				throw error
-			}
+	const guarded = (method) => async (query) => {
+		if (transactionOpen && interactiveTransactionContext.getStore()) {
+			throw new Error(
+				'[echo-desktop] query issued from inside a $transaction callback without the transaction ' +
+					'client — this escapes atomicity on the cloud deployment and deadlocks on PGlite. ' +
+					'Pass the tx client to the query (upstream bug).',
+			)
 		}
 		return adapter[method](query)
 	}
 
 	const wrapped = Object.create(adapter)
-	wrapped.queryRaw = routeToOpenTransaction('queryRaw')
-	wrapped.executeRaw = routeToOpenTransaction('executeRaw')
+	wrapped.queryRaw = guarded('queryRaw')
+	wrapped.executeRaw = guarded('executeRaw')
 
 	wrapped.startTransaction = (...args) => {
 		let release
@@ -67,27 +65,24 @@ function serializeTransactions(adapter) {
 
 		return (async () => {
 			await myTurn
-			const state = { queryable: null, finished: false }
+			let transaction = null
+			let finished = false
 			const finish = () => {
-				state.finished = true
-				if (active === state) active = null
+				finished = true
+				transactionOpen = false
 				clearTimeout(watchdog)
 				release()
 			}
 			const watchdog = setTimeout(() => {
-				if (state.finished) return
+				if (finished) return
 				console.warn('[echo-desktop] transaction held for 60s without commit/rollback, forcing rollback')
-				const abandoned = state.queryable
 				finish()
-				if (abandoned) {
-					abandoned.rollback().catch(() => undefined)
-				}
+				transaction?.rollback().catch(() => undefined)
 			}, LEAKED_TRANSACTION_TIMEOUT_MS)
 
 			try {
-				const transaction = await adapter.startTransaction(...args)
-				state.queryable = transaction
-				active = state
+				transaction = await adapter.startTransaction(...args)
+				transactionOpen = true
 				const wrappedTransaction = Object.create(transaction)
 				wrappedTransaction.commit = async () => {
 					try {

@@ -98,6 +98,7 @@ export function startRouter({
 	port,
 	rheaPort,
 	calliopePort,
+	bucketPort,
 	host = '127.0.0.1',
 	fallbackToRandomPort = false,
 }) {
@@ -108,9 +109,7 @@ export function startRouter({
 		} else if (hasPrefix(pathname, '/calliope')) {
 			proxyHttp(req, res, calliopePort)
 		} else if (hasPrefix(pathname, '/bucket')) {
-			// Asset storage (S3/MinIO) is out of scope for desktop mode
-			res.writeHead(501, { 'content-type': 'application/json' })
-			res.end(JSON.stringify({ error: 'Asset storage is not available in desktop mode' }))
+			proxyHttp(req, res, bucketPort)
 		} else {
 			serveStatic(staticRoot, pathname, res)
 		}

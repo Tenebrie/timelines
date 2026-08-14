@@ -18,7 +18,7 @@ const desktopDir = join(fileURLToPath(new URL('.', import.meta.url)), '..')
 const repoRoot = join(desktopDir, '..', '..')
 const outDir = join(desktopDir, 'dist/bundles')
 
-export const EXTERNALS = ['bcrypt', '@electric-sql/pglite', 'pglite-prisma-adapter', 'electron']
+export const EXTERNALS = ['bcrypt', 'sharp', '@electric-sql/pglite', 'pglite-prisma-adapter', 'electron']
 
 const prismaClientWrapPlugin = {
 	name: 'prisma-client-wrap',

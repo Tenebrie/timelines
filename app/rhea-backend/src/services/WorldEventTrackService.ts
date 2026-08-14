@@ -217,7 +217,7 @@ export const WorldEventTrackService = {
 				),
 			)
 
-			const world = await makeTouchWorldQuery(worldId)
+			const world = await makeTouchWorldQuery(worldId, prisma)
 
 			return {
 				world,

@@ -14,6 +14,7 @@ well-defined seams:
 |---|---|---|
 | PostgreSQL server | PGlite (Postgres-in-WASM) in a local data dir | ESM loader hook: `@prisma/adapter-pg` → `src/adapter-pg-shim.mjs` |
 | Redis server | In-process store + EventEmitter pub/sub, Lua via fengari | ESM loader hook: `redis` → `src/redis-shim.mjs` |
+| S3/MinIO server | Filesystem-backed S3 subset on virtual port 9000 (SDK + presigned uploads/downloads) | `src/s3-shim.mjs` |
 | Docker DNS (`rhea`, `s3-minio`, …) | `dns.lookup` remap to 127.0.0.1 | `src/dns-remap.mjs` |
 | Fixed service ports (`:3000`, `:3001`) | Virtualized: random free loopback ports, outgoing calls rewritten to match | `src/port-remap.mjs` |
 | Gatekeeper nginx | Tiny local router: SPA + `/api` + `/live` (WS) on one origin | `src/router.mjs` |
@@ -46,12 +47,13 @@ npm run package
 # -> dist/package/echo-desktop-<platform>-<arch>.zip|.tar.gz
 ```
 
-The packaged folder is fully self-contained (~320 MB unpacked, ~125 MB
+The packaged folder is fully self-contained (~340 MB unpacked, ~135 MB
 compressed): Electron runtime (single locale), the two backends as esbuild
 bundles with the shims compiled in, the SPA build, the migrations, and the few
-packages that must stay external (bcrypt native, PGlite WASM). sharp
-and y-leveldb are stubbed out at bundle time — both serve features that are
-disabled in desktop mode. The recipient just runs `./neverkin` (see the
+packages that must stay external (bcrypt and sharp native — platform-matched
+prebuilds only — plus PGlite WASM). y-leveldb is stubbed out at bundle time;
+sharp loads through a wrapper that falls back to a header-parsing stub if the
+native module cannot load. The recipient just runs `./neverkin` (see the
 README.txt inside; `--no-sandbox` fallback for some Linux setups). Native
 modules and the Electron binary are taken from the local install, so stage
 each target OS on that OS — e.g. run `npm run package` on a Windows machine to
@@ -72,13 +74,16 @@ drift warnings and crashes survive in packaged builds where nobody sees a consol
 
 PGlite is single-connection, so the adapter shim adds two behaviors a pooled
 Postgres never needed: interactive transactions are serialized through a FIFO
-gate before reaching PGlite, and queries issued on the main client while a
-transaction is open are routed into that transaction (on a pooled server they
-would run on a separate connection; on PGlite they would deadlock — Rhea's
-`updateActor` does exactly this via `makeTouchWorldQuery(worldId)` without the
-tx client). Prisma's interactive-transaction limits are raised to 30s via a
-loader-hook wrapper around the generated client. Verified with ~80 concurrent
-writes/reads per burst: zero failures, sub-second completion.
+gate before reaching PGlite (queries from other requests simply queue on
+PGlite's internal mutex until the transaction commits), and a main-client
+query issued from *inside* a `$transaction` callback fails loudly — by
+contract that is an upstream bug: it silently escapes atomicity on pooled
+Postgres and self-deadlocks on PGlite. The client wrapper marks interactive
+callbacks via AsyncLocalStorage so the adapter can raise an immediate,
+actionable error (this detector caught and led to the `deleteEventTrack`
+fix). Prisma's interactive-transaction limits are raised to 30s via the same
+wrapper. Verified with 240 mixed concurrent transactions/reads per run: zero
+failures, sub-second completion.
 
 ## Maintenance contract
 
@@ -99,8 +104,10 @@ writes/reads per burst: zero failures, sub-second completion.
 
 ## Scope / known limitations (POC)
 
-- **Asset/image upload is disabled** (`/bucket` returns 501; S3 gets dummy config and fails
-  fast). Production path: bundle a filesystem-backed S3 shim or a MinIO binary.
+- Asset upload/download, image conversion and data import/export all work fully
+  (filesystem-backed S3 shim, objects in `<data dir>/s3`; native sharp ships in the
+  package). If sharp cannot load on an unusual system, the app still boots — a
+  header-parsing fallback keeps uploads working and only conversion is disabled.
 - **Google login does not work** offline (its iframe flow assumes the `app.` subdomain
   deployment). Email/password and guest auth work fully. The local router serves an inert
   page at `/google-signin.html` — under the SPA fallback the sign-in iframe would embed

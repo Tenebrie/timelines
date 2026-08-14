@@ -10,6 +10,7 @@ import { installDnsRemap } from './dns-remap.mjs'
 import { prepareDatabase } from './migrate.mjs'
 import { installPortRemap } from './port-remap.mjs'
 import { startRouter } from './router.mjs'
+import { startS3Server } from './s3-shim.mjs'
 
 /**
  * Boots the full Neverkin stack standalone in a single process:
@@ -46,9 +47,8 @@ function ensureEnvironment(dataDir) {
 		NODE_ENV: 'production',
 		jwt_secret: readFileSync(secretPath, 'utf8').trim(),
 		environment: 'development',
-		// S3 config must exist at boot (read at module load); the hostname
-		// resolves to loopback where nothing listens, so asset features fail
-		// fast and loud instead of hanging. Assets are out of desktop scope.
+		// Read at module load; dns-remap + port-remap route this hostname to
+		// the local filesystem-backed S3 shim (s3-shim.mjs)
 		s3_endpoint: 'http://s3-minio:9000',
 		s3_bucket_id: 'bucket',
 		s3_access_key_id: 'desktop',
@@ -81,9 +81,14 @@ export async function startDesktopServices() {
 	process.on('uncaughtException', failLoudly('uncaught exception'))
 	ensureEnvironment(dataDir)
 	installDnsRemap()
-	// Rhea and Calliope hardcode ports 3000/3001; bind random loopback ports
-	// instead so the desktop app coexists with dev stacks and other software
-	const services = installPortRemap([3000, 3001])
+	// Rhea, Calliope and the S3 config hardcode ports 3000/3001/9000; bind
+	// random loopback ports instead so the desktop app coexists with dev
+	// stacks and other software
+	const services = installPortRemap([3000, 3001, 9000])
+
+	console.info('[echo-desktop] starting local asset storage (S3)...')
+	await startS3Server({ storageRoot: join(dataDir, 's3') })
+	const bucketPort = await services.whenBound(9000)
 
 	console.info('[echo-desktop] preparing database...')
 	const migrationResult = await prepareDatabase(
@@ -131,6 +136,7 @@ export async function startDesktopServices() {
 		port,
 		rheaPort,
 		calliopePort,
+		bucketPort,
 		fallbackToRandomPort: !process.env.NEVERKIN_DESKTOP_PORT,
 	})
 	const url = `http://127.0.0.1:${server.address().port}`

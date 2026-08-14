@@ -9,8 +9,14 @@
  * defaults is normal under bursts — raise both limits. Upstream options are
  * spread last, so if Rhea ever configures its own transactionOptions, those
  * win.
+ *
+ * Interactive $transaction callbacks are additionally marked via
+ * AsyncLocalStorage so the adapter shim can fail loudly on queries that
+ * bypass the transaction client (see adapter-pg-shim.mjs).
  */
 import * as original from '../../rhea-backend/dist/prisma/client/client.js?nkd-original'
+
+import { interactiveTransactionContext } from './adapter-pg-shim.mjs'
 
 export * from '../../rhea-backend/dist/prisma/client/client.js?nkd-original'
 
@@ -25,5 +31,15 @@ export class PrismaClient extends original.PrismaClient {
 			transactionOptions: { maxWait: 30_000, timeout: 30_000 },
 			...options,
 		})
+	}
+
+	$transaction(input, options) {
+		if (typeof input !== 'function') {
+			return super.$transaction(input, options)
+		}
+		return super.$transaction(
+			(transactionClient) => interactiveTransactionContext.run(true, () => input(transactionClient)),
+			options,
+		)
 	}
 }

@@ -68,6 +68,7 @@ function copyDependencyClosure(baseModules, rootDeps, destModules) {
 		// (e.g. the adapter's @prisma/client peer ships inside rhea.mjs)
 		for (const group of ['dependencies', 'optionalDependencies']) {
 			for (const name of Object.keys(depPkg[group] ?? {})) {
+				if (group === 'optionalDependencies' && isForeignPlatformVariant(name)) continue
 				if (group === 'dependencies' || existsSync(join(baseModules, name))) pending.push(name)
 			}
 		}
@@ -169,3 +170,11 @@ if (process.platform === 'win32') {
 	run(`du -sh ${target} ${target}.zip ${target}.tar.gz 2>/dev/null || true`, outRoot)
 }
 console.info(`\n[package] done: ${join(outRoot, target)}`)
+
+// Native packages (sharp) list a prebuilt variant per platform/libc as
+// optional deps; only the one matching this build target is shipped.
+function isForeignPlatformVariant(name) {
+	if (name.endsWith('-wasm32')) return true
+	if (!/-(linuxmusl|linux|darwin|win32)-(x64|arm64|ia32)$/.test(name)) return false
+	return !name.includes(`-${process.platform}-${process.arch}`)
+}
