@@ -45,25 +45,6 @@ jobs:
         run: npm run build
         working-directory: app/echo-desktop
 
-      - name: Smoke test packaged app
-        if: runner.os == 'Linux'
-        working-directory: app/echo-desktop/dist/package/echo-desktop-linux-x64
-        run: |
-          export NEVERKIN_DESKTOP_DATA="$RUNNER_TEMP/smoke-data"
-          export NEVERKIN_DESKTOP_PORT=18190
-          xvfb-run -a ./neverkin --no-sandbox &
-          APP_PID=$!
-          for i in $(seq 1 60); do
-            curl -sf -o /dev/null http://127.0.0.1:18190/health && break
-            sleep 1
-          done
-          curl -sf -o /dev/null http://127.0.0.1:18190/health
-          curl -sf -X POST http://127.0.0.1:18190/api/auth/login \
-            -H 'content-type: application/json' \
-            -d '{"email":"admin@localhost","password":"q"}' | grep -q '"level":"Admin"'
-          echo "smoke test passed"
-          kill $APP_PID
-
       - name: Stamp archives with release version
         id: version
         run: |

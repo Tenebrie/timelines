@@ -20,6 +20,7 @@ async function main() {
 		width: 1440,
 		height: 900,
 		title: 'Neverkin',
+		icon: path.join(__dirname, '../assets/icon.png'),
 		autoHideMenuBar: true,
 	})
 	mainWindow.webContents.setWindowOpenHandler(({ url: externalUrl }) => {

@@ -104,6 +104,7 @@ if (existsSync(localesDir)) {
 // 2. The desktop package (resources/app is what Electron boots)
 const appDir = join(resources, 'app')
 copy(join(desktopDir, 'src'), join(appDir, 'src'))
+copy(join(desktopDir, 'assets'), join(appDir, 'assets'))
 copy(join(desktopDir, 'dist/bundles'), join(appDir, 'bundles'))
 const pkg = JSON.parse(readFileSync(join(desktopDir, 'package.json'), 'utf8'))
 writeFileSync(
