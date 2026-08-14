@@ -34,7 +34,7 @@ const Container = styled(Paper)<{ $theme: CustomTheme }>`
 	border-radius: 0 !important;
 	transition: background-color 1.3s;
 	z-index: 10;
-	padding: 4px 8px;
+	padding: 2px 8px;
 `
 
 export const BaseNavigator = () => {
@@ -60,7 +60,7 @@ export const BaseNavigator = () => {
 									<WorldSelectorButton />
 									<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
 								</Stack>
-								<Divider orientation="vertical" sx={{ height: '25px' }} />
+								<Divider orientation="vertical" sx={{ height: '20px' }} />
 								<HomeNavigatorButton disabled={!user} />
 							</>
 						)}
@@ -77,7 +77,7 @@ export const BaseNavigator = () => {
 			<Stack direction="row" gap={2} alignItems="center" height={1}>
 				<ThemeModeToggle />
 				{user && !isNarrow && <AnnouncementView />}
-				<Divider orientation="vertical" sx={{ height: '25px' }} />
+				<Divider orientation="vertical" sx={{ height: '20px' }} />
 				<SmallProfile />
 			</Stack>
 		</Container>

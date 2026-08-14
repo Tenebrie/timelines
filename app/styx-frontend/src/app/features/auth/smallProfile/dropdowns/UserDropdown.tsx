@@ -64,15 +64,15 @@ export function UserDropdown({ user }: Props) {
 	return (
 		<Stack direction="row" alignItems="center" spacing={1}>
 			{isSmallScreen && (
-				<Button {...bindTrigger(popupState)} sx={{ padding: '5px 15px' }} data-testid="UserDropdownButton">
-					<Avatar sx={{ height: 32, width: 32 }} src={user.avatarUrl} />
+				<Button {...bindTrigger(popupState)} sx={{ padding: '4px 15px' }} data-testid="UserDropdownButton">
+					<Avatar sx={{ height: 28, width: 28 }} src={user.avatarUrl} />
 				</Button>
 			)}
 			{!isSmallScreen && (
 				<Button
-					startIcon={<Avatar sx={{ height: 32, width: 32 }} src={user.avatarUrl} />}
+					startIcon={<Avatar sx={{ height: 28, width: 28 }} src={user.avatarUrl} />}
 					{...bindTrigger(popupState)}
-					sx={{ padding: '5px 15px' }}
+					sx={{ padding: '4px 15px' }}
 					data-testid="UserDropdownButton"
 				>
 					{user.username}
