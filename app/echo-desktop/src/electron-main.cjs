@@ -1,30 +1,36 @@
 const path = require('node:path')
 const { pathToFileURL } = require('node:url')
 
-const { app, BrowserWindow, shell } = require('electron')
+const { app, BrowserWindow, dialog, shell } = require('electron')
 
 /**
  * Electron shell: boots the standalone stack in the main process (Electron's
  * Node runtime), then opens a window on the local origin. External links and
  * window.open calls are routed to the system browser.
+ *
+ * Single-instance: a second launch would open a second PGlite on the same
+ * data directory and collide on every port, so it focuses the first window
+ * and exits instead.
  */
+let mainWindow = null
+
 async function main() {
 	await app.whenReady()
 
 	const { startDesktopServices } = await import(pathToFileURL(path.join(__dirname, 'launcher.mjs')))
 	const { url } = await startDesktopServices()
 
-	const window = new BrowserWindow({
+	mainWindow = new BrowserWindow({
 		width: 1440,
 		height: 900,
 		title: 'Neverkin',
 		autoHideMenuBar: true,
 	})
-	window.webContents.setWindowOpenHandler(({ url: externalUrl }) => {
+	mainWindow.webContents.setWindowOpenHandler(({ url: externalUrl }) => {
 		shell.openExternal(externalUrl)
 		return { action: 'deny' }
 	})
-	await window.loadURL(url)
+	await mainWindow.loadURL(url)
 	console.info('[echo-desktop] window loaded')
 
 	app.on('window-all-closed', () => {
@@ -32,7 +38,18 @@ async function main() {
 	})
 }
 
-main().catch((error) => {
-	console.error('[echo-desktop] electron startup failed:', error)
+if (!app.requestSingleInstanceLock()) {
 	app.quit()
-})
+} else {
+	app.on('second-instance', () => {
+		if (mainWindow) {
+			if (mainWindow.isMinimized()) mainWindow.restore()
+			mainWindow.focus()
+		}
+	})
+	main().catch((error) => {
+		console.error('[echo-desktop] electron startup failed:', error)
+		dialog.showErrorBox('Neverkin failed to start', String(error?.stack ?? error))
+		app.quit()
+	})
+}

@@ -1,7 +1,7 @@
 import { createReadStream, existsSync, statSync } from 'node:fs'
 import http from 'node:http'
 import net from 'node:net'
-import { extname, join, normalize } from 'node:path'
+import { extname, join, normalize, sep } from 'node:path'
 
 /**
  * Local stand-in for the Gatekeeper nginx: serves the Styx static build with
@@ -9,6 +9,9 @@ import { extname, join, normalize } from 'node:path'
  * `/api` to Rhea, `/live` (WebSocket) to Calliope. The SPA derives both its
  * API base and WebSocket URLs from window.location, so serving everything
  * from one 127.0.0.1 origin makes the client work without configuration.
+ *
+ * The route prefixes mirror app/gatekeeper-proxy/nginx/default.conf — a new
+ * top-level location added there needs a matching branch here.
  */
 const MIME_TYPES = {
 	'.html': 'text/html; charset=utf-8',
@@ -53,22 +56,30 @@ function proxyHttp(req, res, targetPort) {
 		if (!res.headersSent) res.writeHead(502, { 'content-type': 'application/json' })
 		res.end(JSON.stringify({ error: 'Local backend unavailable', detail: error.message }))
 	})
+	res.on('close', () => upstream.destroy())
 	req.pipe(upstream)
 }
 
-function serveStatic(staticRoot, req, res) {
-	const url = new URL(req.url ?? '/', 'http://localhost')
+function serveStatic(staticRoot, pathname, res) {
 	// In the cloud deployment this path is a real page on the marketing host
 	// (Google sign-in bridge). Under the SPA fallback it would recursively
 	// embed the whole app inside the login page's hidden iframe — each nested
 	// copy stealing focus via autoFocus. Serve an inert page instead.
-	if (url.pathname === '/google-signin.html') {
+	if (pathname === '/google-signin.html') {
 		res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' })
 		res.end('<!doctype html><title>Unavailable</title><!-- Google sign-in is not available in desktop mode -->')
 		return
 	}
-	let filePath = normalize(join(staticRoot, decodeURIComponent(url.pathname)))
-	if (!filePath.startsWith(staticRoot)) {
+	let decoded
+	try {
+		decoded = decodeURIComponent(pathname)
+	} catch {
+		res.writeHead(400)
+		res.end()
+		return
+	}
+	let filePath = normalize(join(staticRoot, decoded))
+	if (filePath !== staticRoot && !filePath.startsWith(staticRoot + sep)) {
 		res.writeHead(403)
 		res.end()
 		return
@@ -80,28 +91,30 @@ function serveStatic(staticRoot, req, res) {
 		'content-type': MIME_TYPES[extname(filePath)] ?? 'application/octet-stream',
 		'cache-control': filePath.endsWith('index.html') ? 'no-cache' : 'public, max-age=3600',
 	})
-	createReadStream(filePath).pipe(res)
+	createReadStream(filePath)
+		.on('error', () => res.destroy())
+		.pipe(res)
 }
 
 export function startRouter({ staticRoot, port, host = '127.0.0.1' }) {
 	const server = http.createServer((req, res) => {
-		const path = req.url ?? '/'
-		if (path.startsWith('/api') || path === '/health') {
+		const pathname = new URL(req.url ?? '/', 'http://localhost').pathname
+		if (hasPrefix(pathname, '/api') || pathname === '/health') {
 			proxyHttp(req, res, RHEA_PORT)
-		} else if (path.startsWith('/calliope')) {
+		} else if (hasPrefix(pathname, '/calliope')) {
 			proxyHttp(req, res, CALLIOPE_PORT)
-		} else if (path.startsWith('/bucket')) {
+		} else if (hasPrefix(pathname, '/bucket')) {
 			// Asset storage (S3/MinIO) is out of scope for desktop mode
 			res.writeHead(501, { 'content-type': 'application/json' })
 			res.end(JSON.stringify({ error: 'Asset storage is not available in desktop mode' }))
 		} else {
-			serveStatic(staticRoot, req, res)
+			serveStatic(staticRoot, pathname, res)
 		}
 	})
 
 	// Raw TCP splice for WebSocket upgrades on /live (live updates + Yjs)
 	server.on('upgrade', (req, clientSocket, head) => {
-		if (!req.url?.startsWith('/live')) {
+		if (!hasPrefix(new URL(req.url ?? '/', 'http://localhost').pathname, '/live')) {
 			clientSocket.destroy()
 			return
 		}
@@ -123,7 +136,12 @@ export function startRouter({ staticRoot, port, host = '127.0.0.1' }) {
 		clientSocket.on('error', destroyBoth)
 	})
 
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
+		server.on('error', reject)
 		server.listen(port, host, () => resolve(server))
 	})
+}
+
+function hasPrefix(pathname, prefix) {
+	return pathname === prefix || pathname.startsWith(prefix + '/')
 }

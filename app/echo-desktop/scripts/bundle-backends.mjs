@@ -1,8 +1,10 @@
 import { mkdirSync } from 'node:fs'
 import path, { join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import esbuild from 'esbuild'
+
+import { BUNDLE_STUBS, RUNTIME_SHIMS } from '../src/substitutions.mjs'
 
 /**
  * Bundles Rhea and Calliope's built output into two self-contained ESM files,
@@ -41,12 +43,12 @@ const shared = {
 	keepNames: true,
 	logLevel: 'warning',
 	external: EXTERNALS,
-	alias: {
-		redis: join(desktopDir, 'src', 'redis-shim.mjs'),
-		'@prisma/adapter-pg': join(desktopDir, 'src', 'adapter-pg-shim.mjs'),
-		'y-leveldb': join(desktopDir, 'src', 'y-leveldb-stub.mjs'),
-		sharp: join(desktopDir, 'src', 'sharp-stub.mjs'),
-	},
+	alias: Object.fromEntries(
+		Object.entries({ ...RUNTIME_SHIMS, ...BUNDLE_STUBS }).map(([specifier, shim]) => [
+			specifier,
+			join(desktopDir, 'src', shim),
+		]),
+	),
 	banner: {
 		js: [
 			"import { createRequire as __nkdCreateRequire } from 'node:module';",
@@ -76,6 +78,6 @@ export async function bundleBackends() {
 	return outDir
 }
 
-if (process.argv[1] && fileURLToPath(new URL(import.meta.url)).endsWith(path.basename(process.argv[1]))) {
+if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {
 	await bundleBackends()
 }

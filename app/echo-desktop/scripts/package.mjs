@@ -82,13 +82,19 @@ rmSync(stage, { recursive: true, force: true })
 mkdirSync(resources, { recursive: true })
 
 // 1. Electron runtime, trimmed to the English locale
+if (process.platform === 'darwin') {
+	throw new Error(
+		'[package] macOS packaging is not implemented — the Electron.app bundle needs renaming and Info.plist edits (electron-builder territory)',
+	)
+}
 const electronDist = join(desktopDir, 'node_modules', 'electron', 'dist')
 if (!existsSync(electronDist)) {
 	throw new Error('[package] electron is not installed — run npm install in app/echo-desktop first')
 }
 copy(electronDist, stage)
 rmSync(join(resources, 'default_app.asar'), { force: true })
-renameSync(join(stage, 'electron'), join(stage, 'neverkin'))
+const exeSuffix = process.platform === 'win32' ? '.exe' : ''
+renameSync(join(stage, `electron${exeSuffix}`), join(stage, `neverkin${exeSuffix}`))
 const localesDir = join(stage, 'locales')
 if (existsSync(localesDir)) {
 	for (const locale of readdirSync(localesDir)) {
@@ -131,26 +137,35 @@ copy(join(rheaSource, 'prisma', 'migrations'), join(rheaStage, 'prisma', 'migrat
 copy(join(repoRoot, 'app', 'styx-frontend', 'build'), join(resources, 'styx-frontend', 'build'))
 
 // 6. User-facing readme + archive
+const runCommand = process.platform === 'win32' ? 'neverkin.exe' : './neverkin'
 writeFileSync(
 	join(stage, 'README.txt'),
 	[
 		'Neverkin Desktop',
 		'',
-		'Run ./neverkin to start. All data is stored locally in ~/.echo-desktop',
+		`Run ${runCommand} to start. All data is stored locally in ~/.neverkin`,
 		'— nothing leaves your machine.',
-		'',
-		'If the app does not start (sandbox error on some Linux setups), run:',
-		'  ./neverkin --no-sandbox',
+		...(process.platform === 'linux'
+			? ['', 'If the app does not start (sandbox error on some Linux setups), run:', '  ./neverkin --no-sandbox']
+			: []),
 		'',
 	].join('\n'),
 )
 
-try {
-	run(`zip -ryq ${target}.zip ${target}`, outRoot)
-} catch {
-	console.warn('[package] zip unavailable, creating tar.gz instead')
-	run(`tar -czf ${target}.tar.gz ${target}`, outRoot)
+// zip updates archives in place, so stale entries from a previous run would
+// survive — always start from a clean file
+rmSync(join(outRoot, `${target}.zip`), { force: true })
+rmSync(join(outRoot, `${target}.tar.gz`), { force: true })
+if (process.platform === 'win32') {
+	// bsdtar ships with Windows 10+; -a picks the zip format from the extension
+	run(`tar -a -c -f ${target}.zip ${target}`, outRoot)
+} else {
+	try {
+		run(`zip -ryq ${target}.zip ${target}`, outRoot)
+	} catch {
+		console.warn('[package] zip unavailable, creating tar.gz instead')
+		run(`tar -czf ${target}.tar.gz ${target}`, outRoot)
+	}
+	run(`du -sh ${target} ${target}.zip ${target}.tar.gz 2>/dev/null || true`, outRoot)
 }
-
-run(`du -sh ${target} ${target}.zip ${target}.tar.gz 2>/dev/null || true`, outRoot)
 console.info(`\n[package] done: ${join(outRoot, target)}`)

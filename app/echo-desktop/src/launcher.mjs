@@ -1,9 +1,10 @@
 import { randomBytes } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { register } from 'node:module'
 import os from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { inspect } from 'node:util'
 
 import { installDnsRemap } from './dns-remap.mjs'
 import { runMigrations } from './migrate.mjs'
@@ -60,21 +61,22 @@ function ensureEnvironment(dataDir) {
 }
 
 export async function startDesktopServices() {
-	const dataDir = process.env.NEVERKIN_DESKTOP_DATA || join(os.homedir(), '.echo-desktop')
+	const dataDir = process.env.NEVERKIN_DESKTOP_DATA || join(os.homedir(), '.neverkin')
 	const port = Number(process.env.NEVERKIN_DESKTOP_PORT || 8190)
+
+	mkdirSync(dataDir, { recursive: true })
+	// In a packaged app nobody sees the console; the shims' drift warnings and
+	// crash logs must survive somewhere a bug report can quote.
+	mirrorConsoleToFile(join(dataDir, 'log.txt'))
 
 	console.info(`[echo-desktop] data directory: ${dataDir}`)
 	console.info(`[echo-desktop] services root: ${servicesRoot}`)
 
-	// In docker each service is an isolated, auto-restarted container; here
-	// they share one process, so a stray unhandled rejection (e.g. a
-	// fire-and-forget cleanup task) must log loudly instead of killing the app.
-	process.on('unhandledRejection', (reason) => {
-		console.error('[echo-desktop] unhandled rejection (continuing):', reason)
-	})
-	process.on('uncaughtException', (error) => {
-		console.error('[echo-desktop] uncaught exception (continuing):', error)
-	})
+	// Beta policy: any error that escapes to the process level is critical —
+	// surface it in the user's face and exit rather than continue in an
+	// unknown state. A crash is recoverable; corrupted data is not.
+	process.on('unhandledRejection', failLoudly('unhandled rejection'))
+	process.on('uncaughtException', failLoudly('uncaught exception'))
 	ensureEnvironment(dataDir)
 	installDnsRemap()
 
@@ -102,6 +104,13 @@ export async function startDesktopServices() {
 	await import(
 		pathToFileURL(useBundles ? join(bundleDir, 'rhea.mjs') : join(rheaDir, 'dist', 'src', 'index.js'))
 	)
+	if (!globalThis.__NEVERKIN_DESKTOP_TX_WRAP__) {
+		throw new Error(
+			'[echo-desktop] the Prisma transaction-limits wrapper was not applied — ' +
+				'the generated client path no longer matches; update the redirects in ' +
+				'loader-hooks.mjs and bundle-backends.mjs (see prisma-client-wrap.mjs)',
+		)
+	}
 
 	console.info('[echo-desktop] starting Calliope (realtime) on :3001...')
 	await import(
@@ -120,4 +129,27 @@ if (isDirectRun) {
 		console.error('[echo-desktop] failed to start:', error)
 		process.exit(1)
 	})
+}
+
+function failLoudly(kind) {
+	return async (error) => {
+		console.error(`[echo-desktop] ${kind}, exiting:`, error)
+		if (process.versions.electron) {
+			const { dialog } = await import('electron')
+			dialog.showErrorBox('Neverkin hit a critical error', String(error?.stack ?? error))
+		}
+		process.exit(1)
+	}
+}
+
+function mirrorConsoleToFile(logPath) {
+	const stream = createWriteStream(logPath, { flags: 'a' })
+	for (const level of ['log', 'info', 'warn', 'error']) {
+		const original = console[level].bind(console)
+		console[level] = (...args) => {
+			original(...args)
+			const line = args.map((arg) => (typeof arg === 'string' ? arg : inspect(arg))).join(' ')
+			stream.write(`${new Date().toISOString()} [${level}] ${line}\n`)
+		}
+	}
 }

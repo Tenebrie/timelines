@@ -366,8 +366,6 @@ function evalLua(store, script, options = {}) {
 	return chained
 }
 
-const warnedMethods = new Set()
-
 function createClientInstance() {
 	const store = getStore()
 	const emitter = new EventEmitter()
@@ -417,6 +415,8 @@ function createClientInstance() {
 		publish: async (channel, message) => dispatch(store, 'PUBLISH', [channel, message]),
 		subscribe: async (channels, listener) => {
 			for (const channel of Array.isArray(channels) ? channels : [channels]) {
+				const previous = subscriptions.get(channel)
+				if (previous) store.pubsub.off(`message:${channel}`, previous)
 				const handler = (message, channelName) => listener(message, channelName)
 				subscriptions.set(channel, handler)
 				store.pubsub.on(`message:${channel}`, handler)
@@ -476,21 +476,20 @@ function createClientInstance() {
 	}
 
 	// Unknown-method fallback: future upstream code that calls a command this
-	// shim does not implement gets a loud one-time warning and a null result
-	// instead of a hard crash. Promise-introspection props must stay undefined.
+	// shim does not implement gets a rejection with an actionable message —
+	// beta policy is to fail loudly rather than degrade silently. Promise-
+	// introspection props must stay undefined. Caveat: unknown *data
+	// properties* (e.g. client.options) also come back as a function — add
+	// them to the client object above if upstream reads one.
 	return new Proxy(client, {
 		get(target, prop, receiver) {
 			if (prop in target || typeof prop === 'symbol') return Reflect.get(target, prop, receiver)
 			if (prop === 'then' || prop === 'catch' || prop === 'finally' || prop === 'constructor')
 				return undefined
 			return async (...args) => {
-				if (!warnedMethods.has(prop)) {
-					warnedMethods.add(prop)
-					console.warn(
-						`[echo-desktop] redis shim: unimplemented client method "${String(prop)}" called (args: ${JSON.stringify(args).slice(0, 200)}). Returning null. Extend redis-shim.mjs if this feature matters.`,
-					)
-				}
-				return null
+				throw new Error(
+					`[echo-desktop] redis shim: unimplemented client method "${String(prop)}" called (args: ${JSON.stringify(args).slice(0, 200)}). Extend redis-shim.mjs.`,
+				)
 			}
 		},
 	})

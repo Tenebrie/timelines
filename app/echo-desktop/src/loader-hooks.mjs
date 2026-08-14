@@ -8,10 +8,14 @@
  *
  * Everything else resolves normally, from each app's own node_modules.
  */
-const redirects = new Map([
-	['redis', new URL('./redis-shim.mjs', import.meta.url).href],
-	['@prisma/adapter-pg', new URL('./adapter-pg-shim.mjs', import.meta.url).href],
-])
+import { RUNTIME_SHIMS } from './substitutions.mjs'
+
+const redirects = new Map(
+	Object.entries(RUNTIME_SHIMS).map(([specifier, shim]) => [
+		specifier,
+		new URL(shim, import.meta.url).href,
+	]),
+)
 
 const prismaClientWrap = new URL('./prisma-client-wrap.mjs', import.meta.url).href
 

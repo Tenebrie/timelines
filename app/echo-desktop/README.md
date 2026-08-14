@@ -52,16 +52,18 @@ disabled in desktop mode. The recipient just runs `./neverkin` (see the
 README.txt inside; `--no-sandbox` fallback for some Linux setups). Native
 modules and the Electron binary are taken from the local install, so stage
 each target OS on that OS — e.g. run `npm run package` on a Windows machine to
-get the Windows build.
+get the Windows build. Linux and Windows are supported; macOS packaging is
+not implemented yet (the Electron.app bundle needs its own treatment).
 
 Size floor note: Electron alone is ~250 MB unpacked, so this architecture
 cannot go below that. The path to a drastically smaller package is swapping
 the shell for a system-webview wrapper (Tauri-style) with a Node sidecar for
 the services — the launcher/bundles are already shell-agnostic.
 
-Data lives in `~/.echo-desktop` (override with `NEVERKIN_DESKTOP_DATA`). Port defaults to
+Data lives in `~/.neverkin` (override with `NEVERKIN_DESKTOP_DATA`). Port defaults to
 `8190` (`NEVERKIN_DESKTOP_PORT`). New migrations merged from other branches are applied
-automatically on next launch.
+automatically on next launch. Console output is mirrored to `<data dir>/log.txt`, so shim
+drift warnings and crashes survive in packaged builds where nobody sees a console.
 
 ### Single-connection concurrency
 
@@ -80,8 +82,10 @@ writes/reads per burst: zero failures, sub-second completion.
 - **Kept automatically by design:** new entities, routes, migrations, frontend features —
   everything that flows through Prisma, the REST API, or the existing Redis command surface.
 - **The one drift point:** if upstream code starts using a Redis command the shim does not
-  implement, the client logs a loud one-time `unimplemented client method` warning and returns
-  `null` instead of crashing. Extend `redis-shim.mjs` (usually a few lines) when that happens.
+  implement, the call rejects with an `unimplemented client method` error naming the command.
+  Extend `redis-shim.mjs` (usually a few lines) when that happens. Beta error policy applies
+  throughout: escaped errors show a system dialog and exit — a crash is recoverable, silently
+  degraded or corrupted state is not.
 - **EVAL runs on a pure-JS Lua-subset interpreter** (redis.call statements, locals, if/then,
   `==`, tonumber, return — covers all upstream scripts). Scripts outside the subset fall back
   to wasmoon with a loud warning. Do NOT move wasmoon back onto the hot path: sustained
@@ -100,5 +104,5 @@ writes/reads per burst: zero failures, sub-second completion.
 - Icon search (Iconify) and Google Fonts require network; both degrade gracefully offline.
 - Rhea/Calliope bind their hardcoded ports 3000/3001 on all interfaces; a hardened build
   should firewall or patch them to loopback.
-- Not yet a signed, packaged installer — `npm start` runs the Electron shell from the repo.
-  Packaging (electron-builder, pruned node_modules) is the next step, not a design change.
+- Builds are unsigned (Windows SmartScreen / macOS Gatekeeper will complain) and there is
+  no installer or auto-update — the package is a plain runnable folder.

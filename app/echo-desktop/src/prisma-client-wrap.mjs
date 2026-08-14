@@ -14,6 +14,11 @@ import * as original from '../../rhea-backend/dist/prisma/client/client.js?nkd-o
 
 export * from '../../rhea-backend/dist/prisma/client/client.js?nkd-original'
 
+// The launcher asserts this after Rhea boots: if the generated client's path
+// ever changes, the redirect silently stops matching and the default 2s/5s
+// limits would return — fail loudly instead.
+globalThis.__NEVERKIN_DESKTOP_TX_WRAP__ = true
+
 export class PrismaClient extends original.PrismaClient {
 	constructor(options = {}) {
 		super({

@@ -69,12 +69,22 @@ async function applyStatementByStatement(db, sql, migration, originalError) {
 	console.warn(
 		`[echo-desktop] migration ${migration}: batch apply failed (${originalError.message}), retrying statement-by-statement`,
 	)
-	// Prisma-generated migration files hold newline-terminated statements; a
-	// naive split is sufficient for them and only used as a fallback path.
+	// Prisma-generated migration files hold newline-terminated statements,
+	// each prefixed with `-- Comment` lines that must be stripped per line —
+	// a chunk-level comment filter would discard the statement beneath it.
 	const statements = sql
 		.split(/;\s*[\r\n]/)
-		.map((statement) => statement.trim())
-		.filter((statement) => statement.length > 0 && !statement.startsWith('--'))
+		.map((chunk) =>
+			chunk
+				.split('\n')
+				.filter((line) => !line.trim().startsWith('--'))
+				.join('\n')
+				.trim(),
+		)
+		.filter((statement) => statement.length > 0)
+	if (statements.length === 0) {
+		throw new Error(`[echo-desktop] migration ${migration}: fallback found no executable statements`)
+	}
 	for (const statement of statements) {
 		try {
 			await db.exec(statement)
