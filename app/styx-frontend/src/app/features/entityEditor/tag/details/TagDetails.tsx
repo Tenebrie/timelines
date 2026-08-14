@@ -3,6 +3,7 @@ import Stack from '@mui/material/Stack'
 import { memo } from 'react'
 
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
+import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 
 import { TagMentionedBy } from './components/TagMentionedBy'
 import { TagTitle } from './components/TagTitle'
@@ -11,11 +12,12 @@ import { useUpdateTag } from './draft/useUpdateTag'
 
 type Props = {
 	editedTag: WorldTag
+	titleProps?: Partial<Parameters<typeof EditableTitle>[0]>
 }
 
 export const TagDetails = memo(TagDetailsComponent)
 
-export function TagDetailsComponent({ editedTag }: Props) {
+export function TagDetailsComponent({ editedTag, titleProps }: Props) {
 	const draft = useTagDraft({ tag: editedTag })
 
 	useUpdateTag({ draft })
@@ -28,7 +30,7 @@ export function TagDetailsComponent({ editedTag }: Props) {
 				...useBrowserSpecificScrollbars(),
 			}}
 		>
-			<TagTitle draft={draft} />
+			<TagTitle draft={draft} titleProps={titleProps} />
 			<TagMentionedBy tagId={editedTag.id} />
 		</Stack>
 	)

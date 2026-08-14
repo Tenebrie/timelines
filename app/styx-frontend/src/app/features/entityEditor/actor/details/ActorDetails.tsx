@@ -9,6 +9,7 @@ import { IconPicker } from '@/app/components/IconPicker/IconPicker'
 import { EntityEditorTabs } from '@/app/features/entityEditor/common/EntityEditorTabs'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
+import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 
 import { useCurrentOrNewActor } from '../hooks/useCurrentOrNewActor'
 import { ActorBacklinks } from './components/ActorBacklinks'
@@ -19,12 +20,13 @@ import { useUpsertActor } from './draft/useUpsertActor'
 
 type Props = {
 	editedActor: Actor
+	titleProps?: Partial<Parameters<typeof EditableTitle>[0]>
 	surface?: string
 }
 
 export const ActorDetails = memo(ActorDetailsComponent)
 
-export function ActorDetailsComponent({ editedActor, surface }: Props) {
+export function ActorDetailsComponent({ editedActor, titleProps, surface }: Props) {
 	const { mode, actor } = useCurrentOrNewActor({ editedActor })
 	const draft = useActorDraft({ actor })
 	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
@@ -50,7 +52,7 @@ export function ActorDetailsComponent({ editedActor, surface }: Props) {
 				...useBrowserSpecificScrollbars(),
 			}}
 		>
-			<ActorTitle draft={draft} />
+			<ActorTitle draft={draft} titleProps={titleProps} />
 			<Divider />
 			<Box flexGrow={1} height={fluidHeight ? 'auto' : 0} sx={{ marginRight: 0 }}>
 				<EntityEditorTabs

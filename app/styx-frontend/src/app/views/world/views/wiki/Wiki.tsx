@@ -89,6 +89,7 @@ export const Wiki = () => {
 					sx={{
 						flex: 1,
 						minWidth: 0,
+						width: '100%',
 						height: '100%',
 						background: theme.custom.palette.background.textEditor,
 					}}
