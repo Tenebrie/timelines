@@ -1,9 +1,12 @@
 name: Build Desktop
 
 on:
-  push:
-    tags: ['v*']
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        required: true
 
 jobs:
   build:
@@ -25,8 +28,6 @@ jobs:
         run: git config --global core.symlinks true
 
       - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0 # full history so git describe finds the release tag
 
       - uses: actions/setup-node@v7
         with:
@@ -49,7 +50,7 @@ jobs:
       - name: Stamp archives with release version
         id: version
         run: |
-          VERSION=$(git describe --tags --always)
+          VERSION="${{ inputs.version || github.ref_name }}"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           cd app/echo-desktop/dist/package
           for archive in neverkin-desktop-*.zip neverkin-desktop-*.tar.gz; do
@@ -70,7 +71,7 @@ jobs:
 
   release:
     name: Attach artifacts to release
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || inputs.version != ''
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -86,6 +87,7 @@ jobs:
       - name: Create GitHub Release with archives
         env:
           GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.version || github.ref_name }}
         run: |
-          gh release create "$GITHUB_REF_NAME" --generate-notes artifacts/* ||
-            gh release upload "$GITHUB_REF_NAME" artifacts/* --clobber
+          gh release create "$RELEASE_TAG" --generate-notes artifacts/* ||
+            gh release upload "$RELEASE_TAG" artifacts/* --clobber

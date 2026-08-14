@@ -104,6 +104,16 @@ jobs:
           tag: ${{ needs.check-commits.outputs.version }}
           title: Release ${{ needs.check-commits.outputs.version }}
 
+  build-desktop:
+    name: Build Desktop
+    needs: [check-commits, create-release]
+    if: ${{ github.ref_name == 'dev' }}
+    permissions:
+      contents: write
+    uses: ./.github/workflows/build-desktop.yml
+    with:
+      version: ${{ needs.check-commits.outputs.version }}
+
   deploy-staging:
     name: Deploy to Staging
     runs-on: ubuntu-latest
