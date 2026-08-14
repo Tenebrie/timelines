@@ -40,6 +40,9 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 	const [docState, setDocState] = useState<DocState>(() => createDocState(key))
 	if (docState.key !== key) {
 		setDocState(createDocState(key))
+		if (isReady) {
+			setIsReady(false)
+		}
 	}
 
 	const resetConnection = useCallback(() => {
