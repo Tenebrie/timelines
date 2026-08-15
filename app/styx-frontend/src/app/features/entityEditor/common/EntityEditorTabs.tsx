@@ -18,9 +18,16 @@ type Props = {
 	illustrationTab?: React.ReactNode
 	backlinksTab?: React.ReactNode
 	isWikiTab?: boolean
+	fluidHeight?: boolean
 }
 
-export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab, isWikiTab }: Props) {
+export function EntityEditorTabs({
+	contentTab,
+	illustrationTab,
+	backlinksTab,
+	isWikiTab,
+	fluidHeight,
+}: Props) {
 	const { tab: defaultModalTab, wikiTab: defaultWikiTab } = useSearch({ from: '/world/$worldId/_world' })
 	const defaultTab = isWikiTab ? defaultWikiTab : defaultModalTab
 	const [tab, setTab] = useState(defaultTab)
@@ -48,13 +55,31 @@ export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab, is
 
 	return (
 		<Stack direction="row" width="100%" height="100%" gap={1} sx={{ flex: 1 }}>
-			<Box sx={{ height: '100%', width: '100%', display: tab === 0 ? 'block' : 'none' }}>
+			<Box
+				sx={{
+					height: '100%',
+					width: '100%',
+					display: tab === 0 ? 'block' : 'none',
+				}}
+			>
 				{mountedTabs.has(0) && contentTab}
 			</Box>
-			<Box sx={{ height: '100%', width: 'calc(100%)', display: tab === 1 ? 'block' : 'none' }}>
+			<Box
+				sx={{
+					height: '100%',
+					width: 'calc(100%)',
+					display: tab === 1 ? 'block' : 'none',
+				}}
+			>
 				{mountedTabs.has(1) && illustrationTab}
 			</Box>
-			<Box sx={{ height: '100%', width: 'calc(100%)', display: tab === 2 ? 'block' : 'none' }}>
+			<Box
+				sx={{
+					height: '100%',
+					width: 'calc(100%)',
+					display: tab === 2 ? 'block' : 'none',
+				}}
+			>
 				{mountedTabs.has(2) && backlinksTab}
 			</Box>
 			{tab !== 0 && <Divider orientation="vertical" />}
@@ -62,9 +87,12 @@ export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab, is
 				orientation="vertical"
 				value={tab}
 				onChange={(_, newValue) => handleChange(newValue)}
-				sx={{ marginTop: 0 }}
+				sx={{
+					marginTop: 0,
+					...(fluidHeight && { position: 'sticky', top: 8, alignSelf: 'flex-start' }),
+				}}
 			>
-				<Tooltip title="Content tab" disableInteractive placement="right" enterDelay={300}>
+				<Tooltip title="Content tab" disableInteractive placement="right" enterDelay={700}>
 					<Tab
 						value={0}
 						data-testid="EntityEditorContentTab"
@@ -78,7 +106,7 @@ export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab, is
 						}}
 					/>
 				</Tooltip>
-				<Tooltip title="Illustration tab" disableInteractive placement="right" enterDelay={300}>
+				<Tooltip title="Illustration tab" disableInteractive placement="right" enterDelay={700}>
 					<Tab
 						value={1}
 						data-testid="EntityEditorIllustrationTab"
@@ -93,7 +121,7 @@ export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab, is
 						}}
 					/>
 				</Tooltip>
-				<Tooltip title="Backlinks tab" disableInteractive placement="right" enterDelay={300}>
+				<Tooltip title="Backlinks tab" disableInteractive placement="right" enterDelay={700}>
 					<Tab
 						value={2}
 						data-testid="EntityEditorBacklinksTab"

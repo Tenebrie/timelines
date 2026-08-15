@@ -4,9 +4,9 @@ import { DragDropStateType } from '../DragDropState'
 import { AllowedDraggableType } from '../types'
 import { useDragDropState } from './useDragDropState'
 
-type Props<T extends AllowedDraggableType> = {
+type Props<T extends AllowedDraggableType, R extends RefObject<unknown>> = {
 	type: T
-	receiverRef?: RefObject<HTMLDivElement | null>
+	receiverRef?: R
 	onDrop: (state: DragDropStateType<T>, event: DragDropEvent) => void
 }
 
@@ -15,11 +15,11 @@ type DragDropEvent = {
 	mouseEvent?: MouseEvent
 }
 
-export const useDragDropReceiver = <T extends AllowedDraggableType>({
+export const useDragDropReceiver = <T extends AllowedDraggableType, R extends RefObject<HTMLElement | null>>({
 	type,
 	receiverRef,
 	onDrop,
-}: Props<T>) => {
+}: Props<T, R>) => {
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const { getState, setStateImmediately } = useDragDropState()
 

@@ -7,7 +7,7 @@ import {
 	CalendarSelector,
 	useTemplateCalendars,
 } from '@/app/features/time/calendar/components/CalendarSelector'
-import { CreatePopoverButton } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
+import { CreatePopoverIconButton } from '@/ui-lib/components/PopoverButton/CreatePopoverIconButton'
 
 export function CalendarListCreateNewButton() {
 	const [newCalendarName, setNewCalendarName] = useState('')
@@ -33,7 +33,7 @@ export function CalendarListCreateNewButton() {
 	}, [newCalendarName, createCalendar, selectedTemplate])
 
 	return (
-		<CreatePopoverButton
+		<CreatePopoverIconButton
 			tooltip="Create new calendar"
 			onConfirm={handleCreateCalendar}
 			confirmDisabled={!newCalendarName.trim() || isCreating}

@@ -228,6 +228,7 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					parentArticleId?: null | string
 				}[]
 				mentions: {
+					id: string
 					pageId?: null | string
 					sourceId: string
 					targetId: string
@@ -252,9 +253,23 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				icon: string
 				color: string
 				descriptionRich: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
 			}[]
 			events: {
+				pages: {
+					description: string
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					descriptionRich: string
+					parentActorId?: null | string
+					parentEventId?: null | string
+					parentArticleId?: null | string
+				}[]
 				mentions: {
+					id: string
 					pageId?: null | string
 					sourceId: string
 					targetId: string
@@ -278,6 +293,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				icon: string
 				color: string
 				descriptionRich: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
 				timestamp: string
 				revokedAt?: null | string
 				worldEventTrackId?: null | string
@@ -295,6 +312,7 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					parentArticleId?: null | string
 				}[]
 				mentions: {
+					id: string
 					pageId?: null | string
 					sourceId: string
 					targetId: string
@@ -316,12 +334,25 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				name: string
 				icon: string
 				color: string
-				position: number
+				parentFolderId?: null | string
+				parentFolderPosition: number
+				content: string
 				contentRich: string
-				parentId?: null | string
+			}[]
+			folders: {
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				icon: string
+				color: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
 			}[]
 			tags: {
 				mentions: {
+					id: string
 					pageId?: null | string
 					sourceId: string
 					targetId: string
@@ -342,6 +373,9 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				createdAt: string
 				updatedAt: string
 				name: string
+				color: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
 			}[]
 			mindmapNodes: {
 				links: {

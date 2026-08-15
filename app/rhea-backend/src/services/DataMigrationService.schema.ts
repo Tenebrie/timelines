@@ -39,7 +39,7 @@ export const worldCalendarTypeSchema = z.union([
 ])
 
 export const exportedUserDataSchema = z.object({
-	version: z.literal(1),
+	version: z.literal(2),
 	user: z.object({
 		id: z.string(),
 		calendars: z.array(
@@ -158,12 +158,127 @@ export const exportedUserDataSchema = z.object({
 				),
 		),
 		worlds: z.array(
-			z.object({
-				events: z.array(
-					z.object({
-						pages: z
-							.union([
-								z.array(
+			z
+				.object({
+					calendars: z.array(
+						z
+							.object({
+								units: z.array(
+									z
+										.object({
+											children: z.array(
+												z.object({
+													id: z.string(),
+													createdAt: z.date(),
+													updatedAt: z.date(),
+													position: z.number(),
+													calendarId: z.string(),
+													label: z.string().nullable(),
+													shortLabel: z.string().nullable(),
+													repeats: z.number(),
+													parentUnitId: z.string(),
+													childUnitId: z.string(),
+												}),
+											),
+										})
+										.and(
+											z.object({
+												id: z.string(),
+												createdAt: z.date(),
+												updatedAt: z.date(),
+												name: z.string(),
+												position: z.number(),
+												displayName: z.string().nullable(),
+												displayNameShort: z.string().nullable(),
+												displayNamePlural: z.string().nullable(),
+												formatMode: calendarUnitFormatModeSchema,
+												formatShorthand: z.string().nullable(),
+												negativeFormat: calendarUnitNegativeFormatSchema,
+												duration: z.bigint(),
+												treeDepth: z.number(),
+												calendarId: z.string(),
+											}),
+										),
+								),
+								seasons: z.array(
+									z
+										.object({
+											intervals: z.array(
+												z.object({
+													id: z.string(),
+													createdAt: z.date(),
+													updatedAt: z.date(),
+													calendarId: z.string(),
+													leftIndex: z.number(),
+													rightIndex: z.number(),
+													seasonId: z.string(),
+												}),
+											),
+										})
+										.and(
+											z.object({
+												id: z.string(),
+												createdAt: z.date(),
+												updatedAt: z.date(),
+												name: z.string(),
+												position: z.number(),
+												formatShorthand: z.string().nullable(),
+												calendarId: z.string(),
+											}),
+										),
+								),
+								presentations: z.array(
+									z
+										.object({
+											units: z.array(
+												z.object({
+													id: z.string(),
+													createdAt: z.date(),
+													updatedAt: z.date(),
+													name: z.string(),
+													position: z.number(),
+													calendarId: z.string(),
+													formatString: z.string(),
+													subdivision: z.number(),
+													labeledIndices: z.array(z.number()),
+													unitId: z.string(),
+													presentationId: z.string(),
+												}),
+											),
+										})
+										.and(
+											z.object({
+												id: z.string(),
+												createdAt: z.date(),
+												updatedAt: z.date(),
+												name: z.string(),
+												calendarId: z.string(),
+												compression: z.number(),
+												scaleFactor: z.number(),
+												baselineUnitId: z.string().nullable(),
+											}),
+										),
+								),
+							})
+							.and(
+								z.object({
+									id: z.string(),
+									createdAt: z.date(),
+									updatedAt: z.date(),
+									name: z.string(),
+									description: z.string(),
+									worldId: z.string().nullable(),
+									ownerId: z.string().nullable(),
+									position: z.number(),
+									originTime: z.bigint(),
+									dateFormat: z.string().nullable(),
+								}),
+							),
+					),
+					events: z.array(
+						z
+							.object({
+								pages: z.array(
 									z.object({
 										id: z.string(),
 										createdAt: z.date(),
@@ -176,350 +291,263 @@ export const exportedUserDataSchema = z.object({
 										parentArticleId: z.string().nullable(),
 									}),
 								),
-								z.undefined(),
-							])
-							.optional(),
-						mentions: z.array(
-							z.object({
-								pageId: z.string().nullable(),
-								sourceId: z.string(),
-								targetId: z.string(),
-								sourceType: mentionedEntitySchema,
-								targetType: mentionedEntitySchema,
-								sourceActorId: z.string().nullable(),
-								sourceEventId: z.string().nullable(),
-								sourceArticleId: z.string().nullable(),
-								sourceTagId: z.string().nullable(),
-								targetActorId: z.string().nullable(),
-								targetEventId: z.string().nullable(),
-								targetArticleId: z.string().nullable(),
-								targetTagId: z.string().nullable(),
-							}),
-						),
+								mentions: z.array(
+									z.object({
+										id: z.string(),
+										pageId: z.string().nullable(),
+										sourceId: z.string(),
+										targetId: z.string(),
+										sourceType: mentionedEntitySchema,
+										targetType: mentionedEntitySchema,
+										sourceActorId: z.string().nullable(),
+										sourceEventId: z.string().nullable(),
+										sourceArticleId: z.string().nullable(),
+										sourceTagId: z.string().nullable(),
+										targetActorId: z.string().nullable(),
+										targetEventId: z.string().nullable(),
+										targetArticleId: z.string().nullable(),
+										targetTagId: z.string().nullable(),
+									}),
+								),
+							})
+							.and(
+								z.object({
+									id: z.string(),
+									createdAt: z.date(),
+									updatedAt: z.date(),
+									name: z.string(),
+									icon: z.string(),
+									color: z.string(),
+									description: z.string(),
+									descriptionRich: z.string(),
+									worldId: z.string(),
+									parentFolderId: z.string().nullable(),
+									parentFolderPosition: z.number(),
+									timestamp: z.bigint(),
+									revokedAt: z.bigint().nullable(),
+									worldEventTrackId: z.string().nullable(),
+								}),
+							),
+					),
+					savedColors: z.array(
+						z.object({
+							id: z.string(),
+							createdAt: z.date(),
+							updatedAt: z.date(),
+							worldId: z.string(),
+							label: z.string().nullable(),
+							value: z.string(),
+						}),
+					),
+					worldCommonIconSets: z.array(
+						z.object({
+							id: z.string(),
+							worldId: z.string(),
+							iconSet: z.string(),
+						}),
+					),
+					worldEventTracks: z.array(
+						z.object({
+							id: z.string(),
+							createdAt: z.date(),
+							updatedAt: z.date(),
+							name: z.string(),
+							worldId: z.string(),
+							position: z.number(),
+							visible: z.boolean(),
+						}),
+					),
+					actors: z.array(
+						z
+							.object({
+								pages: z.array(
+									z.object({
+										id: z.string(),
+										createdAt: z.date(),
+										updatedAt: z.date(),
+										name: z.string(),
+										description: z.string(),
+										descriptionRich: z.string(),
+										parentActorId: z.string().nullable(),
+										parentEventId: z.string().nullable(),
+										parentArticleId: z.string().nullable(),
+									}),
+								),
+								mentions: z.array(
+									z.object({
+										id: z.string(),
+										pageId: z.string().nullable(),
+										sourceId: z.string(),
+										targetId: z.string(),
+										sourceType: mentionedEntitySchema,
+										targetType: mentionedEntitySchema,
+										sourceActorId: z.string().nullable(),
+										sourceEventId: z.string().nullable(),
+										sourceArticleId: z.string().nullable(),
+										sourceTagId: z.string().nullable(),
+										targetActorId: z.string().nullable(),
+										targetEventId: z.string().nullable(),
+										targetArticleId: z.string().nullable(),
+										targetTagId: z.string().nullable(),
+									}),
+								),
+							})
+							.and(
+								z.object({
+									id: z.string(),
+									createdAt: z.date(),
+									updatedAt: z.date(),
+									name: z.string(),
+									title: z.string(),
+									icon: z.string(),
+									color: z.string(),
+									description: z.string(),
+									descriptionRich: z.string(),
+									worldId: z.string(),
+									parentFolderId: z.string().nullable(),
+									parentFolderPosition: z.number(),
+								}),
+							),
+					),
+					articles: z.array(
+						z
+							.object({
+								pages: z.array(
+									z.object({
+										id: z.string(),
+										createdAt: z.date(),
+										updatedAt: z.date(),
+										name: z.string(),
+										description: z.string(),
+										descriptionRich: z.string(),
+										parentActorId: z.string().nullable(),
+										parentEventId: z.string().nullable(),
+										parentArticleId: z.string().nullable(),
+									}),
+								),
+								mentions: z.array(
+									z.object({
+										id: z.string(),
+										pageId: z.string().nullable(),
+										sourceId: z.string(),
+										targetId: z.string(),
+										sourceType: mentionedEntitySchema,
+										targetType: mentionedEntitySchema,
+										sourceActorId: z.string().nullable(),
+										sourceEventId: z.string().nullable(),
+										sourceArticleId: z.string().nullable(),
+										sourceTagId: z.string().nullable(),
+										targetActorId: z.string().nullable(),
+										targetEventId: z.string().nullable(),
+										targetArticleId: z.string().nullable(),
+										targetTagId: z.string().nullable(),
+									}),
+								),
+							})
+							.and(
+								z.object({
+									id: z.string(),
+									createdAt: z.date(),
+									updatedAt: z.date(),
+									name: z.string(),
+									icon: z.string(),
+									color: z.string(),
+									worldId: z.string(),
+									parentFolderId: z.string().nullable(),
+									parentFolderPosition: z.number(),
+									contentRich: z.string(),
+								}),
+							),
+					),
+					tags: z.array(
+						z
+							.object({
+								mentions: z.array(
+									z.object({
+										id: z.string(),
+										pageId: z.string().nullable(),
+										sourceId: z.string(),
+										targetId: z.string(),
+										sourceType: mentionedEntitySchema,
+										targetType: mentionedEntitySchema,
+										sourceActorId: z.string().nullable(),
+										sourceEventId: z.string().nullable(),
+										sourceArticleId: z.string().nullable(),
+										sourceTagId: z.string().nullable(),
+										targetActorId: z.string().nullable(),
+										targetEventId: z.string().nullable(),
+										targetArticleId: z.string().nullable(),
+										targetTagId: z.string().nullable(),
+									}),
+								),
+							})
+							.and(
+								z.object({
+									id: z.string(),
+									createdAt: z.date(),
+									updatedAt: z.date(),
+									name: z.string(),
+									description: z.string(),
+									worldId: z.string(),
+									parentFolderId: z.string().nullable(),
+									parentFolderPosition: z.number(),
+								}),
+							),
+					),
+					mindmapNodes: z.array(
+						z
+							.object({
+								links: z.array(
+									z.object({
+										id: z.string(),
+										createdAt: z.date(),
+										updatedAt: z.date(),
+										sourceNodeId: z.string(),
+										targetNodeId: z.string(),
+										direction: mindmapLinkDirectionSchema,
+										content: z.string(),
+									}),
+								),
+							})
+							.and(
+								z.object({
+									id: z.string(),
+									createdAt: z.date(),
+									updatedAt: z.date(),
+									worldId: z.string(),
+									parentActorId: z.string().nullable(),
+									positionX: z.number(),
+									positionY: z.number(),
+								}),
+							),
+					),
+					folders: z.array(
+						z.object({
+							id: z.string(),
+							createdAt: z.date(),
+							updatedAt: z.date(),
+							name: z.string(),
+							icon: z.string(),
+							color: z.string(),
+							worldId: z.string(),
+							parentFolderId: z.string().nullable(),
+							parentFolderPosition: z.number(),
+						}),
+					),
+				})
+				.and(
+					z.object({
 						id: z.string(),
 						createdAt: z.date(),
 						updatedAt: z.date(),
 						name: z.string(),
-						icon: z.string(),
-						color: z.string(),
 						description: z.string(),
-						descriptionRich: z.string(),
-						worldId: z.string(),
-						timestamp: z.bigint(),
-						revokedAt: z.bigint().nullable(),
-						worldEventTrackId: z.string().nullable(),
+						ownerId: z.string(),
+						calendar: worldCalendarTypeSchema.nullable(),
+						timeOrigin: z.bigint(),
+						accessMode: worldAccessModeSchema,
 					}),
 				),
-				calendars: z.array(
-					z
-						.object({
-							units: z.array(
-								z
-									.object({
-										children: z.array(
-											z.object({
-												id: z.string(),
-												createdAt: z.date(),
-												updatedAt: z.date(),
-												position: z.number(),
-												calendarId: z.string(),
-												label: z.string().nullable(),
-												shortLabel: z.string().nullable(),
-												repeats: z.number(),
-												parentUnitId: z.string(),
-												childUnitId: z.string(),
-											}),
-										),
-									})
-									.and(
-										z.object({
-											id: z.string(),
-											createdAt: z.date(),
-											updatedAt: z.date(),
-											name: z.string(),
-											position: z.number(),
-											displayName: z.string().nullable(),
-											displayNameShort: z.string().nullable(),
-											displayNamePlural: z.string().nullable(),
-											formatMode: calendarUnitFormatModeSchema,
-											formatShorthand: z.string().nullable(),
-											negativeFormat: calendarUnitNegativeFormatSchema,
-											duration: z.bigint(),
-											treeDepth: z.number(),
-											calendarId: z.string(),
-										}),
-									),
-							),
-							seasons: z.array(
-								z
-									.object({
-										intervals: z.array(
-											z.object({
-												id: z.string(),
-												createdAt: z.date(),
-												updatedAt: z.date(),
-												calendarId: z.string(),
-												leftIndex: z.number(),
-												rightIndex: z.number(),
-												seasonId: z.string(),
-											}),
-										),
-									})
-									.and(
-										z.object({
-											id: z.string(),
-											createdAt: z.date(),
-											updatedAt: z.date(),
-											name: z.string(),
-											position: z.number(),
-											formatShorthand: z.string().nullable(),
-											calendarId: z.string(),
-										}),
-									),
-							),
-							presentations: z.array(
-								z
-									.object({
-										units: z.array(
-											z.object({
-												id: z.string(),
-												createdAt: z.date(),
-												updatedAt: z.date(),
-												name: z.string(),
-												position: z.number(),
-												calendarId: z.string(),
-												formatString: z.string(),
-												subdivision: z.number(),
-												labeledIndices: z.array(z.number()),
-												unitId: z.string(),
-												presentationId: z.string(),
-											}),
-										),
-									})
-									.and(
-										z.object({
-											id: z.string(),
-											createdAt: z.date(),
-											updatedAt: z.date(),
-											name: z.string(),
-											calendarId: z.string(),
-											compression: z.number(),
-											scaleFactor: z.number(),
-											baselineUnitId: z.string().nullable(),
-										}),
-									),
-							),
-						})
-						.and(
-							z.object({
-								id: z.string(),
-								createdAt: z.date(),
-								updatedAt: z.date(),
-								name: z.string(),
-								description: z.string(),
-								worldId: z.string().nullable(),
-								ownerId: z.string().nullable(),
-								position: z.number(),
-								originTime: z.bigint(),
-								dateFormat: z.string().nullable(),
-							}),
-						),
-				),
-				savedColors: z.array(
-					z.object({
-						id: z.string(),
-						createdAt: z.date(),
-						updatedAt: z.date(),
-						worldId: z.string(),
-						label: z.string().nullable(),
-						value: z.string(),
-					}),
-				),
-				worldCommonIconSets: z.array(
-					z.object({
-						id: z.string(),
-						worldId: z.string(),
-						iconSet: z.string(),
-					}),
-				),
-				worldEventTracks: z.array(
-					z.object({
-						id: z.string(),
-						createdAt: z.date(),
-						updatedAt: z.date(),
-						name: z.string(),
-						worldId: z.string(),
-						position: z.number(),
-						visible: z.boolean(),
-					}),
-				),
-				actors: z.array(
-					z
-						.object({
-							mentions: z.array(
-								z.object({
-									pageId: z.string().nullable(),
-									sourceId: z.string(),
-									targetId: z.string(),
-									sourceType: mentionedEntitySchema,
-									targetType: mentionedEntitySchema,
-									sourceActorId: z.string().nullable(),
-									sourceEventId: z.string().nullable(),
-									sourceArticleId: z.string().nullable(),
-									sourceTagId: z.string().nullable(),
-									targetActorId: z.string().nullable(),
-									targetEventId: z.string().nullable(),
-									targetArticleId: z.string().nullable(),
-									targetTagId: z.string().nullable(),
-								}),
-							),
-							pages: z.array(
-								z.object({
-									id: z.string(),
-									createdAt: z.date(),
-									updatedAt: z.date(),
-									name: z.string(),
-									description: z.string(),
-									descriptionRich: z.string(),
-									parentActorId: z.string().nullable(),
-									parentEventId: z.string().nullable(),
-									parentArticleId: z.string().nullable(),
-								}),
-							),
-						})
-						.and(
-							z.object({
-								id: z.string(),
-								createdAt: z.date(),
-								updatedAt: z.date(),
-								name: z.string(),
-								title: z.string(),
-								icon: z.string(),
-								color: z.string(),
-								description: z.string(),
-								descriptionRich: z.string(),
-								worldId: z.string(),
-							}),
-						),
-				),
-				articles: z.array(
-					z
-						.object({
-							mentions: z.array(
-								z.object({
-									pageId: z.string().nullable(),
-									sourceId: z.string(),
-									targetId: z.string(),
-									sourceType: mentionedEntitySchema,
-									targetType: mentionedEntitySchema,
-									sourceActorId: z.string().nullable(),
-									sourceEventId: z.string().nullable(),
-									sourceArticleId: z.string().nullable(),
-									sourceTagId: z.string().nullable(),
-									targetActorId: z.string().nullable(),
-									targetEventId: z.string().nullable(),
-									targetArticleId: z.string().nullable(),
-									targetTagId: z.string().nullable(),
-								}),
-							),
-							pages: z.array(
-								z.object({
-									id: z.string(),
-									createdAt: z.date(),
-									updatedAt: z.date(),
-									name: z.string(),
-									description: z.string(),
-									descriptionRich: z.string(),
-									parentActorId: z.string().nullable(),
-									parentEventId: z.string().nullable(),
-									parentArticleId: z.string().nullable(),
-								}),
-							),
-						})
-						.and(
-							z.object({
-								id: z.string(),
-								createdAt: z.date(),
-								updatedAt: z.date(),
-								name: z.string(),
-								icon: z.string(),
-								color: z.string(),
-								worldId: z.string(),
-								position: z.number(),
-								contentRich: z.string(),
-								parentId: z.string().nullable(),
-							}),
-						),
-				),
-				tags: z.array(
-					z
-						.object({
-							mentions: z.array(
-								z.object({
-									pageId: z.string().nullable(),
-									sourceId: z.string(),
-									targetId: z.string(),
-									sourceType: mentionedEntitySchema,
-									targetType: mentionedEntitySchema,
-									sourceActorId: z.string().nullable(),
-									sourceEventId: z.string().nullable(),
-									sourceArticleId: z.string().nullable(),
-									sourceTagId: z.string().nullable(),
-									targetActorId: z.string().nullable(),
-									targetEventId: z.string().nullable(),
-									targetArticleId: z.string().nullable(),
-									targetTagId: z.string().nullable(),
-								}),
-							),
-						})
-						.and(
-							z.object({
-								id: z.string(),
-								createdAt: z.date(),
-								updatedAt: z.date(),
-								name: z.string(),
-								description: z.string(),
-								worldId: z.string(),
-							}),
-						),
-				),
-				mindmapNodes: z.array(
-					z
-						.object({
-							links: z.array(
-								z.object({
-									id: z.string(),
-									createdAt: z.date(),
-									updatedAt: z.date(),
-									sourceNodeId: z.string(),
-									targetNodeId: z.string(),
-									direction: mindmapLinkDirectionSchema,
-									content: z.string(),
-								}),
-							),
-						})
-						.and(
-							z.object({
-								id: z.string(),
-								createdAt: z.date(),
-								updatedAt: z.date(),
-								worldId: z.string(),
-								parentActorId: z.string().nullable(),
-								positionX: z.number(),
-								positionY: z.number(),
-							}),
-						),
-				),
-				id: z.string(),
-				createdAt: z.date(),
-				updatedAt: z.date(),
-				name: z.string(),
-				description: z.string(),
-				ownerId: z.string(),
-				calendar: worldCalendarTypeSchema.nullable(),
-				timeOrigin: z.bigint(),
-				accessMode: worldAccessModeSchema,
-			}),
 		),
 	}),
 })

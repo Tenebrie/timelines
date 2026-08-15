@@ -4,7 +4,8 @@ export function GoogleLoginButton() {
 	const { ready: googleReady } = useGoogleAuth()
 
 	const isLegacyDomain = location.hostname.endsWith('.tenebrie.com')
-	if (isLegacyDomain) {
+	const isTwoHostDeployment = location.hostname.startsWith('app.')
+	if (isLegacyDomain || !isTwoHostDeployment) {
 		return null
 	}
 

@@ -50,7 +50,7 @@ export const ActorHeaderRenderer = ({ actor, collapsed }: Props) => {
 		actions.push(
 			<PopoverButton
 				key={'menu'}
-				icon={<MenuIcon />}
+				content={<MenuIcon />}
 				aria-label="Menu"
 				size="small"
 				tooltip="Show actions"

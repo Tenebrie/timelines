@@ -17,7 +17,7 @@ export const EventIcon = ({ name, height }: Props) => {
 				justifyContent: 'center',
 			}}
 		>
-			<Icon ssr icon={name === 'default' ? 'mdi:leaf' : name} width={height} height={height} />
+			<Icon ssr icon={name === 'default' ? 'mdi:event' : name} width={height} height={height} />
 		</Box>
 	)
 }

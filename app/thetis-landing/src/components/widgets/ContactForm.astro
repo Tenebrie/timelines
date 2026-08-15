@@ -86,7 +86,9 @@ const {
 <script is:inline>
 	function initContactForm() {
 		const form = document.getElementById('contact-form-element')
-		if (!form) return
+		if (!form) {
+			return
+		}
 
 		const emailInput = document.getElementById('email')
 		const emailHelper = document.getElementById('email-helper')

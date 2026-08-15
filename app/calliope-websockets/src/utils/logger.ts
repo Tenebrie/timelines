@@ -14,7 +14,7 @@ export const Logger = {
 		console.warn(`\x1b[33m[${doc}]\x1b[0m ${message}`)
 	},
 
-	yjsError: (docName: string, message: string, error: unknown) => {
+	yjsError: (docName: string, message: string, error?: unknown) => {
 		const doc = Logger.parseDocName(docName)
 		console.error(`\x1b[31m[${doc}]\x1b[0m ${message}`, error)
 	},

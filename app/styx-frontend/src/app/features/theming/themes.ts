@@ -15,9 +15,6 @@ const baseThemeOptions = ({ reduceAnimations }: Props): ThemeOptions => ({
 			styleOverrides: {
 				root: {
 					textTransform: 'none',
-					'&:hover': {
-						transition: 'none !important',
-					},
 				},
 				contained: {
 					boxShadow: 'none',
@@ -144,9 +141,94 @@ const baseThemeOptions = ({ reduceAnimations }: Props): ThemeOptions => ({
 	},
 })
 
+export const customLightTheme = {
+	palette: {
+		timelineAnchor: {
+			text: 'rgb(21, 16, 11)',
+		},
+		outline: 'rgb(60 40 120 / 18%)',
+		outlineStrong: 'rgb(60 40 120 / 40%)',
+		hintText: 'rgb(0 0 0 / 60%)',
+		neutralBackground: {
+			contrastText: 'rgb(0 0 0 / 38%)',
+			normal: 'rgb(0 0 0 / 20%)',
+			hard: 'rgb(0 0 0  / 50%)',
+			harder: 'rgb(0 0 0 / 65%)',
+			hardest: 'rgb(0 0 0  / 80%)',
+			soft: 'rgb(0 0 0  / 8%)',
+			softer: 'rgb(0 0 0 / 4%)',
+			softest: 'rgb(0 0 0 / 2%)',
+		},
+		background: {
+			hard: 'rgb(60 40 120 / 30%)',
+			harder: 'rgb(60 40 120 / 40%)',
+			hardest: 'rgb(60 40 120 / 60%)',
+			soft: 'rgb(60 40 120 / 8%)',
+			softer: 'rgb(60 40 120 / 4%)',
+			softest: 'rgb(60 40 120 / 2%)',
+			textEditor: '#fff',
+			timeline: '#eae9f2',
+			timelineHeader: 'hsl(250, 20%, 93%)',
+			navigator: '#fff',
+			timelineMarker: '#fff',
+			timelineMarkerTail: 'hsl(250, 15%, 82%)',
+		},
+	},
+}
+
+export const customDarkTheme: typeof customLightTheme = {
+	palette: {
+		timelineAnchor: {
+			text: 'white',
+		},
+		outline: 'rgb(180 170 220 / 18%)',
+		outlineStrong: 'rgb(180 170 220 / 40%)',
+		hintText: 'rgb(255 255 255 / 50%)',
+		neutralBackground: {
+			contrastText: 'rgb(255, 255, 255, 38%)',
+			normal: 'rgb(255 255 255 / 10%)',
+			hard: 'rgb(255 255 255 / 30%)',
+			harder: 'rgb(255 255 255 / 40%)',
+			hardest: 'rgb(255 255 255 / 60%)',
+			soft: 'rgb(255 255 255 / 8%)',
+			softer: 'rgb(255 255 255 / 4%)',
+			softest: 'rgb(255 255 255 / 2%)',
+		},
+		background: {
+			hard: 'rgb(180 170 220 / 30%)',
+			harder: 'rgb(180 170 220 / 40%)',
+			hardest: 'rgb(180 170 220 / 60%)',
+			soft: 'rgb(180 170 220 / 8%)',
+			softer: 'rgb(180 170 220 / 4%)',
+			softest: 'rgb(180 170 220 / 2%)',
+			textEditor: 'hsl(252, 25%, 14%)',
+			timeline: '#0f0e1a',
+			timelineHeader: '#16142a',
+			navigator: '#16142a',
+			timelineMarker: '#0f0e1a',
+			timelineMarkerTail: 'hsl(252, 20%, 28%)',
+		},
+	},
+}
+
 export const lightTheme = (props: Props): Theme => {
+	const base = baseThemeOptions(props)
 	const options: ThemeOptions = {
-		...baseThemeOptions(props),
+		...base,
+		components: {
+			...base.components,
+			MuiButton: {
+				styleOverrides: {
+					...(base.components?.MuiButton?.styleOverrides ?? {}),
+					containedPrimary: {
+						backgroundColor: 'hsl(258, 100%, 70%)',
+						'&:hover': {
+							backgroundColor: 'hsl(258, 100%, 75%)',
+						},
+					},
+				},
+			},
+		},
 		palette: {
 			mode: 'light',
 			background: {
@@ -188,6 +270,25 @@ export const darkTheme = (props: Props): Theme => {
 					},
 				},
 			},
+			MuiButton: {
+				styleOverrides: {
+					...(base.components?.MuiButton?.styleOverrides ?? {}),
+					containedPrimary: ({ theme }) => ({
+						backgroundColor: theme.palette.primary.dark,
+						color: '#f0ecff',
+						'&:hover': {
+							backgroundColor: 'hsl(258, 52%, 46%)',
+						},
+					}),
+					containedSecondary: {
+						backgroundColor: 'hsl(200, 55%, 25%)',
+						color: '#f0ecff',
+						'&:hover': {
+							backgroundColor: 'hsl(200, 55%, 30%)',
+						},
+					},
+				},
+			},
 		},
 		palette: {
 			mode: 'dark',
@@ -196,7 +297,9 @@ export const darkTheme = (props: Props): Theme => {
 				paper: 'hsl(252, 25%, 14%)',
 			},
 			primary: {
-				main: 'hsl(258, 55%, 65%)',
+				main: '#9f7eed',
+				// Contained primary buttons are painted with this (see MuiButton styleOverrides)
+				dark: 'hsl(258, 50%, 38%)',
 				contrastText: '#f0ecff',
 				// TODO: Explore orange primary
 				// main: 'hsla(31, 100%, 50%, 1.00)',
@@ -214,52 +317,4 @@ export const darkTheme = (props: Props): Theme => {
 	}
 
 	return createTheme(options)
-}
-
-export const customLightTheme = {
-	palette: {
-		timelineAnchor: {
-			text: 'rgb(21, 16, 11)',
-		},
-		outline: 'rgb(60 40 120 / 18%)',
-		outlineStrong: 'rgb(60 40 120 / 40%)',
-		background: {
-			hard: 'rgb(60 40 120 / 30%)',
-			harder: 'rgb(60 40 120 / 40%)',
-			hardest: 'rgb(60 40 120 / 60%)',
-			soft: 'rgb(60 40 120 / 8%)',
-			softer: 'rgb(60 40 120 / 4%)',
-			softest: 'rgb(60 40 120 / 2%)',
-			textEditor: '#fff',
-			timeline: '#eae9f2',
-			timelineHeader: 'hsl(250, 20%, 93%)',
-			navigator: '#fff',
-			timelineMarker: '#fff',
-			timelineMarkerTail: 'hsl(250, 15%, 82%)',
-		},
-	},
-}
-
-export const customDarkTheme: typeof customLightTheme = {
-	palette: {
-		timelineAnchor: {
-			text: 'white',
-		},
-		outline: 'rgb(180 170 220 / 18%)',
-		outlineStrong: 'rgb(180 170 220 / 40%)',
-		background: {
-			hard: 'rgb(180 170 220 / 30%)',
-			harder: 'rgb(180 170 220 / 40%)',
-			hardest: 'rgb(180 170 220 / 60%)',
-			soft: 'rgb(180 170 220 / 8%)',
-			softer: 'rgb(180 170 220 / 4%)',
-			softest: 'rgb(180 170 220 / 2%)',
-			textEditor: 'hsl(252, 25%, 14%)',
-			timeline: '#0f0e1a',
-			timelineHeader: '#16142a',
-			navigator: '#16142a',
-			timelineMarker: '#0f0e1a',
-			timelineMarkerTail: 'hsl(252, 20%, 28%)',
-		},
-	},
 }

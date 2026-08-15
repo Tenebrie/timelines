@@ -8,10 +8,8 @@ import { useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
-import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { store } from '@/app/store'
-import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
 import { useCreateEvent } from '@/app/views/world/api/useCreateEvent'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -23,7 +21,6 @@ export const CreateEventModal = () => {
 	const [descriptionRich, setDescriptionRich] = useState('')
 	const [creationError, setCreationError] = useState<string | null>(null)
 	const [createEvent, { isLoading }] = useCreateEvent()
-	const theme = useCustomTheme()
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	const { selectedTime } = useSelector(getWorldState, (a, b) => a.selectedTime === b.selectedTime)
@@ -48,7 +45,6 @@ export const CreateEventModal = () => {
 			name: descriptionPlain.trim(),
 			descriptionRich: trimmedDescription,
 			timestamp: String(selectedTime),
-			color: getRandomEntityColor(),
 			worldEventTrackId: targetTrack,
 		})
 
@@ -121,7 +117,6 @@ export const CreateEventModal = () => {
 					}}
 				>
 					<RichTextEditorSummoner
-						softKey="create-event-modal"
 						value={descriptionRich}
 						autoFocus
 						onChange={(value) => {
@@ -129,7 +124,6 @@ export const CreateEventModal = () => {
 							setDescriptionRich(value.richText)
 							setCreationError(null)
 						}}
-						fadeInOverlayColor={theme.custom.palette.background.textEditor}
 					/>
 					<ModalFooter>
 						<Tooltip title={shortcutLabel} arrow placement="top">

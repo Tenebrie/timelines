@@ -76,6 +76,7 @@ export const ModelName = {
   CollaboratingUser: 'CollaboratingUser',
   FeatureFlagEntry: 'FeatureFlagEntry',
   WikiArticle: 'WikiArticle',
+  WikiFolder: 'WikiFolder',
   World: 'World',
   WorldEvent: 'WorldEvent',
   WorldEventDelta: 'WorldEventDelta',
@@ -109,8 +110,9 @@ export const ActorScalarFieldEnum = {
   color: 'color',
   description: 'description',
   descriptionRich: 'descriptionRich',
-  descriptionYjs: 'descriptionYjs',
-  worldId: 'worldId'
+  worldId: 'worldId',
+  parentFolderId: 'parentFolderId',
+  parentFolderPosition: 'parentFolderPosition'
 } as const
 
 export type ActorScalarFieldEnum = (typeof ActorScalarFieldEnum)[keyof typeof ActorScalarFieldEnum]
@@ -307,7 +309,6 @@ export const ContentPageScalarFieldEnum = {
   name: 'name',
   description: 'description',
   descriptionRich: 'descriptionRich',
-  descriptionYjs: 'descriptionYjs',
   parentActorId: 'parentActorId',
   parentEventId: 'parentEventId',
   parentArticleId: 'parentArticleId'
@@ -393,7 +394,10 @@ export const TagScalarFieldEnum = {
   updatedAt: 'updatedAt',
   name: 'name',
   description: 'description',
-  worldId: 'worldId'
+  color: 'color',
+  worldId: 'worldId',
+  parentFolderId: 'parentFolderId',
+  parentFolderPosition: 'parentFolderPosition'
 } as const
 
 export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
@@ -443,14 +447,29 @@ export const WikiArticleScalarFieldEnum = {
   name: 'name',
   icon: 'icon',
   color: 'color',
+  content: 'content',
   contentRich: 'contentRich',
-  contentYjs: 'contentYjs',
-  position: 'position',
   worldId: 'worldId',
-  parentId: 'parentId'
+  parentFolderId: 'parentFolderId',
+  parentFolderPosition: 'parentFolderPosition'
 } as const
 
 export type WikiArticleScalarFieldEnum = (typeof WikiArticleScalarFieldEnum)[keyof typeof WikiArticleScalarFieldEnum]
+
+
+export const WikiFolderScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  icon: 'icon',
+  color: 'color',
+  worldId: 'worldId',
+  parentFolderId: 'parentFolderId',
+  parentFolderPosition: 'parentFolderPosition'
+} as const
+
+export type WikiFolderScalarFieldEnum = (typeof WikiFolderScalarFieldEnum)[keyof typeof WikiFolderScalarFieldEnum]
 
 
 export const WorldScalarFieldEnum = {
@@ -479,9 +498,10 @@ export const WorldEventScalarFieldEnum = {
   revokedAt: 'revokedAt',
   description: 'description',
   descriptionRich: 'descriptionRich',
-  descriptionYjs: 'descriptionYjs',
   worldId: 'worldId',
-  worldEventTrackId: 'worldEventTrackId'
+  worldEventTrackId: 'worldEventTrackId',
+  parentFolderId: 'parentFolderId',
+  parentFolderPosition: 'parentFolderPosition'
 } as const
 
 export type WorldEventScalarFieldEnum = (typeof WorldEventScalarFieldEnum)[keyof typeof WorldEventScalarFieldEnum]

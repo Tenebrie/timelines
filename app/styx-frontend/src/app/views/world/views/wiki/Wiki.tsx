@@ -7,92 +7,99 @@ import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import { Outlet } from '@tanstack/react-router'
 
+import { ActorDetails } from '@/app/features/entityEditor/actor/details/ActorDetails'
 import { ArticleDetails } from '@/app/features/entityEditor/article/details/ArticleDetails'
+import { EventDetails } from '@/app/features/entityEditor/event/details/EventDetails'
+import { TagDetails } from '@/app/features/entityEditor/tag/details/TagDetails'
+import { useDocumentScrollMemory } from '@/app/features/richTextEditor/hooks/useDocumentScrollMemory'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useMobileLayout } from '@/app/hooks/useMobileLayout'
+import { WikiOutlinerDrawer } from '@/app/views/world/components/WikiOutlinerDrawer'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { ArticleList } from './articleList/ArticleList'
+import { ArticleListEntityGroupButton } from './articleList/ArticleListEntityGroupButton'
 import { ArticleListHeader } from './articleList/ArticleListHeader'
 import { useCurrentArticle } from './hooks/useCurrentArticle'
+import { useScreenCenteredColumn, WIKI_COLUMN_MAX_WIDTH } from './hooks/useScreenCenteredColumn'
 
 export const Wiki = () => {
+	const theme = useCustomTheme()
 	const isArticle = useCheckRouteMatch('/world/$worldId/wiki/$articleId')
 	const { isMobile } = useMobileLayout()
 
 	const showList = !isMobile || !isArticle
 	const showContent = !isMobile || isArticle
 
-	return (
-		<>
-			<Stack
-				sx={{
-					width: isMobile ? '100%' : 'min(max(calc(100% - 32px - 350px), 1650px), calc(100% - 32px))',
-					height: '100%',
-					alignItems: 'flex-start',
-					flexDirection: isMobile ? 'column' : 'row',
-					gap: 2,
-					overflowX: 'hidden',
-					overflowY: isMobile ? 'auto' : undefined,
-				}}
-			>
-				{showList && (
-					<Paper
-						sx={(theme) => ({
-							padding: 2,
-							paddingTop: '24px',
-							height: isMobile ? '100%' : 'calc(100%)',
-							maxHeight: 'calc(100%)',
-							width: isMobile ? '100%' : undefined,
-							boxSizing: 'border-box',
-							display: 'flex',
-							flexDirection: 'row',
-							borderRadius: 0,
-							gap: 2,
-							overflowX: 'hidden',
-							borderLeft: isMobile ? 'none' : `1px solid ${theme.palette.divider}`,
-							borderRight: isMobile ? 'none' : `1px solid ${theme.palette.divider}`,
-						})}
-						elevation={1}
-					>
-						<Stack
-							sx={{
-								width: isMobile ? '100%' : '350px',
-								minWidth: isMobile ? 0 : '250px',
-							}}
-							data-testid="ArticleListWithHeader"
-						>
-							<Stack gap={1} height={1}>
-								<Stack gap={1}>
-									<ArticleListHeader />
-									<Divider />
-								</Stack>
-								<ArticleList parentId={null} depth={0} />
-							</Stack>
-						</Stack>
-					</Paper>
-				)}
-				{showContent && (
-					<Stack
-						sx={{
-							flex: 1,
-							paddingTop: isMobile ? '12px' : '24px',
-							paddingX: isMobile ? '8px' : 0,
-							alignItems: 'center',
-							height: isMobile ? '100%' : 'calc(100% - 24px)',
-							width: isMobile ? 'calc(100% - 16px)' : undefined,
-							overflowY: 'auto',
-						}}
-					>
-						{isArticle && (
-							<Stack gap={1} height={'calc(100%)'} sx={{ maxWidth: 1278, width: '100%', flex: 1 }}>
-								<Box height={'calc(100% - 1px)'}>{<Outlet />}</Box>
-							</Stack>
-						)}
-					</Stack>
-				)}
+	const articleList = (
+		<Stack
+			sx={{
+				width: '100%',
+				minWidth: 0,
+				height: '100%',
+			}}
+			data-testid="ArticleListWithHeader"
+		>
+			<Stack gap={1} height={1}>
+				<Stack gap={1}>
+					<ArticleListHeader />
+					<Divider />
+					<ArticleListEntityGroupButton />
+				</Stack>
+				<ArticleList parentId={null} depth={0} />
 			</Stack>
-		</>
+		</Stack>
+	)
+
+	return (
+		<Stack
+			sx={{
+				width: '100%',
+				height: '100%',
+				alignItems: isMobile ? 'flex-start' : 'stretch',
+				flexDirection: isMobile ? 'column' : 'row',
+				gap: isMobile ? 2 : 0,
+				overflowX: 'hidden',
+				overflowY: isMobile ? 'auto' : undefined,
+				background: theme.custom.palette.background.textEditor,
+			}}
+		>
+			{isMobile && showList && (
+				<Paper
+					sx={{
+						padding: 2,
+						paddingTop: '24px',
+						paddingBottom: 0,
+						height: '100%',
+						maxHeight: '100%',
+						width: '100%',
+						boxSizing: 'border-box',
+						display: 'flex',
+						flexDirection: 'row',
+						borderRadius: 0,
+						overflowX: 'hidden',
+					}}
+					elevation={1}
+				>
+					{articleList}
+				</Paper>
+			)}
+			{!isMobile && <WikiOutlinerDrawer>{articleList}</WikiOutlinerDrawer>}
+			{showContent && (
+				<Stack
+					sx={{
+						flex: 1,
+						minWidth: 0,
+						width: '100%',
+						height: '100%',
+					}}
+				>
+					{isArticle && <Outlet />}
+				</Stack>
+			)}
+		</Stack>
 	)
 }
 
@@ -100,6 +107,13 @@ export function CurrentArticleDetails() {
 	const { article } = useCurrentArticle()
 	const navigate = useStableNavigate({ from: '/world/$worldId/wiki/$articleId' })
 	const { isMobile } = useMobileLayout()
+	const scrollbars = useBrowserSpecificScrollbars()
+
+	const { containerRef, onScroll } = useDocumentScrollMemory(
+		article ? `wiki-page:${article.id}` : undefined,
+		article?.id,
+	)
+	const columnRef = useScreenCenteredColumn(!isMobile)
 
 	if (!article) {
 		return null
@@ -107,7 +121,7 @@ export function CurrentArticleDetails() {
 
 	const startAdornment = isMobile ? (
 		<Stack direction="row" gap={0.5} marginRight={0.5} alignItems="center">
-			<Tooltip title="Back to articles" disableInteractive enterDelay={400}>
+			<Tooltip title="Back to list" disableInteractive enterDelay={400}>
 				<IconButton
 					size="small"
 					onClick={() => navigate({ to: '/world/$worldId/wiki', search: true })}
@@ -121,5 +135,52 @@ export function CurrentArticleDetails() {
 		</Stack>
 	) : undefined
 
-	return <ArticleDetails article={article} isWikiTab titleProps={{ startAdornment }} />
+	const content = (() => {
+		switch (article.type) {
+			case 'article':
+				return (
+					<ArticleDetails article={article.entity} isWikiTab titleProps={{ startAdornment }} surface="wiki" />
+				)
+			case 'actor':
+				return <ActorDetails editedActor={article.entity} surface="wiki" titleProps={{ startAdornment }} />
+			case 'event':
+				return <EventDetails editedEvent={article.entity} surface="wiki" titleProps={{ startAdornment }} />
+			case 'tag':
+				return <TagDetails editedTag={article.entity} titleProps={{ startAdornment }} />
+		}
+		return null
+	})()
+
+	return (
+		<Box
+			ref={containerRef}
+			onScroll={onScroll}
+			sx={{
+				height: '100%',
+				width: '100%',
+				paddingX: 2,
+				boxSizing: 'border-box',
+				overflowY: 'auto',
+				display: 'flex',
+				flexDirection: 'row',
+				...scrollbars,
+			}}
+		>
+			<Stack
+				ref={columnRef}
+				gap={1}
+				sx={{
+					maxWidth: WIKI_COLUMN_MAX_WIDTH,
+					width: '100%',
+					minWidth: 0,
+					paddingTop: isMobile ? '12px' : '24px',
+					'& > *': {
+						flexGrow: 1,
+					},
+				}}
+			>
+				{content}
+			</Stack>
+		</Box>
+	)
 }

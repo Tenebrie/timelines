@@ -9,7 +9,6 @@ import { WebSocket } from 'ws'
 import { ClientMessageHandlerService } from './services/ClientMessageHandlerService.js'
 import { persistenceLeaderService } from './services/PersistenceLeaderService.js'
 import { initRedisConnection } from './services/RedisService.js'
-import { RheaService } from './services/RheaService.js'
 import { TokenService } from './services/TokenService.js'
 import { WebsocketService } from './services/WebsocketService.js'
 import { recordLastWritingUser, YjsSyncService } from './services/YjsSyncService.js'
@@ -89,16 +88,14 @@ app.ws.use(
 
 			const docName = `${worldId}:${documentId}`
 			const { id: userId } = TokenService.decodeUserToken(authCookie)
-			const accessLevel = await (async () => {
-				const userData = await RheaService.getUserAccessLevel({ worldId, userId })
-				if (userData.write) {
-					return 'write'
-				} else if (userData.read) {
-					return 'read'
-				} else {
-					throw new Error('User does not have required access level')
-				}
-			})()
+
+			const { accessLevel } = await YjsSyncService.setupDocumentListener({
+				userId,
+				worldId,
+				entityId: documentId,
+				entityType: entityType as 'actor' | 'event' | 'article',
+				docName,
+			})
 
 			setupWSConnection(ctx.websocket, ctx.req, { docName, gc: true })
 
@@ -127,15 +124,6 @@ app.ws.use(
 					recordLastWritingUser(docName, userId)
 				})
 			}
-
-			await YjsSyncService.setupDocumentListener({
-				userId,
-				accessLevel,
-				worldId,
-				entityId: documentId,
-				entityType: entityType as 'actor' | 'event' | 'article',
-				docName,
-			})
 
 			// Replay queued messages
 			isSetupComplete = true
@@ -180,8 +168,14 @@ persistenceLeaderService.connect()
 const server = app.listen(3001)
 console.info(`${chalk.greenBright('[Calliope]')} Listening on port ${chalk.blueBright('3001')}`)
 
+let isShuttingDown = false
 const shutdown = async () => {
+	if (isShuttingDown) {
+		return
+	}
+	isShuttingDown = true
 	console.info('Shutting down gracefully...')
+	await YjsSyncService.flushAllDocuments()
 	await persistenceLeaderService.shutdown()
 	server.close()
 	process.exit(0)

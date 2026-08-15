@@ -1,9 +1,12 @@
-import { WikiArticle } from '@api/types/worldWikiTypes'
+import { WikiArticle, WikiFolder } from '@api/types/worldWikiTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 export const initialState = {
+	articlesLoaded: false,
+	foldersLoaded: false,
 	articles: [] as WikiArticle[],
+	folders: [] as WikiFolder[],
 	lastCheckedArticle: null as string | null,
 	isBulkSelecting: false as boolean,
 	bulkActionArticles: [] as string[],
@@ -13,8 +16,20 @@ export const wikiSlice = createSlice({
 	name: 'worldWiki',
 	initialState,
 	reducers: {
+		addArticles: (state, { payload }: PayloadAction<{ articles: WikiArticle[] }>) => {
+			state.articles = state.articles.filter(
+				(existing) => !payload.articles.some((payload) => payload.id === existing.id),
+			)
+			state.articles = [...state.articles, ...payload.articles]
+		},
 		loadArticles: (state, { payload }: PayloadAction<{ articles: WikiArticle[] }>) => {
+			state.articlesLoaded = true
 			state.articles = payload.articles
+		},
+
+		loadFolders: (state, { payload }: PayloadAction<{ folders: WikiFolder[] }>) => {
+			state.foldersLoaded = true
+			state.folders = payload.folders
 		},
 
 		setLastCheckedArticle: (state, { payload }: PayloadAction<{ article: string | null }>) => {
@@ -23,6 +38,8 @@ export const wikiSlice = createSlice({
 
 		setBulkSelecting: (state, { payload }: PayloadAction<boolean>) => {
 			state.isBulkSelecting = payload
+			state.bulkActionArticles = []
+			state.lastCheckedArticle = null
 		},
 
 		addToBulkSelection: (state, { payload }: PayloadAction<{ articles: string[] }>) => {
@@ -38,6 +55,7 @@ export const wikiSlice = createSlice({
 
 		clearBulkSelection: (state) => {
 			state.bulkActionArticles = []
+			state.lastCheckedArticle = null
 		},
 	},
 })

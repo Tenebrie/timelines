@@ -52,5 +52,7 @@ if ! restic -r "${RESTIC_REPOSITORY}" snapshots 2>/dev/null; then
 fi
 
 echo "Starting backrest server..."
+unset RESTIC_PASSWORD
+
 # Start backrest
 exec /backrest

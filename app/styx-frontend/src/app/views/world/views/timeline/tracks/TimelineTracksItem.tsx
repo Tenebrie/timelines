@@ -16,10 +16,10 @@ import {
 import { TimelineTrack } from '../hooks/useEventTracks'
 import { TimelineState } from '../utils/TimelineState'
 import { ControlledScroller, EVENT_SCROLL_RESET_PERIOD } from './components/ControlledScroller'
-import { TimelineEventTrackTitle } from './marker/TimelineEventTrackTitle'
 import { TimelineMarkerWithChain } from './marker/TimelineMarkerWithChain'
 import { TrackContainer } from './styles'
 import { TimelineTracksItemDragDrop } from './TimelineTracksItemDragDrop'
+import { TimelineTrackTitle } from './track/TimelineTrackTitle'
 
 type Props = {
 	track: TimelineTrack
@@ -171,7 +171,7 @@ export function TimelineTracksItemComponent({
 					/>
 				))}
 			</ControlledScroller>
-			<TimelineEventTrackTitle track={track} />
+			<TimelineTrackTitle track={track} />
 			<TimelineTracksItemDragDrop
 				track={track}
 				receiverRef={dragDropReceiverRef}

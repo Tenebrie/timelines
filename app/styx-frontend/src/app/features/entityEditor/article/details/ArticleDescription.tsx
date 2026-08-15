@@ -1,20 +1,19 @@
+import { useWikiApiCache } from '@api/hooks/useWikiApiCache'
 import { WikiArticle } from '@api/types/worldWikiTypes'
 import Box from '@mui/material/Box'
 import debounce from 'lodash.debounce'
 import { useCallback, useRef } from 'react'
 
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
-import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
-import { useArticleApiCache } from '@/app/views/world/views/wiki/api/useArticleApiCache'
 
 type Props = {
 	article: WikiArticle
+	surface?: string
 }
 
-export const ArticleDescription = ({ article }: Props) => {
-	const theme = useCustomTheme()
-	const { updateCachedArticle } = useArticleApiCache()
+export const ArticleDescription = ({ article, surface }: Props) => {
+	const { updateCachedArticle } = useWikiApiCache()
 
 	const debouncedUpdate = useRef(
 		debounce((articleId: string, richText: string) => {
@@ -44,11 +43,10 @@ export const ArticleDescription = ({ article }: Props) => {
 	return (
 		<Box sx={{ ...scrollbars, height: '100%' }}>
 			<RichTextEditorSummoner
-				softKey={`${article.id}`}
 				value={article.contentRich}
 				onChange={handleChange}
-				fadeInOverlayColor={theme.custom.palette.background.textEditor}
 				allowReadMode
+				surface={surface}
 				collaboration={{
 					entityType: 'article',
 					documentId: article.id,

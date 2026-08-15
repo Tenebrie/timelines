@@ -52,6 +52,23 @@ export const EditEventModal = () => {
 		})
 	})
 
+	const handleCurrentClick = useEvent(() => {
+		if (entityStack.length == 0) {
+			return
+		}
+		navigate({
+			from: '/world/$worldId',
+			to: `/world/$worldId/wiki/$articleId`,
+			params: {
+				articleId: entityStack[entityStack.length - 1],
+			},
+			search: (prev) => ({
+				...prev,
+				navi: [],
+			}),
+		})
+	})
+
 	const currentEntity = useCurrentEntity()
 
 	return (
@@ -69,18 +86,19 @@ export const EditEventModal = () => {
 					entityStack={entityStack}
 					onBreadcrumbClick={handleBreadcrumbClick}
 					onWorldClick={handleWorldClick}
+					onCurrentClick={handleCurrentClick}
 					onClose={handleClose}
 				/>
 
 				<Stack direction="row" width="100%" height="100%" flexDirection="column">
 					{currentEntity?.type === 'event' && currentEntity.entity && (
-						<EventDetails editedEvent={currentEntity.entity} autoFocus={isOpen} />
+						<EventDetails editedEvent={currentEntity.entity} surface="editEventModal" />
 					)}
 					{currentEntity?.type === 'actor' && currentEntity.entity && (
-						<ActorDetails editedActor={currentEntity.entity} />
+						<ActorDetails editedActor={currentEntity.entity} surface="editEventModal" />
 					)}
 					{currentEntity?.type === 'article' && currentEntity.entity && (
-						<ArticleDetails article={currentEntity.entity} />
+						<ArticleDetails article={currentEntity.entity} surface="editEventModal" />
 					)}
 					{currentEntity?.type === 'tag' && currentEntity.entity && (
 						<TagDetails editedTag={currentEntity.entity} />

@@ -68,6 +68,9 @@ const handlers: RheaToCalliopeMessageHandlers = {
 	[RheaToCalliopeMessageType.WORLD_UPDATED]: (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_UPDATED, ...ctx })
 	},
+	[RheaToCalliopeMessageType.WORLD_EVENTS_DELETED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_EVENTS_DELETED, ...ctx })
+	},
 
 	[RheaToCalliopeMessageType.WORLD_EVENT_UPDATED]: (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_EVENT_UPDATED, ...ctx })
@@ -83,6 +86,9 @@ const handlers: RheaToCalliopeMessageHandlers = {
 
 	[RheaToCalliopeMessageType.ACTOR_UPDATED]: (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.ACTOR_UPDATED, ...ctx })
+	},
+	[RheaToCalliopeMessageType.ACTORS_DELETED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.ACTORS_DELETED, ...ctx })
 	},
 
 	[RheaToCalliopeMessageType.CALENDAR_UPDATED]: (ctx) => {
@@ -106,15 +112,29 @@ const handlers: RheaToCalliopeMessageHandlers = {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_WIRES_DELETED, ...ctx })
 	},
 
+	[RheaToCalliopeMessageType.TAG_UPDATED]: function (ctx): void {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.TAG_UPDATED, ...ctx })
+	},
+	[RheaToCalliopeMessageType.TAGS_DELETED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.TAGS_DELETED, ...ctx })
+	},
+
 	[RheaToCalliopeMessageType.WIKI_ARTICLE_UPDATED]: (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED, ...ctx })
 	},
-
 	[RheaToCalliopeMessageType.WIKI_ARTICLE_DELETED]: (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ARTICLE_DELETED, ...ctx })
 	},
-	[RheaToCalliopeMessageType.TAG_UPDATED]: function (ctx): void {
-		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.TAG_UPDATED, ...ctx })
+
+	[RheaToCalliopeMessageType.WIKI_FOLDER_UPDATED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_FOLDER_UPDATED, ...ctx })
+	},
+	[RheaToCalliopeMessageType.WIKI_FOLDER_DELETED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_FOLDER_DELETED, ...ctx })
+	},
+
+	[RheaToCalliopeMessageType.WIKI_ORDER_CHANGED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ORDER_CHANGED, ...ctx })
 	},
 
 	[RheaToCalliopeMessageType.DOCUMENT_RESET]: async (ctx) => {

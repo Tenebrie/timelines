@@ -1,35 +1,35 @@
-import { Editor, useEditor } from '@tiptap/react'
+import Box from '@mui/material/Box'
+import { useEditor } from '@tiptap/react'
 import throttle from 'lodash.throttle'
 import { memo, useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
 import { getWorldState } from '../../views/world/WorldSliceSelectors'
 import { useEventBusSubscribe } from '../eventBus'
 import { EditorContentBox } from './components/EditorContentBox'
 import { useCollaboration } from './extensions/collaboration/useCollaboration'
 import { EditorExtensions } from './extensions/editorExtensions'
-import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/FadeInOverlay'
-import { MentionsList } from './extensions/mentions/MentionsList'
+import { useDocumentScrollMemory } from './hooks/useDocumentScrollMemory'
 import { useEditorPasteHandler } from './hooks/useEditorPasteHandler'
 import { RichTextEditorControls } from './RichTextEditorControls'
+import { RichTextEditorQuickSelect } from './RichTextEditorQuickSelect'
 import { StyledContainer } from './styles'
 
 type Props = {
 	value: string
-	softKey: string | number
 	onChange: (params: OnChangeParams) => void
 	onBlur?: () => void
 	allowReadMode?: boolean
-	fadeInOverlayColor: string
 	// Collaboration params (optional)
 	collaboration?: {
 		entityType: 'actor' | 'event' | 'article'
 		documentId: string
 	}
 	autoFocus?: boolean
-	isLoading?: boolean
+	surface?: string
 }
 
 export type RichTextEditorProps = Props
@@ -43,18 +43,16 @@ export const RichTextEditor = memo(RichTextEditorComponent)
 
 export function RichTextEditorComponent({
 	value,
-	softKey,
 	onChange,
 	onBlur,
-	fadeInOverlayColor,
 	collaboration,
 	autoFocus,
-	isLoading,
+	surface = 'default',
 }: Props) {
 	const theme = useCustomTheme()
+	const scrollbars = useBrowserSpecificScrollbars()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 
-	// Enable collaboration if params provided
 	const { extension: collaborationExtension, isReady: collabReady } = useCollaboration({
 		enabled: !!collaboration,
 		documentId: collaboration?.documentId ?? '',
@@ -67,13 +65,10 @@ export function RichTextEditorComponent({
 	}, [onChange])
 
 	const onChangeThrottled = useRef(
-		throttle((editor: Editor) => {
-			if (editor.isDestroyed) {
-				return
-			}
+		throttle(({ plainText, richText }: { plainText: string; richText: string }) => {
 			onChangeRef.current({
-				plainText: editor.getText(),
-				richText: editor.getHTML(),
+				plainText,
+				richText,
 			})
 		}, 100),
 	)
@@ -89,37 +84,50 @@ export function RichTextEditorComponent({
 
 	const { handlePaste } = useEditorPasteHandler()
 
+	const showPreview = !!collaboration && !collabReady
+	const previewEditor = useEditor({
+		content: value,
+		editable: false,
+		extensions: EditorExtensions,
+	})
+
+	const previewSyncedDocId = useRef(collaboration?.documentId)
+	if (
+		previewEditor &&
+		!previewEditor.isDestroyed &&
+		collaboration?.documentId &&
+		previewSyncedDocId.current !== collaboration.documentId
+	) {
+		previewEditor.chain().setContent(value).setTextSelection(0).run()
+		previewSyncedDocId.current = collaboration.documentId
+	}
+
 	const editor = useEditor(
 		{
-			// content: value,
-			// editable: !isReadOnly && (!collaboration || collabReady),
 			extensions,
-			autofocus: false,
+			autofocus: autoFocus,
 			editorProps: {
 				handlePaste,
 			},
 			onUpdate({ editor, transaction }) {
-				if (editor.getHTML() === value || transaction.steps.length === 0) {
+				const richText = editor.getHTML()
+				if (richText === value || transaction.steps.length === 0) {
 					return
 				}
-				onChangeThrottled.current(editor)
-			},
-			onCreate({ editor }) {
-				if (!autoFocus) {
-					return
-				}
-
-				requestIdleCallback(
-					() => {
-						if (!editor.isDestroyed) {
-							editor.commands.focus('end')
-						}
-					},
-					{ timeout: 100 },
-				)
+				onChangeThrottled.current({
+					plainText: editor.getText(),
+					richText,
+				})
 			},
 		},
-		[collabReady],
+		[extensions],
+	)
+
+	const displayedEditor = showPreview && previewEditor ? previewEditor : editor
+
+	const { containerRef: scrollContainerRef, onScroll } = useDocumentScrollMemory(
+		collaboration?.documentId ? `${surface}:${collaboration.documentId}` : undefined,
+		displayedEditor,
 	)
 
 	const currentValue = useRef(value)
@@ -145,31 +153,53 @@ export function RichTextEditorComponent({
 		},
 	})
 
+	const isPageScroll = surface === 'wiki'
+
 	return (
 		<StyledContainer
 			sx={{
-				borderRadius: '6px',
+				borderRadius: isPageScroll ? 0 : '6px',
 				minHeight: '128px',
 				background: isReadOnly ? '' : theme.custom.palette.background.textEditor,
-				position: 'relative',
+				display: 'flex',
+				flexDirection: 'column',
 			}}
 			data-testid="RichTextEditor"
 			$theme={theme}
+			$fluid={isPageScroll}
 			onBlur={() => {
 				onBlur?.()
 				onChangeThrottled.current.cancel()
 			}}
 		>
-			<RichTextEditorControls editor={editor} />
-			{editor && <EditorContentBox className="content" editor={editor} mode={isReadOnly ? 'read' : 'edit'} />}
-			<MentionsList editor={editor} />
-			<FadeInOverlay
-				key={softKey}
-				content={value}
-				isReadMode={isReadOnly}
-				color={fadeInOverlayColor}
-				isLoading={isLoading || !collabReady || false}
-			/>
+			<RichTextEditorControls editor={displayedEditor} sticky={isPageScroll} />
+			<Box
+				ref={isPageScroll ? undefined : scrollContainerRef}
+				onScroll={isPageScroll ? undefined : onScroll}
+				sx={
+					isPageScroll
+						? { position: 'relative', flex: 1 }
+						: { position: 'relative', flex: 1, minHeight: 0, overflowY: 'auto', ...scrollbars }
+				}
+			>
+				{showPreview && previewEditor ? (
+					<EditorContentBox
+						className="content"
+						editor={previewEditor}
+						mode={isReadOnly ? 'read' : 'edit'}
+						readOnly={isReadOnly}
+					></EditorContentBox>
+				) : (
+					editor && (
+						<EditorContentBox
+							className="content"
+							editor={editor}
+							mode={isReadOnly ? 'read' : 'edit'}
+						></EditorContentBox>
+					)
+				)}
+			</Box>
+			<RichTextEditorQuickSelect editor={editor} />
 		</StyledContainer>
 	)
 }

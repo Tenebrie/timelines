@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['worldWiki'] as const
+export const addTagTypes = ['worldWiki', 'worldWikiArticle'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -8,7 +8,7 @@ const injectedRtkApi = api
 		endpoints: (build) => ({
 			getArticles: build.query<GetArticlesApiResponse, GetArticlesApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/wiki/articles` }),
-				providesTags: ['worldWiki'],
+				providesTags: ['worldWiki', 'worldWikiArticle'],
 			}),
 			createArticle: build.mutation<CreateArticleApiResponse, CreateArticleApiArg>({
 				query: (queryArg) => ({
@@ -16,30 +16,30 @@ const injectedRtkApi = api
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['worldWiki'],
+				invalidatesTags: ['worldWiki', 'worldWikiArticle'],
 			}),
 			deleteArticle: build.mutation<DeleteArticleApiResponse, DeleteArticleApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/wiki/article/${queryArg.articleId}`,
 					method: 'DELETE',
 				}),
-				invalidatesTags: ['worldWiki'],
+				invalidatesTags: ['worldWiki', 'worldWikiArticle'],
 			}),
-			moveArticle: build.mutation<MoveArticleApiResponse, MoveArticleApiArg>({
+			moveWikiEntity: build.mutation<MoveWikiEntityApiResponse, MoveWikiEntityApiArg>({
 				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/wiki/article/move`,
+					url: `/api/world/${queryArg.worldId}/wiki/move`,
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['worldWiki'],
+				invalidatesTags: [],
 			}),
-			bulkDeleteArticles: build.mutation<BulkDeleteArticlesApiResponse, BulkDeleteArticlesApiArg>({
+			bulkMoveWikiEntities: build.mutation<BulkMoveWikiEntitiesApiResponse, BulkMoveWikiEntitiesApiArg>({
 				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/wiki/articles/delete`,
+					url: `/api/world/${queryArg.worldId}/wiki/bulk/move`,
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['worldWiki'],
+				invalidatesTags: [],
 			}),
 		}),
 		overrideExisting: false,
@@ -58,10 +58,6 @@ export type GetArticlesApiResponse = /** status 200  */ {
 		sourceId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
-	children: {
-		id: string
-		name: string
-	}[]
 	worldId: string
 	id: string
 	createdAt: string
@@ -69,19 +65,16 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	position: number
+	parentFolderId?: null | string
+	parentFolderPosition: number
+	content: string
 	contentRich: string
-	parentId?: null | string
 }[]
 export type GetArticlesApiArg = {
 	/** Any string value */
 	worldId: string
 }
 export type CreateArticleApiResponse = /** status 200  */ {
-	children: {
-		id: string
-		name: string
-	}[]
 	worldId: string
 	id: string
 	createdAt: string
@@ -89,9 +82,10 @@ export type CreateArticleApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	position: number
+	parentFolderId?: null | string
+	parentFolderPosition: number
+	content: string
 	contentRich: string
-	parentId?: null | string
 }
 export type CreateArticleApiArg = {
 	/** Any string value */
@@ -101,6 +95,7 @@ export type CreateArticleApiArg = {
 		icon?: string
 		color?: string
 		contentRich?: string
+		parentFolderId?: null | string
 	}
 }
 export type DeleteArticleApiResponse = unknown
@@ -110,22 +105,38 @@ export type DeleteArticleApiArg = {
 	/** Any string value */
 	articleId: string
 }
-export type MoveArticleApiResponse = unknown
-export type MoveArticleApiArg = {
+export type MoveWikiEntityApiResponse = /** status 200  */ {
+	updates: {
+		entityId: string
+		entityType: 'actor' | 'tag' | 'article' | 'event' | 'folder'
+		position: number
+		folderId?: null | string
+	}[]
+}
+export type MoveWikiEntityApiArg = {
 	/** Any string value */
 	worldId: string
 	body: {
-		articleId: string
+		entityId: string
 		parentId?: null | string
 		position: number
 	}
 }
-export type BulkDeleteArticlesApiResponse = unknown
-export type BulkDeleteArticlesApiArg = {
+export type BulkMoveWikiEntitiesApiResponse = /** status 200  */ {
+	updates: {
+		entityId: string
+		entityType: 'actor' | 'tag' | 'article' | 'event' | 'folder'
+		position: number
+		folderId?: null | string
+	}[]
+}
+export type BulkMoveWikiEntitiesApiArg = {
 	/** Any string value */
 	worldId: string
 	body: {
-		articles: string[]
+		entityIds: string[]
+		parentId?: null | string
+		position: number
 	}
 }
 export const {
@@ -133,6 +144,6 @@ export const {
 	useLazyGetArticlesQuery,
 	useCreateArticleMutation,
 	useDeleteArticleMutation,
-	useMoveArticleMutation,
-	useBulkDeleteArticlesMutation,
+	useMoveWikiEntityMutation,
+	useBulkMoveWikiEntitiesMutation,
 } = injectedRtkApi

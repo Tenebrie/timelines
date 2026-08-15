@@ -13,14 +13,6 @@ type Props = {
 export const useCalendarUnitDragDrop = ({ unit }: Props) => {
 	const [moveCalendarUnit] = useMoveCalendarUnit()
 
-	// const { uncollapseWikiFolder } = preferencesSlice.actions
-	// const dispatch = useDispatch()
-	// const forceOpen = useCallback(() => {
-	// 	dispatch(uncollapseWikiFolder(article))
-	// }, [dispatch, uncollapseWikiFolder, article])
-
-	// const icon = useMemo(() => (article.children?.length ? <Folder /> : <Article />), [article.children])
-
 	const { ref, ghostElement } = useDragDrop({
 		type: 'calendarUnit',
 		ghostFactory: () => <CalendarUnitListItem unit={unit} isSelected={false} onSelectUnit={() => {}} />,

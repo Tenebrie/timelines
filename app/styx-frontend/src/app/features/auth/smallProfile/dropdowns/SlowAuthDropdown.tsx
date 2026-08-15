@@ -11,8 +11,8 @@ export function SlowAuthDropdown() {
 	return (
 		<Stack direction="row" alignItems="center" spacing={1}>
 			<Button
-				startIcon={<Skeleton variant="circular" width={32} height={32} />}
-				sx={{ padding: '5px 15px' }}
+				startIcon={<Skeleton variant="circular" width={28} height={28} />}
+				sx={{ padding: '4px 15px' }}
 				{...bindTrigger(popupState)}
 			>
 				<Skeleton variant="text" width={100} height={20} />

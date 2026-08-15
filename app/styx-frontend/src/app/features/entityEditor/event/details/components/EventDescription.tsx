@@ -4,17 +4,14 @@ import { useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
-import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 
 type Props = {
 	event: WorldEvent
-	autoFocus?: boolean
+	surface?: string
 }
 
-export const EventDescription = ({ event, autoFocus }: Props) => {
-	const theme = useCustomTheme()
-
+export const EventDescription = ({ event, surface }: Props) => {
 	const { updateEvent } = worldSlice.actions
 	const dispatch = useDispatch()
 
@@ -32,13 +29,11 @@ export const EventDescription = ({ event, autoFocus }: Props) => {
 
 	return (
 		<RichTextEditorSummoner
-			softKey={event.id}
 			value={event.descriptionRich}
 			onChange={({ plainText, richText }) => {
 				debouncedUpdate.current(event.id, plainText, richText)
 			}}
-			autoFocus={autoFocus}
-			fadeInOverlayColor={theme.custom.palette.background.textEditor}
+			surface={surface}
 			collaboration={{
 				documentId: event.id,
 				entityType: 'event',

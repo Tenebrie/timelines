@@ -16,6 +16,7 @@ import {
 	usePathParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { worldEventTracksTag } from './utils/tags.js'
 import { NameStringValidator } from './validators/NameStringValidator.js'
@@ -136,6 +137,35 @@ router.post('/api/world/:worldId/event-track/swap', async (ctx) => {
 		worldId,
 		trackIdA: params.trackA,
 		trackIdB: params.trackB,
+	})
+
+	RedisService.notifyAboutWorldTracksUpdate(ctx, { worldId, timestamp: world.updatedAt })
+})
+
+router.post('/api/world/:worldId/event-track/move', async (ctx) => {
+	useApiEndpoint({
+		name: 'moveWorldEventTrack',
+		description: 'Moves the track to a new position.',
+		tags: [worldEventTracksTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(user, worldId)
+
+	const { trackId, position } = useRequestBody(ctx, {
+		trackId: z.string(),
+		position: z.number(),
+	})
+
+	const { world } = await WorldEventTrackService.moveEventTrack({
+		worldId,
+		trackId,
+		toPosition: position,
 	})
 
 	RedisService.notifyAboutWorldTracksUpdate(ctx, { worldId, timestamp: world.updatedAt })

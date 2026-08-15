@@ -27,11 +27,11 @@ export type AggregateWikiArticle = {
 }
 
 export type WikiArticleAvgAggregateOutputType = {
-  position: number | null
+  parentFolderPosition: number | null
 }
 
 export type WikiArticleSumAggregateOutputType = {
-  position: number | null
+  parentFolderPosition: number | null
 }
 
 export type WikiArticleMinAggregateOutputType = {
@@ -41,11 +41,11 @@ export type WikiArticleMinAggregateOutputType = {
   name: string | null
   icon: string | null
   color: string | null
+  content: string | null
   contentRich: string | null
-  contentYjs: string | null
-  position: number | null
   worldId: string | null
-  parentId: string | null
+  parentFolderId: string | null
+  parentFolderPosition: number | null
 }
 
 export type WikiArticleMaxAggregateOutputType = {
@@ -55,11 +55,11 @@ export type WikiArticleMaxAggregateOutputType = {
   name: string | null
   icon: string | null
   color: string | null
+  content: string | null
   contentRich: string | null
-  contentYjs: string | null
-  position: number | null
   worldId: string | null
-  parentId: string | null
+  parentFolderId: string | null
+  parentFolderPosition: number | null
 }
 
 export type WikiArticleCountAggregateOutputType = {
@@ -69,21 +69,21 @@ export type WikiArticleCountAggregateOutputType = {
   name: number
   icon: number
   color: number
+  content: number
   contentRich: number
-  contentYjs: number
-  position: number
   worldId: number
-  parentId: number
+  parentFolderId: number
+  parentFolderPosition: number
   _all: number
 }
 
 
 export type WikiArticleAvgAggregateInputType = {
-  position?: true
+  parentFolderPosition?: true
 }
 
 export type WikiArticleSumAggregateInputType = {
-  position?: true
+  parentFolderPosition?: true
 }
 
 export type WikiArticleMinAggregateInputType = {
@@ -93,11 +93,11 @@ export type WikiArticleMinAggregateInputType = {
   name?: true
   icon?: true
   color?: true
+  content?: true
   contentRich?: true
-  contentYjs?: true
-  position?: true
   worldId?: true
-  parentId?: true
+  parentFolderId?: true
+  parentFolderPosition?: true
 }
 
 export type WikiArticleMaxAggregateInputType = {
@@ -107,11 +107,11 @@ export type WikiArticleMaxAggregateInputType = {
   name?: true
   icon?: true
   color?: true
+  content?: true
   contentRich?: true
-  contentYjs?: true
-  position?: true
   worldId?: true
-  parentId?: true
+  parentFolderId?: true
+  parentFolderPosition?: true
 }
 
 export type WikiArticleCountAggregateInputType = {
@@ -121,11 +121,11 @@ export type WikiArticleCountAggregateInputType = {
   name?: true
   icon?: true
   color?: true
+  content?: true
   contentRich?: true
-  contentYjs?: true
-  position?: true
   worldId?: true
-  parentId?: true
+  parentFolderId?: true
+  parentFolderPosition?: true
   _all?: true
 }
 
@@ -222,11 +222,11 @@ export type WikiArticleGroupByOutputType = {
   name: string
   icon: string
   color: string
+  content: string
   contentRich: string
-  contentYjs: string | null
-  position: number
   worldId: string
-  parentId: string | null
+  parentFolderId: string | null
+  parentFolderPosition: number
   _count: WikiArticleCountAggregateOutputType | null
   _avg: WikiArticleAvgAggregateOutputType | null
   _sum: WikiArticleSumAggregateOutputType | null
@@ -259,18 +259,17 @@ export type WikiArticleWhereInput = {
   name?: Prisma.StringFilter<"WikiArticle"> | string
   icon?: Prisma.StringFilter<"WikiArticle"> | string
   color?: Prisma.StringFilter<"WikiArticle"> | string
+  content?: Prisma.StringFilter<"WikiArticle"> | string
   contentRich?: Prisma.StringFilter<"WikiArticle"> | string
-  contentYjs?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
-  position?: Prisma.IntFilter<"WikiArticle"> | number
   worldId?: Prisma.StringFilter<"WikiArticle"> | string
-  parentId?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
+  parentFolderId?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
+  parentFolderPosition?: Prisma.FloatFilter<"WikiArticle"> | number
   pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
   assetRefs?: Prisma.AssetReferenceListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
-  parent?: Prisma.XOR<Prisma.WikiArticleNullableScalarRelationFilter, Prisma.WikiArticleWhereInput> | null
-  children?: Prisma.WikiArticleListRelationFilter
+  parentFolder?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
 }
 
 export type WikiArticleOrderByWithRelationInput = {
@@ -280,18 +279,17 @@ export type WikiArticleOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  content?: Prisma.SortOrder
   contentRich?: Prisma.SortOrder
-  contentYjs?: Prisma.SortOrderInput | Prisma.SortOrder
-  position?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
-  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentFolderPosition?: Prisma.SortOrder
   pages?: Prisma.ContentPageOrderByRelationAggregateInput
   mentions?: Prisma.MentionOrderByRelationAggregateInput
   mentionedIn?: Prisma.MentionOrderByRelationAggregateInput
   assetRefs?: Prisma.AssetReferenceOrderByRelationAggregateInput
   world?: Prisma.WorldOrderByWithRelationInput
-  parent?: Prisma.WikiArticleOrderByWithRelationInput
-  children?: Prisma.WikiArticleOrderByRelationAggregateInput
+  parentFolder?: Prisma.WikiFolderOrderByWithRelationInput
 }
 
 export type WikiArticleWhereUniqueInput = Prisma.AtLeast<{
@@ -304,18 +302,17 @@ export type WikiArticleWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"WikiArticle"> | string
   icon?: Prisma.StringFilter<"WikiArticle"> | string
   color?: Prisma.StringFilter<"WikiArticle"> | string
+  content?: Prisma.StringFilter<"WikiArticle"> | string
   contentRich?: Prisma.StringFilter<"WikiArticle"> | string
-  contentYjs?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
-  position?: Prisma.IntFilter<"WikiArticle"> | number
   worldId?: Prisma.StringFilter<"WikiArticle"> | string
-  parentId?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
+  parentFolderId?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
+  parentFolderPosition?: Prisma.FloatFilter<"WikiArticle"> | number
   pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
   assetRefs?: Prisma.AssetReferenceListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
-  parent?: Prisma.XOR<Prisma.WikiArticleNullableScalarRelationFilter, Prisma.WikiArticleWhereInput> | null
-  children?: Prisma.WikiArticleListRelationFilter
+  parentFolder?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
 }, "id" | "id">
 
 export type WikiArticleOrderByWithAggregationInput = {
@@ -325,11 +322,11 @@ export type WikiArticleOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  content?: Prisma.SortOrder
   contentRich?: Prisma.SortOrder
-  contentYjs?: Prisma.SortOrderInput | Prisma.SortOrder
-  position?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
-  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentFolderPosition?: Prisma.SortOrder
   _count?: Prisma.WikiArticleCountOrderByAggregateInput
   _avg?: Prisma.WikiArticleAvgOrderByAggregateInput
   _max?: Prisma.WikiArticleMaxOrderByAggregateInput
@@ -347,11 +344,11 @@ export type WikiArticleScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"WikiArticle"> | string
   icon?: Prisma.StringWithAggregatesFilter<"WikiArticle"> | string
   color?: Prisma.StringWithAggregatesFilter<"WikiArticle"> | string
+  content?: Prisma.StringWithAggregatesFilter<"WikiArticle"> | string
   contentRich?: Prisma.StringWithAggregatesFilter<"WikiArticle"> | string
-  contentYjs?: Prisma.StringNullableWithAggregatesFilter<"WikiArticle"> | string | null
-  position?: Prisma.IntWithAggregatesFilter<"WikiArticle"> | number
   worldId?: Prisma.StringWithAggregatesFilter<"WikiArticle"> | string
-  parentId?: Prisma.StringNullableWithAggregatesFilter<"WikiArticle"> | string | null
+  parentFolderId?: Prisma.StringNullableWithAggregatesFilter<"WikiArticle"> | string | null
+  parentFolderPosition?: Prisma.FloatWithAggregatesFilter<"WikiArticle"> | number
 }
 
 export type WikiArticleCreateInput = {
@@ -361,16 +358,15 @@ export type WikiArticleCreateInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentArticleInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetArticleInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderArticleInput
   world: Prisma.WorldCreateNestedOneWithoutArticlesInput
-  parent?: Prisma.WikiArticleCreateNestedOneWithoutChildrenInput
-  children?: Prisma.WikiArticleCreateNestedManyWithoutParentInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutArticlesInput
 }
 
 export type WikiArticleUncheckedCreateInput = {
@@ -380,16 +376,15 @@ export type WikiArticleUncheckedCreateInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
   worldId: string
-  parentId?: string | null
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentArticleInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetArticleInput
   assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderArticleInput
-  children?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type WikiArticleUpdateInput = {
@@ -399,16 +394,15 @@ export type WikiArticleUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderArticleNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutArticlesNestedInput
-  parent?: Prisma.WikiArticleUpdateOneWithoutChildrenNestedInput
-  children?: Prisma.WikiArticleUpdateManyWithoutParentNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutArticlesNestedInput
 }
 
 export type WikiArticleUncheckedUpdateInput = {
@@ -418,16 +412,15 @@ export type WikiArticleUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderArticleNestedInput
-  children?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type WikiArticleCreateManyInput = {
@@ -437,11 +430,11 @@ export type WikiArticleCreateManyInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
   worldId: string
-  parentId?: string | null
+  parentFolderId?: string | null
+  parentFolderPosition?: number
 }
 
 export type WikiArticleUpdateManyMutationInput = {
@@ -451,9 +444,9 @@ export type WikiArticleUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type WikiArticleUncheckedUpdateManyInput = {
@@ -463,16 +456,66 @@ export type WikiArticleUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type WikiArticleNullableScalarRelationFilter = {
   is?: Prisma.WikiArticleWhereInput | null
   isNot?: Prisma.WikiArticleWhereInput | null
+}
+
+export type WikiArticleCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
+  worldId?: Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrder
+  parentFolderPosition?: Prisma.SortOrder
+}
+
+export type WikiArticleAvgOrderByAggregateInput = {
+  parentFolderPosition?: Prisma.SortOrder
+}
+
+export type WikiArticleMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
+  worldId?: Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrder
+  parentFolderPosition?: Prisma.SortOrder
+}
+
+export type WikiArticleMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
+  worldId?: Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrder
+  parentFolderPosition?: Prisma.SortOrder
+}
+
+export type WikiArticleSumOrderByAggregateInput = {
+  parentFolderPosition?: Prisma.SortOrder
 }
 
 export type WikiArticleListRelationFilter = {
@@ -483,56 +526,6 @@ export type WikiArticleListRelationFilter = {
 
 export type WikiArticleOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type WikiArticleCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  icon?: Prisma.SortOrder
-  color?: Prisma.SortOrder
-  contentRich?: Prisma.SortOrder
-  contentYjs?: Prisma.SortOrder
-  position?: Prisma.SortOrder
-  worldId?: Prisma.SortOrder
-  parentId?: Prisma.SortOrder
-}
-
-export type WikiArticleAvgOrderByAggregateInput = {
-  position?: Prisma.SortOrder
-}
-
-export type WikiArticleMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  icon?: Prisma.SortOrder
-  color?: Prisma.SortOrder
-  contentRich?: Prisma.SortOrder
-  contentYjs?: Prisma.SortOrder
-  position?: Prisma.SortOrder
-  worldId?: Prisma.SortOrder
-  parentId?: Prisma.SortOrder
-}
-
-export type WikiArticleMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  icon?: Prisma.SortOrder
-  color?: Prisma.SortOrder
-  contentRich?: Prisma.SortOrder
-  contentYjs?: Prisma.SortOrder
-  position?: Prisma.SortOrder
-  worldId?: Prisma.SortOrder
-  parentId?: Prisma.SortOrder
-}
-
-export type WikiArticleSumOrderByAggregateInput = {
-  position?: Prisma.SortOrder
 }
 
 export type WikiArticleCreateNestedOneWithoutAssetRefsInput = {
@@ -599,61 +592,45 @@ export type WikiArticleUpdateOneWithoutMentionedInNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WikiArticleUpdateToOneWithWhereWithoutMentionedInInput, Prisma.WikiArticleUpdateWithoutMentionedInInput>, Prisma.WikiArticleUncheckedUpdateWithoutMentionedInInput>
 }
 
-export type WikiArticleCreateNestedOneWithoutChildrenInput = {
-  create?: Prisma.XOR<Prisma.WikiArticleCreateWithoutChildrenInput, Prisma.WikiArticleUncheckedCreateWithoutChildrenInput>
-  connectOrCreate?: Prisma.WikiArticleCreateOrConnectWithoutChildrenInput
-  connect?: Prisma.WikiArticleWhereUniqueInput
-}
-
-export type WikiArticleCreateNestedManyWithoutParentInput = {
-  create?: Prisma.XOR<Prisma.WikiArticleCreateWithoutParentInput, Prisma.WikiArticleUncheckedCreateWithoutParentInput> | Prisma.WikiArticleCreateWithoutParentInput[] | Prisma.WikiArticleUncheckedCreateWithoutParentInput[]
-  connectOrCreate?: Prisma.WikiArticleCreateOrConnectWithoutParentInput | Prisma.WikiArticleCreateOrConnectWithoutParentInput[]
-  createMany?: Prisma.WikiArticleCreateManyParentInputEnvelope
+export type WikiArticleCreateNestedManyWithoutParentFolderInput = {
+  create?: Prisma.XOR<Prisma.WikiArticleCreateWithoutParentFolderInput, Prisma.WikiArticleUncheckedCreateWithoutParentFolderInput> | Prisma.WikiArticleCreateWithoutParentFolderInput[] | Prisma.WikiArticleUncheckedCreateWithoutParentFolderInput[]
+  connectOrCreate?: Prisma.WikiArticleCreateOrConnectWithoutParentFolderInput | Prisma.WikiArticleCreateOrConnectWithoutParentFolderInput[]
+  createMany?: Prisma.WikiArticleCreateManyParentFolderInputEnvelope
   connect?: Prisma.WikiArticleWhereUniqueInput | Prisma.WikiArticleWhereUniqueInput[]
 }
 
-export type WikiArticleUncheckedCreateNestedManyWithoutParentInput = {
-  create?: Prisma.XOR<Prisma.WikiArticleCreateWithoutParentInput, Prisma.WikiArticleUncheckedCreateWithoutParentInput> | Prisma.WikiArticleCreateWithoutParentInput[] | Prisma.WikiArticleUncheckedCreateWithoutParentInput[]
-  connectOrCreate?: Prisma.WikiArticleCreateOrConnectWithoutParentInput | Prisma.WikiArticleCreateOrConnectWithoutParentInput[]
-  createMany?: Prisma.WikiArticleCreateManyParentInputEnvelope
+export type WikiArticleUncheckedCreateNestedManyWithoutParentFolderInput = {
+  create?: Prisma.XOR<Prisma.WikiArticleCreateWithoutParentFolderInput, Prisma.WikiArticleUncheckedCreateWithoutParentFolderInput> | Prisma.WikiArticleCreateWithoutParentFolderInput[] | Prisma.WikiArticleUncheckedCreateWithoutParentFolderInput[]
+  connectOrCreate?: Prisma.WikiArticleCreateOrConnectWithoutParentFolderInput | Prisma.WikiArticleCreateOrConnectWithoutParentFolderInput[]
+  createMany?: Prisma.WikiArticleCreateManyParentFolderInputEnvelope
   connect?: Prisma.WikiArticleWhereUniqueInput | Prisma.WikiArticleWhereUniqueInput[]
 }
 
-export type WikiArticleUpdateOneWithoutChildrenNestedInput = {
-  create?: Prisma.XOR<Prisma.WikiArticleCreateWithoutChildrenInput, Prisma.WikiArticleUncheckedCreateWithoutChildrenInput>
-  connectOrCreate?: Prisma.WikiArticleCreateOrConnectWithoutChildrenInput
-  upsert?: Prisma.WikiArticleUpsertWithoutChildrenInput
-  disconnect?: Prisma.WikiArticleWhereInput | boolean
-  delete?: Prisma.WikiArticleWhereInput | boolean
-  connect?: Prisma.WikiArticleWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.WikiArticleUpdateToOneWithWhereWithoutChildrenInput, Prisma.WikiArticleUpdateWithoutChildrenInput>, Prisma.WikiArticleUncheckedUpdateWithoutChildrenInput>
-}
-
-export type WikiArticleUpdateManyWithoutParentNestedInput = {
-  create?: Prisma.XOR<Prisma.WikiArticleCreateWithoutParentInput, Prisma.WikiArticleUncheckedCreateWithoutParentInput> | Prisma.WikiArticleCreateWithoutParentInput[] | Prisma.WikiArticleUncheckedCreateWithoutParentInput[]
-  connectOrCreate?: Prisma.WikiArticleCreateOrConnectWithoutParentInput | Prisma.WikiArticleCreateOrConnectWithoutParentInput[]
-  upsert?: Prisma.WikiArticleUpsertWithWhereUniqueWithoutParentInput | Prisma.WikiArticleUpsertWithWhereUniqueWithoutParentInput[]
-  createMany?: Prisma.WikiArticleCreateManyParentInputEnvelope
+export type WikiArticleUpdateManyWithoutParentFolderNestedInput = {
+  create?: Prisma.XOR<Prisma.WikiArticleCreateWithoutParentFolderInput, Prisma.WikiArticleUncheckedCreateWithoutParentFolderInput> | Prisma.WikiArticleCreateWithoutParentFolderInput[] | Prisma.WikiArticleUncheckedCreateWithoutParentFolderInput[]
+  connectOrCreate?: Prisma.WikiArticleCreateOrConnectWithoutParentFolderInput | Prisma.WikiArticleCreateOrConnectWithoutParentFolderInput[]
+  upsert?: Prisma.WikiArticleUpsertWithWhereUniqueWithoutParentFolderInput | Prisma.WikiArticleUpsertWithWhereUniqueWithoutParentFolderInput[]
+  createMany?: Prisma.WikiArticleCreateManyParentFolderInputEnvelope
   set?: Prisma.WikiArticleWhereUniqueInput | Prisma.WikiArticleWhereUniqueInput[]
   disconnect?: Prisma.WikiArticleWhereUniqueInput | Prisma.WikiArticleWhereUniqueInput[]
   delete?: Prisma.WikiArticleWhereUniqueInput | Prisma.WikiArticleWhereUniqueInput[]
   connect?: Prisma.WikiArticleWhereUniqueInput | Prisma.WikiArticleWhereUniqueInput[]
-  update?: Prisma.WikiArticleUpdateWithWhereUniqueWithoutParentInput | Prisma.WikiArticleUpdateWithWhereUniqueWithoutParentInput[]
-  updateMany?: Prisma.WikiArticleUpdateManyWithWhereWithoutParentInput | Prisma.WikiArticleUpdateManyWithWhereWithoutParentInput[]
+  update?: Prisma.WikiArticleUpdateWithWhereUniqueWithoutParentFolderInput | Prisma.WikiArticleUpdateWithWhereUniqueWithoutParentFolderInput[]
+  updateMany?: Prisma.WikiArticleUpdateManyWithWhereWithoutParentFolderInput | Prisma.WikiArticleUpdateManyWithWhereWithoutParentFolderInput[]
   deleteMany?: Prisma.WikiArticleScalarWhereInput | Prisma.WikiArticleScalarWhereInput[]
 }
 
-export type WikiArticleUncheckedUpdateManyWithoutParentNestedInput = {
-  create?: Prisma.XOR<Prisma.WikiArticleCreateWithoutParentInput, Prisma.WikiArticleUncheckedCreateWithoutParentInput> | Prisma.WikiArticleCreateWithoutParentInput[] | Prisma.WikiArticleUncheckedCreateWithoutParentInput[]
-  connectOrCreate?: Prisma.WikiArticleCreateOrConnectWithoutParentInput | Prisma.WikiArticleCreateOrConnectWithoutParentInput[]
-  upsert?: Prisma.WikiArticleUpsertWithWhereUniqueWithoutParentInput | Prisma.WikiArticleUpsertWithWhereUniqueWithoutParentInput[]
-  createMany?: Prisma.WikiArticleCreateManyParentInputEnvelope
+export type WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput = {
+  create?: Prisma.XOR<Prisma.WikiArticleCreateWithoutParentFolderInput, Prisma.WikiArticleUncheckedCreateWithoutParentFolderInput> | Prisma.WikiArticleCreateWithoutParentFolderInput[] | Prisma.WikiArticleUncheckedCreateWithoutParentFolderInput[]
+  connectOrCreate?: Prisma.WikiArticleCreateOrConnectWithoutParentFolderInput | Prisma.WikiArticleCreateOrConnectWithoutParentFolderInput[]
+  upsert?: Prisma.WikiArticleUpsertWithWhereUniqueWithoutParentFolderInput | Prisma.WikiArticleUpsertWithWhereUniqueWithoutParentFolderInput[]
+  createMany?: Prisma.WikiArticleCreateManyParentFolderInputEnvelope
   set?: Prisma.WikiArticleWhereUniqueInput | Prisma.WikiArticleWhereUniqueInput[]
   disconnect?: Prisma.WikiArticleWhereUniqueInput | Prisma.WikiArticleWhereUniqueInput[]
   delete?: Prisma.WikiArticleWhereUniqueInput | Prisma.WikiArticleWhereUniqueInput[]
   connect?: Prisma.WikiArticleWhereUniqueInput | Prisma.WikiArticleWhereUniqueInput[]
-  update?: Prisma.WikiArticleUpdateWithWhereUniqueWithoutParentInput | Prisma.WikiArticleUpdateWithWhereUniqueWithoutParentInput[]
-  updateMany?: Prisma.WikiArticleUpdateManyWithWhereWithoutParentInput | Prisma.WikiArticleUpdateManyWithWhereWithoutParentInput[]
+  update?: Prisma.WikiArticleUpdateWithWhereUniqueWithoutParentFolderInput | Prisma.WikiArticleUpdateWithWhereUniqueWithoutParentFolderInput[]
+  updateMany?: Prisma.WikiArticleUpdateManyWithWhereWithoutParentFolderInput | Prisma.WikiArticleUpdateManyWithWhereWithoutParentFolderInput[]
   deleteMany?: Prisma.WikiArticleScalarWhereInput | Prisma.WikiArticleScalarWhereInput[]
 }
 
@@ -706,15 +683,14 @@ export type WikiArticleCreateWithoutAssetRefsInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentArticleInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetArticleInput
   world: Prisma.WorldCreateNestedOneWithoutArticlesInput
-  parent?: Prisma.WikiArticleCreateNestedOneWithoutChildrenInput
-  children?: Prisma.WikiArticleCreateNestedManyWithoutParentInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutArticlesInput
 }
 
 export type WikiArticleUncheckedCreateWithoutAssetRefsInput = {
@@ -724,15 +700,14 @@ export type WikiArticleUncheckedCreateWithoutAssetRefsInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
   worldId: string
-  parentId?: string | null
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentArticleInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetArticleInput
-  children?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type WikiArticleCreateOrConnectWithoutAssetRefsInput = {
@@ -758,15 +733,14 @@ export type WikiArticleUpdateWithoutAssetRefsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutArticlesNestedInput
-  parent?: Prisma.WikiArticleUpdateOneWithoutChildrenNestedInput
-  children?: Prisma.WikiArticleUpdateManyWithoutParentNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutArticlesNestedInput
 }
 
 export type WikiArticleUncheckedUpdateWithoutAssetRefsInput = {
@@ -776,15 +750,14 @@ export type WikiArticleUncheckedUpdateWithoutAssetRefsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
-  children?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type WikiArticleCreateWithoutPagesInput = {
@@ -794,15 +767,14 @@ export type WikiArticleCreateWithoutPagesInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
+  parentFolderPosition?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetArticleInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderArticleInput
   world: Prisma.WorldCreateNestedOneWithoutArticlesInput
-  parent?: Prisma.WikiArticleCreateNestedOneWithoutChildrenInput
-  children?: Prisma.WikiArticleCreateNestedManyWithoutParentInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutArticlesInput
 }
 
 export type WikiArticleUncheckedCreateWithoutPagesInput = {
@@ -812,15 +784,14 @@ export type WikiArticleUncheckedCreateWithoutPagesInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
   worldId: string
-  parentId?: string | null
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetArticleInput
   assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderArticleInput
-  children?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type WikiArticleCreateOrConnectWithoutPagesInput = {
@@ -846,15 +817,14 @@ export type WikiArticleUpdateWithoutPagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderArticleNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutArticlesNestedInput
-  parent?: Prisma.WikiArticleUpdateOneWithoutChildrenNestedInput
-  children?: Prisma.WikiArticleUpdateManyWithoutParentNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutArticlesNestedInput
 }
 
 export type WikiArticleUncheckedUpdateWithoutPagesInput = {
@@ -864,15 +834,14 @@ export type WikiArticleUncheckedUpdateWithoutPagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderArticleNestedInput
-  children?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type WikiArticleCreateWithoutMentionsInput = {
@@ -882,15 +851,14 @@ export type WikiArticleCreateWithoutMentionsInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentArticleInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetArticleInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderArticleInput
   world: Prisma.WorldCreateNestedOneWithoutArticlesInput
-  parent?: Prisma.WikiArticleCreateNestedOneWithoutChildrenInput
-  children?: Prisma.WikiArticleCreateNestedManyWithoutParentInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutArticlesInput
 }
 
 export type WikiArticleUncheckedCreateWithoutMentionsInput = {
@@ -900,15 +868,14 @@ export type WikiArticleUncheckedCreateWithoutMentionsInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
   worldId: string
-  parentId?: string | null
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentArticleInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetArticleInput
   assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderArticleInput
-  children?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type WikiArticleCreateOrConnectWithoutMentionsInput = {
@@ -923,15 +890,14 @@ export type WikiArticleCreateWithoutMentionedInInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentArticleInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceArticleInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderArticleInput
   world: Prisma.WorldCreateNestedOneWithoutArticlesInput
-  parent?: Prisma.WikiArticleCreateNestedOneWithoutChildrenInput
-  children?: Prisma.WikiArticleCreateNestedManyWithoutParentInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutArticlesInput
 }
 
 export type WikiArticleUncheckedCreateWithoutMentionedInInput = {
@@ -941,15 +907,14 @@ export type WikiArticleUncheckedCreateWithoutMentionedInInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
   worldId: string
-  parentId?: string | null
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentArticleInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceArticleInput
   assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderArticleInput
-  children?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type WikiArticleCreateOrConnectWithoutMentionedInInput = {
@@ -975,15 +940,14 @@ export type WikiArticleUpdateWithoutMentionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderArticleNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutArticlesNestedInput
-  parent?: Prisma.WikiArticleUpdateOneWithoutChildrenNestedInput
-  children?: Prisma.WikiArticleUpdateManyWithoutParentNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutArticlesNestedInput
 }
 
 export type WikiArticleUncheckedUpdateWithoutMentionsInput = {
@@ -993,15 +957,14 @@ export type WikiArticleUncheckedUpdateWithoutMentionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderArticleNestedInput
-  children?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type WikiArticleUpsertWithoutMentionedInInput = {
@@ -1022,15 +985,14 @@ export type WikiArticleUpdateWithoutMentionedInInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderArticleNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutArticlesNestedInput
-  parent?: Prisma.WikiArticleUpdateOneWithoutChildrenNestedInput
-  children?: Prisma.WikiArticleUpdateManyWithoutParentNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutArticlesNestedInput
 }
 
 export type WikiArticleUncheckedUpdateWithoutMentionedInInput = {
@@ -1040,165 +1002,74 @@ export type WikiArticleUncheckedUpdateWithoutMentionedInInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderArticleNestedInput
-  children?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentNestedInput
 }
 
-export type WikiArticleCreateWithoutChildrenInput = {
+export type WikiArticleCreateWithoutParentFolderInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentArticleInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetArticleInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderArticleInput
   world: Prisma.WorldCreateNestedOneWithoutArticlesInput
-  parent?: Prisma.WikiArticleCreateNestedOneWithoutChildrenInput
 }
 
-export type WikiArticleUncheckedCreateWithoutChildrenInput = {
+export type WikiArticleUncheckedCreateWithoutParentFolderInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
   worldId: string
-  parentId?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentArticleInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetArticleInput
   assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderArticleInput
 }
 
-export type WikiArticleCreateOrConnectWithoutChildrenInput = {
+export type WikiArticleCreateOrConnectWithoutParentFolderInput = {
   where: Prisma.WikiArticleWhereUniqueInput
-  create: Prisma.XOR<Prisma.WikiArticleCreateWithoutChildrenInput, Prisma.WikiArticleUncheckedCreateWithoutChildrenInput>
+  create: Prisma.XOR<Prisma.WikiArticleCreateWithoutParentFolderInput, Prisma.WikiArticleUncheckedCreateWithoutParentFolderInput>
 }
 
-export type WikiArticleCreateWithoutParentInput = {
-  id?: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  name: string
-  icon?: string
-  color?: string
-  contentRich?: string
-  contentYjs?: string | null
-  position?: number
-  pages?: Prisma.ContentPageCreateNestedManyWithoutParentArticleInput
-  mentions?: Prisma.MentionCreateNestedManyWithoutSourceArticleInput
-  mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetArticleInput
-  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderArticleInput
-  world: Prisma.WorldCreateNestedOneWithoutArticlesInput
-  children?: Prisma.WikiArticleCreateNestedManyWithoutParentInput
-}
-
-export type WikiArticleUncheckedCreateWithoutParentInput = {
-  id?: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  name: string
-  icon?: string
-  color?: string
-  contentRich?: string
-  contentYjs?: string | null
-  position?: number
-  worldId: string
-  pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentArticleInput
-  mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceArticleInput
-  mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetArticleInput
-  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderArticleInput
-  children?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentInput
-}
-
-export type WikiArticleCreateOrConnectWithoutParentInput = {
-  where: Prisma.WikiArticleWhereUniqueInput
-  create: Prisma.XOR<Prisma.WikiArticleCreateWithoutParentInput, Prisma.WikiArticleUncheckedCreateWithoutParentInput>
-}
-
-export type WikiArticleCreateManyParentInputEnvelope = {
-  data: Prisma.WikiArticleCreateManyParentInput | Prisma.WikiArticleCreateManyParentInput[]
+export type WikiArticleCreateManyParentFolderInputEnvelope = {
+  data: Prisma.WikiArticleCreateManyParentFolderInput | Prisma.WikiArticleCreateManyParentFolderInput[]
   skipDuplicates?: boolean
 }
 
-export type WikiArticleUpsertWithoutChildrenInput = {
-  update: Prisma.XOR<Prisma.WikiArticleUpdateWithoutChildrenInput, Prisma.WikiArticleUncheckedUpdateWithoutChildrenInput>
-  create: Prisma.XOR<Prisma.WikiArticleCreateWithoutChildrenInput, Prisma.WikiArticleUncheckedCreateWithoutChildrenInput>
-  where?: Prisma.WikiArticleWhereInput
-}
-
-export type WikiArticleUpdateToOneWithWhereWithoutChildrenInput = {
-  where?: Prisma.WikiArticleWhereInput
-  data: Prisma.XOR<Prisma.WikiArticleUpdateWithoutChildrenInput, Prisma.WikiArticleUncheckedUpdateWithoutChildrenInput>
-}
-
-export type WikiArticleUpdateWithoutChildrenInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
-  color?: Prisma.StringFieldUpdateOperationsInput | string
-  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
-  pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
-  mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
-  mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
-  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderArticleNestedInput
-  world?: Prisma.WorldUpdateOneRequiredWithoutArticlesNestedInput
-  parent?: Prisma.WikiArticleUpdateOneWithoutChildrenNestedInput
-}
-
-export type WikiArticleUncheckedUpdateWithoutChildrenInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  icon?: Prisma.StringFieldUpdateOperationsInput | string
-  color?: Prisma.StringFieldUpdateOperationsInput | string
-  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
-  worldId?: Prisma.StringFieldUpdateOperationsInput | string
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
-  mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
-  mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
-  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderArticleNestedInput
-}
-
-export type WikiArticleUpsertWithWhereUniqueWithoutParentInput = {
+export type WikiArticleUpsertWithWhereUniqueWithoutParentFolderInput = {
   where: Prisma.WikiArticleWhereUniqueInput
-  update: Prisma.XOR<Prisma.WikiArticleUpdateWithoutParentInput, Prisma.WikiArticleUncheckedUpdateWithoutParentInput>
-  create: Prisma.XOR<Prisma.WikiArticleCreateWithoutParentInput, Prisma.WikiArticleUncheckedCreateWithoutParentInput>
+  update: Prisma.XOR<Prisma.WikiArticleUpdateWithoutParentFolderInput, Prisma.WikiArticleUncheckedUpdateWithoutParentFolderInput>
+  create: Prisma.XOR<Prisma.WikiArticleCreateWithoutParentFolderInput, Prisma.WikiArticleUncheckedCreateWithoutParentFolderInput>
 }
 
-export type WikiArticleUpdateWithWhereUniqueWithoutParentInput = {
+export type WikiArticleUpdateWithWhereUniqueWithoutParentFolderInput = {
   where: Prisma.WikiArticleWhereUniqueInput
-  data: Prisma.XOR<Prisma.WikiArticleUpdateWithoutParentInput, Prisma.WikiArticleUncheckedUpdateWithoutParentInput>
+  data: Prisma.XOR<Prisma.WikiArticleUpdateWithoutParentFolderInput, Prisma.WikiArticleUncheckedUpdateWithoutParentFolderInput>
 }
 
-export type WikiArticleUpdateManyWithWhereWithoutParentInput = {
+export type WikiArticleUpdateManyWithWhereWithoutParentFolderInput = {
   where: Prisma.WikiArticleScalarWhereInput
-  data: Prisma.XOR<Prisma.WikiArticleUpdateManyMutationInput, Prisma.WikiArticleUncheckedUpdateManyWithoutParentInput>
+  data: Prisma.XOR<Prisma.WikiArticleUpdateManyMutationInput, Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderInput>
 }
 
 export type WikiArticleScalarWhereInput = {
@@ -1211,11 +1082,11 @@ export type WikiArticleScalarWhereInput = {
   name?: Prisma.StringFilter<"WikiArticle"> | string
   icon?: Prisma.StringFilter<"WikiArticle"> | string
   color?: Prisma.StringFilter<"WikiArticle"> | string
+  content?: Prisma.StringFilter<"WikiArticle"> | string
   contentRich?: Prisma.StringFilter<"WikiArticle"> | string
-  contentYjs?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
-  position?: Prisma.IntFilter<"WikiArticle"> | number
   worldId?: Prisma.StringFilter<"WikiArticle"> | string
-  parentId?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
+  parentFolderId?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
+  parentFolderPosition?: Prisma.FloatFilter<"WikiArticle"> | number
 }
 
 export type WikiArticleCreateWithoutWorldInput = {
@@ -1225,15 +1096,14 @@ export type WikiArticleCreateWithoutWorldInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentArticleInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetArticleInput
   assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderArticleInput
-  parent?: Prisma.WikiArticleCreateNestedOneWithoutChildrenInput
-  children?: Prisma.WikiArticleCreateNestedManyWithoutParentInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutArticlesInput
 }
 
 export type WikiArticleUncheckedCreateWithoutWorldInput = {
@@ -1243,15 +1113,14 @@ export type WikiArticleUncheckedCreateWithoutWorldInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
-  parentId?: string | null
+  parentFolderId?: string | null
+  parentFolderPosition?: number
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentArticleInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetArticleInput
   assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderArticleInput
-  children?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type WikiArticleCreateOrConnectWithoutWorldInput = {
@@ -1280,66 +1149,64 @@ export type WikiArticleUpdateManyWithWhereWithoutWorldInput = {
   data: Prisma.XOR<Prisma.WikiArticleUpdateManyMutationInput, Prisma.WikiArticleUncheckedUpdateManyWithoutWorldInput>
 }
 
-export type WikiArticleCreateManyParentInput = {
+export type WikiArticleCreateManyParentFolderInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
   worldId: string
+  parentFolderPosition?: number
 }
 
-export type WikiArticleUpdateWithoutParentInput = {
+export type WikiArticleUpdateWithoutParentFolderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderArticleNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutArticlesNestedInput
-  children?: Prisma.WikiArticleUpdateManyWithoutParentNestedInput
 }
 
-export type WikiArticleUncheckedUpdateWithoutParentInput = {
+export type WikiArticleUncheckedUpdateWithoutParentFolderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderArticleNestedInput
-  children?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentNestedInput
 }
 
-export type WikiArticleUncheckedUpdateManyWithoutParentInput = {
+export type WikiArticleUncheckedUpdateManyWithoutParentFolderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type WikiArticleCreateManyWorldInput = {
@@ -1349,10 +1216,10 @@ export type WikiArticleCreateManyWorldInput = {
   name: string
   icon?: string
   color?: string
+  content?: string
   contentRich?: string
-  contentYjs?: string | null
-  position?: number
-  parentId?: string | null
+  parentFolderId?: string | null
+  parentFolderPosition?: number
 }
 
 export type WikiArticleUpdateWithoutWorldInput = {
@@ -1362,15 +1229,14 @@ export type WikiArticleUpdateWithoutWorldInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderArticleNestedInput
-  parent?: Prisma.WikiArticleUpdateOneWithoutChildrenNestedInput
-  children?: Prisma.WikiArticleUpdateManyWithoutParentNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutArticlesNestedInput
 }
 
 export type WikiArticleUncheckedUpdateWithoutWorldInput = {
@@ -1380,15 +1246,14 @@ export type WikiArticleUncheckedUpdateWithoutWorldInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentArticleNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetArticleNestedInput
   assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderArticleNestedInput
-  children?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type WikiArticleUncheckedUpdateManyWithoutWorldInput = {
@@ -1398,10 +1263,10 @@ export type WikiArticleUncheckedUpdateManyWithoutWorldInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
-  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  position?: Prisma.IntFieldUpdateOperationsInput | number
-  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 
@@ -1414,7 +1279,6 @@ export type WikiArticleCountOutputType = {
   mentions: number
   mentionedIn: number
   assetRefs: number
-  children: number
 }
 
 export type WikiArticleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1422,7 +1286,6 @@ export type WikiArticleCountOutputTypeSelect<ExtArgs extends runtime.Types.Exten
   mentions?: boolean | WikiArticleCountOutputTypeCountMentionsArgs
   mentionedIn?: boolean | WikiArticleCountOutputTypeCountMentionedInArgs
   assetRefs?: boolean | WikiArticleCountOutputTypeCountAssetRefsArgs
-  children?: boolean | WikiArticleCountOutputTypeCountChildrenArgs
 }
 
 /**
@@ -1463,13 +1326,6 @@ export type WikiArticleCountOutputTypeCountAssetRefsArgs<ExtArgs extends runtime
   where?: Prisma.AssetReferenceWhereInput
 }
 
-/**
- * WikiArticleCountOutputType without action
- */
-export type WikiArticleCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.WikiArticleWhereInput
-}
-
 
 export type WikiArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1478,18 +1334,17 @@ export type WikiArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   name?: boolean
   icon?: boolean
   color?: boolean
+  content?: boolean
   contentRich?: boolean
-  contentYjs?: boolean
-  position?: boolean
   worldId?: boolean
-  parentId?: boolean
+  parentFolderId?: boolean
+  parentFolderPosition?: boolean
   pages?: boolean | Prisma.WikiArticle$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.WikiArticle$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.WikiArticle$mentionedInArgs<ExtArgs>
   assetRefs?: boolean | Prisma.WikiArticle$assetRefsArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
-  parent?: boolean | Prisma.WikiArticle$parentArgs<ExtArgs>
-  children?: boolean | Prisma.WikiArticle$childrenArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.WikiArticle$parentFolderArgs<ExtArgs>
   _count?: boolean | Prisma.WikiArticleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["wikiArticle"]>
 
@@ -1500,13 +1355,13 @@ export type WikiArticleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   name?: boolean
   icon?: boolean
   color?: boolean
+  content?: boolean
   contentRich?: boolean
-  contentYjs?: boolean
-  position?: boolean
   worldId?: boolean
-  parentId?: boolean
+  parentFolderId?: boolean
+  parentFolderPosition?: boolean
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
-  parent?: boolean | Prisma.WikiArticle$parentArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.WikiArticle$parentFolderArgs<ExtArgs>
 }, ExtArgs["result"]["wikiArticle"]>
 
 export type WikiArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1516,13 +1371,13 @@ export type WikiArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   name?: boolean
   icon?: boolean
   color?: boolean
+  content?: boolean
   contentRich?: boolean
-  contentYjs?: boolean
-  position?: boolean
   worldId?: boolean
-  parentId?: boolean
+  parentFolderId?: boolean
+  parentFolderPosition?: boolean
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
-  parent?: boolean | Prisma.WikiArticle$parentArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.WikiArticle$parentFolderArgs<ExtArgs>
 }, ExtArgs["result"]["wikiArticle"]>
 
 export type WikiArticleSelectScalar = {
@@ -1532,31 +1387,30 @@ export type WikiArticleSelectScalar = {
   name?: boolean
   icon?: boolean
   color?: boolean
+  content?: boolean
   contentRich?: boolean
-  contentYjs?: boolean
-  position?: boolean
   worldId?: boolean
-  parentId?: boolean
+  parentFolderId?: boolean
+  parentFolderPosition?: boolean
 }
 
-export type WikiArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "icon" | "color" | "contentRich" | "contentYjs" | "position" | "worldId" | "parentId", ExtArgs["result"]["wikiArticle"]>
+export type WikiArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "icon" | "color" | "content" | "contentRich" | "worldId" | "parentFolderId" | "parentFolderPosition", ExtArgs["result"]["wikiArticle"]>
 export type WikiArticleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pages?: boolean | Prisma.WikiArticle$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.WikiArticle$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.WikiArticle$mentionedInArgs<ExtArgs>
   assetRefs?: boolean | Prisma.WikiArticle$assetRefsArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
-  parent?: boolean | Prisma.WikiArticle$parentArgs<ExtArgs>
-  children?: boolean | Prisma.WikiArticle$childrenArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.WikiArticle$parentFolderArgs<ExtArgs>
   _count?: boolean | Prisma.WikiArticleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WikiArticleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
-  parent?: boolean | Prisma.WikiArticle$parentArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.WikiArticle$parentFolderArgs<ExtArgs>
 }
 export type WikiArticleIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
-  parent?: boolean | Prisma.WikiArticle$parentArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.WikiArticle$parentFolderArgs<ExtArgs>
 }
 
 export type $WikiArticlePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1567,8 +1421,7 @@ export type $WikiArticlePayload<ExtArgs extends runtime.Types.Extensions.Interna
     mentionedIn: Prisma.$MentionPayload<ExtArgs>[]
     assetRefs: Prisma.$AssetReferencePayload<ExtArgs>[]
     world: Prisma.$WorldPayload<ExtArgs>
-    parent: Prisma.$WikiArticlePayload<ExtArgs> | null
-    children: Prisma.$WikiArticlePayload<ExtArgs>[]
+    parentFolder: Prisma.$WikiFolderPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1577,11 +1430,11 @@ export type $WikiArticlePayload<ExtArgs extends runtime.Types.Extensions.Interna
     name: string
     icon: string
     color: string
+    content: string
     contentRich: string
-    contentYjs: string | null
-    position: number
     worldId: string
-    parentId: string | null
+    parentFolderId: string | null
+    parentFolderPosition: number
   }, ExtArgs["result"]["wikiArticle"]>
   composites: {}
 }
@@ -1981,8 +1834,7 @@ export interface Prisma__WikiArticleClient<T, Null = never, ExtArgs extends runt
   mentionedIn<T extends Prisma.WikiArticle$mentionedInArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WikiArticle$mentionedInArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assetRefs<T extends Prisma.WikiArticle$assetRefsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WikiArticle$assetRefsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssetReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   world<T extends Prisma.WorldDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldDefaultArgs<ExtArgs>>): Prisma.Prisma__WorldClient<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  parent<T extends Prisma.WikiArticle$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WikiArticle$parentArgs<ExtArgs>>): Prisma.Prisma__WikiArticleClient<runtime.Types.Result.GetResult<Prisma.$WikiArticlePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  children<T extends Prisma.WikiArticle$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WikiArticle$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WikiArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  parentFolder<T extends Prisma.WikiArticle$parentFolderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WikiArticle$parentFolderArgs<ExtArgs>>): Prisma.Prisma__WikiFolderClient<runtime.Types.Result.GetResult<Prisma.$WikiFolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2018,11 +1870,11 @@ export interface WikiArticleFieldRefs {
   readonly name: Prisma.FieldRef<"WikiArticle", 'String'>
   readonly icon: Prisma.FieldRef<"WikiArticle", 'String'>
   readonly color: Prisma.FieldRef<"WikiArticle", 'String'>
+  readonly content: Prisma.FieldRef<"WikiArticle", 'String'>
   readonly contentRich: Prisma.FieldRef<"WikiArticle", 'String'>
-  readonly contentYjs: Prisma.FieldRef<"WikiArticle", 'String'>
-  readonly position: Prisma.FieldRef<"WikiArticle", 'Int'>
   readonly worldId: Prisma.FieldRef<"WikiArticle", 'String'>
-  readonly parentId: Prisma.FieldRef<"WikiArticle", 'String'>
+  readonly parentFolderId: Prisma.FieldRef<"WikiArticle", 'String'>
+  readonly parentFolderPosition: Prisma.FieldRef<"WikiArticle", 'Float'>
 }
     
 
@@ -2520,46 +2372,22 @@ export type WikiArticle$assetRefsArgs<ExtArgs extends runtime.Types.Extensions.I
 }
 
 /**
- * WikiArticle.parent
+ * WikiArticle.parentFolder
  */
-export type WikiArticle$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type WikiArticle$parentFolderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the WikiArticle
+   * Select specific fields to fetch from the WikiFolder
    */
-  select?: Prisma.WikiArticleSelect<ExtArgs> | null
+  select?: Prisma.WikiFolderSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the WikiArticle
+   * Omit specific fields from the WikiFolder
    */
-  omit?: Prisma.WikiArticleOmit<ExtArgs> | null
+  omit?: Prisma.WikiFolderOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.WikiArticleInclude<ExtArgs> | null
-  where?: Prisma.WikiArticleWhereInput
-}
-
-/**
- * WikiArticle.children
- */
-export type WikiArticle$childrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the WikiArticle
-   */
-  select?: Prisma.WikiArticleSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the WikiArticle
-   */
-  omit?: Prisma.WikiArticleOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.WikiArticleInclude<ExtArgs> | null
-  where?: Prisma.WikiArticleWhereInput
-  orderBy?: Prisma.WikiArticleOrderByWithRelationInput | Prisma.WikiArticleOrderByWithRelationInput[]
-  cursor?: Prisma.WikiArticleWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.WikiArticleScalarFieldEnum | Prisma.WikiArticleScalarFieldEnum[]
+  include?: Prisma.WikiFolderInclude<ExtArgs> | null
+  where?: Prisma.WikiFolderWhereInput
 }
 
 /**

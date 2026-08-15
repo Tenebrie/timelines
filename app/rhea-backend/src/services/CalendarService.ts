@@ -60,8 +60,14 @@ export const CalendarService = {
 		})
 	},
 
-	getEditorCalendar: async ({ calendarId }: { calendarId: string }) => {
-		const calendar = await getPrismaClient().calendar.findUniqueOrThrow({
+	getEditorCalendar: async ({
+		calendarId,
+		prisma,
+	}: {
+		calendarId: string
+		prisma?: Prisma.TransactionClient
+	}) => {
+		const calendar = await getPrismaClient(prisma).calendar.findUniqueOrThrow({
 			where: {
 				id: calendarId,
 			},
@@ -481,7 +487,7 @@ export const CalendarService = {
 				continue
 			}
 
-			const existingCalendar = await CalendarService.getEditorCalendar({ calendarId })
+			const existingCalendar = await CalendarService.getEditorCalendar({ calendarId, prisma })
 
 			// If owned by the user, make a deep copy. Otherwise, reassign.
 			if (existingCalendar.ownerId !== null) {

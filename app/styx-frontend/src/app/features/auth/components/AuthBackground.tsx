@@ -82,7 +82,6 @@ const variations: Record<string, GradientVariation> = {
 	calendar: { purpleX: '45%', purpleY: '25%', redX: '65%', redY: '85%', visible: true },
 	profile: { purpleX: '10%', purpleY: '90%', redX: '90%', redY: '30%', visible: true },
 	tools: { purpleX: '85%', purpleY: '50%', redX: '15%', redY: '50%', visible: true },
-	wiki: { purpleX: '35%', purpleY: '80%', redX: '65%', redY: '15%', visible: true },
 	admin: {
 		purpleX: '100%',
 		purpleY: '80%',
@@ -105,8 +104,6 @@ function getVariation(pathname: string): GradientVariation {
 	if (pathname === '/calendar') return variations.calendar
 	if (pathname.startsWith('/profile')) return variations.profile
 	if (pathname.startsWith('/tools')) return variations.tools
-	// /world/:worldId/wiki exact (no article selected)
-	if (/^\/world\/[^/]+\/wiki\/?$/.test(pathname)) return variations.wiki
 	return variations.hidden
 }
 

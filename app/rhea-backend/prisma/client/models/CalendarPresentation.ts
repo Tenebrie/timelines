@@ -538,14 +538,6 @@ export type CalendarPresentationUncheckedUpdateManyWithoutBaselineUnitNestedInpu
   deleteMany?: Prisma.CalendarPresentationScalarWhereInput | Prisma.CalendarPresentationScalarWhereInput[]
 }
 
-export type FloatFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type CalendarPresentationCreateNestedOneWithoutUnitsInput = {
   create?: Prisma.XOR<Prisma.CalendarPresentationCreateWithoutUnitsInput, Prisma.CalendarPresentationUncheckedCreateWithoutUnitsInput>
   connectOrCreate?: Prisma.CalendarPresentationCreateOrConnectWithoutUnitsInput

@@ -4,16 +4,9 @@ import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export type MentionData = Pick<Mention, 'targetId' | 'targetType'>
 
-export function dedupeMentions<T extends Pick<Mention, 'sourceId' | 'targetId'>>(mentions: T[]): T[] {
-	const unique = new Map<string, T>()
-	for (const mention of mentions) {
-		unique.set(`${mention.sourceId}->${mention.targetId}`, mention)
-	}
-	return Array.from(unique.values())
-}
-
 export const MentionsService = {
 	createMentions: async (
+		worldId: string,
 		sourceId: string,
 		sourceType: MentionedEntity,
 		mentions: MentionData[] | undefined,
@@ -52,6 +45,18 @@ export const MentionsService = {
 			})),
 		)
 
+		const dataWithWorldIds = await Promise.all(
+			data.map(async (mention) => ({
+				...mention,
+				sourceWorldId: await getEntityWorldId(mention.sourceId, mention.sourceType, prisma),
+				targetWorldId: await getEntityWorldId(mention.targetId, mention.targetType, prisma),
+			})),
+		)
+
+		const filteredData = dataWithWorldIds.filter(
+			(mention) => mention.sourceWorldId === worldId && mention.targetWorldId === worldId,
+		)
+
 		await client.mention.deleteMany({
 			where: {
 				...sourceColumn,
@@ -59,9 +64,13 @@ export const MentionsService = {
 			},
 		})
 
-		if (data.length > 0) {
+		if (filteredData.length > 0) {
 			await client.mention.createMany({
-				data,
+				data: filteredData.map((data) => ({
+					...data,
+					sourceWorldId: undefined,
+					targetWorldId: undefined,
+				})),
 				skipDuplicates: true,
 			})
 		}
@@ -83,4 +92,30 @@ export const MentionsService = {
 			},
 		})
 	},
+}
+
+export function dedupeMentions<T extends Pick<Mention, 'sourceId' | 'targetId'>>(mentions: T[]): T[] {
+	const unique = new Map<string, T>()
+	for (const mention of mentions) {
+		unique.set(`${mention.sourceId}->${mention.targetId}`, mention)
+	}
+	return Array.from(unique.values())
+}
+
+async function getEntityWorldId(
+	entityId: string,
+	entityType: MentionedEntity,
+	prisma?: Prisma.TransactionClient,
+) {
+	const client = getPrismaClient(prisma)
+	switch (entityType) {
+		case MentionedEntity.Actor:
+			return (await client.actor.findUnique({ where: { id: entityId } }))?.worldId
+		case MentionedEntity.Event:
+			return (await client.worldEvent.findUnique({ where: { id: entityId } }))?.worldId
+		case MentionedEntity.Article:
+			return (await client.wikiArticle.findUnique({ where: { id: entityId } }))?.worldId
+		case MentionedEntity.Tag:
+			return (await client.tag.findUnique({ where: { id: entityId } }))?.worldId
+	}
 }

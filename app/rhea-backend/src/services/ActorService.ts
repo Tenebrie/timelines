@@ -3,10 +3,12 @@ import { MentionedEntity, Prisma, ReferenceHoldingEntity } from '@prisma/client'
 import { ContentPageUpdateWithoutParentActorInput } from '../../prisma/client/models.js'
 import { AssetRefService } from './AssetRefService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { makeUpdateActorQuery, UpdateActorQueryParams } from './dbQueries/makeUpdateActorQuery.js'
 import { MentionData, MentionsService } from './MentionsService.js'
 import { MentionedByEntry } from './TagService.js'
+import { BulkActionService } from './WorldBulkActionService.js'
 
 export const ActorService = {
 	findActor: async ({ worldId, actorId }: { worldId: string; actorId: string | null | undefined }) => {
@@ -37,9 +39,6 @@ export const ActorService = {
 					},
 				},
 				nodes: true,
-			},
-			omit: {
-				descriptionYjs: true,
 			},
 		})
 	},
@@ -138,16 +137,26 @@ export const ActorService = {
 		updateData: UpdateActorQueryParams
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
+			const entityCount = await BulkActionService.countWikiEntities({
+				worldId,
+				folderId: createData.parentFolderId ?? null,
+				prisma,
+			})
+
 			const baseActor = await getPrismaClient(prisma).actor.create({
 				data: {
 					worldId,
 					...createData,
+					parentFolderPosition: entityCount * 2,
 				},
-				include: {
-					mentions: { distinct: ['targetId'] },
-					mentionedIn: { distinct: ['sourceId'] },
+				select: {
+					id: true,
+					color: true,
 				},
 			})
+
+			const world = await makeTouchWorldQuery(worldId, prisma)
+			await makeSortWikiArticlesQuery(worldId, prisma)
 
 			const { actor } = await makeUpdateActorQuery({
 				worldId,
@@ -155,8 +164,6 @@ export const ActorService = {
 				params: updateData,
 				prisma,
 			})
-
-			const world = await makeTouchWorldQuery(worldId)
 
 			return {
 				world,
@@ -181,7 +188,7 @@ export const ActorService = {
 				params,
 				prisma,
 			})
-			const world = await makeTouchWorldQuery(worldId)
+			const world = await makeTouchWorldQuery(worldId, prisma)
 			return {
 				world,
 				actor,
@@ -247,6 +254,7 @@ export const ActorService = {
 			})
 
 			const mentionedEntities = await MentionsService.createMentions(
+				worldId,
 				actorId,
 				MentionedEntity.Actor,
 				mentions,

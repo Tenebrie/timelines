@@ -6,18 +6,18 @@ import * as Y from 'yjs'
  * Create Yjs WebSocket provider for real-time collaboration
  */
 export function createCollaborationProvider({
+	doc,
 	worldId,
 	entityType,
 	documentId,
 	onReconnect,
 }: {
+	doc: Y.Doc
 	worldId: string
 	entityType: string
 	documentId: string
 	onReconnect: () => void
 }) {
-	const doc = new Y.Doc()
-
 	// Connect to Calliope WebSocket server
 	const provider = new WebsocketProvider(
 		`${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/live/yjs/${worldId}/${entityType}`,
@@ -36,6 +36,7 @@ export function createCollaborationProvider({
 	provider.on('status', (event: { status: string }) => {
 		if (event.status === 'connected' && reconnectState.timeout) {
 			window.clearTimeout(reconnectState.timeout)
+			reconnectState.reconnectCounter = 0
 			reconnectState.timeout = null
 			console.info('[yjs] Connection established!')
 		}
@@ -52,7 +53,6 @@ export function createCollaborationProvider({
 			reconnectState.timeout = window.setTimeout(() => {
 				console.info(`[yjs] Waited ${Math.round(delay)}ms before reconnecting`)
 				onReconnect()
-				reconnectState.reconnectCounter = 0
 			}, delay)
 		}
 	})
@@ -69,7 +69,7 @@ export function createCollaborationProvider({
 		}
 	}
 
-	return { doc, provider, disableReconnect }
+	return { provider, disableReconnect }
 }
 
 /**

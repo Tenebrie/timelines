@@ -225,7 +225,7 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 			}
 		}, [])
 
-		useEffect(() => {
+		useLayoutEffect(() => {
 			if (ref.current) {
 				update(ref.current, props)
 			}

@@ -1,0 +1,39 @@
+import { useSelector } from 'react-redux'
+
+import { useEventBusDispatch } from '@/app/features/eventBus'
+import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
+
+import { BaseMentionChip } from './BaseMentionChip'
+
+type Props = {
+	worldId: string
+	actorId: string
+	fallbackName?: string
+}
+
+export const ActorMentionChip = ({ actorId, fallbackName }: Props) => {
+	const navigateTo = useEventBusDispatch['world/requestNavigation']()
+	const { actors } = useSelector(getWorldState, (a, b) => a.actors === b.actors)
+
+	const actor = actors.find((actor) => actor.id === actorId)
+	const actorName = actor ? `${actor.name}` : `Deleted Actor (${fallbackName ?? 'Unknown'})`
+
+	const onClick = () => {
+		if (!actor) {
+			return
+		}
+		navigateTo({
+			search: (prev) => {
+				const navi = [...(prev.navi ?? [])] as string[]
+				if (navi.length === 0 || !navi[navi.length - 1].includes(actorId)) {
+					navi.push(actorId)
+				}
+				return { ...prev, navi, tab: 0 }
+			},
+		})
+	}
+
+	return (
+		<BaseMentionChip type="Actor" label={actorName} color={actor?.color ?? '#000000'} onClick={onClick} />
+	)
+}

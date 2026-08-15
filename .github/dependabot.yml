@@ -7,8 +7,12 @@ updates:
     schedule:
       interval: 'weekly'
     groups:
-      npm-minor-patch:
+      root-npm-minor-patch:
+        patterns: ['*']
         update-types: ['minor', 'patch']
+      root-npm-major:
+        patterns: ['*']
+        update-types: ['major']
 
   # Styx
   - package-ecosystem: 'npm'
@@ -16,13 +20,24 @@ updates:
     schedule:
       interval: 'weekly'
     groups:
-      npm-minor-patch:
+      styx-npm-minor-patch:
+        patterns: ['*']
         update-types: ['minor', 'patch']
+      styx-npm-major:
+        patterns: ['*']
+        update-types: ['major']
 
   - package-ecosystem: 'docker'
     directory: '/app/styx-frontend'
     schedule:
       interval: 'weekly'
+    groups:
+      styx-docker-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      styx-docker-major:
+        patterns: ['*']
+        update-types: ['major']
 
   # Rhea
   - package-ecosystem: 'npm'
@@ -30,13 +45,24 @@ updates:
     schedule:
       interval: 'weekly'
     groups:
-      npm-minor-patch:
+      rhea-npm-minor-patch:
+        patterns: ['*']
         update-types: ['minor', 'patch']
+      rhea-npm-major:
+        patterns: ['*']
+        update-types: ['major']
 
   - package-ecosystem: 'docker'
     directory: '/app/rhea-backend'
     schedule:
       interval: 'weekly'
+    groups:
+      rhea-docker-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      rhea-docker-major:
+        patterns: ['*']
+        update-types: ['major']
 
   # Calliope
   - package-ecosystem: 'npm'
@@ -44,13 +70,24 @@ updates:
     schedule:
       interval: 'weekly'
     groups:
-      npm-minor-patch:
+      calliope-npm-minor-patch:
+        patterns: ['*']
         update-types: ['minor', 'patch']
+      calliope-npm-major:
+        patterns: ['*']
+        update-types: ['major']
 
   - package-ecosystem: 'docker'
     directory: '/app/calliope-websockets'
     schedule:
       interval: 'weekly'
+    groups:
+      calliope-docker-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      calliope-docker-major:
+        patterns: ['*']
+        update-types: ['major']
 
   # Orpheus
   - package-ecosystem: 'npm'
@@ -58,13 +95,24 @@ updates:
     schedule:
       interval: 'weekly'
     groups:
-      npm-minor-patch:
+      orpheus-npm-minor-patch:
+        patterns: ['*']
         update-types: ['minor', 'patch']
+      orpheus-npm-major:
+        patterns: ['*']
+        update-types: ['major']
 
   - package-ecosystem: 'docker'
     directory: '/app/orpheus-mcp'
     schedule:
       interval: 'weekly'
+    groups:
+      orpheus-docker-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      orpheus-docker-major:
+        patterns: ['*']
+        update-types: ['major']
 
   # Thetis
   - package-ecosystem: 'npm'
@@ -72,13 +120,24 @@ updates:
     schedule:
       interval: 'weekly'
     groups:
-      npm-minor-patch:
+      thetis-npm-minor-patch:
+        patterns: ['*']
         update-types: ['minor', 'patch']
+      thetis-npm-major:
+        patterns: ['*']
+        update-types: ['major']
 
   - package-ecosystem: 'docker'
     directory: '/app/thetis-landing'
     schedule:
       interval: 'weekly'
+    groups:
+      thetis-docker-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      thetis-docker-major:
+        patterns: ['*']
+        update-types: ['major']
 
   # ts-shared
   - package-ecosystem: 'npm'
@@ -86,20 +145,38 @@ updates:
     schedule:
       interval: 'weekly'
     groups:
-      npm-minor-patch:
+      ts-shared-npm-minor-patch:
+        patterns: ['*']
         update-types: ['minor', 'patch']
+      ts-shared-npm-major:
+        patterns: ['*']
+        update-types: ['major']
 
   # Gatekeeper
   - package-ecosystem: 'docker'
     directory: '/app/gatekeeper-proxy'
     schedule:
       interval: 'weekly'
+    groups:
+      gatekeeper-docker-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      gatekeeper-docker-major:
+        patterns: ['*']
+        update-types: ['major']
 
   # Chronos
   - package-ecosystem: 'docker'
     directory: '/app/chronos-backups'
     schedule:
       interval: 'weekly'
+    groups:
+      chronos-docker-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      chronos-docker-major:
+        patterns: ['*']
+        update-types: ['major']
 
   # E2E Tests
   - package-ecosystem: 'npm'
@@ -107,8 +184,12 @@ updates:
     schedule:
       interval: 'weekly'
     groups:
-      npm-minor-patch:
+      e2e-npm-minor-patch:
+        patterns: ['*']
         update-types: ['minor', 'patch']
+      e2e-npm-major:
+        patterns: ['*']
+        update-types: ['major']
 
   # GitHub Actions
   - package-ecosystem: 'github-actions'
@@ -117,4 +198,8 @@ updates:
       interval: 'weekly'
     groups:
       actions-minor-patch:
+        patterns: ['*']
         update-types: ['minor', 'patch']
+      actions-major:
+        patterns: ['*']
+        update-types: ['major']

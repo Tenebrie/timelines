@@ -3,7 +3,6 @@ import { WorldEvent } from '@api/types/worldTypes'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 type Props = {
@@ -22,7 +21,7 @@ export const useCurrentOrNewEvent = ({ event: currentEvent }: Props) => {
 				mockEventModel({
 					worldId,
 					name: '',
-					color: getRandomEntityColor(),
+					color: '#efb45e',
 					description: '',
 					descriptionRich: '',
 					timestamp: selectedTime,

@@ -23,7 +23,7 @@ export function DeleteCalendarButton({ calendarId, calendarName }: Props) {
 				type="delete"
 				tooltip="Delete calendar"
 				onConfirm={handleDelete}
-				disabled={isLoading}
+				loading={isLoading}
 				prompt={
 					<>
 						Are you sure you want to delete calendar <strong>{calendarName}</strong>?

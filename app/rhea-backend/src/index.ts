@@ -25,6 +25,7 @@ import { NotificationRouter } from './routers/NotificationRouter.js'
 import { ProfileRouter } from './routers/ProfileRouter.js'
 import { TagRouter } from './routers/TagRouter.js'
 import { WikiArticleContentRouter } from './routers/WikiArticleContentRouter.js'
+import { WorldBulkRouter } from './routers/WorldBulkActionRouter.js'
 import { WorldColorRouter } from './routers/WorldColorRouter.js'
 import { WorldEventContentRouter } from './routers/WorldEventContentRouter.js'
 import { WorldEventRouter } from './routers/WorldEventRouter.js'
@@ -34,7 +35,8 @@ import { WorldSearchRouter } from './routers/WorldSearchRouter.js'
 import { WorldShareRouter } from './routers/WorldShareRouter.js'
 import { WorldShareVisitRouter } from './routers/WorldShareVisitRouter.js'
 import { WorldThumbnailRouter } from './routers/WorldThumbnailRouter.js'
-import { WorldWikiRouter } from './routers/WorldWikiRouter.js'
+import { WorldWikiArticleRouter } from './routers/WorldWikiArticleRouter.js'
+import { WorldWikiFolderRouter } from './routers/WorldWikiFolderRouter.js'
 import { CloudStorageService } from './services/CloudStorageService.js'
 import { RedisService } from './services/RedisService.js'
 import { UserService } from './services/UserService.js'
@@ -119,6 +121,8 @@ app
 	.use(WorldEventTrackRouter.allowedMethods())
 	.use(WorldRouter.routes())
 	.use(WorldRouter.allowedMethods())
+	.use(WorldBulkRouter.routes())
+	.use(WorldBulkRouter.allowedMethods())
 	.use(WorldColorRouter.routes())
 	.use(WorldColorRouter.allowedMethods())
 	.use(WorldSearchRouter.routes())
@@ -129,8 +133,10 @@ app
 	.use(WorldShareVisitRouter.allowedMethods())
 	.use(WorldThumbnailRouter.routes())
 	.use(WorldThumbnailRouter.allowedMethods())
-	.use(WorldWikiRouter.routes())
-	.use(WorldWikiRouter.allowedMethods())
+	.use(WorldWikiArticleRouter.routes())
+	.use(WorldWikiArticleRouter.allowedMethods())
+	.use(WorldWikiFolderRouter.routes())
+	.use(WorldWikiFolderRouter.allowedMethods())
 	// Internal use routers
 	.use(ClientAuthRouter.routes())
 	.use(ClientAuthRouter.allowedMethods())

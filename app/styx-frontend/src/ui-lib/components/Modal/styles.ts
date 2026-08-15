@@ -35,7 +35,7 @@ export const ModalContainer = styled(Paper)<{ $theme: CustomTheme }>`
 	flex-direction: column;
 `
 
-export const ModalHeader = styled.h2`
+export const ModalHeaderNative = styled.h2`
 	margin: none;
 	padding: none;
 	font-family: 'Roboto';

@@ -50,7 +50,7 @@ export const TagRenderer = ({ tag, collapsed, actions }: Props) => {
 				return (
 					<PopoverButton
 						key={'menu'}
-						icon={<MenuIcon />}
+						content={<MenuIcon />}
 						aria-label="Menu"
 						size="small"
 						tooltip="Show actions"

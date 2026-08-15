@@ -27,7 +27,7 @@ export function NavigatorButton({ route, icon, label, disabled, iconOnly }: Prop
 				sx={{
 					gap: 0.5,
 					border: 'none',
-					padding: '8px 15px',
+					padding: '6px 15px',
 					minWidth: iconOnly ? 'auto' : undefined,
 					textDecoration: 'none',
 				}}
