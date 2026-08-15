@@ -164,7 +164,7 @@ export function MindmapWireLine({
 		const isHov = isHoveredRef.current
 		const isAct = isActiveRef.current
 
-		const glowOpacity = isSel ? '0.7' : isHov || isAct ? '0.4' : '0'
+		const glowOpacity = isSel ? '0.7' : isHov || isAct ? '0.4' : '0.12'
 		const brightness = isAct ? 'brightness(0.85)' : 'none'
 
 		glowPathRef.current?.style.setProperty('opacity', glowOpacity)
@@ -204,7 +204,7 @@ export function MindmapWireLine({
 						fill="none"
 						strokeWidth={8}
 						pointerEvents="none"
-						style={{ stroke: `url(#${gradientId})`, opacity: 0, transition: 'opacity 0.25s ease' }}
+						style={{ stroke: `url(#${gradientId})`, opacity: 0.12, transition: 'opacity 0.25s ease' }}
 					/>
 					<g
 						ref={visibleGroupRef}

@@ -1,4 +1,5 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { useMemo } from 'react'
@@ -41,94 +42,126 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 			sx={{
 				userSelect: 'none',
 				width: '250px',
-				borderRadius: 2,
+				borderRadius: '14px',
 				overflow: 'hidden',
 				position: 'relative',
+				background: theme.custom.palette.background.soft,
+				boxShadow:
+					theme.mode === 'light' ? '0 1px 4px rgba(20, 10, 50, 0.18)' : '0 1px 4px rgba(0, 0, 0, 0.4)',
 				transition: 'box-shadow 0.2s ease-out, transform 0.2s ease-out',
+				border: (theme) => `1px solid ${theme.palette.divider}`,
 				'&:has([data-mindmap-header]:hover):not(:has([data-mindmap-port]:hover)):not(:has(body.cursor-grabbing))':
 					{
 						boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
 					},
 			}}
 		>
-			{/* Header */}
 			<Stack
-				data-mindmap-header
-				onClick={onHeaderClick}
+				direction="row"
+				gap={1}
 				sx={{
-					background: theme.custom.palette.background.soft,
-					padding: '8px 0 8px 12px',
-					borderBottom: `1px solid ${theme.custom.palette.background.softer}`,
-					flexDirection: 'row',
-					userSelect: 'none',
-					gap: 1,
+					padding: '12px 0 12px 12px',
 					cursor: 'grab',
 					'&:active': {
 						cursor: 'grabbing',
 					},
 				}}
 			>
-				<Stack
-					sx={{
-						flexDirection: 'row',
-						width: '100%',
-						alignItems: 'center',
-						justifyContent: 'space-between',
-						gap: 1,
-					}}
-				>
+				<ArticleListItemIcon article={parent} highlighted={false} />
+
+				<Box sx={{ width: 1 }}>
+					{/* Header */}
 					<Stack
+						data-mindmap-header
+						onClick={onHeaderClick}
 						sx={{
 							flexDirection: 'row',
-							alignItems: 'center',
+							userSelect: 'none',
 							gap: 1,
+							alignItems: 'flex-start',
 						}}
 					>
-						<ArticleListItemIcon article={parent} highlighted={false} />
-						<Box
+						<Stack
 							sx={{
-								fontWeight: 'bold',
-								fontSize: '0.9rem',
-								color: theme.material.palette.text.primary,
+								flexDirection: 'row',
+								width: '100%',
+								gap: 1.25,
 							}}
 						>
-							{parent.name}
-						</Box>
+							<Stack gap={0.5}>
+								<Box
+									sx={{
+										fontWeight: 'bold',
+										fontSize: '0.7rem',
+										color: parent.color,
+										textTransform: 'uppercase',
+									}}
+								>
+									{parent.type}
+								</Box>
+								<Box
+									sx={{
+										fontWeight: 'bold',
+										fontSize: '0.9rem',
+										color: theme.material.palette.text.primary,
+									}}
+								>
+									{parent.name}
+								</Box>
+							</Stack>
+						</Stack>
+						<MindmapNodePort node={node} parent={parent} />
 					</Stack>
-				</Stack>
-				<Stack sx={{ marginTop: '-8px', marginBottom: '-9px' }} flexShrink={0}>
-					<MindmapNodePort node={node} parent={parent} />
-				</Stack>
-			</Stack>
 
-			{/* Content */}
-			<Box
-				data-mindmap-content
-				onClick={(e) => {
-					e.stopPropagation()
-					onContentClick?.()
-				}}
-				sx={{
-					fontSize: '0.8rem',
-					lineHeight: 1.4,
-					padding: '12px',
-					background: theme.custom.palette.background.softest,
-					cursor: 'pointer',
-					transition: 'background 0.2s ease-out',
-					'&:hover': {
-						background: theme.custom.palette.background.softer,
-					},
-				}}
-			>
-				<Box>
-					<div>{description.content}</div>
+					{/* Content */}
+					{parent.type !== 'folder' && description.content.length > 0 && (
+						<Box
+							data-mindmap-content
+							onClick={(e) => {
+								e.stopPropagation()
+								onContentClick?.()
+							}}
+							sx={{
+								fontSize: '0.8rem',
+								lineHeight: 1.4,
+								marginTop: 2,
+								// background: theme.custom.palette.background.softest,
+								// cursor: 'pointer',
+								// transition: 'background 0.2s ease-out',
+								// '&:hover': {
+								// background: theme.custom.palette.background.softer,
+								// },
+							}}
+						>
+							<Box>
+								<div>{description.content}</div>
+							</Box>
+							{description.more && (
+								<Stack
+									direction="row"
+									sx={{
+										marginTop: 1,
+										width: 'fit-content',
+										marginInline: 'auto',
+										alignItems: 'center',
+										justifyContent: 'center',
+										gap: 0.25,
+										padding: '4px 10px',
+										borderRadius: '999px',
+										background: theme.custom.palette.background.soft,
+										fontWeight: 600,
+										fontSize: '0.75rem',
+										color: theme.material.palette.text.secondary,
+									}}
+								>
+									Click to see more
+									<KeyboardArrowDown sx={{ fontSize: '1rem' }} />
+								</Stack>
+							)}
+						</Box>
+					)}
 				</Box>
-				{description.more && (
-					<Box sx={{ marginTop: 1, width: '100%', textAlign: 'center', fontWeight: 600 }}>
-						Click to see more
-					</Box>
-				)}
-			</Box>
+			</Stack>
 		</Box>
 	)
 }

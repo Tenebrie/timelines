@@ -51,6 +51,7 @@ export function MindmapNodePort({ node, parent }: Props) {
 			<Stack
 				data-testid="MindmapNodePort"
 				data-mindmap-port
+				title="Drag to connect"
 				onClick={(e) => {
 					e.stopPropagation()
 					e.preventDefault()
@@ -62,10 +63,13 @@ export function MindmapNodePort({ node, parent }: Props) {
 					alignItems: 'center',
 					justifyContent: 'center',
 					cursor: 'pointer',
+					opacity: 0.35,
+					transition: 'opacity 0.15s ease-out',
 					'--fill-color': theme.custom.palette.background.timeline,
 					'--hover-opacity': 0.0,
 					'--active-opacity': 0.0,
 					'&:hover': {
+						opacity: 1,
 						'--hover-opacity': 1.0,
 					},
 					'&:active': {

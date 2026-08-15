@@ -323,7 +323,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				},
 				transition:
 					'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out, outline-color 0.2s ease-out',
-				borderRadius: 2,
+				borderRadius: '14px',
 				'&:hover': {
 					zIndex: 10,
 				},
