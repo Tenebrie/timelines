@@ -31,7 +31,7 @@ const Container = styled.div`
 	flex-direction: column;
 	align-items: center;
 	width: 100vw;
-	height: calc(100dvh - 40px);
+	height: calc(100vh);
 `
 
 const App = () => {
