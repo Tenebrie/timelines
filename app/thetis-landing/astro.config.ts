@@ -2,7 +2,6 @@ import mdx from '@astrojs/mdx'
 import partytown from '@astrojs/partytown'
 import sitemap from '@astrojs/sitemap'
 import starlight from '@astrojs/starlight'
-import tailwind from '@astrojs/tailwind'
 import tailwindcss from '@tailwindcss/vite'
 import type { AstroIntegration } from 'astro'
 import { defineConfig } from 'astro/config'
@@ -35,9 +34,6 @@ export default defineConfig({
 	trailingSlash: 'never',
 
 	integrations: [
-		tailwind({
-			applyBaseStyles: false,
-		}),
 		starlight({
 			title: 'Neverkin Docs',
 			// AstroWind already provides src/pages/404.astro — let it own the 404 route.
