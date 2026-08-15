@@ -6,8 +6,16 @@ model MindmapNode {
   positionX Int
   positionY Int
 
-  parentActor   Actor?  @relation(fields: [parentActorId], references: [id], onDelete: Cascade)
-  parentActorId String?
+  parentActor     Actor?       @relation(fields: [parentActorId], references: [id], onDelete: Cascade)
+  parentActorId   String?
+  parentArticle   WikiArticle? @relation(fields: [parentArticleId], references: [id], onDelete: Cascade)
+  parentArticleId String?
+  parentEvent     WorldEvent?  @relation(fields: [parentEventId], references: [id], onDelete: Cascade)
+  parentEventId   String?
+  parentFolder    WikiFolder?  @relation(fields: [parentFolderId], references: [id], onDelete: Cascade)
+  parentFolderId  String?
+  parentTag       Tag?         @relation(fields: [parentTagId], references: [id], onDelete: Cascade)
+  parentTagId     String?
 
   links    MindmapLink[] @relation("MindmapLinkSource")
   linkedBy MindmapLink[] @relation("MindmapLinkTarget")

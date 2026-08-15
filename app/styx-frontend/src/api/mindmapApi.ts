@@ -80,9 +80,13 @@ export type GetMindmapApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
+		parentFolderId?: null | string
 		parentActorId?: null | string
+		parentEventId?: null | string
+		parentArticleId?: null | string
 		positionX: number
 		positionY: number
+		parentTagId?: null | string
 	}[]
 	wires: {
 		id: string
@@ -102,9 +106,13 @@ export type CreateNodeApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	parentFolderId?: null | string
 	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
 	positionX: number
 	positionY: number
+	parentTagId?: null | string
 }
 export type CreateNodeApiArg = {
 	worldId: string
@@ -113,6 +121,10 @@ export type CreateNodeApiArg = {
 		positionX: number
 		positionY: number
 		parentActorId?: string
+		parentArticleId?: string
+		parentEventId?: string
+		parentFolderId?: string
+		parentTagId?: string
 	}
 }
 export type DeleteNodesApiResponse = /** status 200  */ {
@@ -127,9 +139,13 @@ export type UpdateNodeApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	parentFolderId?: null | string
 	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
 	positionX: number
 	positionY: number
+	parentTagId?: null | string
 }
 export type UpdateNodeApiArg = {
 	worldId: string
@@ -144,9 +160,13 @@ export type MoveMindmapNodesApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	parentFolderId?: null | string
 	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
 	positionX: number
 	positionY: number
+	parentTagId?: null | string
 }[]
 export type MoveMindmapNodesApiArg = {
 	worldId: string

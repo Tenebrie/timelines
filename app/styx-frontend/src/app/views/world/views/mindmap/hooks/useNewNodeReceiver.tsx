@@ -1,3 +1,4 @@
+import { WikiEntityType } from '@api/types/worldTypes'
 import { RefObject } from 'react'
 
 import { getGhostElementRect } from '@/app/features/dragDrop/components/GhostWrapper'
@@ -12,7 +13,15 @@ type Props = {
 export function useNewNodeReceiver({ ref }: Props) {
 	const [createMindmapNode] = useCreateMindmapNode()
 
-	function createNodeAt(targetPos: { x: number; y: number }, parentActorId: string) {
+	function createNodeAt({
+		targetPos,
+		parentId,
+		parentType,
+	}: {
+		targetPos: { x: number; y: number }
+		parentId: string
+		parentType: WikiEntityType
+	}) {
 		const boundingBox = ref.current!.getBoundingClientRect()
 		const style = getComputedStyle(ref.current!)
 		const offsetX = parseFloat(style.getPropertyValue('--grid-offset-x'))
@@ -26,7 +35,11 @@ export function useNewNodeReceiver({ ref }: Props) {
 		createMindmapNode({
 			positionX: Math.round((targetPos.x - boundingBox.x - offsetX) / scale - ghostHalfWidth),
 			positionY: Math.round((targetPos.y - boundingBox.y - offsetY) / scale - ghostHalfHeight),
-			parentActorId,
+			parentActorId: parentType === 'actor' ? parentId : undefined,
+			parentArticleId: parentType === 'article' ? parentId : undefined,
+			parentEventId: parentType === 'event' ? parentId : undefined,
+			parentFolderId: parentType === 'folder' ? parentId : undefined,
+			parentTagId: parentType === 'tag' ? parentId : undefined,
 		})
 	}
 
@@ -43,11 +56,15 @@ export function useNewNodeReceiver({ ref }: Props) {
 		type: 'articleListItem',
 		receiverRef: ref,
 		onDrop: ({ params, targetPos }, { markHandled }) => {
-			if (params.article.type !== 'actor') {
-				return
-			}
+			// if (params.article.type !== 'actor') {
+			// 	return
+			// }
 			markHandled()
-			createNodeAt(targetPos, params.article.entity.id)
+			createNodeAt({
+				targetPos,
+				parentId: params.article.entity.id,
+				parentType: params.article.type,
+			})
 		},
 	})
 

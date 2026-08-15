@@ -10,6 +10,7 @@ export const MindmapService = {
 			},
 		})
 	},
+
 	async createNode(data: Prisma.MindmapNodeUncheckedCreateInput) {
 		return getPrismaClient().mindmapNode.create({
 			data,

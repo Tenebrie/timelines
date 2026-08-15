@@ -6,6 +6,8 @@ import { useSelector } from 'react-redux'
 import { dispatchGlobalEvent } from '@/app/features/eventBus'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
+import { boxActor, boxArticle, boxEvent, boxFolder, boxTag } from '../wiki/utils/boxEntity'
+import { getWikiState } from '../wiki/WikiSliceSelectors'
 import { getMindmapState } from './MindmapSliceSelectors'
 import { ActorNodePositioner } from './workspace/ActorNodePositioner'
 import { MindmapWireLayer } from './workspace/MindmapWireLayer'
@@ -26,7 +28,19 @@ function MindmapSelectionBridge() {
 }
 
 export function MindmapContent() {
-	const { id: worldId, actors } = useSelector(getWorldState, (a, b) => a.id === b.id && a.actors === b.actors)
+	const {
+		id: worldId,
+		actors,
+		events,
+		tags,
+	} = useSelector(
+		getWorldState,
+		(a, b) => a.id === b.id && a.actors === b.actors && a.events === b.events && a.tags === b.tags,
+	)
+	const { articles, folders } = useSelector(
+		getWikiState,
+		(a, b) => a.articles === b.articles && a.folders === b.folders,
+	)
 	const { data } = useGetMindmapQuery({ worldId }, { skip: !worldId })
 
 	const actorsWithNodes = useMemo(() => {
@@ -35,19 +49,41 @@ export function MindmapContent() {
 		}
 		return data.nodes
 			.map((node) => {
-				const actor = actors.find((a) => a.id === node.parentActorId)
-				if (!actor) {
+				const parent = (() => {
+					const actor = actors.find((a) => a.id === node.parentActorId)
+					if (actor) {
+						return boxActor(actor)
+					}
+					const article = articles.find((a) => a.id === node.parentArticleId)
+					if (article) {
+						return boxArticle(article)
+					}
+					const event = events.find((e) => e.id === node.parentEventId)
+					if (event) {
+						return boxEvent(event)
+					}
+					const folder = folders.find((f) => f.id === node.parentFolderId)
+					if (folder) {
+						return boxFolder(folder)
+					}
+					const tag = tags.find((t) => t.id === node.parentTagId)
+					if (tag) {
+						return boxTag(tag)
+					}
+					return null
+				})()
+				if (!parent) {
 					return null
 				}
 				return {
 					id: node.id,
-					actor,
 					node,
+					parent,
 				}
 			})
 			.filter((node) => node !== null)
 			.map((node) => node as NonNullable<typeof node>)
-	}, [data, actors])
+	}, [data, actors, articles, events, folders, tags])
 
 	if (!data) {
 		return null
@@ -58,7 +94,7 @@ export function MindmapContent() {
 			<MindmapSelectionBridge />
 			<MindmapWireLayer actorsWithNodes={actorsWithNodes} />
 			{actorsWithNodes.map((wrapper) => (
-				<ActorNodePositioner key={wrapper.id} actor={wrapper.actor} node={wrapper.node} />
+				<ActorNodePositioner key={wrapper.id} parent={wrapper.parent} node={wrapper.node} />
 			))}
 		</Box>
 	)

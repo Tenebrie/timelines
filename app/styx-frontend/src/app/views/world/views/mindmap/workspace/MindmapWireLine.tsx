@@ -1,5 +1,4 @@
 import { MindmapNode, MindmapWire } from '@api/types/mindmapTypes'
-import { ActorDetails } from '@api/types/worldTypes'
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch } from 'react-redux'
@@ -8,6 +7,7 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 
+import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 import { mindmapSlice } from '../MindmapSlice'
 import {
 	arrowPath,
@@ -25,11 +25,11 @@ type Props = {
 	wire: MindmapWire
 	source: {
 		node: MindmapNode
-		actor: ActorDetails
+		parent: BoxedWikiEntity
 	}
 	target: {
 		node: MindmapNode
-		actor: ActorDetails
+		parent: BoxedWikiEntity
 	}
 	svgDefsPortal: SVGDefsElement
 	svgGroupPortal: SVGGElement
@@ -190,8 +190,8 @@ export function MindmapWireLine({
 					x2={x2}
 					y2={y2}
 				>
-					<stop offset="0%" stopColor={target.actor.color} />
-					<stop offset="100%" stopColor={source.actor.color} />
+					<stop offset="0%" stopColor={target.parent.color} />
+					<stop offset="100%" stopColor={source.parent.color} />
 				</linearGradient>,
 				svgDefsPortal,
 			)}
@@ -227,8 +227,8 @@ export function MindmapWireLine({
 									cx="0"
 									cy="0"
 									r="3"
-									fill={target.actor.color}
-									stroke={target.actor.color}
+									fill={target.parent.color}
+									stroke={target.parent.color}
 									strokeWidth="2"
 								/>
 							</g>
@@ -239,8 +239,8 @@ export function MindmapWireLine({
 									cx="0"
 									cy="0"
 									r="3"
-									fill={source.actor.color}
-									stroke={source.actor.color}
+									fill={source.parent.color}
+									stroke={source.parent.color}
 									strokeWidth="2"
 								/>
 							</g>
@@ -250,7 +250,7 @@ export function MindmapWireLine({
 								ref={srcArrowRef}
 								d={arrowPath(x1, y1, -nx1, -ny1, ARROW_SIZE)}
 								fill="none"
-								stroke={target.actor.color}
+								stroke={target.parent.color}
 								strokeWidth={2}
 								strokeLinecap="round"
 								strokeLinejoin="round"
@@ -262,7 +262,7 @@ export function MindmapWireLine({
 								ref={tgtArrowRef}
 								d={arrowPath(x2, y2, -nx2, -ny2, ARROW_SIZE)}
 								fill="none"
-								stroke={source.actor.color}
+								stroke={source.parent.color}
 								strokeWidth={2}
 								strokeLinecap="round"
 								strokeLinejoin="round"

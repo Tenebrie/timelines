@@ -42,46 +42,6 @@ const injectedRtkApi = api
 					invalidatesTags: [],
 				},
 			),
-			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
-				query: () => ({ url: `/health` }),
-				providesTags: [],
-			}),
-			getApiHealth: build.query<GetApiHealthApiResponse, GetApiHealthApiArg>({
-				query: () => ({ url: `/api/health` }),
-				providesTags: [],
-			}),
-			getSupportedImageFormats: build.query<
-				GetSupportedImageFormatsApiResponse,
-				GetSupportedImageFormatsApiArg
-			>({
-				query: () => ({ url: `/api/images/formats` }),
-				providesTags: [],
-			}),
-			requestImageConversion: build.mutation<RequestImageConversionApiResponse, RequestImageConversionApiArg>(
-				{
-					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
-					invalidatesTags: [],
-				},
-			),
-			visitWorldShareLink: build.query<VisitWorldShareLinkApiResponse, VisitWorldShareLinkApiArg>({
-				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}` }),
-				providesTags: [],
-			}),
-			acceptWorldShareLink: build.mutation<AcceptWorldShareLinkApiResponse, AcceptWorldShareLinkApiArg>({
-				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}/accept`, method: 'POST' }),
-				invalidatesTags: [],
-			}),
-			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
-				{
-					query: (queryArg) => ({
-						url: `/api/internal/auth/${queryArg.userId}`,
-						params: {
-							worldId: queryArg.worldId,
-						},
-					}),
-					providesTags: [],
-				},
-			),
 			getEntityContent: build.query<GetEntityContentApiResponse, GetEntityContentApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content`,
@@ -131,6 +91,27 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: [],
 			}),
+			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
+				query: () => ({ url: `/health` }),
+				providesTags: [],
+			}),
+			getApiHealth: build.query<GetApiHealthApiResponse, GetApiHealthApiArg>({
+				query: () => ({ url: `/api/health` }),
+				providesTags: [],
+			}),
+			getSupportedImageFormats: build.query<
+				GetSupportedImageFormatsApiResponse,
+				GetSupportedImageFormatsApiArg
+			>({
+				query: () => ({ url: `/api/images/formats` }),
+				providesTags: [],
+			}),
+			requestImageConversion: build.mutation<RequestImageConversionApiResponse, RequestImageConversionApiArg>(
+				{
+					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
+					invalidatesTags: [],
+				},
+			),
 			listWorldShareLinks: build.query<ListWorldShareLinksApiResponse, ListWorldShareLinksApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/share-links` }),
 				providesTags: ['worldShareLink'],
@@ -168,6 +149,14 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldShareLink'],
 			}),
+			visitWorldShareLink: build.query<VisitWorldShareLinkApiResponse, VisitWorldShareLinkApiArg>({
+				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}` }),
+				providesTags: [],
+			}),
+			acceptWorldShareLink: build.mutation<AcceptWorldShareLinkApiResponse, AcceptWorldShareLinkApiArg>({
+				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}/accept`, method: 'POST' }),
+				invalidatesTags: [],
+			}),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/wiki/article/${queryArg.articleId}`,
@@ -182,6 +171,17 @@ const injectedRtkApi = api
 				}),
 				providesTags: ['worldWikiArticle'],
 			}),
+			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
+				{
+					query: (queryArg) => ({
+						url: `/api/internal/auth/${queryArg.userId}`,
+						params: {
+							worldId: queryArg.worldId,
+						},
+					}),
+					providesTags: [],
+				},
+			),
 		}),
 		overrideExisting: false,
 	})
@@ -226,82 +226,6 @@ export type SendContactFormMessageApiArg = {
 		message: string
 		source?: string
 	}
-}
-export type GetHealthApiResponse = unknown
-export type GetHealthApiArg = void
-export type GetApiHealthApiResponse = unknown
-export type GetApiHealthApiArg = void
-export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
-	formats: ('webp' | 'jpeg' | 'png' | 'gif')[]
-}
-export type GetSupportedImageFormatsApiArg = void
-export type RequestImageConversionApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	ownerId: string
-	size: number
-	expiresAt?: null | string
-	bucketKey: string
-	originalFileName: string
-	originalFileExtension: string
-	contentType:
-		| 'Avatar'
-		| 'ImageConversion'
-		| 'ImageGeneration'
-		| 'DataMigrationExport'
-		| 'DataMigrationImport'
-		| 'ImageEmbed'
-	status: 'Pending' | 'Finalized' | 'Failed'
-	contentDescription?: null | string
-	imageWidth?: null | number
-	imageHeight?: null | number
-}
-export type RequestImageConversionApiArg = {
-	body: {
-		assetId: string
-		format: 'webp' | 'jpeg' | 'png' | 'gif'
-		width?: number
-		height?: number
-		quality?: number
-	}
-}
-export type VisitWorldShareLinkApiResponse = /** status 200  */ {
-	world: {
-		id: string
-		name: string
-		description: string
-	}
-	linkAccess: 'ReadOnly' | 'Editing'
-	alreadyHasAccess: boolean
-}
-export type VisitWorldShareLinkApiArg = {
-	/** Any string value */
-	slug: string
-}
-export type AcceptWorldShareLinkApiResponse = /** status 200  */ {
-	world: {
-		id: string
-		name: string
-		description: string
-	}
-	linkAccess: 'ReadOnly' | 'Editing'
-	alreadyHasAccess: boolean
-}
-export type AcceptWorldShareLinkApiArg = {
-	/** Any string value */
-	slug: string
-}
-export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
-	owner: boolean
-	write: boolean
-	read: boolean
-}
-export type GetUserWorldAccessLevelApiArg = {
-	/** Any string value with at least one character */
-	userId: string
-	/** Any string value with at least one character */
-	worldId: string
 }
 export type GetEntityContentApiResponse = /** status 200  */ {
 	contentHtml: string
@@ -383,6 +307,45 @@ export type CreateEntityContentPageApiArg = {
 		name: string
 	}
 }
+export type GetHealthApiResponse = unknown
+export type GetHealthApiArg = void
+export type GetApiHealthApiResponse = unknown
+export type GetApiHealthApiArg = void
+export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
+	formats: ('webp' | 'jpeg' | 'png' | 'gif')[]
+}
+export type GetSupportedImageFormatsApiArg = void
+export type RequestImageConversionApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	ownerId: string
+	size: number
+	expiresAt?: null | string
+	bucketKey: string
+	originalFileName: string
+	originalFileExtension: string
+	contentType:
+		| 'Avatar'
+		| 'ImageConversion'
+		| 'ImageGeneration'
+		| 'DataMigrationExport'
+		| 'DataMigrationImport'
+		| 'ImageEmbed'
+	status: 'Pending' | 'Finalized' | 'Failed'
+	contentDescription?: null | string
+	imageWidth?: null | number
+	imageHeight?: null | number
+}
+export type RequestImageConversionApiArg = {
+	body: {
+		assetId: string
+		format: 'webp' | 'jpeg' | 'png' | 'gif'
+		width?: number
+		height?: number
+		quality?: number
+	}
+}
 export type ListWorldShareLinksApiResponse = /** status 200  */ {
 	worldId: string
 	id: string
@@ -443,6 +406,32 @@ export type DeleteWorldShareLinkApiArg = {
 	/** Any string value */
 	shareLinkId: string
 }
+export type VisitWorldShareLinkApiResponse = /** status 200  */ {
+	world: {
+		id: string
+		name: string
+		description: string
+	}
+	linkAccess: 'ReadOnly' | 'Editing'
+	alreadyHasAccess: boolean
+}
+export type VisitWorldShareLinkApiArg = {
+	/** Any string value */
+	slug: string
+}
+export type AcceptWorldShareLinkApiResponse = /** status 200  */ {
+	world: {
+		id: string
+		name: string
+		description: string
+	}
+	linkAccess: 'ReadOnly' | 'Editing'
+	alreadyHasAccess: boolean
+}
+export type AcceptWorldShareLinkApiArg = {
+	/** Any string value */
+	slug: string
+}
 export type UpdateArticleApiResponse = /** status 200  */ {
 	worldId: string
 	id: string
@@ -478,6 +467,17 @@ export type GetArticleBacklinksApiArg = {
 	/** Any string value */
 	articleId: string
 }
+export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
+	owner: boolean
+	write: boolean
+	read: boolean
+}
+export type GetUserWorldAccessLevelApiArg = {
+	/** Any string value with at least one character */
+	userId: string
+	/** Any string value with at least one character */
+	worldId: string
+}
 export const {
 	useAdminGetUserLevelsQuery,
 	useLazyAdminGetUserLevelsQuery,
@@ -492,18 +492,6 @@ export const {
 	useListFeatureFlagsQuery,
 	useLazyListFeatureFlagsQuery,
 	useSendContactFormMessageMutation,
-	useGetHealthQuery,
-	useLazyGetHealthQuery,
-	useGetApiHealthQuery,
-	useLazyGetApiHealthQuery,
-	useGetSupportedImageFormatsQuery,
-	useLazyGetSupportedImageFormatsQuery,
-	useRequestImageConversionMutation,
-	useVisitWorldShareLinkQuery,
-	useLazyVisitWorldShareLinkQuery,
-	useAcceptWorldShareLinkMutation,
-	useGetUserWorldAccessLevelQuery,
-	useLazyGetUserWorldAccessLevelQuery,
 	useGetEntityContentQuery,
 	useLazyGetEntityContentQuery,
 	usePutEntityContentMutation,
@@ -512,13 +500,25 @@ export const {
 	usePutEntityContentPageMutation,
 	useDeleteEntityContentPageMutation,
 	useCreateEntityContentPageMutation,
+	useGetHealthQuery,
+	useLazyGetHealthQuery,
+	useGetApiHealthQuery,
+	useLazyGetApiHealthQuery,
+	useGetSupportedImageFormatsQuery,
+	useLazyGetSupportedImageFormatsQuery,
+	useRequestImageConversionMutation,
 	useListWorldShareLinksQuery,
 	useLazyListWorldShareLinksQuery,
 	useGenerateFreeWorldShareLinkMutation,
 	useCreateWorldShareLinkMutation,
 	useExpireWorldShareLinkMutation,
 	useDeleteWorldShareLinkMutation,
+	useVisitWorldShareLinkQuery,
+	useLazyVisitWorldShareLinkQuery,
+	useAcceptWorldShareLinkMutation,
 	useUpdateArticleMutation,
 	useGetArticleBacklinksQuery,
 	useLazyGetArticleBacklinksQuery,
+	useGetUserWorldAccessLevelQuery,
+	useLazyGetUserWorldAccessLevelQuery,
 } = injectedRtkApi

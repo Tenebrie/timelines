@@ -1,35 +1,40 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
-import { ActorDetails } from '@api/types/worldTypes'
-import { Icon } from '@iconify/react'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { useMemo } from 'react'
 
-import { ActorAvatar } from '@/app/components/ActorAvatar/ActorAvatar'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
+import { ArticleListItemIcon } from '../../wiki/articleList/icon/ArticleListItemIcon'
+import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 import { MindmapNodePort } from './MindmapNodePort'
 
 type Props = {
 	node?: MindmapNode
-	actor: ActorDetails
+	parent: BoxedWikiEntity
 	onHeaderClick?: (e: React.MouseEvent) => void
 	onContentClick?: () => void
 }
 
-export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }: Props) {
+export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }: Props) {
 	const theme = useCustomTheme()
 
 	const description = useMemo(() => {
-		const firstParagraph = actor.content.split('\n')[0]
-		if (firstParagraph.length < actor.content.length - 1) {
+		const content = (() => {
+			if ('content' in parent.entity) {
+				return parent.entity.content
+			}
+			return ''
+		})()
+		const firstParagraph = content.split('\n')[0]
+		if (firstParagraph.length < content.length - 1) {
 			return {
 				content: firstParagraph,
 				more: true,
 			}
 		}
 		return { content: firstParagraph }
-	}, [actor.content])
+	}, [parent.entity])
 
 	return (
 		<Box
@@ -79,7 +84,7 @@ export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }:
 							gap: 1,
 						}}
 					>
-						<ActorAvatar actor={actor} sx={{ width: 24, height: 24, fontSize: '0.7rem' }} />
+						<ArticleListItemIcon article={parent} highlighted={false} />
 						<Box
 							sx={{
 								fontWeight: 'bold',
@@ -87,30 +92,13 @@ export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }:
 								color: theme.material.palette.text.primary,
 							}}
 						>
-							{actor.name}
+							{parent.name}
 						</Box>
-
-						<Icon
-							icon={actor.icon === 'default' ? 'mdi:person' : actor.icon}
-							color={'#0a0908'}
-							style={{
-								opacity: theme.mode === 'dark' ? 0.5 : 0.25,
-								zIndex: -1,
-								position: 'absolute',
-								top: '0px',
-								right: '36px',
-								width: '100%',
-								height: '100%',
-								maxHeight: '75px',
-								maxWidth: '75px',
-								pointerEvents: 'none',
-							}}
-						/>
 					</Stack>
 				</Stack>
 				{node && (
 					<Stack sx={{ marginTop: '-8px', marginBottom: '-9px' }} flexShrink={0}>
-						<MindmapNodePort node={node} actor={actor} />
+						<MindmapNodePort node={node} parent={parent} />
 					</Stack>
 				)}
 			</Stack>

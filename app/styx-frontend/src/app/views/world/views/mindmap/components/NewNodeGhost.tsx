@@ -10,14 +10,14 @@ type Props = {
 
 export function NewNodeGhost({ entityHandle }: Props) {
 	const hoveredMindmapClickArea = getHoveredMindmapClickArea()
-	if (!hoveredMindmapClickArea || entityHandle.type !== 'actor') {
+	if (!hoveredMindmapClickArea) {
 		return null
 	}
 	const style = getComputedStyle(hoveredMindmapClickArea)
 	const scale = parseFloat(style.getPropertyValue('--grid-scale'))
 	return (
 		<Box sx={{ transform: `scale(${scale})` }}>
-			<ActorNodeContent actor={entityHandle.entity} />
+			<ActorNodeContent parent={entityHandle} />
 		</Box>
 	)
 }

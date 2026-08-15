@@ -43,6 +43,10 @@ export type MindmapNodeMinAggregateOutputType = {
   positionX: number | null
   positionY: number | null
   parentActorId: string | null
+  parentArticleId: string | null
+  parentEventId: string | null
+  parentFolderId: string | null
+  parentTagId: string | null
   worldId: string | null
 }
 
@@ -53,6 +57,10 @@ export type MindmapNodeMaxAggregateOutputType = {
   positionX: number | null
   positionY: number | null
   parentActorId: string | null
+  parentArticleId: string | null
+  parentEventId: string | null
+  parentFolderId: string | null
+  parentTagId: string | null
   worldId: string | null
 }
 
@@ -63,6 +71,10 @@ export type MindmapNodeCountAggregateOutputType = {
   positionX: number
   positionY: number
   parentActorId: number
+  parentArticleId: number
+  parentEventId: number
+  parentFolderId: number
+  parentTagId: number
   worldId: number
   _all: number
 }
@@ -85,6 +97,10 @@ export type MindmapNodeMinAggregateInputType = {
   positionX?: true
   positionY?: true
   parentActorId?: true
+  parentArticleId?: true
+  parentEventId?: true
+  parentFolderId?: true
+  parentTagId?: true
   worldId?: true
 }
 
@@ -95,6 +111,10 @@ export type MindmapNodeMaxAggregateInputType = {
   positionX?: true
   positionY?: true
   parentActorId?: true
+  parentArticleId?: true
+  parentEventId?: true
+  parentFolderId?: true
+  parentTagId?: true
   worldId?: true
 }
 
@@ -105,6 +125,10 @@ export type MindmapNodeCountAggregateInputType = {
   positionX?: true
   positionY?: true
   parentActorId?: true
+  parentArticleId?: true
+  parentEventId?: true
+  parentFolderId?: true
+  parentTagId?: true
   worldId?: true
   _all?: true
 }
@@ -202,6 +226,10 @@ export type MindmapNodeGroupByOutputType = {
   positionX: number
   positionY: number
   parentActorId: string | null
+  parentArticleId: string | null
+  parentEventId: string | null
+  parentFolderId: string | null
+  parentTagId: string | null
   worldId: string
   _count: MindmapNodeCountAggregateOutputType | null
   _avg: MindmapNodeAvgAggregateOutputType | null
@@ -235,8 +263,16 @@ export type MindmapNodeWhereInput = {
   positionX?: Prisma.IntFilter<"MindmapNode"> | number
   positionY?: Prisma.IntFilter<"MindmapNode"> | number
   parentActorId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
+  parentArticleId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
+  parentEventId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
+  parentFolderId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
+  parentTagId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
   worldId?: Prisma.StringFilter<"MindmapNode"> | string
   parentActor?: Prisma.XOR<Prisma.ActorNullableScalarRelationFilter, Prisma.ActorWhereInput> | null
+  parentArticle?: Prisma.XOR<Prisma.WikiArticleNullableScalarRelationFilter, Prisma.WikiArticleWhereInput> | null
+  parentEvent?: Prisma.XOR<Prisma.WorldEventNullableScalarRelationFilter, Prisma.WorldEventWhereInput> | null
+  parentFolder?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
+  parentTag?: Prisma.XOR<Prisma.TagNullableScalarRelationFilter, Prisma.TagWhereInput> | null
   links?: Prisma.MindmapLinkListRelationFilter
   linkedBy?: Prisma.MindmapLinkListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
@@ -249,8 +285,16 @@ export type MindmapNodeOrderByWithRelationInput = {
   positionX?: Prisma.SortOrder
   positionY?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentArticleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentEventId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentTagId?: Prisma.SortOrderInput | Prisma.SortOrder
   worldId?: Prisma.SortOrder
   parentActor?: Prisma.ActorOrderByWithRelationInput
+  parentArticle?: Prisma.WikiArticleOrderByWithRelationInput
+  parentEvent?: Prisma.WorldEventOrderByWithRelationInput
+  parentFolder?: Prisma.WikiFolderOrderByWithRelationInput
+  parentTag?: Prisma.TagOrderByWithRelationInput
   links?: Prisma.MindmapLinkOrderByRelationAggregateInput
   linkedBy?: Prisma.MindmapLinkOrderByRelationAggregateInput
   world?: Prisma.WorldOrderByWithRelationInput
@@ -266,8 +310,16 @@ export type MindmapNodeWhereUniqueInput = Prisma.AtLeast<{
   positionX?: Prisma.IntFilter<"MindmapNode"> | number
   positionY?: Prisma.IntFilter<"MindmapNode"> | number
   parentActorId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
+  parentArticleId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
+  parentEventId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
+  parentFolderId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
+  parentTagId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
   worldId?: Prisma.StringFilter<"MindmapNode"> | string
   parentActor?: Prisma.XOR<Prisma.ActorNullableScalarRelationFilter, Prisma.ActorWhereInput> | null
+  parentArticle?: Prisma.XOR<Prisma.WikiArticleNullableScalarRelationFilter, Prisma.WikiArticleWhereInput> | null
+  parentEvent?: Prisma.XOR<Prisma.WorldEventNullableScalarRelationFilter, Prisma.WorldEventWhereInput> | null
+  parentFolder?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
+  parentTag?: Prisma.XOR<Prisma.TagNullableScalarRelationFilter, Prisma.TagWhereInput> | null
   links?: Prisma.MindmapLinkListRelationFilter
   linkedBy?: Prisma.MindmapLinkListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
@@ -280,6 +332,10 @@ export type MindmapNodeOrderByWithAggregationInput = {
   positionX?: Prisma.SortOrder
   positionY?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentArticleId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentEventId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentTagId?: Prisma.SortOrderInput | Prisma.SortOrder
   worldId?: Prisma.SortOrder
   _count?: Prisma.MindmapNodeCountOrderByAggregateInput
   _avg?: Prisma.MindmapNodeAvgOrderByAggregateInput
@@ -298,6 +354,10 @@ export type MindmapNodeScalarWhereWithAggregatesInput = {
   positionX?: Prisma.IntWithAggregatesFilter<"MindmapNode"> | number
   positionY?: Prisma.IntWithAggregatesFilter<"MindmapNode"> | number
   parentActorId?: Prisma.StringNullableWithAggregatesFilter<"MindmapNode"> | string | null
+  parentArticleId?: Prisma.StringNullableWithAggregatesFilter<"MindmapNode"> | string | null
+  parentEventId?: Prisma.StringNullableWithAggregatesFilter<"MindmapNode"> | string | null
+  parentFolderId?: Prisma.StringNullableWithAggregatesFilter<"MindmapNode"> | string | null
+  parentTagId?: Prisma.StringNullableWithAggregatesFilter<"MindmapNode"> | string | null
   worldId?: Prisma.StringWithAggregatesFilter<"MindmapNode"> | string
 }
 
@@ -308,6 +368,10 @@ export type MindmapNodeCreateInput = {
   positionX: number
   positionY: number
   parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
+  parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutNodesInput
+  parentEvent?: Prisma.WorldEventCreateNestedOneWithoutNodesInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutNodesInput
+  parentTag?: Prisma.TagCreateNestedOneWithoutNodesInput
   links?: Prisma.MindmapLinkCreateNestedManyWithoutSourceNodeInput
   linkedBy?: Prisma.MindmapLinkCreateNestedManyWithoutTargetNodeInput
   world: Prisma.WorldCreateNestedOneWithoutMindmapNodesInput
@@ -320,6 +384,10 @@ export type MindmapNodeUncheckedCreateInput = {
   positionX: number
   positionY: number
   parentActorId?: string | null
+  parentArticleId?: string | null
+  parentEventId?: string | null
+  parentFolderId?: string | null
+  parentTagId?: string | null
   worldId: string
   links?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutSourceNodeInput
   linkedBy?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutTargetNodeInput
@@ -332,6 +400,10 @@ export type MindmapNodeUpdateInput = {
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
+  parentArticle?: Prisma.WikiArticleUpdateOneWithoutNodesNestedInput
+  parentEvent?: Prisma.WorldEventUpdateOneWithoutNodesNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutNodesNestedInput
+  parentTag?: Prisma.TagUpdateOneWithoutNodesNestedInput
   links?: Prisma.MindmapLinkUpdateManyWithoutSourceNodeNestedInput
   linkedBy?: Prisma.MindmapLinkUpdateManyWithoutTargetNodeNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutMindmapNodesNestedInput
@@ -344,6 +416,10 @@ export type MindmapNodeUncheckedUpdateInput = {
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   links?: Prisma.MindmapLinkUncheckedUpdateManyWithoutSourceNodeNestedInput
   linkedBy?: Prisma.MindmapLinkUncheckedUpdateManyWithoutTargetNodeNestedInput
@@ -356,6 +432,10 @@ export type MindmapNodeCreateManyInput = {
   positionX: number
   positionY: number
   parentActorId?: string | null
+  parentArticleId?: string | null
+  parentEventId?: string | null
+  parentFolderId?: string | null
+  parentTagId?: string | null
   worldId: string
 }
 
@@ -374,6 +454,10 @@ export type MindmapNodeUncheckedUpdateManyInput = {
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -394,6 +478,10 @@ export type MindmapNodeCountOrderByAggregateInput = {
   positionX?: Prisma.SortOrder
   positionY?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrder
+  parentArticleId?: Prisma.SortOrder
+  parentEventId?: Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrder
+  parentTagId?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
 }
 
@@ -409,6 +497,10 @@ export type MindmapNodeMaxOrderByAggregateInput = {
   positionX?: Prisma.SortOrder
   positionY?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrder
+  parentArticleId?: Prisma.SortOrder
+  parentEventId?: Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrder
+  parentTagId?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
 }
 
@@ -419,6 +511,10 @@ export type MindmapNodeMinOrderByAggregateInput = {
   positionX?: Prisma.SortOrder
   positionY?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrder
+  parentArticleId?: Prisma.SortOrder
+  parentEventId?: Prisma.SortOrder
+  parentFolderId?: Prisma.SortOrder
+  parentTagId?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
 }
 
@@ -502,6 +598,132 @@ export type MindmapNodeUpdateOneRequiredWithoutLinkedByNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MindmapNodeUpdateToOneWithWhereWithoutLinkedByInput, Prisma.MindmapNodeUpdateWithoutLinkedByInput>, Prisma.MindmapNodeUncheckedUpdateWithoutLinkedByInput>
 }
 
+export type MindmapNodeCreateNestedManyWithoutParentTagInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentTagInput, Prisma.MindmapNodeUncheckedCreateWithoutParentTagInput> | Prisma.MindmapNodeCreateWithoutParentTagInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentTagInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentTagInput | Prisma.MindmapNodeCreateOrConnectWithoutParentTagInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentTagInputEnvelope
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+}
+
+export type MindmapNodeUncheckedCreateNestedManyWithoutParentTagInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentTagInput, Prisma.MindmapNodeUncheckedCreateWithoutParentTagInput> | Prisma.MindmapNodeCreateWithoutParentTagInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentTagInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentTagInput | Prisma.MindmapNodeCreateOrConnectWithoutParentTagInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentTagInputEnvelope
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+}
+
+export type MindmapNodeUpdateManyWithoutParentTagNestedInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentTagInput, Prisma.MindmapNodeUncheckedCreateWithoutParentTagInput> | Prisma.MindmapNodeCreateWithoutParentTagInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentTagInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentTagInput | Prisma.MindmapNodeCreateOrConnectWithoutParentTagInput[]
+  upsert?: Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentTagInput | Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentTagInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentTagInputEnvelope
+  set?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  disconnect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  delete?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  update?: Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentTagInput | Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentTagInput[]
+  updateMany?: Prisma.MindmapNodeUpdateManyWithWhereWithoutParentTagInput | Prisma.MindmapNodeUpdateManyWithWhereWithoutParentTagInput[]
+  deleteMany?: Prisma.MindmapNodeScalarWhereInput | Prisma.MindmapNodeScalarWhereInput[]
+}
+
+export type MindmapNodeUncheckedUpdateManyWithoutParentTagNestedInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentTagInput, Prisma.MindmapNodeUncheckedCreateWithoutParentTagInput> | Prisma.MindmapNodeCreateWithoutParentTagInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentTagInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentTagInput | Prisma.MindmapNodeCreateOrConnectWithoutParentTagInput[]
+  upsert?: Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentTagInput | Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentTagInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentTagInputEnvelope
+  set?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  disconnect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  delete?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  update?: Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentTagInput | Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentTagInput[]
+  updateMany?: Prisma.MindmapNodeUpdateManyWithWhereWithoutParentTagInput | Prisma.MindmapNodeUpdateManyWithWhereWithoutParentTagInput[]
+  deleteMany?: Prisma.MindmapNodeScalarWhereInput | Prisma.MindmapNodeScalarWhereInput[]
+}
+
+export type MindmapNodeCreateNestedManyWithoutParentArticleInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentArticleInput, Prisma.MindmapNodeUncheckedCreateWithoutParentArticleInput> | Prisma.MindmapNodeCreateWithoutParentArticleInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentArticleInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentArticleInput | Prisma.MindmapNodeCreateOrConnectWithoutParentArticleInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentArticleInputEnvelope
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+}
+
+export type MindmapNodeUncheckedCreateNestedManyWithoutParentArticleInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentArticleInput, Prisma.MindmapNodeUncheckedCreateWithoutParentArticleInput> | Prisma.MindmapNodeCreateWithoutParentArticleInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentArticleInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentArticleInput | Prisma.MindmapNodeCreateOrConnectWithoutParentArticleInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentArticleInputEnvelope
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+}
+
+export type MindmapNodeUpdateManyWithoutParentArticleNestedInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentArticleInput, Prisma.MindmapNodeUncheckedCreateWithoutParentArticleInput> | Prisma.MindmapNodeCreateWithoutParentArticleInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentArticleInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentArticleInput | Prisma.MindmapNodeCreateOrConnectWithoutParentArticleInput[]
+  upsert?: Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentArticleInput | Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentArticleInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentArticleInputEnvelope
+  set?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  disconnect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  delete?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  update?: Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentArticleInput | Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentArticleInput[]
+  updateMany?: Prisma.MindmapNodeUpdateManyWithWhereWithoutParentArticleInput | Prisma.MindmapNodeUpdateManyWithWhereWithoutParentArticleInput[]
+  deleteMany?: Prisma.MindmapNodeScalarWhereInput | Prisma.MindmapNodeScalarWhereInput[]
+}
+
+export type MindmapNodeUncheckedUpdateManyWithoutParentArticleNestedInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentArticleInput, Prisma.MindmapNodeUncheckedCreateWithoutParentArticleInput> | Prisma.MindmapNodeCreateWithoutParentArticleInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentArticleInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentArticleInput | Prisma.MindmapNodeCreateOrConnectWithoutParentArticleInput[]
+  upsert?: Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentArticleInput | Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentArticleInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentArticleInputEnvelope
+  set?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  disconnect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  delete?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  update?: Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentArticleInput | Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentArticleInput[]
+  updateMany?: Prisma.MindmapNodeUpdateManyWithWhereWithoutParentArticleInput | Prisma.MindmapNodeUpdateManyWithWhereWithoutParentArticleInput[]
+  deleteMany?: Prisma.MindmapNodeScalarWhereInput | Prisma.MindmapNodeScalarWhereInput[]
+}
+
+export type MindmapNodeCreateNestedManyWithoutParentFolderInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentFolderInput, Prisma.MindmapNodeUncheckedCreateWithoutParentFolderInput> | Prisma.MindmapNodeCreateWithoutParentFolderInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentFolderInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentFolderInput | Prisma.MindmapNodeCreateOrConnectWithoutParentFolderInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentFolderInputEnvelope
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+}
+
+export type MindmapNodeUncheckedCreateNestedManyWithoutParentFolderInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentFolderInput, Prisma.MindmapNodeUncheckedCreateWithoutParentFolderInput> | Prisma.MindmapNodeCreateWithoutParentFolderInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentFolderInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentFolderInput | Prisma.MindmapNodeCreateOrConnectWithoutParentFolderInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentFolderInputEnvelope
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+}
+
+export type MindmapNodeUpdateManyWithoutParentFolderNestedInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentFolderInput, Prisma.MindmapNodeUncheckedCreateWithoutParentFolderInput> | Prisma.MindmapNodeCreateWithoutParentFolderInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentFolderInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentFolderInput | Prisma.MindmapNodeCreateOrConnectWithoutParentFolderInput[]
+  upsert?: Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentFolderInput | Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentFolderInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentFolderInputEnvelope
+  set?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  disconnect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  delete?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  update?: Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentFolderInput | Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentFolderInput[]
+  updateMany?: Prisma.MindmapNodeUpdateManyWithWhereWithoutParentFolderInput | Prisma.MindmapNodeUpdateManyWithWhereWithoutParentFolderInput[]
+  deleteMany?: Prisma.MindmapNodeScalarWhereInput | Prisma.MindmapNodeScalarWhereInput[]
+}
+
+export type MindmapNodeUncheckedUpdateManyWithoutParentFolderNestedInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentFolderInput, Prisma.MindmapNodeUncheckedCreateWithoutParentFolderInput> | Prisma.MindmapNodeCreateWithoutParentFolderInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentFolderInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentFolderInput | Prisma.MindmapNodeCreateOrConnectWithoutParentFolderInput[]
+  upsert?: Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentFolderInput | Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentFolderInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentFolderInputEnvelope
+  set?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  disconnect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  delete?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  update?: Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentFolderInput | Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentFolderInput[]
+  updateMany?: Prisma.MindmapNodeUpdateManyWithWhereWithoutParentFolderInput | Prisma.MindmapNodeUpdateManyWithWhereWithoutParentFolderInput[]
+  deleteMany?: Prisma.MindmapNodeScalarWhereInput | Prisma.MindmapNodeScalarWhereInput[]
+}
+
 export type MindmapNodeCreateNestedManyWithoutWorldInput = {
   create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutWorldInput, Prisma.MindmapNodeUncheckedCreateWithoutWorldInput> | Prisma.MindmapNodeCreateWithoutWorldInput[] | Prisma.MindmapNodeUncheckedCreateWithoutWorldInput[]
   connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutWorldInput | Prisma.MindmapNodeCreateOrConnectWithoutWorldInput[]
@@ -544,12 +766,58 @@ export type MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput = {
   deleteMany?: Prisma.MindmapNodeScalarWhereInput | Prisma.MindmapNodeScalarWhereInput[]
 }
 
+export type MindmapNodeCreateNestedManyWithoutParentEventInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentEventInput, Prisma.MindmapNodeUncheckedCreateWithoutParentEventInput> | Prisma.MindmapNodeCreateWithoutParentEventInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentEventInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentEventInput | Prisma.MindmapNodeCreateOrConnectWithoutParentEventInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentEventInputEnvelope
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+}
+
+export type MindmapNodeUncheckedCreateNestedManyWithoutParentEventInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentEventInput, Prisma.MindmapNodeUncheckedCreateWithoutParentEventInput> | Prisma.MindmapNodeCreateWithoutParentEventInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentEventInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentEventInput | Prisma.MindmapNodeCreateOrConnectWithoutParentEventInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentEventInputEnvelope
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+}
+
+export type MindmapNodeUpdateManyWithoutParentEventNestedInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentEventInput, Prisma.MindmapNodeUncheckedCreateWithoutParentEventInput> | Prisma.MindmapNodeCreateWithoutParentEventInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentEventInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentEventInput | Prisma.MindmapNodeCreateOrConnectWithoutParentEventInput[]
+  upsert?: Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentEventInput | Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentEventInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentEventInputEnvelope
+  set?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  disconnect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  delete?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  update?: Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentEventInput | Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentEventInput[]
+  updateMany?: Prisma.MindmapNodeUpdateManyWithWhereWithoutParentEventInput | Prisma.MindmapNodeUpdateManyWithWhereWithoutParentEventInput[]
+  deleteMany?: Prisma.MindmapNodeScalarWhereInput | Prisma.MindmapNodeScalarWhereInput[]
+}
+
+export type MindmapNodeUncheckedUpdateManyWithoutParentEventNestedInput = {
+  create?: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentEventInput, Prisma.MindmapNodeUncheckedCreateWithoutParentEventInput> | Prisma.MindmapNodeCreateWithoutParentEventInput[] | Prisma.MindmapNodeUncheckedCreateWithoutParentEventInput[]
+  connectOrCreate?: Prisma.MindmapNodeCreateOrConnectWithoutParentEventInput | Prisma.MindmapNodeCreateOrConnectWithoutParentEventInput[]
+  upsert?: Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentEventInput | Prisma.MindmapNodeUpsertWithWhereUniqueWithoutParentEventInput[]
+  createMany?: Prisma.MindmapNodeCreateManyParentEventInputEnvelope
+  set?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  disconnect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  delete?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  connect?: Prisma.MindmapNodeWhereUniqueInput | Prisma.MindmapNodeWhereUniqueInput[]
+  update?: Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentEventInput | Prisma.MindmapNodeUpdateWithWhereUniqueWithoutParentEventInput[]
+  updateMany?: Prisma.MindmapNodeUpdateManyWithWhereWithoutParentEventInput | Prisma.MindmapNodeUpdateManyWithWhereWithoutParentEventInput[]
+  deleteMany?: Prisma.MindmapNodeScalarWhereInput | Prisma.MindmapNodeScalarWhereInput[]
+}
+
 export type MindmapNodeCreateWithoutParentActorInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   positionX: number
   positionY: number
+  parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutNodesInput
+  parentEvent?: Prisma.WorldEventCreateNestedOneWithoutNodesInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutNodesInput
+  parentTag?: Prisma.TagCreateNestedOneWithoutNodesInput
   links?: Prisma.MindmapLinkCreateNestedManyWithoutSourceNodeInput
   linkedBy?: Prisma.MindmapLinkCreateNestedManyWithoutTargetNodeInput
   world: Prisma.WorldCreateNestedOneWithoutMindmapNodesInput
@@ -561,6 +829,10 @@ export type MindmapNodeUncheckedCreateWithoutParentActorInput = {
   updatedAt?: Date | string
   positionX: number
   positionY: number
+  parentArticleId?: string | null
+  parentEventId?: string | null
+  parentFolderId?: string | null
+  parentTagId?: string | null
   worldId: string
   links?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutSourceNodeInput
   linkedBy?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutTargetNodeInput
@@ -602,6 +874,10 @@ export type MindmapNodeScalarWhereInput = {
   positionX?: Prisma.IntFilter<"MindmapNode"> | number
   positionY?: Prisma.IntFilter<"MindmapNode"> | number
   parentActorId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
+  parentArticleId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
+  parentEventId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
+  parentFolderId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
+  parentTagId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
   worldId?: Prisma.StringFilter<"MindmapNode"> | string
 }
 
@@ -612,6 +888,10 @@ export type MindmapNodeCreateWithoutLinksInput = {
   positionX: number
   positionY: number
   parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
+  parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutNodesInput
+  parentEvent?: Prisma.WorldEventCreateNestedOneWithoutNodesInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutNodesInput
+  parentTag?: Prisma.TagCreateNestedOneWithoutNodesInput
   linkedBy?: Prisma.MindmapLinkCreateNestedManyWithoutTargetNodeInput
   world: Prisma.WorldCreateNestedOneWithoutMindmapNodesInput
 }
@@ -623,6 +903,10 @@ export type MindmapNodeUncheckedCreateWithoutLinksInput = {
   positionX: number
   positionY: number
   parentActorId?: string | null
+  parentArticleId?: string | null
+  parentEventId?: string | null
+  parentFolderId?: string | null
+  parentTagId?: string | null
   worldId: string
   linkedBy?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutTargetNodeInput
 }
@@ -639,6 +923,10 @@ export type MindmapNodeCreateWithoutLinkedByInput = {
   positionX: number
   positionY: number
   parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
+  parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutNodesInput
+  parentEvent?: Prisma.WorldEventCreateNestedOneWithoutNodesInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutNodesInput
+  parentTag?: Prisma.TagCreateNestedOneWithoutNodesInput
   links?: Prisma.MindmapLinkCreateNestedManyWithoutSourceNodeInput
   world: Prisma.WorldCreateNestedOneWithoutMindmapNodesInput
 }
@@ -650,6 +938,10 @@ export type MindmapNodeUncheckedCreateWithoutLinkedByInput = {
   positionX: number
   positionY: number
   parentActorId?: string | null
+  parentArticleId?: string | null
+  parentEventId?: string | null
+  parentFolderId?: string | null
+  parentTagId?: string | null
   worldId: string
   links?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutSourceNodeInput
 }
@@ -677,6 +969,10 @@ export type MindmapNodeUpdateWithoutLinksInput = {
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
+  parentArticle?: Prisma.WikiArticleUpdateOneWithoutNodesNestedInput
+  parentEvent?: Prisma.WorldEventUpdateOneWithoutNodesNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutNodesNestedInput
+  parentTag?: Prisma.TagUpdateOneWithoutNodesNestedInput
   linkedBy?: Prisma.MindmapLinkUpdateManyWithoutTargetNodeNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutMindmapNodesNestedInput
 }
@@ -688,6 +984,10 @@ export type MindmapNodeUncheckedUpdateWithoutLinksInput = {
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   linkedBy?: Prisma.MindmapLinkUncheckedUpdateManyWithoutTargetNodeNestedInput
 }
@@ -710,6 +1010,10 @@ export type MindmapNodeUpdateWithoutLinkedByInput = {
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
+  parentArticle?: Prisma.WikiArticleUpdateOneWithoutNodesNestedInput
+  parentEvent?: Prisma.WorldEventUpdateOneWithoutNodesNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutNodesNestedInput
+  parentTag?: Prisma.TagUpdateOneWithoutNodesNestedInput
   links?: Prisma.MindmapLinkUpdateManyWithoutSourceNodeNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutMindmapNodesNestedInput
 }
@@ -721,8 +1025,180 @@ export type MindmapNodeUncheckedUpdateWithoutLinkedByInput = {
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   links?: Prisma.MindmapLinkUncheckedUpdateManyWithoutSourceNodeNestedInput
+}
+
+export type MindmapNodeCreateWithoutParentTagInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionX: number
+  positionY: number
+  parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
+  parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutNodesInput
+  parentEvent?: Prisma.WorldEventCreateNestedOneWithoutNodesInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutNodesInput
+  links?: Prisma.MindmapLinkCreateNestedManyWithoutSourceNodeInput
+  linkedBy?: Prisma.MindmapLinkCreateNestedManyWithoutTargetNodeInput
+  world: Prisma.WorldCreateNestedOneWithoutMindmapNodesInput
+}
+
+export type MindmapNodeUncheckedCreateWithoutParentTagInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionX: number
+  positionY: number
+  parentActorId?: string | null
+  parentArticleId?: string | null
+  parentEventId?: string | null
+  parentFolderId?: string | null
+  worldId: string
+  links?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutSourceNodeInput
+  linkedBy?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutTargetNodeInput
+}
+
+export type MindmapNodeCreateOrConnectWithoutParentTagInput = {
+  where: Prisma.MindmapNodeWhereUniqueInput
+  create: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentTagInput, Prisma.MindmapNodeUncheckedCreateWithoutParentTagInput>
+}
+
+export type MindmapNodeCreateManyParentTagInputEnvelope = {
+  data: Prisma.MindmapNodeCreateManyParentTagInput | Prisma.MindmapNodeCreateManyParentTagInput[]
+  skipDuplicates?: boolean
+}
+
+export type MindmapNodeUpsertWithWhereUniqueWithoutParentTagInput = {
+  where: Prisma.MindmapNodeWhereUniqueInput
+  update: Prisma.XOR<Prisma.MindmapNodeUpdateWithoutParentTagInput, Prisma.MindmapNodeUncheckedUpdateWithoutParentTagInput>
+  create: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentTagInput, Prisma.MindmapNodeUncheckedCreateWithoutParentTagInput>
+}
+
+export type MindmapNodeUpdateWithWhereUniqueWithoutParentTagInput = {
+  where: Prisma.MindmapNodeWhereUniqueInput
+  data: Prisma.XOR<Prisma.MindmapNodeUpdateWithoutParentTagInput, Prisma.MindmapNodeUncheckedUpdateWithoutParentTagInput>
+}
+
+export type MindmapNodeUpdateManyWithWhereWithoutParentTagInput = {
+  where: Prisma.MindmapNodeScalarWhereInput
+  data: Prisma.XOR<Prisma.MindmapNodeUpdateManyMutationInput, Prisma.MindmapNodeUncheckedUpdateManyWithoutParentTagInput>
+}
+
+export type MindmapNodeCreateWithoutParentArticleInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionX: number
+  positionY: number
+  parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
+  parentEvent?: Prisma.WorldEventCreateNestedOneWithoutNodesInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutNodesInput
+  parentTag?: Prisma.TagCreateNestedOneWithoutNodesInput
+  links?: Prisma.MindmapLinkCreateNestedManyWithoutSourceNodeInput
+  linkedBy?: Prisma.MindmapLinkCreateNestedManyWithoutTargetNodeInput
+  world: Prisma.WorldCreateNestedOneWithoutMindmapNodesInput
+}
+
+export type MindmapNodeUncheckedCreateWithoutParentArticleInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionX: number
+  positionY: number
+  parentActorId?: string | null
+  parentEventId?: string | null
+  parentFolderId?: string | null
+  parentTagId?: string | null
+  worldId: string
+  links?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutSourceNodeInput
+  linkedBy?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutTargetNodeInput
+}
+
+export type MindmapNodeCreateOrConnectWithoutParentArticleInput = {
+  where: Prisma.MindmapNodeWhereUniqueInput
+  create: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentArticleInput, Prisma.MindmapNodeUncheckedCreateWithoutParentArticleInput>
+}
+
+export type MindmapNodeCreateManyParentArticleInputEnvelope = {
+  data: Prisma.MindmapNodeCreateManyParentArticleInput | Prisma.MindmapNodeCreateManyParentArticleInput[]
+  skipDuplicates?: boolean
+}
+
+export type MindmapNodeUpsertWithWhereUniqueWithoutParentArticleInput = {
+  where: Prisma.MindmapNodeWhereUniqueInput
+  update: Prisma.XOR<Prisma.MindmapNodeUpdateWithoutParentArticleInput, Prisma.MindmapNodeUncheckedUpdateWithoutParentArticleInput>
+  create: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentArticleInput, Prisma.MindmapNodeUncheckedCreateWithoutParentArticleInput>
+}
+
+export type MindmapNodeUpdateWithWhereUniqueWithoutParentArticleInput = {
+  where: Prisma.MindmapNodeWhereUniqueInput
+  data: Prisma.XOR<Prisma.MindmapNodeUpdateWithoutParentArticleInput, Prisma.MindmapNodeUncheckedUpdateWithoutParentArticleInput>
+}
+
+export type MindmapNodeUpdateManyWithWhereWithoutParentArticleInput = {
+  where: Prisma.MindmapNodeScalarWhereInput
+  data: Prisma.XOR<Prisma.MindmapNodeUpdateManyMutationInput, Prisma.MindmapNodeUncheckedUpdateManyWithoutParentArticleInput>
+}
+
+export type MindmapNodeCreateWithoutParentFolderInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionX: number
+  positionY: number
+  parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
+  parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutNodesInput
+  parentEvent?: Prisma.WorldEventCreateNestedOneWithoutNodesInput
+  parentTag?: Prisma.TagCreateNestedOneWithoutNodesInput
+  links?: Prisma.MindmapLinkCreateNestedManyWithoutSourceNodeInput
+  linkedBy?: Prisma.MindmapLinkCreateNestedManyWithoutTargetNodeInput
+  world: Prisma.WorldCreateNestedOneWithoutMindmapNodesInput
+}
+
+export type MindmapNodeUncheckedCreateWithoutParentFolderInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionX: number
+  positionY: number
+  parentActorId?: string | null
+  parentArticleId?: string | null
+  parentEventId?: string | null
+  parentTagId?: string | null
+  worldId: string
+  links?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutSourceNodeInput
+  linkedBy?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutTargetNodeInput
+}
+
+export type MindmapNodeCreateOrConnectWithoutParentFolderInput = {
+  where: Prisma.MindmapNodeWhereUniqueInput
+  create: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentFolderInput, Prisma.MindmapNodeUncheckedCreateWithoutParentFolderInput>
+}
+
+export type MindmapNodeCreateManyParentFolderInputEnvelope = {
+  data: Prisma.MindmapNodeCreateManyParentFolderInput | Prisma.MindmapNodeCreateManyParentFolderInput[]
+  skipDuplicates?: boolean
+}
+
+export type MindmapNodeUpsertWithWhereUniqueWithoutParentFolderInput = {
+  where: Prisma.MindmapNodeWhereUniqueInput
+  update: Prisma.XOR<Prisma.MindmapNodeUpdateWithoutParentFolderInput, Prisma.MindmapNodeUncheckedUpdateWithoutParentFolderInput>
+  create: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentFolderInput, Prisma.MindmapNodeUncheckedCreateWithoutParentFolderInput>
+}
+
+export type MindmapNodeUpdateWithWhereUniqueWithoutParentFolderInput = {
+  where: Prisma.MindmapNodeWhereUniqueInput
+  data: Prisma.XOR<Prisma.MindmapNodeUpdateWithoutParentFolderInput, Prisma.MindmapNodeUncheckedUpdateWithoutParentFolderInput>
+}
+
+export type MindmapNodeUpdateManyWithWhereWithoutParentFolderInput = {
+  where: Prisma.MindmapNodeScalarWhereInput
+  data: Prisma.XOR<Prisma.MindmapNodeUpdateManyMutationInput, Prisma.MindmapNodeUncheckedUpdateManyWithoutParentFolderInput>
 }
 
 export type MindmapNodeCreateWithoutWorldInput = {
@@ -732,6 +1208,10 @@ export type MindmapNodeCreateWithoutWorldInput = {
   positionX: number
   positionY: number
   parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
+  parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutNodesInput
+  parentEvent?: Prisma.WorldEventCreateNestedOneWithoutNodesInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutNodesInput
+  parentTag?: Prisma.TagCreateNestedOneWithoutNodesInput
   links?: Prisma.MindmapLinkCreateNestedManyWithoutSourceNodeInput
   linkedBy?: Prisma.MindmapLinkCreateNestedManyWithoutTargetNodeInput
 }
@@ -743,6 +1223,10 @@ export type MindmapNodeUncheckedCreateWithoutWorldInput = {
   positionX: number
   positionY: number
   parentActorId?: string | null
+  parentArticleId?: string | null
+  parentEventId?: string | null
+  parentFolderId?: string | null
+  parentTagId?: string | null
   links?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutSourceNodeInput
   linkedBy?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutTargetNodeInput
 }
@@ -773,12 +1257,72 @@ export type MindmapNodeUpdateManyWithWhereWithoutWorldInput = {
   data: Prisma.XOR<Prisma.MindmapNodeUpdateManyMutationInput, Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldInput>
 }
 
+export type MindmapNodeCreateWithoutParentEventInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionX: number
+  positionY: number
+  parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
+  parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutNodesInput
+  parentFolder?: Prisma.WikiFolderCreateNestedOneWithoutNodesInput
+  parentTag?: Prisma.TagCreateNestedOneWithoutNodesInput
+  links?: Prisma.MindmapLinkCreateNestedManyWithoutSourceNodeInput
+  linkedBy?: Prisma.MindmapLinkCreateNestedManyWithoutTargetNodeInput
+  world: Prisma.WorldCreateNestedOneWithoutMindmapNodesInput
+}
+
+export type MindmapNodeUncheckedCreateWithoutParentEventInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionX: number
+  positionY: number
+  parentActorId?: string | null
+  parentArticleId?: string | null
+  parentFolderId?: string | null
+  parentTagId?: string | null
+  worldId: string
+  links?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutSourceNodeInput
+  linkedBy?: Prisma.MindmapLinkUncheckedCreateNestedManyWithoutTargetNodeInput
+}
+
+export type MindmapNodeCreateOrConnectWithoutParentEventInput = {
+  where: Prisma.MindmapNodeWhereUniqueInput
+  create: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentEventInput, Prisma.MindmapNodeUncheckedCreateWithoutParentEventInput>
+}
+
+export type MindmapNodeCreateManyParentEventInputEnvelope = {
+  data: Prisma.MindmapNodeCreateManyParentEventInput | Prisma.MindmapNodeCreateManyParentEventInput[]
+  skipDuplicates?: boolean
+}
+
+export type MindmapNodeUpsertWithWhereUniqueWithoutParentEventInput = {
+  where: Prisma.MindmapNodeWhereUniqueInput
+  update: Prisma.XOR<Prisma.MindmapNodeUpdateWithoutParentEventInput, Prisma.MindmapNodeUncheckedUpdateWithoutParentEventInput>
+  create: Prisma.XOR<Prisma.MindmapNodeCreateWithoutParentEventInput, Prisma.MindmapNodeUncheckedCreateWithoutParentEventInput>
+}
+
+export type MindmapNodeUpdateWithWhereUniqueWithoutParentEventInput = {
+  where: Prisma.MindmapNodeWhereUniqueInput
+  data: Prisma.XOR<Prisma.MindmapNodeUpdateWithoutParentEventInput, Prisma.MindmapNodeUncheckedUpdateWithoutParentEventInput>
+}
+
+export type MindmapNodeUpdateManyWithWhereWithoutParentEventInput = {
+  where: Prisma.MindmapNodeScalarWhereInput
+  data: Prisma.XOR<Prisma.MindmapNodeUpdateManyMutationInput, Prisma.MindmapNodeUncheckedUpdateManyWithoutParentEventInput>
+}
+
 export type MindmapNodeCreateManyParentActorInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   positionX: number
   positionY: number
+  parentArticleId?: string | null
+  parentEventId?: string | null
+  parentFolderId?: string | null
+  parentTagId?: string | null
   worldId: string
 }
 
@@ -788,6 +1332,10 @@ export type MindmapNodeUpdateWithoutParentActorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentArticle?: Prisma.WikiArticleUpdateOneWithoutNodesNestedInput
+  parentEvent?: Prisma.WorldEventUpdateOneWithoutNodesNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutNodesNestedInput
+  parentTag?: Prisma.TagUpdateOneWithoutNodesNestedInput
   links?: Prisma.MindmapLinkUpdateManyWithoutSourceNodeNestedInput
   linkedBy?: Prisma.MindmapLinkUpdateManyWithoutTargetNodeNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutMindmapNodesNestedInput
@@ -799,6 +1347,10 @@ export type MindmapNodeUncheckedUpdateWithoutParentActorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   links?: Prisma.MindmapLinkUncheckedUpdateManyWithoutSourceNodeNestedInput
   linkedBy?: Prisma.MindmapLinkUncheckedUpdateManyWithoutTargetNodeNestedInput
@@ -810,6 +1362,178 @@ export type MindmapNodeUncheckedUpdateManyWithoutParentActorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type MindmapNodeCreateManyParentTagInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionX: number
+  positionY: number
+  parentActorId?: string | null
+  parentArticleId?: string | null
+  parentEventId?: string | null
+  parentFolderId?: string | null
+  worldId: string
+}
+
+export type MindmapNodeUpdateWithoutParentTagInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionX?: Prisma.IntFieldUpdateOperationsInput | number
+  positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
+  parentArticle?: Prisma.WikiArticleUpdateOneWithoutNodesNestedInput
+  parentEvent?: Prisma.WorldEventUpdateOneWithoutNodesNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutNodesNestedInput
+  links?: Prisma.MindmapLinkUpdateManyWithoutSourceNodeNestedInput
+  linkedBy?: Prisma.MindmapLinkUpdateManyWithoutTargetNodeNestedInput
+  world?: Prisma.WorldUpdateOneRequiredWithoutMindmapNodesNestedInput
+}
+
+export type MindmapNodeUncheckedUpdateWithoutParentTagInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionX?: Prisma.IntFieldUpdateOperationsInput | number
+  positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  links?: Prisma.MindmapLinkUncheckedUpdateManyWithoutSourceNodeNestedInput
+  linkedBy?: Prisma.MindmapLinkUncheckedUpdateManyWithoutTargetNodeNestedInput
+}
+
+export type MindmapNodeUncheckedUpdateManyWithoutParentTagInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionX?: Prisma.IntFieldUpdateOperationsInput | number
+  positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type MindmapNodeCreateManyParentArticleInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionX: number
+  positionY: number
+  parentActorId?: string | null
+  parentEventId?: string | null
+  parentFolderId?: string | null
+  parentTagId?: string | null
+  worldId: string
+}
+
+export type MindmapNodeUpdateWithoutParentArticleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionX?: Prisma.IntFieldUpdateOperationsInput | number
+  positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
+  parentEvent?: Prisma.WorldEventUpdateOneWithoutNodesNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutNodesNestedInput
+  parentTag?: Prisma.TagUpdateOneWithoutNodesNestedInput
+  links?: Prisma.MindmapLinkUpdateManyWithoutSourceNodeNestedInput
+  linkedBy?: Prisma.MindmapLinkUpdateManyWithoutTargetNodeNestedInput
+  world?: Prisma.WorldUpdateOneRequiredWithoutMindmapNodesNestedInput
+}
+
+export type MindmapNodeUncheckedUpdateWithoutParentArticleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionX?: Prisma.IntFieldUpdateOperationsInput | number
+  positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  links?: Prisma.MindmapLinkUncheckedUpdateManyWithoutSourceNodeNestedInput
+  linkedBy?: Prisma.MindmapLinkUncheckedUpdateManyWithoutTargetNodeNestedInput
+}
+
+export type MindmapNodeUncheckedUpdateManyWithoutParentArticleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionX?: Prisma.IntFieldUpdateOperationsInput | number
+  positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type MindmapNodeCreateManyParentFolderInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionX: number
+  positionY: number
+  parentActorId?: string | null
+  parentArticleId?: string | null
+  parentEventId?: string | null
+  parentTagId?: string | null
+  worldId: string
+}
+
+export type MindmapNodeUpdateWithoutParentFolderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionX?: Prisma.IntFieldUpdateOperationsInput | number
+  positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
+  parentArticle?: Prisma.WikiArticleUpdateOneWithoutNodesNestedInput
+  parentEvent?: Prisma.WorldEventUpdateOneWithoutNodesNestedInput
+  parentTag?: Prisma.TagUpdateOneWithoutNodesNestedInput
+  links?: Prisma.MindmapLinkUpdateManyWithoutSourceNodeNestedInput
+  linkedBy?: Prisma.MindmapLinkUpdateManyWithoutTargetNodeNestedInput
+  world?: Prisma.WorldUpdateOneRequiredWithoutMindmapNodesNestedInput
+}
+
+export type MindmapNodeUncheckedUpdateWithoutParentFolderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionX?: Prisma.IntFieldUpdateOperationsInput | number
+  positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  links?: Prisma.MindmapLinkUncheckedUpdateManyWithoutSourceNodeNestedInput
+  linkedBy?: Prisma.MindmapLinkUncheckedUpdateManyWithoutTargetNodeNestedInput
+}
+
+export type MindmapNodeUncheckedUpdateManyWithoutParentFolderInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionX?: Prisma.IntFieldUpdateOperationsInput | number
+  positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -820,6 +1544,10 @@ export type MindmapNodeCreateManyWorldInput = {
   positionX: number
   positionY: number
   parentActorId?: string | null
+  parentArticleId?: string | null
+  parentEventId?: string | null
+  parentFolderId?: string | null
+  parentTagId?: string | null
 }
 
 export type MindmapNodeUpdateWithoutWorldInput = {
@@ -829,6 +1557,10 @@ export type MindmapNodeUpdateWithoutWorldInput = {
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
+  parentArticle?: Prisma.WikiArticleUpdateOneWithoutNodesNestedInput
+  parentEvent?: Prisma.WorldEventUpdateOneWithoutNodesNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutNodesNestedInput
+  parentTag?: Prisma.TagUpdateOneWithoutNodesNestedInput
   links?: Prisma.MindmapLinkUpdateManyWithoutSourceNodeNestedInput
   linkedBy?: Prisma.MindmapLinkUpdateManyWithoutTargetNodeNestedInput
 }
@@ -840,6 +1572,10 @@ export type MindmapNodeUncheckedUpdateWithoutWorldInput = {
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   links?: Prisma.MindmapLinkUncheckedUpdateManyWithoutSourceNodeNestedInput
   linkedBy?: Prisma.MindmapLinkUncheckedUpdateManyWithoutTargetNodeNestedInput
 }
@@ -851,6 +1587,66 @@ export type MindmapNodeUncheckedUpdateManyWithoutWorldInput = {
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type MindmapNodeCreateManyParentEventInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  positionX: number
+  positionY: number
+  parentActorId?: string | null
+  parentArticleId?: string | null
+  parentFolderId?: string | null
+  parentTagId?: string | null
+  worldId: string
+}
+
+export type MindmapNodeUpdateWithoutParentEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionX?: Prisma.IntFieldUpdateOperationsInput | number
+  positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
+  parentArticle?: Prisma.WikiArticleUpdateOneWithoutNodesNestedInput
+  parentFolder?: Prisma.WikiFolderUpdateOneWithoutNodesNestedInput
+  parentTag?: Prisma.TagUpdateOneWithoutNodesNestedInput
+  links?: Prisma.MindmapLinkUpdateManyWithoutSourceNodeNestedInput
+  linkedBy?: Prisma.MindmapLinkUpdateManyWithoutTargetNodeNestedInput
+  world?: Prisma.WorldUpdateOneRequiredWithoutMindmapNodesNestedInput
+}
+
+export type MindmapNodeUncheckedUpdateWithoutParentEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionX?: Prisma.IntFieldUpdateOperationsInput | number
+  positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  links?: Prisma.MindmapLinkUncheckedUpdateManyWithoutSourceNodeNestedInput
+  linkedBy?: Prisma.MindmapLinkUncheckedUpdateManyWithoutTargetNodeNestedInput
+}
+
+export type MindmapNodeUncheckedUpdateManyWithoutParentEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  positionX?: Prisma.IntFieldUpdateOperationsInput | number
+  positionY?: Prisma.IntFieldUpdateOperationsInput | number
+  parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -900,8 +1696,16 @@ export type MindmapNodeSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   positionX?: boolean
   positionY?: boolean
   parentActorId?: boolean
+  parentArticleId?: boolean
+  parentEventId?: boolean
+  parentFolderId?: boolean
+  parentTagId?: boolean
   worldId?: boolean
   parentActor?: boolean | Prisma.MindmapNode$parentActorArgs<ExtArgs>
+  parentArticle?: boolean | Prisma.MindmapNode$parentArticleArgs<ExtArgs>
+  parentEvent?: boolean | Prisma.MindmapNode$parentEventArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.MindmapNode$parentFolderArgs<ExtArgs>
+  parentTag?: boolean | Prisma.MindmapNode$parentTagArgs<ExtArgs>
   links?: boolean | Prisma.MindmapNode$linksArgs<ExtArgs>
   linkedBy?: boolean | Prisma.MindmapNode$linkedByArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
@@ -915,8 +1719,16 @@ export type MindmapNodeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   positionX?: boolean
   positionY?: boolean
   parentActorId?: boolean
+  parentArticleId?: boolean
+  parentEventId?: boolean
+  parentFolderId?: boolean
+  parentTagId?: boolean
   worldId?: boolean
   parentActor?: boolean | Prisma.MindmapNode$parentActorArgs<ExtArgs>
+  parentArticle?: boolean | Prisma.MindmapNode$parentArticleArgs<ExtArgs>
+  parentEvent?: boolean | Prisma.MindmapNode$parentEventArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.MindmapNode$parentFolderArgs<ExtArgs>
+  parentTag?: boolean | Prisma.MindmapNode$parentTagArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mindmapNode"]>
 
@@ -927,8 +1739,16 @@ export type MindmapNodeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   positionX?: boolean
   positionY?: boolean
   parentActorId?: boolean
+  parentArticleId?: boolean
+  parentEventId?: boolean
+  parentFolderId?: boolean
+  parentTagId?: boolean
   worldId?: boolean
   parentActor?: boolean | Prisma.MindmapNode$parentActorArgs<ExtArgs>
+  parentArticle?: boolean | Prisma.MindmapNode$parentArticleArgs<ExtArgs>
+  parentEvent?: boolean | Prisma.MindmapNode$parentEventArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.MindmapNode$parentFolderArgs<ExtArgs>
+  parentTag?: boolean | Prisma.MindmapNode$parentTagArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mindmapNode"]>
 
@@ -939,12 +1759,20 @@ export type MindmapNodeSelectScalar = {
   positionX?: boolean
   positionY?: boolean
   parentActorId?: boolean
+  parentArticleId?: boolean
+  parentEventId?: boolean
+  parentFolderId?: boolean
+  parentTagId?: boolean
   worldId?: boolean
 }
 
-export type MindmapNodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "positionX" | "positionY" | "parentActorId" | "worldId", ExtArgs["result"]["mindmapNode"]>
+export type MindmapNodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "positionX" | "positionY" | "parentActorId" | "parentArticleId" | "parentEventId" | "parentFolderId" | "parentTagId" | "worldId", ExtArgs["result"]["mindmapNode"]>
 export type MindmapNodeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parentActor?: boolean | Prisma.MindmapNode$parentActorArgs<ExtArgs>
+  parentArticle?: boolean | Prisma.MindmapNode$parentArticleArgs<ExtArgs>
+  parentEvent?: boolean | Prisma.MindmapNode$parentEventArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.MindmapNode$parentFolderArgs<ExtArgs>
+  parentTag?: boolean | Prisma.MindmapNode$parentTagArgs<ExtArgs>
   links?: boolean | Prisma.MindmapNode$linksArgs<ExtArgs>
   linkedBy?: boolean | Prisma.MindmapNode$linkedByArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
@@ -952,10 +1780,18 @@ export type MindmapNodeInclude<ExtArgs extends runtime.Types.Extensions.Internal
 }
 export type MindmapNodeIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parentActor?: boolean | Prisma.MindmapNode$parentActorArgs<ExtArgs>
+  parentArticle?: boolean | Prisma.MindmapNode$parentArticleArgs<ExtArgs>
+  parentEvent?: boolean | Prisma.MindmapNode$parentEventArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.MindmapNode$parentFolderArgs<ExtArgs>
+  parentTag?: boolean | Prisma.MindmapNode$parentTagArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
 }
 export type MindmapNodeIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parentActor?: boolean | Prisma.MindmapNode$parentActorArgs<ExtArgs>
+  parentArticle?: boolean | Prisma.MindmapNode$parentArticleArgs<ExtArgs>
+  parentEvent?: boolean | Prisma.MindmapNode$parentEventArgs<ExtArgs>
+  parentFolder?: boolean | Prisma.MindmapNode$parentFolderArgs<ExtArgs>
+  parentTag?: boolean | Prisma.MindmapNode$parentTagArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
 }
 
@@ -963,6 +1799,10 @@ export type $MindmapNodePayload<ExtArgs extends runtime.Types.Extensions.Interna
   name: "MindmapNode"
   objects: {
     parentActor: Prisma.$ActorPayload<ExtArgs> | null
+    parentArticle: Prisma.$WikiArticlePayload<ExtArgs> | null
+    parentEvent: Prisma.$WorldEventPayload<ExtArgs> | null
+    parentFolder: Prisma.$WikiFolderPayload<ExtArgs> | null
+    parentTag: Prisma.$TagPayload<ExtArgs> | null
     links: Prisma.$MindmapLinkPayload<ExtArgs>[]
     linkedBy: Prisma.$MindmapLinkPayload<ExtArgs>[]
     world: Prisma.$WorldPayload<ExtArgs>
@@ -974,6 +1814,10 @@ export type $MindmapNodePayload<ExtArgs extends runtime.Types.Extensions.Interna
     positionX: number
     positionY: number
     parentActorId: string | null
+    parentArticleId: string | null
+    parentEventId: string | null
+    parentFolderId: string | null
+    parentTagId: string | null
     worldId: string
   }, ExtArgs["result"]["mindmapNode"]>
   composites: {}
@@ -1370,6 +2214,10 @@ readonly fields: MindmapNodeFieldRefs;
 export interface Prisma__MindmapNodeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   parentActor<T extends Prisma.MindmapNode$parentActorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MindmapNode$parentActorArgs<ExtArgs>>): Prisma.Prisma__ActorClient<runtime.Types.Result.GetResult<Prisma.$ActorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  parentArticle<T extends Prisma.MindmapNode$parentArticleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MindmapNode$parentArticleArgs<ExtArgs>>): Prisma.Prisma__WikiArticleClient<runtime.Types.Result.GetResult<Prisma.$WikiArticlePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  parentEvent<T extends Prisma.MindmapNode$parentEventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MindmapNode$parentEventArgs<ExtArgs>>): Prisma.Prisma__WorldEventClient<runtime.Types.Result.GetResult<Prisma.$WorldEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  parentFolder<T extends Prisma.MindmapNode$parentFolderArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MindmapNode$parentFolderArgs<ExtArgs>>): Prisma.Prisma__WikiFolderClient<runtime.Types.Result.GetResult<Prisma.$WikiFolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  parentTag<T extends Prisma.MindmapNode$parentTagArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MindmapNode$parentTagArgs<ExtArgs>>): Prisma.Prisma__TagClient<runtime.Types.Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   links<T extends Prisma.MindmapNode$linksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MindmapNode$linksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MindmapLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   linkedBy<T extends Prisma.MindmapNode$linkedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MindmapNode$linkedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MindmapLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   world<T extends Prisma.WorldDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldDefaultArgs<ExtArgs>>): Prisma.Prisma__WorldClient<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -1408,6 +2256,10 @@ export interface MindmapNodeFieldRefs {
   readonly positionX: Prisma.FieldRef<"MindmapNode", 'Int'>
   readonly positionY: Prisma.FieldRef<"MindmapNode", 'Int'>
   readonly parentActorId: Prisma.FieldRef<"MindmapNode", 'String'>
+  readonly parentArticleId: Prisma.FieldRef<"MindmapNode", 'String'>
+  readonly parentEventId: Prisma.FieldRef<"MindmapNode", 'String'>
+  readonly parentFolderId: Prisma.FieldRef<"MindmapNode", 'String'>
+  readonly parentTagId: Prisma.FieldRef<"MindmapNode", 'String'>
   readonly worldId: Prisma.FieldRef<"MindmapNode", 'String'>
 }
     
@@ -1826,6 +2678,82 @@ export type MindmapNode$parentActorArgs<ExtArgs extends runtime.Types.Extensions
    */
   include?: Prisma.ActorInclude<ExtArgs> | null
   where?: Prisma.ActorWhereInput
+}
+
+/**
+ * MindmapNode.parentArticle
+ */
+export type MindmapNode$parentArticleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WikiArticle
+   */
+  select?: Prisma.WikiArticleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WikiArticle
+   */
+  omit?: Prisma.WikiArticleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WikiArticleInclude<ExtArgs> | null
+  where?: Prisma.WikiArticleWhereInput
+}
+
+/**
+ * MindmapNode.parentEvent
+ */
+export type MindmapNode$parentEventArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WorldEvent
+   */
+  select?: Prisma.WorldEventSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WorldEvent
+   */
+  omit?: Prisma.WorldEventOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WorldEventInclude<ExtArgs> | null
+  where?: Prisma.WorldEventWhereInput
+}
+
+/**
+ * MindmapNode.parentFolder
+ */
+export type MindmapNode$parentFolderArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WikiFolder
+   */
+  select?: Prisma.WikiFolderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WikiFolder
+   */
+  omit?: Prisma.WikiFolderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WikiFolderInclude<ExtArgs> | null
+  where?: Prisma.WikiFolderWhereInput
+}
+
+/**
+ * MindmapNode.parentTag
+ */
+export type MindmapNode$parentTagArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Tag
+   */
+  select?: Prisma.TagSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Tag
+   */
+  omit?: Prisma.TagOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TagInclude<ExtArgs> | null
+  where?: Prisma.TagWhereInput
 }
 
 /**

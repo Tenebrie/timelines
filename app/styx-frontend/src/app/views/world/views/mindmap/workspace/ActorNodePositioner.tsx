@@ -1,5 +1,4 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
-import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { memo, useEffect, useLayoutEffect, useRef } from 'react'
 import { useDispatch, useStore } from 'react-redux'
@@ -13,6 +12,7 @@ import { RootState } from '@/app/store'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
+import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
 import { mindmapSlice } from '../MindmapSlice'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
@@ -20,16 +20,16 @@ import { ActorNode } from './ActorNode'
 import { nodePositions } from './mindmapWireUtils'
 
 type Props = {
-	actor: ActorDetails
+	parent: BoxedWikiEntity
 	node: MindmapNode
 }
 
 export const ActorNodePositioner = memo(
 	ActorNodePositionerComponent,
-	(prev, next) => prev.actor === next.actor && prev.node === next.node,
+	(prev, next) => prev.parent === next.parent && prev.node === next.node,
 )
 
-function ActorNodePositionerComponent({ actor, node }: Props) {
+function ActorNodePositionerComponent({ parent, node }: Props) {
 	const theme = useCustomTheme()
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 	const [moveMindmapNodes] = useMoveMindmapNodes()
@@ -55,21 +55,24 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			if (selectedRef.current) {
 				dispatch(removeNodeFromSelection(node.id))
 			} else {
-				dispatch(addNodeToSelection({ key: node.id, actorId: actor.id, multiselect }))
+				dispatch(addNodeToSelection({ key: node.id, actorId: parent.id, multiselect }))
 			}
 		},
 		onDoubleClick: () => {
 			onContentClick()
-			dispatch(addNodeToSelection({ key: node.id, actorId: actor.id, multiselect: false }))
+			dispatch(addNodeToSelection({ key: node.id, actorId: parent.id, multiselect: false }))
 		},
 		ignoreDelay: true,
 	})
 
 	const onContentClick = useEvent(() => {
+		if (parent.type === 'folder') {
+			return
+		}
 		navigate({
 			search: (prev) => ({
 				...prev,
-				navi: [actor.id],
+				navi: [parent.id],
 			}),
 		})
 	})
@@ -299,7 +302,7 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			ref={ref}
 			data-testid="MindmapNode"
 			data-mindmap-node={node.id}
-			data-actor-id={actor.id}
+			data-entity-id={parent.id}
 			style={
 				{
 					'--node-x': `${node.positionX}px`,
@@ -327,7 +330,7 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			}}
 		>
 			<ActorNode
-				actor={actor}
+				parent={parent}
 				node={node}
 				onHeaderClick={(e) => onHeaderClick(e, { multiselect: isMultiselectEvent(e) })}
 				onContentClick={onContentClick}

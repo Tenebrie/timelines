@@ -121,7 +121,7 @@ function checkNodeIntersection(parentElement: HTMLElement | null, selectionBox: 
 
 		if (intersects) {
 			const nodeId = nodeElement.getAttribute('data-mindmap-node')
-			const actorId = nodeElement.getAttribute('data-actor-id')
+			const actorId = nodeElement.getAttribute('data-entity-id')
 			if (nodeId && actorId) {
 				selectedNodeIds.add(JSON.stringify({ key: nodeId, actorId }))
 			}

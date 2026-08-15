@@ -313,9 +313,13 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				id: string
 				createdAt: string
 				updatedAt: string
+				parentFolderId?: null | string
 				parentActorId?: null | string
+				parentEventId?: null | string
+				parentArticleId?: null | string
 				positionX: number
 				positionY: number
+				parentTagId?: null | string
 			}[]
 			worldEventTracks: {
 				worldId: string

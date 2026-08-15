@@ -163,7 +163,7 @@ function ArticleListItemInnerComponent({
 									sx={{ p: 0, pointerEvents: 'none' }}
 								/>
 							)}
-							<ArticleListItemIcon article={article} highlighted={renderHighlighted} />
+							<ArticleListItemIcon article={article} highlighted={renderHighlighted} folderCollapseIcon />
 						</Stack>
 					}
 					variant={renderHighlighted ? 'contained' : 'text'}

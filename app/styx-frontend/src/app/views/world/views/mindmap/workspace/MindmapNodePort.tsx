@@ -1,5 +1,4 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
-import { Actor } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { useEffect, useRef } from 'react'
@@ -7,12 +6,14 @@ import { useEffect, useRef } from 'react'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
+import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
+
 type Props = {
 	node: MindmapNode
-	actor: Actor
+	parent: BoxedWikiEntity
 }
 
-export function MindmapNodePort({ node, actor }: Props) {
+export function MindmapNodePort({ node, parent }: Props) {
 	const isDragging = useRef(false)
 	const theme = useCustomTheme()
 
@@ -91,7 +92,7 @@ export function MindmapNodePort({ node, actor }: Props) {
 							cy="8"
 							r="7"
 							fill="var(--fill-color)"
-							stroke={actor.color}
+							stroke={parent.color}
 							strokeWidth="2"
 							style={{ transition: 'fill 120ms ease-out' }}
 						/>

@@ -1,5 +1,4 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
-import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import React from 'react'
 import { useStore } from 'react-redux'
@@ -7,18 +6,19 @@ import { useStore } from 'react-redux'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { RootState } from '@/app/store'
 
+import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 import { useNodeLinking } from '../hooks/useNodeLinking'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { ActorNodeContent } from './ActorNodeContent'
 
 type Props = {
 	node: MindmapNode
-	actor: ActorDetails
+	parent: BoxedWikiEntity
 	onHeaderClick: (e: React.MouseEvent) => void
 	onContentClick: () => void
 }
 
-export function ActorNode({ actor, node, onHeaderClick, onContentClick }: Props) {
+export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props) {
 	const { createLinks } = useNodeLinking()
 	const store = useStore<RootState>()
 
@@ -44,7 +44,7 @@ export function ActorNode({ actor, node, onHeaderClick, onContentClick }: Props)
 		<Box ref={ref}>
 			<ActorNodeContent
 				node={node}
-				actor={actor}
+				parent={parent}
 				onHeaderClick={onHeaderClick}
 				onContentClick={onContentClick}
 			/>

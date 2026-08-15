@@ -1,6 +1,5 @@
 import { useGetMindmapQuery } from '@api/mindmapApi'
 import { MindmapNode } from '@api/types/mindmapTypes'
-import { Actor } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -8,12 +7,13 @@ import { useSelector } from 'react-redux'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 import { getWorldState } from '../../../WorldSliceSelectors'
+import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 import { MindmapWireGhost } from './MindmapWireGhost'
 import { MindmapWireLine } from './MindmapWireLine'
 import { MindmapWirePopover, MindmapWireState } from './MindmapWirePopover'
 
 type Props = {
-	actorsWithNodes: { id: string; actor: Actor; node: MindmapNode }[]
+	actorsWithNodes: { id: string; parent: BoxedWikiEntity; node: MindmapNode }[]
 }
 
 export function MindmapWireLayer({ actorsWithNodes }: Props) {

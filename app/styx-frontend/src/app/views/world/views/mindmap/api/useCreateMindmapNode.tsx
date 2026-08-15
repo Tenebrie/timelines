@@ -17,12 +17,10 @@ export const useCreateMindmapNode = () => {
 				mindmapApi.util.updateQueryData('getMindmap', { worldId }, (draft) => {
 					draft.nodes.push({
 						worldId,
-						id,
 						createdAt: new Date().toISOString(),
 						updatedAt: new Date().toISOString(),
-						parentActorId: body.parentActorId,
-						positionX: body.positionX,
-						positionY: body.positionY,
+						...body,
+						id,
 					})
 				}),
 			)
