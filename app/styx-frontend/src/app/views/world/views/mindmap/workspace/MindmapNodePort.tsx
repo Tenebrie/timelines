@@ -9,7 +9,7 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 
 type Props = {
-	node: MindmapNode
+	node?: MindmapNode
 	parent: BoxedWikiEntity
 }
 
@@ -21,7 +21,7 @@ export function MindmapNodePort({ node, parent }: Props) {
 		type: 'actorNodeLinking',
 		ghostFactory: () => null,
 		params: {
-			sourceNode: node,
+			sourceNode: node!,
 		},
 	})
 
@@ -44,7 +44,7 @@ export function MindmapNodePort({ node, parent }: Props) {
 		return () => {
 			box.removeEventListener('mousedown', onMouseDown)
 		}
-	}, [node.id, ref])
+	}, [node?.id, ref])
 
 	return (
 		<>

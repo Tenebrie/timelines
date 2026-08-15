@@ -96,11 +96,9 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 						</Box>
 					</Stack>
 				</Stack>
-				{node && (
-					<Stack sx={{ marginTop: '-8px', marginBottom: '-9px' }} flexShrink={0}>
-						<MindmapNodePort node={node} parent={parent} />
-					</Stack>
-				)}
+				<Stack sx={{ marginTop: '-8px', marginBottom: '-9px' }} flexShrink={0}>
+					<MindmapNodePort node={node} parent={parent} />
+				</Stack>
 			</Stack>
 
 			{/* Content */}

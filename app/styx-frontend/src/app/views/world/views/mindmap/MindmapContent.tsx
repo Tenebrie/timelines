@@ -12,21 +12,6 @@ import { getMindmapState } from './MindmapSliceSelectors'
 import { ActorNodePositioner } from './workspace/ActorNodePositioner'
 import { MindmapWireLayer } from './workspace/MindmapWireLayer'
 
-function MindmapSelectionBridge() {
-	const { selectedNodes, selectedWires } = useSelector(getMindmapState, (a, b) => {
-		return a.selectedNodes === b.selectedNodes && a.selectedWires === b.selectedWires
-	})
-
-	useEffect(() => {
-		dispatchGlobalEvent['mindmap/selection/changed']({
-			selectedNodeIds: new Set(selectedNodes.map((n) => n.key)),
-			selectedWireIds: new Set(selectedWires),
-		})
-	}, [selectedNodes, selectedWires])
-
-	return null
-}
-
 export function MindmapContent() {
 	const {
 		id: worldId,
@@ -98,4 +83,19 @@ export function MindmapContent() {
 			))}
 		</Box>
 	)
+}
+
+function MindmapSelectionBridge() {
+	const { selectedNodes, selectedWires } = useSelector(getMindmapState, (a, b) => {
+		return a.selectedNodes === b.selectedNodes && a.selectedWires === b.selectedWires
+	})
+
+	useEffect(() => {
+		dispatchGlobalEvent['mindmap/selection/changed']({
+			selectedNodeIds: new Set(selectedNodes.map((n) => n.key)),
+			selectedWireIds: new Set(selectedWires),
+		})
+	}, [selectedNodes, selectedWires])
+
+	return null
 }
