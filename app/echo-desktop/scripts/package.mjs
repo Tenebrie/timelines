@@ -159,8 +159,8 @@ writeFileSync(
 rmSync(join(outRoot, `${target}.zip`), { force: true })
 rmSync(join(outRoot, `${target}.tar.gz`), { force: true })
 if (process.platform === 'win32') {
-	// bsdtar ships with Windows 10+; -a picks the zip format from the extension.
-	run(`tar --options zip:compression=deflate -a -c -f ${target}.zip ${target}`, outRoot)
+	const bsdtar = join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe')
+	run(`"${bsdtar}" --options zip:compression=deflate -a -c -f ${target}.zip ${target}`, outRoot)
 } else {
 	run(`tar -czf ${target}.tar.gz ${target}`, outRoot)
 	run(`du -sh ${target} ${target}.tar.gz`, outRoot)

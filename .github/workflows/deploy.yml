@@ -106,8 +106,8 @@ jobs:
             --title "Release ${{ needs.check-commits.outputs.version }}" \
             --prerelease --generate-notes
 
-  build-desktop:
-    name: Echo Build (${{ matrix.platform }})
+  build-echo:
+    name: Build Echo (${{ matrix.platform }})
     needs: [check-commits, create-release]
     if: ${{ github.ref_name == 'dev' }}
     strategy:
@@ -154,9 +154,9 @@ jobs:
             app/echo-desktop/dist/package/*.tar.gz
           if-no-files-found: error
 
-  publish-desktop:
-    name: Echo Publish
-    needs: [check-commits, build-desktop]
+  publish-echo:
+    name: Publish Echo Builds
+    needs: [check-commits, build-echo]
     if: ${{ github.ref_name == 'dev' }}
     runs-on: ubuntu-latest
     permissions:
