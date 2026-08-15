@@ -39,6 +39,10 @@ export function GhostWrapper({ children, ref, left, top, align }: WrapperProps) 
 
 const portalSlotRef = createRef<HTMLDivElement>()
 
+export function getGhostElementRect() {
+	return portalSlotRef.current?.firstElementChild?.getBoundingClientRect() ?? null
+}
+
 export const DragDropPortalSlot = memo(DragDropPortalSlotComponent)
 
 function DragDropPortalSlotComponent() {

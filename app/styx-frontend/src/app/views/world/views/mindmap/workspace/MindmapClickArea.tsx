@@ -17,7 +17,11 @@ export function MindmapClickArea() {
 
 	return (
 		<>
-			<Box ref={ref} sx={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0 }}></Box>
+			<Box
+				data-mindmap-click-area
+				ref={ref}
+				sx={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0 }}
+			></Box>
 			<MindmapSelectionBox ref={ref} />
 		</>
 	)

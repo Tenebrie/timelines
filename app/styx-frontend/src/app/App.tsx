@@ -93,10 +93,10 @@ const App = () => {
 							<LostConnectionAlert server="rhea" />
 							<LostConnectionAlert server="calliope" />
 							<AnnouncementSnackbar />
+							<DragDropPortalSlot />
 						</CustomThemeOverrides>
 					</CustomThemeProvider>
 					<NavigationReceiverWrapper />
-					<DragDropPortalSlot />
 					<PageMetadata />
 					<TimelineZoomReporter />
 					<UndoRedoManager />

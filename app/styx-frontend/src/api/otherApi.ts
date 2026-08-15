@@ -42,6 +42,46 @@ const injectedRtkApi = api
 					invalidatesTags: [],
 				},
 			),
+			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
+				query: () => ({ url: `/health` }),
+				providesTags: [],
+			}),
+			getApiHealth: build.query<GetApiHealthApiResponse, GetApiHealthApiArg>({
+				query: () => ({ url: `/api/health` }),
+				providesTags: [],
+			}),
+			getSupportedImageFormats: build.query<
+				GetSupportedImageFormatsApiResponse,
+				GetSupportedImageFormatsApiArg
+			>({
+				query: () => ({ url: `/api/images/formats` }),
+				providesTags: [],
+			}),
+			requestImageConversion: build.mutation<RequestImageConversionApiResponse, RequestImageConversionApiArg>(
+				{
+					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
+					invalidatesTags: [],
+				},
+			),
+			visitWorldShareLink: build.query<VisitWorldShareLinkApiResponse, VisitWorldShareLinkApiArg>({
+				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}` }),
+				providesTags: [],
+			}),
+			acceptWorldShareLink: build.mutation<AcceptWorldShareLinkApiResponse, AcceptWorldShareLinkApiArg>({
+				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}/accept`, method: 'POST' }),
+				invalidatesTags: [],
+			}),
+			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
+				{
+					query: (queryArg) => ({
+						url: `/api/internal/auth/${queryArg.userId}`,
+						params: {
+							worldId: queryArg.worldId,
+						},
+					}),
+					providesTags: [],
+				},
+			),
 			getEntityContent: build.query<GetEntityContentApiResponse, GetEntityContentApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content`,
@@ -91,27 +131,6 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: [],
 			}),
-			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
-				query: () => ({ url: `/health` }),
-				providesTags: [],
-			}),
-			getApiHealth: build.query<GetApiHealthApiResponse, GetApiHealthApiArg>({
-				query: () => ({ url: `/api/health` }),
-				providesTags: [],
-			}),
-			getSupportedImageFormats: build.query<
-				GetSupportedImageFormatsApiResponse,
-				GetSupportedImageFormatsApiArg
-			>({
-				query: () => ({ url: `/api/images/formats` }),
-				providesTags: [],
-			}),
-			requestImageConversion: build.mutation<RequestImageConversionApiResponse, RequestImageConversionApiArg>(
-				{
-					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
-					invalidatesTags: [],
-				},
-			),
 			listWorldShareLinks: build.query<ListWorldShareLinksApiResponse, ListWorldShareLinksApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/share-links` }),
 				providesTags: ['worldShareLink'],
@@ -149,14 +168,6 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldShareLink'],
 			}),
-			visitWorldShareLink: build.query<VisitWorldShareLinkApiResponse, VisitWorldShareLinkApiArg>({
-				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}` }),
-				providesTags: [],
-			}),
-			acceptWorldShareLink: build.mutation<AcceptWorldShareLinkApiResponse, AcceptWorldShareLinkApiArg>({
-				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}/accept`, method: 'POST' }),
-				invalidatesTags: [],
-			}),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/wiki/article/${queryArg.articleId}`,
@@ -171,17 +182,6 @@ const injectedRtkApi = api
 				}),
 				providesTags: ['worldWikiArticle'],
 			}),
-			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
-				{
-					query: (queryArg) => ({
-						url: `/api/internal/auth/${queryArg.userId}`,
-						params: {
-							worldId: queryArg.worldId,
-						},
-					}),
-					providesTags: [],
-				},
-			),
 		}),
 		overrideExisting: false,
 	})
@@ -227,92 +227,6 @@ export type SendContactFormMessageApiArg = {
 		source?: string
 	}
 }
-export type GetEntityContentApiResponse = /** status 200  */ {
-	contentHtml: string
-}
-export type GetEntityContentApiArg = {
-	/** Any string value */
-	worldId: string
-	/** unknown_6 */
-	entityType: 'actor' | 'event' | 'article'
-	/** Any string value */
-	entityId: string
-}
-export type PutEntityContentApiResponse = unknown
-export type PutEntityContentApiArg = {
-	/** Any string value */
-	worldId: string
-	/** unknown_6 */
-	entityType: 'actor' | 'event' | 'article'
-	/** Any string value */
-	entityId: string
-	body: {
-		content: string
-		reloadClients?: boolean
-	}
-}
-export type GetEntityContentPageApiResponse = /** status 200  */ {
-	contentHtml: string
-}
-export type GetEntityContentPageApiArg = {
-	/** Any string value */
-	worldId: string
-	/** unknown_6 */
-	entityType: 'actor' | 'event' | 'article'
-	/** Any string value */
-	entityId: string
-	/** Any string value */
-	pageId: string
-}
-export type PutEntityContentPageApiResponse = unknown
-export type PutEntityContentPageApiArg = {
-	/** Any string value */
-	worldId: string
-	/** unknown_6 */
-	entityType: 'actor' | 'event' | 'article'
-	/** Any string value */
-	entityId: string
-	/** Any string value */
-	pageId: string
-	body: {
-		content: string
-		reloadClients?: boolean
-	}
-}
-export type DeleteEntityContentPageApiResponse = unknown
-export type DeleteEntityContentPageApiArg = {
-	/** Any string value */
-	worldId: string
-	/** unknown_6 */
-	entityType: 'actor' | 'event' | 'article'
-	/** Any string value */
-	entityId: string
-	/** Any string value */
-	pageId: string
-}
-export type CreateEntityContentPageApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	content: string
-	contentRich: string
-	parentType: 'Actor' | 'Event' | 'Article' | 'Tag'
-	parentActorId?: null | string
-	parentEventId?: null | string
-	parentArticleId?: null | string
-}
-export type CreateEntityContentPageApiArg = {
-	/** Any string value */
-	worldId: string
-	/** unknown_6 */
-	entityType: 'actor' | 'event' | 'article'
-	/** Any string value */
-	entityId: string
-	body: {
-		name: string
-	}
-}
 export type GetHealthApiResponse = unknown
 export type GetHealthApiArg = void
 export type GetApiHealthApiResponse = unknown
@@ -350,6 +264,123 @@ export type RequestImageConversionApiArg = {
 		width?: number
 		height?: number
 		quality?: number
+	}
+}
+export type VisitWorldShareLinkApiResponse = /** status 200  */ {
+	world: {
+		id: string
+		name: string
+		description: string
+	}
+	linkAccess: 'ReadOnly' | 'Editing'
+	alreadyHasAccess: boolean
+}
+export type VisitWorldShareLinkApiArg = {
+	/** Any string value */
+	slug: string
+}
+export type AcceptWorldShareLinkApiResponse = /** status 200  */ {
+	world: {
+		id: string
+		name: string
+		description: string
+	}
+	linkAccess: 'ReadOnly' | 'Editing'
+	alreadyHasAccess: boolean
+}
+export type AcceptWorldShareLinkApiArg = {
+	/** Any string value */
+	slug: string
+}
+export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
+	owner: boolean
+	write: boolean
+	read: boolean
+}
+export type GetUserWorldAccessLevelApiArg = {
+	/** Any string value with at least one character */
+	userId: string
+	/** Any string value with at least one character */
+	worldId: string
+}
+export type GetEntityContentApiResponse = /** status 200  */ {
+	contentHtml: string
+}
+export type GetEntityContentApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article'
+	/** Any string value */
+	entityId: string
+}
+export type PutEntityContentApiResponse = unknown
+export type PutEntityContentApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article'
+	/** Any string value */
+	entityId: string
+	body: {
+		content: string
+		reloadClients?: boolean
+	}
+}
+export type GetEntityContentPageApiResponse = /** status 200  */ {
+	contentHtml: string
+}
+export type GetEntityContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article'
+	/** Any string value */
+	entityId: string
+	/** Any string value */
+	pageId: string
+}
+export type PutEntityContentPageApiResponse = unknown
+export type PutEntityContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article'
+	/** Any string value */
+	entityId: string
+	/** Any string value */
+	pageId: string
+	body: {
+		content: string
+		reloadClients?: boolean
+	}
+}
+export type DeleteEntityContentPageApiResponse = unknown
+export type DeleteEntityContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article'
+	/** Any string value */
+	entityId: string
+	/** Any string value */
+	pageId: string
+}
+export type CreateEntityContentPageApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	content: string
+	contentRich: string
+	parentType: 'Actor' | 'Event' | 'Article' | 'Tag'
+	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
+}
+export type CreateEntityContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article'
+	/** Any string value */
+	entityId: string
+	body: {
+		name: string
 	}
 }
 export type ListWorldShareLinksApiResponse = /** status 200  */ {
@@ -412,32 +443,6 @@ export type DeleteWorldShareLinkApiArg = {
 	/** Any string value */
 	shareLinkId: string
 }
-export type VisitWorldShareLinkApiResponse = /** status 200  */ {
-	world: {
-		id: string
-		name: string
-		description: string
-	}
-	linkAccess: 'ReadOnly' | 'Editing'
-	alreadyHasAccess: boolean
-}
-export type VisitWorldShareLinkApiArg = {
-	/** Any string value */
-	slug: string
-}
-export type AcceptWorldShareLinkApiResponse = /** status 200  */ {
-	world: {
-		id: string
-		name: string
-		description: string
-	}
-	linkAccess: 'ReadOnly' | 'Editing'
-	alreadyHasAccess: boolean
-}
-export type AcceptWorldShareLinkApiArg = {
-	/** Any string value */
-	slug: string
-}
 export type UpdateArticleApiResponse = /** status 200  */ {
 	worldId: string
 	id: string
@@ -473,17 +478,6 @@ export type GetArticleBacklinksApiArg = {
 	/** Any string value */
 	articleId: string
 }
-export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
-	owner: boolean
-	write: boolean
-	read: boolean
-}
-export type GetUserWorldAccessLevelApiArg = {
-	/** Any string value with at least one character */
-	userId: string
-	/** Any string value with at least one character */
-	worldId: string
-}
 export const {
 	useAdminGetUserLevelsQuery,
 	useLazyAdminGetUserLevelsQuery,
@@ -498,6 +492,18 @@ export const {
 	useListFeatureFlagsQuery,
 	useLazyListFeatureFlagsQuery,
 	useSendContactFormMessageMutation,
+	useGetHealthQuery,
+	useLazyGetHealthQuery,
+	useGetApiHealthQuery,
+	useLazyGetApiHealthQuery,
+	useGetSupportedImageFormatsQuery,
+	useLazyGetSupportedImageFormatsQuery,
+	useRequestImageConversionMutation,
+	useVisitWorldShareLinkQuery,
+	useLazyVisitWorldShareLinkQuery,
+	useAcceptWorldShareLinkMutation,
+	useGetUserWorldAccessLevelQuery,
+	useLazyGetUserWorldAccessLevelQuery,
 	useGetEntityContentQuery,
 	useLazyGetEntityContentQuery,
 	usePutEntityContentMutation,
@@ -506,25 +512,13 @@ export const {
 	usePutEntityContentPageMutation,
 	useDeleteEntityContentPageMutation,
 	useCreateEntityContentPageMutation,
-	useGetHealthQuery,
-	useLazyGetHealthQuery,
-	useGetApiHealthQuery,
-	useLazyGetApiHealthQuery,
-	useGetSupportedImageFormatsQuery,
-	useLazyGetSupportedImageFormatsQuery,
-	useRequestImageConversionMutation,
 	useListWorldShareLinksQuery,
 	useLazyListWorldShareLinksQuery,
 	useGenerateFreeWorldShareLinkMutation,
 	useCreateWorldShareLinkMutation,
 	useExpireWorldShareLinkMutation,
 	useDeleteWorldShareLinkMutation,
-	useVisitWorldShareLinkQuery,
-	useLazyVisitWorldShareLinkQuery,
-	useAcceptWorldShareLinkMutation,
 	useUpdateArticleMutation,
 	useGetArticleBacklinksQuery,
 	useLazyGetArticleBacklinksQuery,
-	useGetUserWorldAccessLevelQuery,
-	useLazyGetUserWorldAccessLevelQuery,
 } = injectedRtkApi

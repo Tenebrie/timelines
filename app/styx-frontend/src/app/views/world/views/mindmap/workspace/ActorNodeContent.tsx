@@ -13,8 +13,8 @@ import { MindmapNodePort } from './MindmapNodePort'
 type Props = {
 	node?: MindmapNode
 	actor: ActorDetails
-	onHeaderClick: (e: React.MouseEvent) => void
-	onContentClick: () => void
+	onHeaderClick?: (e: React.MouseEvent) => void
+	onContentClick?: () => void
 }
 
 export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }: Props) {
@@ -120,7 +120,7 @@ export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }:
 				data-mindmap-content
 				onClick={(e) => {
 					e.stopPropagation()
-					onContentClick()
+					onContentClick?.()
 				}}
 				sx={{
 					fontSize: '0.8rem',

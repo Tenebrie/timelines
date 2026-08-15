@@ -240,8 +240,8 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			}
 
 			const snappedPosition = {
-				x: Math.round(positionRef.current.x / 10) * 10,
-				y: Math.round(positionRef.current.y / 10) * 10,
+				x: Math.round(positionRef.current.x / 1) * 1,
+				y: Math.round(positionRef.current.y / 1) * 1,
 			}
 
 			positionRef.current = snappedPosition

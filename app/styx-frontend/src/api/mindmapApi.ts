@@ -16,7 +16,7 @@ const injectedRtkApi = api
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['mindmap', 'mindmapNode'],
+				invalidatesTags: [],
 			}),
 			deleteNodes: build.mutation<DeleteNodesApiResponse, DeleteNodesApiArg>({
 				query: (queryArg) => ({

@@ -4,6 +4,244 @@
  */
 
 export interface paths {
+    "/api/constants/admin-levels": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get all available user levels */
+        get: operations["adminGetUserLevels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/constants/world-access-modes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Lists all available world access modes. */
+        get: operations["listWorldAccessModes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/constants/calendar-templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Lists all built-in calendar templates */
+        get: operations["listCalendarTemplates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/constants/calendar-unit-format-modes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Lists all available calendar unit format modes. */
+        get: operations["listCalendarUnitFormatModes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/constants/image-generation-models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns a list of available AI image generation models. */
+        get: operations["listImageGenerationModels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/constants/feature-flags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns a list of available feature flags. */
+        get: operations["listFeatureFlags"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/contact": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Send a message from the contact form */
+        post: operations["sendContactFormMessage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Check the health of the server. */
+        get: operations["getHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Check the health of the server (API endpoint). */
+        get: operations["getApiHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/images/formats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns a list of supported image formats for conversion. */
+        get: operations["getSupportedImageFormats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/images/convert": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Requests an image conversion. */
+        post: operations["requestImageConversion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/share-link-visit/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Provides information to add the user to collaborators via a share link. */
+        get: operations["visitWorldShareLink"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/share-link-visit/{slug}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Accepts a world share link and adds the user as a collaborator. */
+        post: operations["acceptWorldShareLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/internal/auth/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns the user's access level for a specific world. */
+        get: operations["getUserWorldAccessLevel"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/world/{worldId}/actors": {
         parameters: {
             query?: never;
@@ -597,125 +835,6 @@ export interface paths {
         patch: operations["updateCalendarUnit"];
         trace?: never;
     };
-    "/api/constants/admin-levels": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Get all available user levels */
-        get: operations["adminGetUserLevels"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/constants/world-access-modes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Lists all available world access modes. */
-        get: operations["listWorldAccessModes"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/constants/calendar-templates": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Lists all built-in calendar templates */
-        get: operations["listCalendarTemplates"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/constants/calendar-unit-format-modes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Lists all available calendar unit format modes. */
-        get: operations["listCalendarUnitFormatModes"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/constants/image-generation-models": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns a list of available AI image generation models. */
-        get: operations["listImageGenerationModels"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/constants/feature-flags": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns a list of available feature flags. */
-        get: operations["listFeatureFlags"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/contact": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Send a message from the contact form */
-        post: operations["sendContactFormMessage"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/world/{worldId}/{entityType}/{entityId}/content": {
         parameters: {
             query?: never;
@@ -838,40 +957,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Check the health of the server. */
-        get: operations["getHealth"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/health": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Check the health of the server (API endpoint). */
-        get: operations["getApiHealth"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/icons/favorites": {
         parameters: {
             query?: never;
@@ -911,40 +996,6 @@ export interface paths {
          * @description Removes an icon from the user's list of favorite icons
          */
         delete: operations["removeFavoriteIcon"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/images/formats": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns a list of supported image formats for conversion. */
-        get: operations["getSupportedImageFormats"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/images/convert": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Requests an image conversion. */
-        post: operations["requestImageConversion"];
-        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1721,40 +1772,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/share-link-visit/{slug}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Provides information to add the user to collaborators via a share link. */
-        get: operations["visitWorldShareLink"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/share-link-visit/{slug}/accept": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Accepts a world share link and adds the user as a collaborator. */
-        post: operations["acceptWorldShareLink"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/world/{worldId}/thumbnail": {
         parameters: {
             query?: never;
@@ -1912,23 +1929,6 @@ export interface paths {
         patch: operations["updateFolder"];
         trace?: never;
     };
-    "/api/internal/auth/{userId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns the user's access level for a specific world. */
-        get: operations["getUserWorldAccessLevel"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1941,6 +1941,367 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    adminGetUserLevels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": ("Free" | "Premium" | "Admin")[];
+                };
+            };
+        };
+    };
+    listWorldAccessModes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": ("Private" | "PublicRead" | "PublicEdit")[];
+                };
+            };
+        };
+    };
+    listCalendarTemplates: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        keys: ("earth_current" | "martian" | "pf2e_current" | "rimworld" | "exether")[];
+                        templates: {
+                            name: string;
+                            description: string;
+                            id: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    listCalendarUnitFormatModes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": ("Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden")[];
+                };
+            };
+        };
+    };
+    listImageGenerationModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        models: {
+                            id: string;
+                            name: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    listFeatureFlags: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        featureFlags: "MindmapRework"[];
+                    };
+                };
+            };
+        };
+    };
+    sendContactFormMessage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    email?: string;
+                    message: string;
+                    source?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name?: string;
+                    email?: string;
+                    message: string;
+                    source?: string;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+        };
+    };
+    getApiHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+        };
+    };
+    getSupportedImageFormats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        formats: ("webp" | "jpeg" | "png" | "gif")[];
+                    };
+                };
+            };
+        };
+    };
+    requestImageConversion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    assetId: string;
+                    format: "webp" | "jpeg" | "png" | "gif";
+                    width?: number;
+                    height?: number;
+                    quality?: number;
+                };
+                "application/x-www-form-urlencoded": {
+                    assetId: string;
+                    format: "webp" | "jpeg" | "png" | "gif";
+                    width?: number;
+                    height?: number;
+                    quality?: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        ownerId: string;
+                        size: number;
+                        expiresAt?: null | string;
+                        bucketKey: string;
+                        originalFileName: string;
+                        originalFileExtension: string;
+                        contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
+                        status: "Pending" | "Finalized" | "Failed";
+                        contentDescription?: null | string;
+                        imageWidth?: null | number;
+                        imageHeight?: null | number;
+                    };
+                };
+            };
+        };
+    };
+    visitWorldShareLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        world: {
+                            id: string;
+                            name: string;
+                            description: string;
+                        };
+                        linkAccess: "ReadOnly" | "Editing";
+                        alreadyHasAccess: boolean;
+                    };
+                };
+            };
+        };
+    };
+    acceptWorldShareLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        world: {
+                            id: string;
+                            name: string;
+                            description: string;
+                        };
+                        linkAccess: "ReadOnly" | "Editing";
+                        alreadyHasAccess: boolean;
+                    };
+                };
+            };
+        };
+    };
+    getUserWorldAccessLevel: {
+        parameters: {
+            query: {
+                /** @description Any string value with at least one character */
+                worldId: string;
+            };
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        owner: boolean;
+                        write: boolean;
+                        read: boolean;
+                    };
+                };
+            };
+        };
+    };
     createActor: {
         parameters: {
             query?: never;
@@ -3954,166 +4315,6 @@ export interface operations {
             };
         };
     };
-    adminGetUserLevels: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": ("Free" | "Premium" | "Admin")[];
-                };
-            };
-        };
-    };
-    listWorldAccessModes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": ("Private" | "PublicRead" | "PublicEdit")[];
-                };
-            };
-        };
-    };
-    listCalendarTemplates: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        keys: ("earth_current" | "martian" | "pf2e_current" | "rimworld" | "exether")[];
-                        templates: {
-                            name: string;
-                            description: string;
-                            id: string;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    listCalendarUnitFormatModes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": ("Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden")[];
-                };
-            };
-        };
-    };
-    listImageGenerationModels: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        models: {
-                            id: string;
-                            name: string;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    listFeatureFlags: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        featureFlags: "MindmapRework"[];
-                    };
-                };
-            };
-        };
-    };
-    sendContactFormMessage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name?: string;
-                    email?: string;
-                    message: string;
-                    source?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    name?: string;
-                    email?: string;
-                    message: string;
-                    source?: string;
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     getEntityContent: {
         parameters: {
             query?: never;
@@ -4121,7 +4322,6 @@ export interface operations {
             path: {
                 /** @description Any string value */
                 worldId: string;
-                /** @description unknown_6 */
                 entityType: "actor" | "event" | "article";
                 /** @description Any string value */
                 entityId: string;
@@ -4149,7 +4349,6 @@ export interface operations {
             path: {
                 /** @description Any string value */
                 worldId: string;
-                /** @description unknown_6 */
                 entityType: "actor" | "event" | "article";
                 /** @description Any string value */
                 entityId: string;
@@ -4184,7 +4383,6 @@ export interface operations {
             path: {
                 /** @description Any string value */
                 worldId: string;
-                /** @description unknown_6 */
                 entityType: "actor" | "event" | "article";
                 /** @description Any string value */
                 entityId: string;
@@ -4214,7 +4412,6 @@ export interface operations {
             path: {
                 /** @description Any string value */
                 worldId: string;
-                /** @description unknown_6 */
                 entityType: "actor" | "event" | "article";
                 /** @description Any string value */
                 entityId: string;
@@ -4251,7 +4448,6 @@ export interface operations {
             path: {
                 /** @description Any string value */
                 worldId: string;
-                /** @description unknown_6 */
                 entityType: "actor" | "event" | "article";
                 /** @description Any string value */
                 entityId: string;
@@ -4277,7 +4473,6 @@ export interface operations {
             path: {
                 /** @description Any string value */
                 worldId: string;
-                /** @description unknown_6 */
                 entityType: "actor" | "event" | "article";
                 /** @description Any string value */
                 entityId: string;
@@ -4853,44 +5048,6 @@ export interface operations {
             };
         };
     };
-    getHealth: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "text/plain": string;
-                };
-            };
-        };
-    };
-    getApiHealth: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "text/plain": string;
-                };
-            };
-        };
-    };
     getFavoriteIcons: {
         parameters: {
             query?: never;
@@ -4955,80 +5112,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-        };
-    };
-    getSupportedImageFormats: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        formats: ("webp" | "jpeg" | "png" | "gif")[];
-                    };
-                };
-            };
-        };
-    };
-    requestImageConversion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    assetId: string;
-                    format: "webp" | "jpeg" | "png" | "gif";
-                    width?: number;
-                    height?: number;
-                    quality?: number;
-                };
-                "application/x-www-form-urlencoded": {
-                    assetId: string;
-                    format: "webp" | "jpeg" | "png" | "gif";
-                    width?: number;
-                    height?: number;
-                    quality?: number;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        ownerId: string;
-                        size: number;
-                        expiresAt?: null | string;
-                        bucketKey: string;
-                        originalFileName: string;
-                        originalFileExtension: string;
-                        contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
-                        status: "Pending" | "Finalized" | "Failed";
-                        contentDescription?: null | string;
-                        imageWidth?: null | number;
-                        imageHeight?: null | number;
-                    };
-                };
             };
         };
     };
@@ -7580,66 +7663,6 @@ export interface operations {
             };
         };
     };
-    visitWorldShareLink: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                slug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        world: {
-                            id: string;
-                            name: string;
-                            description: string;
-                        };
-                        linkAccess: "ReadOnly" | "Editing";
-                        alreadyHasAccess: boolean;
-                    };
-                };
-            };
-        };
-    };
-    acceptWorldShareLink: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                slug: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        world: {
-                            id: string;
-                            name: string;
-                            description: string;
-                        };
-                        linkAccess: "ReadOnly" | "Editing";
-                        alreadyHasAccess: boolean;
-                    };
-                };
-            };
-        };
-    };
     getWorldThumbnail: {
         parameters: {
             query?: never;
@@ -8212,35 +8235,6 @@ export interface operations {
                         color: string;
                         parentFolderId?: null | string;
                         parentFolderPosition: number;
-                    };
-                };
-            };
-        };
-    };
-    getUserWorldAccessLevel: {
-        parameters: {
-            query: {
-                /** @description Any string value with at least one character */
-                worldId: string;
-            };
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        owner: boolean;
-                        write: boolean;
-                        read: boolean;
                     };
                 };
             };
