@@ -29,8 +29,9 @@ export type ContentPageMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   name: string | null
-  description: string | null
-  descriptionRich: string | null
+  content: string | null
+  contentRich: string | null
+  parentType: $Enums.MentionedEntity | null
   parentActorId: string | null
   parentEventId: string | null
   parentArticleId: string | null
@@ -41,8 +42,9 @@ export type ContentPageMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   name: string | null
-  description: string | null
-  descriptionRich: string | null
+  content: string | null
+  contentRich: string | null
+  parentType: $Enums.MentionedEntity | null
   parentActorId: string | null
   parentEventId: string | null
   parentArticleId: string | null
@@ -53,8 +55,9 @@ export type ContentPageCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   name: number
-  description: number
-  descriptionRich: number
+  content: number
+  contentRich: number
+  parentType: number
   parentActorId: number
   parentEventId: number
   parentArticleId: number
@@ -67,8 +70,9 @@ export type ContentPageMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   name?: true
-  description?: true
-  descriptionRich?: true
+  content?: true
+  contentRich?: true
+  parentType?: true
   parentActorId?: true
   parentEventId?: true
   parentArticleId?: true
@@ -79,8 +83,9 @@ export type ContentPageMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   name?: true
-  description?: true
-  descriptionRich?: true
+  content?: true
+  contentRich?: true
+  parentType?: true
   parentActorId?: true
   parentEventId?: true
   parentArticleId?: true
@@ -91,8 +96,9 @@ export type ContentPageCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   name?: true
-  description?: true
-  descriptionRich?: true
+  content?: true
+  contentRich?: true
+  parentType?: true
   parentActorId?: true
   parentEventId?: true
   parentArticleId?: true
@@ -176,8 +182,9 @@ export type ContentPageGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   name: string
-  description: string
-  descriptionRich: string
+  content: string
+  contentRich: string
+  parentType: $Enums.MentionedEntity
   parentActorId: string | null
   parentEventId: string | null
   parentArticleId: string | null
@@ -209,8 +216,9 @@ export type ContentPageWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ContentPage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ContentPage"> | Date | string
   name?: Prisma.StringFilter<"ContentPage"> | string
-  description?: Prisma.StringFilter<"ContentPage"> | string
-  descriptionRich?: Prisma.StringFilter<"ContentPage"> | string
+  content?: Prisma.StringFilter<"ContentPage"> | string
+  contentRich?: Prisma.StringFilter<"ContentPage"> | string
+  parentType?: Prisma.EnumMentionedEntityFilter<"ContentPage"> | $Enums.MentionedEntity
   parentActorId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentEventId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentArticleId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
@@ -226,8 +234,9 @@ export type ContentPageOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  descriptionRich?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
+  parentType?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentEventId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentArticleId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -246,8 +255,9 @@ export type ContentPageWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"ContentPage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ContentPage"> | Date | string
   name?: Prisma.StringFilter<"ContentPage"> | string
-  description?: Prisma.StringFilter<"ContentPage"> | string
-  descriptionRich?: Prisma.StringFilter<"ContentPage"> | string
+  content?: Prisma.StringFilter<"ContentPage"> | string
+  contentRich?: Prisma.StringFilter<"ContentPage"> | string
+  parentType?: Prisma.EnumMentionedEntityFilter<"ContentPage"> | $Enums.MentionedEntity
   parentActorId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentEventId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentArticleId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
@@ -263,8 +273,9 @@ export type ContentPageOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  descriptionRich?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
+  parentType?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentEventId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentArticleId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -281,8 +292,9 @@ export type ContentPageScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"ContentPage"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"ContentPage"> | Date | string
   name?: Prisma.StringWithAggregatesFilter<"ContentPage"> | string
-  description?: Prisma.StringWithAggregatesFilter<"ContentPage"> | string
-  descriptionRich?: Prisma.StringWithAggregatesFilter<"ContentPage"> | string
+  content?: Prisma.StringWithAggregatesFilter<"ContentPage"> | string
+  contentRich?: Prisma.StringWithAggregatesFilter<"ContentPage"> | string
+  parentType?: Prisma.EnumMentionedEntityWithAggregatesFilter<"ContentPage"> | $Enums.MentionedEntity
   parentActorId?: Prisma.StringNullableWithAggregatesFilter<"ContentPage"> | string | null
   parentEventId?: Prisma.StringNullableWithAggregatesFilter<"ContentPage"> | string | null
   parentArticleId?: Prisma.StringNullableWithAggregatesFilter<"ContentPage"> | string | null
@@ -293,8 +305,9 @@ export type ContentPageCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActor?: Prisma.ActorCreateNestedOneWithoutPagesInput
   parentEvent?: Prisma.WorldEventCreateNestedOneWithoutPagesInput
   parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutPagesInput
@@ -307,8 +320,9 @@ export type ContentPageUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActorId?: string | null
   parentEventId?: string | null
   parentArticleId?: string | null
@@ -321,8 +335,9 @@ export type ContentPageUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActor?: Prisma.ActorUpdateOneWithoutPagesNestedInput
   parentEvent?: Prisma.WorldEventUpdateOneWithoutPagesNestedInput
   parentArticle?: Prisma.WikiArticleUpdateOneWithoutPagesNestedInput
@@ -335,8 +350,9 @@ export type ContentPageUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -349,8 +365,9 @@ export type ContentPageCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActorId?: string | null
   parentEventId?: string | null
   parentArticleId?: string | null
@@ -361,8 +378,9 @@ export type ContentPageUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
 }
 
 export type ContentPageUncheckedUpdateManyInput = {
@@ -370,8 +388,9 @@ export type ContentPageUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -397,8 +416,9 @@ export type ContentPageCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  descriptionRich?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
+  parentType?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrder
   parentEventId?: Prisma.SortOrder
   parentArticleId?: Prisma.SortOrder
@@ -409,8 +429,9 @@ export type ContentPageMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  descriptionRich?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
+  parentType?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrder
   parentEventId?: Prisma.SortOrder
   parentArticleId?: Prisma.SortOrder
@@ -421,8 +442,9 @@ export type ContentPageMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  descriptionRich?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
+  parentType?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrder
   parentEventId?: Prisma.SortOrder
   parentArticleId?: Prisma.SortOrder
@@ -484,6 +506,10 @@ export type ContentPageUpdateOneWithoutAssetRefsNestedInput = {
   delete?: Prisma.ContentPageWhereInput | boolean
   connect?: Prisma.ContentPageWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ContentPageUpdateToOneWithWhereWithoutAssetRefsInput, Prisma.ContentPageUpdateWithoutAssetRefsInput>, Prisma.ContentPageUncheckedUpdateWithoutAssetRefsInput>
+}
+
+export type EnumMentionedEntityFieldUpdateOperationsInput = {
+  set?: $Enums.MentionedEntity
 }
 
 export type ContentPageCreateNestedOneWithoutMentionsInput = {
@@ -591,8 +617,9 @@ export type ContentPageCreateWithoutParentActorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentEvent?: Prisma.WorldEventCreateNestedOneWithoutPagesInput
   parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutPagesInput
   mentions?: Prisma.MentionCreateNestedManyWithoutPageInput
@@ -604,8 +631,9 @@ export type ContentPageUncheckedCreateWithoutParentActorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentEventId?: string | null
   parentArticleId?: string | null
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutPageInput
@@ -646,8 +674,9 @@ export type ContentPageScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"ContentPage"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"ContentPage"> | Date | string
   name?: Prisma.StringFilter<"ContentPage"> | string
-  description?: Prisma.StringFilter<"ContentPage"> | string
-  descriptionRich?: Prisma.StringFilter<"ContentPage"> | string
+  content?: Prisma.StringFilter<"ContentPage"> | string
+  contentRich?: Prisma.StringFilter<"ContentPage"> | string
+  parentType?: Prisma.EnumMentionedEntityFilter<"ContentPage"> | $Enums.MentionedEntity
   parentActorId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentEventId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
   parentArticleId?: Prisma.StringNullableFilter<"ContentPage"> | string | null
@@ -658,8 +687,9 @@ export type ContentPageCreateWithoutAssetRefsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActor?: Prisma.ActorCreateNestedOneWithoutPagesInput
   parentEvent?: Prisma.WorldEventCreateNestedOneWithoutPagesInput
   parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutPagesInput
@@ -671,8 +701,9 @@ export type ContentPageUncheckedCreateWithoutAssetRefsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActorId?: string | null
   parentEventId?: string | null
   parentArticleId?: string | null
@@ -700,8 +731,9 @@ export type ContentPageUpdateWithoutAssetRefsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActor?: Prisma.ActorUpdateOneWithoutPagesNestedInput
   parentEvent?: Prisma.WorldEventUpdateOneWithoutPagesNestedInput
   parentArticle?: Prisma.WikiArticleUpdateOneWithoutPagesNestedInput
@@ -713,8 +745,9 @@ export type ContentPageUncheckedUpdateWithoutAssetRefsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -726,8 +759,9 @@ export type ContentPageCreateWithoutMentionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActor?: Prisma.ActorCreateNestedOneWithoutPagesInput
   parentEvent?: Prisma.WorldEventCreateNestedOneWithoutPagesInput
   parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutPagesInput
@@ -739,8 +773,9 @@ export type ContentPageUncheckedCreateWithoutMentionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActorId?: string | null
   parentEventId?: string | null
   parentArticleId?: string | null
@@ -768,8 +803,9 @@ export type ContentPageUpdateWithoutMentionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActor?: Prisma.ActorUpdateOneWithoutPagesNestedInput
   parentEvent?: Prisma.WorldEventUpdateOneWithoutPagesNestedInput
   parentArticle?: Prisma.WikiArticleUpdateOneWithoutPagesNestedInput
@@ -781,8 +817,9 @@ export type ContentPageUncheckedUpdateWithoutMentionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -794,8 +831,9 @@ export type ContentPageCreateWithoutParentArticleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActor?: Prisma.ActorCreateNestedOneWithoutPagesInput
   parentEvent?: Prisma.WorldEventCreateNestedOneWithoutPagesInput
   mentions?: Prisma.MentionCreateNestedManyWithoutPageInput
@@ -807,8 +845,9 @@ export type ContentPageUncheckedCreateWithoutParentArticleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActorId?: string | null
   parentEventId?: string | null
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutPageInput
@@ -846,8 +885,9 @@ export type ContentPageCreateWithoutParentEventInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActor?: Prisma.ActorCreateNestedOneWithoutPagesInput
   parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutPagesInput
   mentions?: Prisma.MentionCreateNestedManyWithoutPageInput
@@ -859,8 +899,9 @@ export type ContentPageUncheckedCreateWithoutParentEventInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActorId?: string | null
   parentArticleId?: string | null
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutPageInput
@@ -898,8 +939,9 @@ export type ContentPageCreateManyParentActorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentEventId?: string | null
   parentArticleId?: string | null
 }
@@ -909,8 +951,9 @@ export type ContentPageUpdateWithoutParentActorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentEvent?: Prisma.WorldEventUpdateOneWithoutPagesNestedInput
   parentArticle?: Prisma.WikiArticleUpdateOneWithoutPagesNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutPageNestedInput
@@ -922,8 +965,9 @@ export type ContentPageUncheckedUpdateWithoutParentActorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutPageNestedInput
@@ -935,8 +979,9 @@ export type ContentPageUncheckedUpdateManyWithoutParentActorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -946,8 +991,9 @@ export type ContentPageCreateManyParentArticleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActorId?: string | null
   parentEventId?: string | null
 }
@@ -957,8 +1003,9 @@ export type ContentPageUpdateWithoutParentArticleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActor?: Prisma.ActorUpdateOneWithoutPagesNestedInput
   parentEvent?: Prisma.WorldEventUpdateOneWithoutPagesNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutPageNestedInput
@@ -970,8 +1017,9 @@ export type ContentPageUncheckedUpdateWithoutParentArticleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutPageNestedInput
@@ -983,8 +1031,9 @@ export type ContentPageUncheckedUpdateManyWithoutParentArticleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -994,8 +1043,9 @@ export type ContentPageCreateManyParentEventInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
+  parentType: $Enums.MentionedEntity
   parentActorId?: string | null
   parentArticleId?: string | null
 }
@@ -1005,8 +1055,9 @@ export type ContentPageUpdateWithoutParentEventInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActor?: Prisma.ActorUpdateOneWithoutPagesNestedInput
   parentArticle?: Prisma.WikiArticleUpdateOneWithoutPagesNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutPageNestedInput
@@ -1018,8 +1069,9 @@ export type ContentPageUncheckedUpdateWithoutParentEventInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutPageNestedInput
@@ -1031,8 +1083,9 @@ export type ContentPageUncheckedUpdateManyWithoutParentEventInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  parentType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -1082,8 +1135,9 @@ export type ContentPageSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
-  description?: boolean
-  descriptionRich?: boolean
+  content?: boolean
+  contentRich?: boolean
+  parentType?: boolean
   parentActorId?: boolean
   parentEventId?: boolean
   parentArticleId?: boolean
@@ -1100,8 +1154,9 @@ export type ContentPageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
-  description?: boolean
-  descriptionRich?: boolean
+  content?: boolean
+  contentRich?: boolean
+  parentType?: boolean
   parentActorId?: boolean
   parentEventId?: boolean
   parentArticleId?: boolean
@@ -1115,8 +1170,9 @@ export type ContentPageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
-  description?: boolean
-  descriptionRich?: boolean
+  content?: boolean
+  contentRich?: boolean
+  parentType?: boolean
   parentActorId?: boolean
   parentEventId?: boolean
   parentArticleId?: boolean
@@ -1130,14 +1186,15 @@ export type ContentPageSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
-  description?: boolean
-  descriptionRich?: boolean
+  content?: boolean
+  contentRich?: boolean
+  parentType?: boolean
   parentActorId?: boolean
   parentEventId?: boolean
   parentArticleId?: boolean
 }
 
-export type ContentPageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "description" | "descriptionRich" | "parentActorId" | "parentEventId" | "parentArticleId", ExtArgs["result"]["contentPage"]>
+export type ContentPageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "content" | "contentRich" | "parentType" | "parentActorId" | "parentEventId" | "parentArticleId", ExtArgs["result"]["contentPage"]>
 export type ContentPageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parentActor?: boolean | Prisma.ContentPage$parentActorArgs<ExtArgs>
   parentEvent?: boolean | Prisma.ContentPage$parentEventArgs<ExtArgs>
@@ -1171,8 +1228,9 @@ export type $ContentPagePayload<ExtArgs extends runtime.Types.Extensions.Interna
     createdAt: Date
     updatedAt: Date
     name: string
-    description: string
-    descriptionRich: string
+    content: string
+    contentRich: string
+    parentType: $Enums.MentionedEntity
     parentActorId: string | null
     parentEventId: string | null
     parentArticleId: string | null
@@ -1608,8 +1666,9 @@ export interface ContentPageFieldRefs {
   readonly createdAt: Prisma.FieldRef<"ContentPage", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"ContentPage", 'DateTime'>
   readonly name: Prisma.FieldRef<"ContentPage", 'String'>
-  readonly description: Prisma.FieldRef<"ContentPage", 'String'>
-  readonly descriptionRich: Prisma.FieldRef<"ContentPage", 'String'>
+  readonly content: Prisma.FieldRef<"ContentPage", 'String'>
+  readonly contentRich: Prisma.FieldRef<"ContentPage", 'String'>
+  readonly parentType: Prisma.FieldRef<"ContentPage", 'MentionedEntity'>
   readonly parentActorId: Prisma.FieldRef<"ContentPage", 'String'>
   readonly parentEventId: Prisma.FieldRef<"ContentPage", 'String'>
   readonly parentArticleId: Prisma.FieldRef<"ContentPage", 'String'>

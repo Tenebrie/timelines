@@ -38,9 +38,10 @@ export function registerGetArticleDetailsTool(server: McpServer) {
 				const articles = await RheaService.getWorldArticles({ worldId, userId })
 				const article = findByName({ name: articleName, entities: articles })
 
-				const rawContent = await RheaService.getArticleContent({
+				const rawContent = await RheaService.getEntityContent({
+					entityType: 'article',
 					worldId,
-					articleId: article.id,
+					entityId: article.id,
 					userId,
 				})
 

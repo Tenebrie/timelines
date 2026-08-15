@@ -52,9 +52,10 @@ export function registerGetActorDetailsTool(server: McpServer) {
 				const actor = findByName({ name: actorName, entities: worldData.actors })
 				const page = args.pageName ? findByName({ name: args.pageName, entities: actor.pages }) : undefined
 
-				const rawContent = await RheaService.getActorContent({
+				const rawContent = await RheaService.getEntityContent({
+					entityType: 'actor',
 					worldId,
-					actorId: actor.id,
+					entityId: actor.id,
 					userId,
 					pageId: page?.id,
 				})

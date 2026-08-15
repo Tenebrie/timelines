@@ -664,10 +664,6 @@ export type MentionUncheckedUpdateManyWithoutPageNestedInput = {
   deleteMany?: Prisma.MentionScalarWhereInput | Prisma.MentionScalarWhereInput[]
 }
 
-export type EnumMentionedEntityFieldUpdateOperationsInput = {
-  set?: $Enums.MentionedEntity
-}
-
 export type MentionCreateNestedManyWithoutSourceTagInput = {
   create?: Prisma.XOR<Prisma.MentionCreateWithoutSourceTagInput, Prisma.MentionUncheckedCreateWithoutSourceTagInput> | Prisma.MentionCreateWithoutSourceTagInput[] | Prisma.MentionUncheckedCreateWithoutSourceTagInput[]
   connectOrCreate?: Prisma.MentionCreateOrConnectWithoutSourceTagInput | Prisma.MentionCreateOrConnectWithoutSourceTagInput[]

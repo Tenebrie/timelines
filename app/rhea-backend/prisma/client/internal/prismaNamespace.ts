@@ -2775,8 +2775,8 @@ export const ActorScalarFieldEnum = {
   title: 'title',
   icon: 'icon',
   color: 'color',
-  description: 'description',
-  descriptionRich: 'descriptionRich',
+  content: 'content',
+  contentRich: 'contentRich',
   worldId: 'worldId',
   parentFolderId: 'parentFolderId',
   parentFolderPosition: 'parentFolderPosition'
@@ -2974,8 +2974,9 @@ export const ContentPageScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   name: 'name',
-  description: 'description',
-  descriptionRich: 'descriptionRich',
+  content: 'content',
+  contentRich: 'contentRich',
+  parentType: 'parentType',
   parentActorId: 'parentActorId',
   parentEventId: 'parentEventId',
   parentArticleId: 'parentArticleId'
@@ -3163,8 +3164,8 @@ export const WorldEventScalarFieldEnum = {
   name: 'name',
   timestamp: 'timestamp',
   revokedAt: 'revokedAt',
-  description: 'description',
-  descriptionRich: 'descriptionRich',
+  content: 'content',
+  contentRich: 'contentRich',
   worldId: 'worldId',
   worldEventTrackId: 'worldEventTrackId',
   parentFolderId: 'parentFolderId',
@@ -3452,20 +3453,6 @@ export type ListEnumCalendarUnitNegativeFormatFieldRefInput<$PrismaModel> = Fiel
 
 
 /**
- * Reference to a field of type 'FlagValue'
- */
-export type EnumFlagValueFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FlagValue'>
-    
-
-
-/**
- * Reference to a field of type 'FlagValue[]'
- */
-export type ListEnumFlagValueFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FlagValue[]'>
-    
-
-
-/**
  * Reference to a field of type 'MentionedEntity'
  */
 export type EnumMentionedEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MentionedEntity'>
@@ -3476,6 +3463,20 @@ export type EnumMentionedEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'MentionedEntity[]'
  */
 export type ListEnumMentionedEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MentionedEntity[]'>
+    
+
+
+/**
+ * Reference to a field of type 'FlagValue'
+ */
+export type EnumFlagValueFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FlagValue'>
+    
+
+
+/**
+ * Reference to a field of type 'FlagValue[]'
+ */
+export type ListEnumFlagValueFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FlagValue[]'>
     
 
 

@@ -48,40 +48,15 @@ export const RheaService = {
 	},
 
 	fetchDocumentState: async (userId: string, { worldId, entityId, entityType }: DocumentMetadata) => {
-		const response = await (() => {
-			if (entityType === 'actor') {
-				return rheaClient['GET']('/api/world/{worldId}/actor/{actorId}/content', {
-					params: {
-						path: { worldId, actorId: entityId },
-					},
-					headers: {
-						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-						[IMPERSONATED_USER_HEADER]: userId,
-					},
-				})
-			} else if (entityType === 'event') {
-				return rheaClient['GET']('/api/world/{worldId}/event/{eventId}/content', {
-					params: {
-						path: { worldId, eventId: entityId },
-					},
-					headers: {
-						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-						[IMPERSONATED_USER_HEADER]: userId,
-					},
-				})
-			} else if (entityType === 'article') {
-				return rheaClient['GET']('/api/world/{worldId}/article/{articleId}/content', {
-					params: {
-						path: { worldId, articleId: entityId },
-					},
-					headers: {
-						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-						[IMPERSONATED_USER_HEADER]: userId,
-					},
-				})
-			}
-			throw new Error('Invalid entity type for fetchDocumentState')
-		})()
+		const response = await rheaClient['GET']('/api/world/{worldId}/{entityType}/{entityId}/content', {
+			params: {
+				path: { worldId, entityType, entityId },
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
 
 		if (!response.data || response.error) {
 			console.error(response.error)
@@ -104,43 +79,21 @@ export const RheaService = {
 		entityType: 'actor' | 'event' | 'article'
 		contentRich: string
 	}) => {
-		const response = await (() => {
-			if (contentRich.length >= 1_131_000) {
-				console.error(
-					`${chalk.greenBright('[Calliope]')} Unable to flush ${entityType} ${chalk.blueBright(entityId)} (${contentRich.length} bytes)`,
-				)
-			}
+		if (contentRich.length >= 1_131_000) {
+			console.error(
+				`${chalk.greenBright('[Calliope]')} Unable to flush ${entityType} ${chalk.blueBright(entityId)} (${contentRich.length} bytes)`,
+			)
+			throw new Error('Failed to flush document state to Rhea')
+		}
 
-			if (entityType === 'actor') {
-				return rheaClient['PUT']('/api/world/{worldId}/actor/{actorId}/content', {
-					params: { path: { worldId, actorId: entityId } },
-					body: { content: contentRich },
-					headers: {
-						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-						[IMPERSONATED_USER_HEADER]: lastUserId,
-					},
-				})
-			} else if (entityType === 'event') {
-				return rheaClient['PUT']('/api/world/{worldId}/event/{eventId}/content', {
-					params: { path: { worldId, eventId: entityId } },
-					body: { content: contentRich },
-					headers: {
-						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-						[IMPERSONATED_USER_HEADER]: lastUserId,
-					},
-				})
-			} else if (entityType === 'article') {
-				return rheaClient['PUT']('/api/world/{worldId}/article/{articleId}/content', {
-					params: { path: { worldId, articleId: entityId } },
-					body: { content: contentRich },
-					headers: {
-						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-						[IMPERSONATED_USER_HEADER]: lastUserId,
-					},
-				})
-			}
-			throw new Error('Invalid entity type for flushDocumentState')
-		})()
+		const response = await rheaClient['PUT']('/api/world/{worldId}/{entityType}/{entityId}/content', {
+			params: { path: { worldId, entityType, entityId } },
+			body: { content: contentRich },
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: lastUserId,
+			},
+		})
 
 		if (response.error) {
 			console.error(response)

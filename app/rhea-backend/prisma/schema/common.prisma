@@ -5,8 +5,10 @@ model ContentPage {
 
     name String
 
-    description     String  @default("")
-    descriptionRich String  @default("")
+    content     String @default("")
+    contentRich String @default("")
+
+    parentType MentionedEntity
 
     parentActorId   String?
     parentEventId   String?

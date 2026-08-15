@@ -38,9 +38,10 @@ export function registerDeleteActorContentPageTool(server: McpServer) {
 
 				const page = findByName({ name: pageName, entities: actor.pages })
 
-				await RheaService.deleteActorContentPage({
+				await RheaService.deleteEntityContentPage({
+					entityType: 'actor',
 					worldId,
-					actorId: actor.id,
+					entityId: actor.id,
 					userId,
 					pageId: page.id,
 				})

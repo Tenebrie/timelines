@@ -43,12 +43,12 @@ const makeActor = (
 		createdAt: now,
 		updatedAt: now,
 		name: 'Actor',
-		description: '',
+		content: '',
 		worldId,
 		title: '',
 		icon: '',
 		color: '',
-		descriptionRich: '',
+		contentRich: '',
 		mentions,
 		pages,
 		parentFolderId: null,
@@ -66,11 +66,11 @@ const makeEvent = (
 		createdAt: now,
 		updatedAt: now,
 		name: 'Event',
-		description: '',
+		content: '',
 		worldId,
 		icon: '',
 		color: '',
-		descriptionRich: '',
+		contentRich: '',
 		timestamp: BigInt(0),
 		revokedAt: null as bigint | null,
 		worldEventTrackId: null as string | null,
@@ -146,8 +146,14 @@ const makePage = (id = 'page-1', overrides: Record<string, unknown> = {}) => ({
 	createdAt: now,
 	updatedAt: now,
 	name: 'Page',
-	description: '',
-	descriptionRich: '',
+	content: '',
+	contentRich: '',
+	parentType:
+		'parentEventId' in overrides
+			? ('Event' as const)
+			: 'parentArticleId' in overrides
+				? ('Article' as const)
+				: ('Actor' as const),
 	parentActorId: null as string | null,
 	parentEventId: null as string | null,
 	parentArticleId: null as string | null,
@@ -325,7 +331,7 @@ const makeExportData = (
 	calendars = [makeCalendar({ ownerId: userId })],
 ) =>
 	({
-		version: 2 as const,
+		version: 3 as const,
 		user: { id: userId, worlds, calendars },
 	}) satisfies ExportedData
 
@@ -988,12 +994,12 @@ describe('DataMigrationService', () => {
 			expect(result.isValid).toBe(false)
 		})
 
-		it('version check in code is unreachable because schema enforces version: 2', async () => {
+		it('version check in code is unreachable because schema enforces version: 3', async () => {
 			const prisma = makePrisma()
 			const result = await DataMigrationService.validateUserData(
 				ctx,
 				JSON.stringify({
-					version: 3,
+					version: 2,
 					user: { id: 'u', worlds: [], calendars: [] },
 				}),
 				prisma,

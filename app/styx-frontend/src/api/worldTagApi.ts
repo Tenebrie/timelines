@@ -40,7 +40,6 @@ export { injectedRtkApi as worldTagApi }
 export type CreateTagApiResponse = /** status 200  */ {
 	mentions: {
 		id: string
-		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -53,10 +52,10 @@ export type CreateTagApiResponse = /** status 200  */ {
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
+		pageId?: null | string
 	}[]
 	mentionedIn: {
 		id: string
-		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -69,6 +68,7 @@ export type CreateTagApiResponse = /** status 200  */ {
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
+		pageId?: null | string
 	}[]
 	description: string
 	worldId: string
@@ -144,7 +144,6 @@ export type GetTagDetailsApiResponse = /** status 200  */ {
 	}[]
 	mentions: {
 		id: string
-		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -157,6 +156,7 @@ export type GetTagDetailsApiResponse = /** status 200  */ {
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
+		pageId?: null | string
 	}[]
 	description: string
 	worldId: string

@@ -141,7 +141,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			sourceId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
-		description: string
 		worldId: string
 		id: string
 		createdAt: string
@@ -150,7 +149,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		title: string
 		icon: string
 		color: string
-		descriptionRich: string
+		content: string
+		contentRich: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
 	}[]
@@ -173,11 +173,10 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			createdAt: string
 			updatedAt: string
 			name?: null | string
-			descriptionRich?: null | string
 			timestamp: string
+			descriptionRich?: null | string
 			worldEventId: string
 		}[]
-		description: string
 		worldId: string
 		id: string
 		createdAt: string
@@ -185,7 +184,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		name: string
 		icon: string
 		color: string
-		descriptionRich: string
+		content: string
+		contentRich: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
 		timestamp: string

@@ -80,9 +80,10 @@ export function registerUpdateEventTool(server: McpServer) {
 						articleData,
 					})
 
-					await RheaService.updateEventContent({
+					await RheaService.updateEntityContent({
+						entityType: 'event',
 						worldId,
-						eventId: event.id,
+						entityId: event.id,
 						userId,
 						content: parsedContent,
 					})

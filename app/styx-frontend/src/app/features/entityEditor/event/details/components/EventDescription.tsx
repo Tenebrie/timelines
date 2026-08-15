@@ -20,8 +20,8 @@ export const EventDescription = ({ event, surface }: Props) => {
 			dispatch(
 				updateEvent({
 					id: eventId,
-					description: plainText,
-					descriptionRich: richText,
+					content: plainText,
+					contentRich: richText,
 				}),
 			)
 		}, 500),
@@ -29,7 +29,7 @@ export const EventDescription = ({ event, surface }: Props) => {
 
 	return (
 		<RichTextEditorSummoner
-			value={event.descriptionRich}
+			value={event.contentRich}
 			onChange={({ plainText, richText }) => {
 				debouncedUpdate.current(event.id, plainText, richText)
 			}}

@@ -28,7 +28,7 @@ export function resolveEntityName({
 			type: 'event',
 			name: `${event.name}`,
 			fullName: `${event.name} :: ${formatTimestamp(event.timestamp, worldData)}`,
-			summary: toSummary(event.descriptionRich),
+			summary: toSummary(event.contentRich),
 		}
 
 	const actor = actors.find((actor) => actor.id === entityId)
@@ -37,7 +37,7 @@ export function resolveEntityName({
 			type: 'actor',
 			name: actor.name,
 			fullName: `${actor.name}${actor.title ? `, ${actor.title}` : ''}`,
-			summary: toSummary(actor.descriptionRich),
+			summary: toSummary(actor.contentRich),
 		}
 
 	const tag = tags.find((tag) => tag.id === entityId)

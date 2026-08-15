@@ -16,13 +16,13 @@ const mockWorldData = mockWorldDetails({
 			id: 'actor-1',
 			name: 'Alice',
 			title: 'Queen of the North',
-			descriptionRich: 'She is brave and wise.',
+			contentRich: 'She is brave and wise.',
 		}),
 		mockWorldActor({
 			id: 'actor-2',
 			name: 'Bob the Builder',
 			title: '',
-			descriptionRich: 'A skilled craftsman.',
+			contentRich: 'A skilled craftsman.',
 		}),
 	],
 	events: [
@@ -30,9 +30,9 @@ const mockWorldData = mockWorldDetails({
 			id: 'event-1',
 			name: 'The Great Battle',
 			timestamp: '100',
-			descriptionRich: 'A terrible conflict erupted.',
+			contentRich: 'A terrible conflict erupted.',
 		}),
-		mockWorldEvent({ id: 'event-2', name: 'Peace Treaty Signing', timestamp: '200', descriptionRich: '' }),
+		mockWorldEvent({ id: 'event-2', name: 'Peace Treaty Signing', timestamp: '200', contentRich: '' }),
 	],
 	tags: [
 		mockWorldTag({ id: 'tag-1', name: 'Important', description: 'Critical events and turning points.' }),
@@ -144,7 +144,7 @@ describe('resolveSavedMentions', () => {
 						id: 'event-1',
 						name: 'Multi-line Event',
 						timestamp: '100',
-						descriptionRich: '<p>First line.</p><p>Second line.</p>',
+						contentRich: '<p>First line.</p><p>Second line.</p>',
 					}),
 				],
 			})
@@ -164,7 +164,7 @@ describe('resolveSavedMentions', () => {
 						id: 'event-1',
 						name: 'The Great Battle',
 						timestamp: '100',
-						descriptionRich: `Led by ${aliceMentionSpan}.`,
+						contentRich: `Led by ${aliceMentionSpan}.`,
 					}),
 				],
 			})

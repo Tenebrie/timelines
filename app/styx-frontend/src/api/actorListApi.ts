@@ -6,51 +6,6 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
-			getActorContent: build.query<GetActorContentApiResponse, GetActorContentApiArg>({
-				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content` }),
-				providesTags: ['actorList'],
-			}),
-			putActorContent: build.mutation<PutActorContentApiResponse, PutActorContentApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content`,
-					method: 'PUT',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['actorList'],
-			}),
-			getActorContentPage: build.query<GetActorContentPageApiResponse, GetActorContentPageApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content/pages/${queryArg.pageId}`,
-				}),
-				providesTags: ['actorList'],
-			}),
-			putActorContentPage: build.mutation<PutActorContentPageApiResponse, PutActorContentPageApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content/pages/${queryArg.pageId}`,
-					method: 'PUT',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['actorList'],
-			}),
-			deleteActorContentPage: build.mutation<DeleteActorContentPageApiResponse, DeleteActorContentPageApiArg>(
-				{
-					query: (queryArg) => ({
-						url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content/pages/${queryArg.pageId}`,
-						method: 'DELETE',
-					}),
-					invalidatesTags: ['actorList'],
-				},
-			),
-			createActorContentPage: build.mutation<CreateActorContentPageApiResponse, CreateActorContentPageApiArg>(
-				{
-					query: (queryArg) => ({
-						url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content/pages`,
-						method: 'POST',
-						body: queryArg.body,
-					}),
-					invalidatesTags: ['actorList'],
-				},
-			),
 			createActor: build.mutation<CreateActorApiResponse, CreateActorApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/actors`,
@@ -82,79 +37,6 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as actorListApi }
-export type GetActorContentApiResponse = /** status 200  */ {
-	contentHtml: string
-}
-export type GetActorContentApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	actorId: string
-}
-export type PutActorContentApiResponse = unknown
-export type PutActorContentApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	actorId: string
-	body: {
-		content: string
-		reloadClients?: boolean
-	}
-}
-export type GetActorContentPageApiResponse = /** status 200  */ {
-	contentHtml: string
-}
-export type GetActorContentPageApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	actorId: string
-	/** Any string value */
-	pageId: string
-}
-export type PutActorContentPageApiResponse = unknown
-export type PutActorContentPageApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	actorId: string
-	/** Any string value */
-	pageId: string
-	body: {
-		content: string
-		reloadClients?: boolean
-	}
-}
-export type DeleteActorContentPageApiResponse = unknown
-export type DeleteActorContentPageApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	actorId: string
-	/** Any string value */
-	pageId: string
-}
-export type CreateActorContentPageApiResponse = /** status 200  */ {
-	description: string
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	descriptionRich: string
-	parentActorId?: null | string
-	parentEventId?: null | string
-	parentArticleId?: null | string
-}
-export type CreateActorContentPageApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	actorId: string
-	body: {
-		name: string
-	}
-}
 export type CreateActorApiResponse = /** status 200  */ {
 	pages: {
 		id: string
@@ -162,7 +44,6 @@ export type CreateActorApiResponse = /** status 200  */ {
 	}[]
 	mentions: {
 		id: string
-		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -175,10 +56,10 @@ export type CreateActorApiResponse = /** status 200  */ {
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
+		pageId?: null | string
 	}[]
 	mentionedIn: {
 		id: string
-		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -191,8 +72,8 @@ export type CreateActorApiResponse = /** status 200  */ {
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
+		pageId?: null | string
 	}[]
-	description: string
 	worldId: string
 	id: string
 	createdAt: string
@@ -201,7 +82,8 @@ export type CreateActorApiResponse = /** status 200  */ {
 	title: string
 	icon: string
 	color: string
-	descriptionRich: string
+	content: string
+	contentRich: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 }
@@ -213,7 +95,7 @@ export type CreateActorApiArg = {
 		title?: string
 		icon?: string
 		color?: string
-		descriptionRich?: string
+		contentRich?: string
 		parentFolderId?: null | string
 	}
 }
@@ -224,7 +106,6 @@ export type UpdateActorApiResponse = /** status 200  */ {
 	}[]
 	mentions: {
 		id: string
-		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -237,10 +118,10 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
+		pageId?: null | string
 	}[]
 	mentionedIn: {
 		id: string
-		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -253,8 +134,8 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
+		pageId?: null | string
 	}[]
-	description: string
 	worldId: string
 	id: string
 	createdAt: string
@@ -263,7 +144,8 @@ export type UpdateActorApiResponse = /** status 200  */ {
 	title: string
 	icon: string
 	color: string
-	descriptionRich: string
+	content: string
+	contentRich: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 }
@@ -280,7 +162,6 @@ export type UpdateActorApiArg = {
 	}
 }
 export type DeleteActorApiResponse = /** status 200  */ {
-	description: string
 	worldId: string
 	id: string
 	createdAt: string
@@ -289,7 +170,8 @@ export type DeleteActorApiResponse = /** status 200  */ {
 	title: string
 	icon: string
 	color: string
-	descriptionRich: string
+	content: string
+	contentRich: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 }
@@ -311,14 +193,6 @@ export type GetActorBacklinksApiArg = {
 	actorId: string
 }
 export const {
-	useGetActorContentQuery,
-	useLazyGetActorContentQuery,
-	usePutActorContentMutation,
-	useGetActorContentPageQuery,
-	useLazyGetActorContentPageQuery,
-	usePutActorContentPageMutation,
-	useDeleteActorContentPageMutation,
-	useCreateActorContentPageMutation,
 	useCreateActorMutation,
 	useUpdateActorMutation,
 	useDeleteActorMutation,

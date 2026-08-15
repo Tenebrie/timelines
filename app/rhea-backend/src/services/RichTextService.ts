@@ -18,6 +18,13 @@ export type EmbeddedImageNodeContent = {
 	assetId: string
 }
 
+export type DocumentContent = {
+	content: string
+	contentRich: string
+	mentions: MentionData[]
+	referencedAssetIds: string[]
+}
+
 export const RichTextService = {
 	parseContentString: async ({
 		worldId,
@@ -25,12 +32,7 @@ export const RichTextService = {
 	}: {
 		worldId: string
 		contentString: string
-	}): Promise<{
-		contentPlain: string
-		contentRich: string
-		mentions: MentionData[]
-		referencedAssetIds: string[]
-	}> => {
+	}): Promise<DocumentContent> => {
 		const $ = load(contentString)
 		const mentions: MentionData[] = []
 
@@ -135,7 +137,7 @@ export const RichTextService = {
 		const validMentions = await asyncFilter(mentions, RichTextService.isMentionValid)
 
 		return {
-			contentPlain,
+			content: contentPlain,
 			contentRich: contentString,
 			mentions: validMentions,
 			referencedAssetIds: referencedAssetIds.filter((assetId): assetId is string => !!assetId),

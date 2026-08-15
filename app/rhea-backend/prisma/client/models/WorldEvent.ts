@@ -47,8 +47,8 @@ export type WorldEventMinAggregateOutputType = {
   name: string | null
   timestamp: bigint | null
   revokedAt: bigint | null
-  description: string | null
-  descriptionRich: string | null
+  content: string | null
+  contentRich: string | null
   worldId: string | null
   worldEventTrackId: string | null
   parentFolderId: string | null
@@ -64,8 +64,8 @@ export type WorldEventMaxAggregateOutputType = {
   name: string | null
   timestamp: bigint | null
   revokedAt: bigint | null
-  description: string | null
-  descriptionRich: string | null
+  content: string | null
+  contentRich: string | null
   worldId: string | null
   worldEventTrackId: string | null
   parentFolderId: string | null
@@ -81,8 +81,8 @@ export type WorldEventCountAggregateOutputType = {
   name: number
   timestamp: number
   revokedAt: number
-  description: number
-  descriptionRich: number
+  content: number
+  contentRich: number
   worldId: number
   worldEventTrackId: number
   parentFolderId: number
@@ -112,8 +112,8 @@ export type WorldEventMinAggregateInputType = {
   name?: true
   timestamp?: true
   revokedAt?: true
-  description?: true
-  descriptionRich?: true
+  content?: true
+  contentRich?: true
   worldId?: true
   worldEventTrackId?: true
   parentFolderId?: true
@@ -129,8 +129,8 @@ export type WorldEventMaxAggregateInputType = {
   name?: true
   timestamp?: true
   revokedAt?: true
-  description?: true
-  descriptionRich?: true
+  content?: true
+  contentRich?: true
   worldId?: true
   worldEventTrackId?: true
   parentFolderId?: true
@@ -146,8 +146,8 @@ export type WorldEventCountAggregateInputType = {
   name?: true
   timestamp?: true
   revokedAt?: true
-  description?: true
-  descriptionRich?: true
+  content?: true
+  contentRich?: true
   worldId?: true
   worldEventTrackId?: true
   parentFolderId?: true
@@ -250,8 +250,8 @@ export type WorldEventGroupByOutputType = {
   name: string
   timestamp: bigint
   revokedAt: bigint | null
-  description: string
-  descriptionRich: string
+  content: string
+  contentRich: string
   worldId: string
   worldEventTrackId: string | null
   parentFolderId: string | null
@@ -290,8 +290,8 @@ export type WorldEventWhereInput = {
   name?: Prisma.StringFilter<"WorldEvent"> | string
   timestamp?: Prisma.BigIntFilter<"WorldEvent"> | bigint | number
   revokedAt?: Prisma.BigIntNullableFilter<"WorldEvent"> | bigint | number | null
-  description?: Prisma.StringFilter<"WorldEvent"> | string
-  descriptionRich?: Prisma.StringFilter<"WorldEvent"> | string
+  content?: Prisma.StringFilter<"WorldEvent"> | string
+  contentRich?: Prisma.StringFilter<"WorldEvent"> | string
   worldId?: Prisma.StringFilter<"WorldEvent"> | string
   worldEventTrackId?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
   parentFolderId?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
@@ -315,8 +315,8 @@ export type WorldEventOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  description?: Prisma.SortOrder
-  descriptionRich?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   worldEventTrackId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -343,8 +343,8 @@ export type WorldEventWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"WorldEvent"> | string
   timestamp?: Prisma.BigIntFilter<"WorldEvent"> | bigint | number
   revokedAt?: Prisma.BigIntNullableFilter<"WorldEvent"> | bigint | number | null
-  description?: Prisma.StringFilter<"WorldEvent"> | string
-  descriptionRich?: Prisma.StringFilter<"WorldEvent"> | string
+  content?: Prisma.StringFilter<"WorldEvent"> | string
+  contentRich?: Prisma.StringFilter<"WorldEvent"> | string
   worldId?: Prisma.StringFilter<"WorldEvent"> | string
   worldEventTrackId?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
   parentFolderId?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
@@ -368,8 +368,8 @@ export type WorldEventOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  description?: Prisma.SortOrder
-  descriptionRich?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   worldEventTrackId?: Prisma.SortOrderInput | Prisma.SortOrder
   parentFolderId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -393,8 +393,8 @@ export type WorldEventScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
   timestamp?: Prisma.BigIntWithAggregatesFilter<"WorldEvent"> | bigint | number
   revokedAt?: Prisma.BigIntNullableWithAggregatesFilter<"WorldEvent"> | bigint | number | null
-  description?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
-  descriptionRich?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
+  content?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
+  contentRich?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
   worldId?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
   worldEventTrackId?: Prisma.StringNullableWithAggregatesFilter<"WorldEvent"> | string | null
   parentFolderId?: Prisma.StringNullableWithAggregatesFilter<"WorldEvent"> | string | null
@@ -410,8 +410,8 @@ export type WorldEventCreateInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
@@ -432,8 +432,8 @@ export type WorldEventUncheckedCreateInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldId: string
   worldEventTrackId?: string | null
   parentFolderId?: string | null
@@ -454,8 +454,8 @@ export type WorldEventUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
@@ -476,8 +476,8 @@ export type WorldEventUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -498,8 +498,8 @@ export type WorldEventCreateManyInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldId: string
   worldEventTrackId?: string | null
   parentFolderId?: string | null
@@ -515,8 +515,8 @@ export type WorldEventUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
@@ -529,8 +529,8 @@ export type WorldEventUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -561,8 +561,8 @@ export type WorldEventCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  descriptionRich?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   worldEventTrackId?: Prisma.SortOrder
   parentFolderId?: Prisma.SortOrder
@@ -584,8 +584,8 @@ export type WorldEventMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  descriptionRich?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   worldEventTrackId?: Prisma.SortOrder
   parentFolderId?: Prisma.SortOrder
@@ -601,8 +601,8 @@ export type WorldEventMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
   revokedAt?: Prisma.SortOrder
-  description?: Prisma.SortOrder
-  descriptionRich?: Prisma.SortOrder
+  content?: Prisma.SortOrder
+  contentRich?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   worldEventTrackId?: Prisma.SortOrder
   parentFolderId?: Prisma.SortOrder
@@ -841,8 +841,8 @@ export type WorldEventCreateWithoutAssetRefsInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
@@ -862,8 +862,8 @@ export type WorldEventUncheckedCreateWithoutAssetRefsInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldId: string
   worldEventTrackId?: string | null
   parentFolderId?: string | null
@@ -899,8 +899,8 @@ export type WorldEventUpdateWithoutAssetRefsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
@@ -920,8 +920,8 @@ export type WorldEventUncheckedUpdateWithoutAssetRefsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -941,8 +941,8 @@ export type WorldEventCreateWithoutPagesInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   parentFolderPosition?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
@@ -962,8 +962,8 @@ export type WorldEventUncheckedCreateWithoutPagesInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldId: string
   worldEventTrackId?: string | null
   parentFolderId?: string | null
@@ -999,8 +999,8 @@ export type WorldEventUpdateWithoutPagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
@@ -1020,8 +1020,8 @@ export type WorldEventUncheckedUpdateWithoutPagesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1041,8 +1041,8 @@ export type WorldEventCreateWithoutMentionsInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
@@ -1062,8 +1062,8 @@ export type WorldEventUncheckedCreateWithoutMentionsInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldId: string
   worldEventTrackId?: string | null
   parentFolderId?: string | null
@@ -1088,8 +1088,8 @@ export type WorldEventCreateWithoutMentionedInInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
@@ -1109,8 +1109,8 @@ export type WorldEventUncheckedCreateWithoutMentionedInInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldId: string
   worldEventTrackId?: string | null
   parentFolderId?: string | null
@@ -1146,8 +1146,8 @@ export type WorldEventUpdateWithoutMentionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
@@ -1167,8 +1167,8 @@ export type WorldEventUncheckedUpdateWithoutMentionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1199,8 +1199,8 @@ export type WorldEventUpdateWithoutMentionedInInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
@@ -1220,8 +1220,8 @@ export type WorldEventUncheckedUpdateWithoutMentionedInInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1241,8 +1241,8 @@ export type WorldEventCreateWithoutParentFolderInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
@@ -1262,8 +1262,8 @@ export type WorldEventUncheckedCreateWithoutParentFolderInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldId: string
   worldEventTrackId?: string | null
   parentFolderPosition?: number
@@ -1312,8 +1312,8 @@ export type WorldEventScalarWhereInput = {
   name?: Prisma.StringFilter<"WorldEvent"> | string
   timestamp?: Prisma.BigIntFilter<"WorldEvent"> | bigint | number
   revokedAt?: Prisma.BigIntNullableFilter<"WorldEvent"> | bigint | number | null
-  description?: Prisma.StringFilter<"WorldEvent"> | string
-  descriptionRich?: Prisma.StringFilter<"WorldEvent"> | string
+  content?: Prisma.StringFilter<"WorldEvent"> | string
+  contentRich?: Prisma.StringFilter<"WorldEvent"> | string
   worldId?: Prisma.StringFilter<"WorldEvent"> | string
   worldEventTrackId?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
   parentFolderId?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
@@ -1329,8 +1329,8 @@ export type WorldEventCreateWithoutWorldInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
@@ -1350,8 +1350,8 @@ export type WorldEventUncheckedCreateWithoutWorldInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldEventTrackId?: string | null
   parentFolderId?: string | null
   parentFolderPosition?: number
@@ -1397,8 +1397,8 @@ export type WorldEventCreateWithoutDeltaStatesInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
@@ -1418,8 +1418,8 @@ export type WorldEventUncheckedCreateWithoutDeltaStatesInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldId: string
   worldEventTrackId?: string | null
   parentFolderId?: string | null
@@ -1455,8 +1455,8 @@ export type WorldEventUpdateWithoutDeltaStatesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
@@ -1476,8 +1476,8 @@ export type WorldEventUncheckedUpdateWithoutDeltaStatesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1497,8 +1497,8 @@ export type WorldEventCreateWithoutTrackInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   parentFolderPosition?: number
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
@@ -1518,8 +1518,8 @@ export type WorldEventUncheckedCreateWithoutTrackInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
@@ -1565,8 +1565,8 @@ export type WorldEventCreateManyParentFolderInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldId: string
   worldEventTrackId?: string | null
   parentFolderPosition?: number
@@ -1581,8 +1581,8 @@ export type WorldEventUpdateWithoutParentFolderInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
@@ -1602,8 +1602,8 @@ export type WorldEventUncheckedUpdateWithoutParentFolderInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1623,8 +1623,8 @@ export type WorldEventUncheckedUpdateManyWithoutParentFolderInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1639,8 +1639,8 @@ export type WorldEventCreateManyWorldInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldEventTrackId?: string | null
   parentFolderId?: string | null
   parentFolderPosition?: number
@@ -1655,8 +1655,8 @@ export type WorldEventUpdateWithoutWorldInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
@@ -1676,8 +1676,8 @@ export type WorldEventUncheckedUpdateWithoutWorldInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1697,8 +1697,8 @@ export type WorldEventUncheckedUpdateManyWithoutWorldInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1713,8 +1713,8 @@ export type WorldEventCreateManyTrackInput = {
   name: string
   timestamp: bigint | number
   revokedAt?: bigint | number | null
-  description?: string
-  descriptionRich?: string
+  content?: string
+  contentRich?: string
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
@@ -1729,8 +1729,8 @@ export type WorldEventUpdateWithoutTrackInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
@@ -1750,8 +1750,8 @@ export type WorldEventUncheckedUpdateWithoutTrackInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1771,8 +1771,8 @@ export type WorldEventUncheckedUpdateManyWithoutTrackInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
@@ -1854,8 +1854,8 @@ export type WorldEventSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   name?: boolean
   timestamp?: boolean
   revokedAt?: boolean
-  description?: boolean
-  descriptionRich?: boolean
+  content?: boolean
+  contentRich?: boolean
   worldId?: boolean
   worldEventTrackId?: boolean
   parentFolderId?: boolean
@@ -1880,8 +1880,8 @@ export type WorldEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   name?: boolean
   timestamp?: boolean
   revokedAt?: boolean
-  description?: boolean
-  descriptionRich?: boolean
+  content?: boolean
+  contentRich?: boolean
   worldId?: boolean
   worldEventTrackId?: boolean
   parentFolderId?: boolean
@@ -1900,8 +1900,8 @@ export type WorldEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   name?: boolean
   timestamp?: boolean
   revokedAt?: boolean
-  description?: boolean
-  descriptionRich?: boolean
+  content?: boolean
+  contentRich?: boolean
   worldId?: boolean
   worldEventTrackId?: boolean
   parentFolderId?: boolean
@@ -1920,15 +1920,15 @@ export type WorldEventSelectScalar = {
   name?: boolean
   timestamp?: boolean
   revokedAt?: boolean
-  description?: boolean
-  descriptionRich?: boolean
+  content?: boolean
+  contentRich?: boolean
   worldId?: boolean
   worldEventTrackId?: boolean
   parentFolderId?: boolean
   parentFolderPosition?: boolean
 }
 
-export type WorldEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "icon" | "color" | "name" | "timestamp" | "revokedAt" | "description" | "descriptionRich" | "worldId" | "worldEventTrackId" | "parentFolderId" | "parentFolderPosition", ExtArgs["result"]["worldEvent"]>
+export type WorldEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "icon" | "color" | "name" | "timestamp" | "revokedAt" | "content" | "contentRich" | "worldId" | "worldEventTrackId" | "parentFolderId" | "parentFolderPosition", ExtArgs["result"]["worldEvent"]>
 export type WorldEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pages?: boolean | Prisma.WorldEvent$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.WorldEvent$mentionsArgs<ExtArgs>
@@ -1972,8 +1972,8 @@ export type $WorldEventPayload<ExtArgs extends runtime.Types.Extensions.Internal
     name: string
     timestamp: bigint
     revokedAt: bigint | null
-    description: string
-    descriptionRich: string
+    content: string
+    contentRich: string
     worldId: string
     worldEventTrackId: string | null
     parentFolderId: string | null
@@ -2417,8 +2417,8 @@ export interface WorldEventFieldRefs {
   readonly name: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly timestamp: Prisma.FieldRef<"WorldEvent", 'BigInt'>
   readonly revokedAt: Prisma.FieldRef<"WorldEvent", 'BigInt'>
-  readonly description: Prisma.FieldRef<"WorldEvent", 'String'>
-  readonly descriptionRich: Prisma.FieldRef<"WorldEvent", 'String'>
+  readonly content: Prisma.FieldRef<"WorldEvent", 'String'>
+  readonly contentRich: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly worldId: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly worldEventTrackId: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly parentFolderId: Prisma.FieldRef<"WorldEvent", 'String'>

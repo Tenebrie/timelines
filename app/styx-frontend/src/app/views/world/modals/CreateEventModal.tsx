@@ -43,7 +43,7 @@ export const CreateEventModal = () => {
 
 		const createdEvent = await createEvent({
 			name: descriptionPlain.trim(),
-			descriptionRich: trimmedDescription,
+			contentRich: trimmedDescription,
 			timestamp: String(selectedTime),
 			worldEventTrackId: targetTrack,
 		})

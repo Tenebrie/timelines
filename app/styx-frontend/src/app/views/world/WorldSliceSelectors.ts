@@ -13,7 +13,7 @@ export const getWorldRouterState = createSelector([getWorldState], (state) => ({
 	isReadOnly: state.isReadOnly,
 }))
 export const getEventDescriptionRich = (eventId: string) => (state: RootState) =>
-	state.world.events.find((event) => event.id === eventId)?.descriptionRich ?? ''
+	state.world.events.find((event) => event.id === eventId)?.contentRich ?? ''
 export const getEventCreatorState = (state: RootState) => state.world.eventCreator
 export const getEventDeltaCreatorState = (state: RootState) => state.world.eventDeltaCreator
 export const getTimelineContextMenuState = (state: RootState) => state.world.timelineContextMenu

@@ -67,7 +67,7 @@ export function registerCreateEventTool(server: McpServer) {
 					name,
 					timestamp: resolveDateTime(dateTime, worldData),
 					color: normalizeColor(color),
-					descriptionRich: parsedDescription || '',
+					contentRich: parsedDescription || '',
 				})
 
 				Logger.toolSuccess(TOOL_NAME, `Created event: ${event.name} (${event.id})`)

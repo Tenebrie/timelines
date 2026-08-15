@@ -32,8 +32,8 @@ export const EventContentRenderer = ({ event, active }: Props) => {
 		}
 	}, [event.revokedAt, event.timestamp, scrollTimelineTo])
 
-	// const paragraphs = event.description.split('\n').filter((p) => p.trim().length > 0)
-	const paragraphs = [event.descriptionRich]
+	// const paragraphs = event.content.split('\n').filter((p) => p.trim().length > 0)
+	const paragraphs = [event.contentRich]
 
 	const revokedAtTimestamp = isNotNull(event.revokedAt) ? (
 		<>

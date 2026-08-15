@@ -58,7 +58,7 @@ export const RedisService = {
 	) => {
 		const eventToSend = {
 			...event,
-			descriptionRich: undefined,
+			contentRich: undefined,
 		}
 		calliope.sendMessage({
 			type: RheaToCalliopeMessageType.WORLD_EVENT_UPDATED,
@@ -118,7 +118,7 @@ export const RedisService = {
 	) => {
 		const actorToSend = {
 			...actor,
-			descriptionRich: undefined,
+			contentRich: undefined,
 		}
 		calliope.sendMessage({
 			type: RheaToCalliopeMessageType.ACTOR_UPDATED,

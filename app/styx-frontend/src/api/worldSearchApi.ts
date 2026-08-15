@@ -44,7 +44,6 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			positionX: number
 			positionY: number
 		}[]
-		description: string
 		worldId: string
 		id: string
 		createdAt: string
@@ -53,7 +52,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		title: string
 		icon: string
 		color: string
-		descriptionRich: string
+		content: string
+		contentRich: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
 	}[]
@@ -77,10 +77,10 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		name: string
 		icon: string
 		color: string
-		parentFolderId?: null | string
-		parentFolderPosition: number
 		content: string
 		contentRich: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
 	}[]
 	events: {
 		pages: {
@@ -101,11 +101,10 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			createdAt: string
 			updatedAt: string
 			name?: null | string
-			descriptionRich?: null | string
 			timestamp: string
+			descriptionRich?: null | string
 			worldEventId: string
 		}[]
-		description: string
 		worldId: string
 		id: string
 		createdAt: string
@@ -113,7 +112,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		name: string
 		icon: string
 		color: string
-		descriptionRich: string
+		content: string
+		contentRich: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
 		timestamp: string

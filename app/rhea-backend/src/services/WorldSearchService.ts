@@ -68,13 +68,13 @@ export const WorldSearchService = {
 				OR: [
 					{ name: { contains: query, mode: 'insensitive' } },
 					{ title: { contains: query, mode: 'insensitive' } },
-					{ description: { contains: query, mode: 'insensitive' } },
+					{ content: { contains: query, mode: 'insensitive' } },
 					{
 						pages: {
 							some: {
 								OR: [
 									{ name: { contains: query, mode: 'insensitive' } },
-									{ description: { contains: query, mode: 'insensitive' } },
+									{ content: { contains: query, mode: 'insensitive' } },
 								],
 							},
 						},
@@ -120,7 +120,7 @@ export const WorldSearchService = {
 							some: {
 								OR: [
 									{ name: { contains: query, mode: 'insensitive' } },
-									{ description: { contains: query, mode: 'insensitive' } },
+									{ content: { contains: query, mode: 'insensitive' } },
 								],
 							},
 						},
@@ -166,7 +166,7 @@ export const WorldSearchService = {
 					? undefined
 					: [
 							{ name: { contains: query, mode: 'insensitive' } },
-							{ description: { contains: query, mode: 'insensitive' } },
+							{ content: { contains: query, mode: 'insensitive' } },
 							{
 								deltaStates: {
 									some: {
@@ -182,7 +182,7 @@ export const WorldSearchService = {
 									some: {
 										OR: [
 											{ name: { contains: query, mode: 'insensitive' } },
-											{ description: { contains: query, mode: 'insensitive' } },
+											{ content: { contains: query, mode: 'insensitive' } },
 										],
 									},
 								},

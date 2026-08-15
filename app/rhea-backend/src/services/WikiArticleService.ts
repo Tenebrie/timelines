@@ -50,15 +50,6 @@ export const WikiArticleService = {
 		return article
 	},
 
-	findArticleByIdWithContentDeltas: async ({ id, worldId }: { id: string; worldId: string }) => {
-		return getPrismaClient().wikiArticle.findFirst({
-			where: {
-				id,
-				worldId,
-			},
-		})
-	},
-
 	listWikiArticles: async (params: Pick<WikiArticle, 'worldId'>) => {
 		const articles = await getPrismaClient().wikiArticle.findMany({
 			where: {

@@ -21,15 +21,15 @@ export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }:
 	const theme = useCustomTheme()
 
 	const description = useMemo(() => {
-		const firstParagraph = actor.description.split('\n')[0]
-		if (firstParagraph.length < actor.description.length - 1) {
+		const firstParagraph = actor.content.split('\n')[0]
+		if (firstParagraph.length < actor.content.length - 1) {
 			return {
 				content: firstParagraph,
 				more: true,
 			}
 		}
 		return { content: firstParagraph }
-	}, [actor.description])
+	}, [actor.content])
 
 	return (
 		<Box
