@@ -97,7 +97,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`
 				class="flex flex-col lg:flex-row lg:self-center w-full lg:w-auto text-xl lg:text-[0.9375rem] tracking-[0.01rem] font-medium lg:justify-center"
 			>
 				{
-					links.map(({ text, href, links }) => (
+					links.map(({ text, href, icon, links }) => (
 						<li class={links?.length ? 'dropdown' : ''}>
 							{links?.length ? (
 								<>
@@ -135,6 +135,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`
 									]}
 									href={href}
 								>
+									{icon && <Icon name={icon} class="w-[1.15em] h-[1.15em] mr-1.5 rtl:mr-0 rtl:ml-1.5" />}
 									{text}
 								</a>
 							)}

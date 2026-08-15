@@ -1,0 +1,161 @@
+---
+import { Icon } from 'astro-icon/components'
+import Layout from '~/layouts/PageLayout.astro'
+import Button from '~/components/ui/Button.astro'
+
+const metadata = {
+	title: 'Download Neverkin Desktop',
+	description: 'Download Neverkin Desktop for Linux and Windows.',
+}
+
+const platforms = [
+	{
+		key: 'linux',
+		name: 'Linux',
+		icon: 'tabler:brand-ubuntu',
+		arch: 'x64',
+		format: '.tar.gz',
+		asset: 'neverkin-desktop-linux-x64.tar.gz',
+		available: true,
+	},
+	{
+		key: 'windows',
+		name: 'Windows',
+		icon: 'tabler:brand-windows',
+		arch: 'x64',
+		format: '.zip',
+		asset: 'neverkin-desktop-win32-x64.zip',
+		available: true,
+	},
+	{
+		key: 'mac',
+		name: 'macOS',
+		icon: 'tabler:brand-apple',
+		arch: 'arm64',
+		format: '.zip',
+		asset: '',
+		available: false,
+	},
+]
+---
+
+<Layout metadata={metadata}>
+	<section class="relative">
+		<div class="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-20">
+			<!-- Headline -->
+			<div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+				<p class="text-brand-gradient font-bold uppercase tracking-widest text-sm mb-2">Downloads</p>
+				<h1
+					class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200"
+				>
+					<span class="text-brand-gradient">Neverkin</span> Desktop
+				</h1>
+				<p class="text-xl text-muted dark:text-slate-300">No internet required*</p>
+			</div>
+
+			<!-- Platform cards -->
+			<div class="grid gap-6 sm:grid-cols-2 max-w-3xl mx-auto">
+				{
+					platforms
+						.filter((platform) => platform.available)
+						.map((platform) => (
+							<div
+								data-platform={platform.key}
+								class="group relative flex flex-col items-center text-center rounded-xl border border-gray-200 dark:border-slate-700/40 bg-gray-50/50 dark:bg-slate-800/30 p-8 transition-all duration-200 hover:border-primary/40 hover:shadow-lg hover:shadow-purple-900/10"
+							>
+								<span
+									data-recommended-badge
+									class="hidden absolute -top-3 left-1/2 -translate-x-1/2 text-[11px] font-semibold uppercase tracking-wider text-white bg-primary px-3 py-0.5 rounded-full whitespace-nowrap"
+								>
+									For your system
+								</span>
+								<div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+									<Icon name={platform.icon} class="w-9 h-9 text-primary" />
+								</div>
+								<h2 class="text-2xl font-bold dark:text-white mb-1">{platform.name}</h2>
+								<p class="text-sm text-gray-500 dark:text-slate-400 mb-6">
+									{platform.arch} &middot; {platform.format}
+									<span data-version />
+								</p>
+								<Button
+									variant="primary"
+									text={`Download for ${platform.name}`}
+									href={`https://github.com/Tenebrie/timelines/releases/latest/download/${platform.asset}`}
+									icon="tabler:download"
+									class="w-full"
+								/>
+							</div>
+						))
+				}
+			</div>
+
+			<!-- Footnote -->
+			<div class="text-center mt-10 space-y-2">
+				<p class="text-sm text-gray-500 dark:text-slate-400">
+					Previous versions available as
+					<a
+						href="https://github.com/Tenebrie/timelines/releases"
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-primary hover:underline">GitHub releases</a
+					>.
+				</p>
+				<p class="text-sm text-gray-500 dark:text-slate-400">
+					*You do require an internet connection to download the app.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<script is:inline>
+		const ua = navigator.userAgent
+		const detected = ua.includes('Windows')
+			? 'windows'
+			: ua.includes('Mac')
+				? 'mac'
+				: ua.includes('Linux')
+					? 'linux'
+					: null
+		const card = detected && document.querySelector(`[data-platform="${detected}"]`)
+		if (card) {
+			card.classList.add('border-primary/50', 'dark:border-primary/50')
+			card.querySelector('[data-recommended-badge]')?.classList.remove('hidden')
+		}
+
+		async function fetchLatestTag() {
+			const cached = sessionStorage.getItem('latest-release-tag')
+			if (cached) {
+				const { tag, storedAt } = JSON.parse(cached)
+				if (Date.now() - storedAt < 60_000) {
+					return tag
+				}
+			}
+			const response = await fetch('https://api.github.com/repos/Tenebrie/timelines/releases/latest', {
+				headers: { Accept: 'application/vnd.github+json' },
+			})
+			if (!response.ok) {
+				return null
+			}
+			const release = await response.json()
+			if (!release.tag_name) {
+				return null
+			}
+			sessionStorage.setItem(
+				'latest-release-tag',
+				JSON.stringify({ tag: release.tag_name, storedAt: Date.now() }),
+			)
+			return release.tag_name
+		}
+
+		async function showLatestVersion() {
+			const tag = await fetchLatestTag()
+			if (!tag) {
+				return
+			}
+			document.querySelectorAll('[data-version]').forEach((label) => {
+				label.textContent = ` · ${tag}`
+			})
+		}
+		showLatestVersion().catch(() => {})
+	</script>
+</Layout>
