@@ -1,6 +1,7 @@
 ---
 import Layout from '~/layouts/PageLayout.astro'
 import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
 import devPhoto from '~/assets/images/dev-photo.jpg'
 
 import Hero from '~/components/widgets/Hero.astro'
@@ -51,27 +52,40 @@ const metadata = {
 		actions={[
 			{
 				variant: 'primary',
-				text: 'Start Telling Your Story',
+				text: 'Web Version',
 				href: 'https://app.neverkin.com',
-				icon: 'tabler:sparkles',
+				icon: 'tabler:pencil-heart',
 			},
-			{ text: 'See How It Works', href: '#how-it-works' },
+			{ text: 'Desktop App', href: '/download', icon: 'tabler:download' },
 		]}
 	>
 		<Fragment slot="title">
-			That online writing app<br />
-			<span class="text-brand-gradient">you never knew you needed</span>
+			<span class="text-brand-gradient">Worlds</span> for notes and <span class="text-brand-gradient"
+				>thoughts</span
+			>
 		</Fragment>
 
 		<Fragment slot="subtitle">
 			<span class="hidden sm:inline">
-				<span class="font-semibold text-brand-gradient">Neverkin</span> is the open-source collaborative writing
-				and worldbuilding platform for storytellers, game masters, writers, and creators.</span
+				<span class="font-semibold text-brand-gradient">Neverkin</span> is a worldbuilding platform for people.</span
 			>
-			Manage your timelines, characters, lore, and interconnected stories - all in real-time with your friends.
+			Just write something neat.
 		</Fragment>
 
 		<Fragment slot="content">
+			<p
+				class="mt-6 text-center text-sm text-muted dark:text-slate-400 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+			>
+				<a
+					href="https://github.com/tenebrie/timelines"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex items-center gap-1.5 text-primary hover:underline"
+				>
+					<Icon name="tabler:brand-github" class="w-4 h-4" />
+					Grab sources here
+				</a>
+			</p>
 			<div
 				class="mt-8 flex justify-center intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
 			>
@@ -306,9 +320,8 @@ const metadata = {
 	<!-- ==================== STATS / HIGHLIGHTS ==================== -->
 	<Stats
 		stats={[
-			{ title: 'No Paywalls', amount: '100% Free', icon: 'tabler:heart' },
-			{ title: 'No Artificial Limitations', amount: 'Unlimited', icon: 'tabler:infinity' },
-			{ title: 'Of Active Development', amount: '4+ Years', icon: 'tabler:code' },
+			{ title: 'In Development Since', amount: 'Est. 2022', icon: 'tabler:code' },
+			{ title: 'No Credit Cards Accepted', amount: '0 Paywalls', icon: 'tabler:heart' },
 			{ title: 'Performance Focus', amount: '240+ fps', icon: 'tabler:bolt' },
 		]}
 	/>
@@ -316,44 +329,48 @@ const metadata = {
 	<!-- ==================== KEY FEATURES ==================== -->
 	<Features
 		id="features"
-		tagline="Writing Tools to Build Your Story"
-		title="Everything you need to build living worlds"
-		subtitle="Neverkin brings structure to the creative chaos of storytelling — without getting in the way of your imagination."
+		tagline="Key Features"
+		title="...and some things that are just neat"
+		subtitle="An ever-growing writer's toolkit"
 		items={[
 			{
-				title: 'Interactive Timelines',
+				title: 'Wiki & Characters',
 				description:
-					'Plot events on a visual timeline across billions of years. See how storylines interact, overlap, and evolve across time.',
-				icon: 'tabler:timeline',
-			},
-			// {
-			// 	title: 'Deep Character Management',
-			// 	description:
-			// 		'Create rich character profiles with relationships, arcs, and a visual mindmap showing how everyone connects.',
-			// 	icon: 'tabler:users',
-			// },
-			{
-				title: 'Living Wiki',
-				description:
-					'Build a hierarchical wiki for your lore. Cross-reference characters, events, locations - everything links to everything.',
+					'Define actors, events and articles, group them into folders and link them all through tags and mentions.',
 				icon: 'tabler:book',
 			},
 			{
 				title: 'Real-Time Collaboration',
 				description:
-					'Invite co-authors and collaborators. Edit simultaneously with live sync - perfect for writing groups and TTRPG tables.',
+					'Invite co-authors and collaborators. Your changes sync live over network - perfect for writing groups and TTRPG tables.',
 				icon: 'tabler:arrows-exchange',
+			},
+			{
+				title: 'Map Your Mind',
+				description: 'Plot ideas, relationships or dungeon rooms on a visual mindmap.',
+				icon: 'tabler:timeline',
+			},
+			{
+				title: 'Interactive Timeline',
+				description: 'Plot events on a visual timeline across billions of years.',
+				icon: 'tabler:timeline',
 			},
 			{
 				title: 'Custom Calendars',
 				description:
-					"Earth years too boring? Define your own wild calendar and unprecedented time units. It's not just a reflavor. Esoteric calendars allowed.",
+					'Earth years too boring? Define your own wild calendar and imaginary time units. Esoteric calendars allowed.',
 				icon: 'tabler:calendar',
+			},
+			{
+				title: 'Security & Access Control',
+				description:
+					'Only you can access your data, unless you choose to share it. It is not harvested or sold to anyone.',
+				icon: 'tabler:file-text-shield',
 			},
 			{
 				title: 'AI Integration',
 				description:
-					'Connect your favorite AI assistant via the built-in MCP server. Let AI agents create events and write down your notes - all hands-free.',
+					'Connect your favorite AI assistant via the built-in MCP server. Let the clankers write down your notes.',
 				icon: 'tabler:robot',
 			},
 			{
@@ -366,7 +383,7 @@ const metadata = {
 	/>
 
 	<!-- ==================== SHOWCASE: TIMELINE ==================== -->
-	<Content
+	<!-- <Content
 		isReversed
 		tagline="Showcase"
 		id="showcase"
@@ -457,10 +474,10 @@ const metadata = {
 				</div>
 			</div>
 		</Fragment>
-	</Content>
+	</Content> -->
 
 	<!-- ==================== SHOWCASE: CHARACTERS ==================== -->
-	<Content
+	<!-- <Content
 		isAfterContent
 		items={[
 			{
@@ -553,10 +570,10 @@ const metadata = {
 				</div>
 			</div>
 		</Fragment>
-	</Content>
+	</Content> -->
 
 	<!-- ==================== SHOWCASE: WIKI ==================== -->
-	<Content
+	<!-- <Content
 		isReversed
 		isAfterContent
 		items={[
@@ -625,10 +642,10 @@ const metadata = {
 				</div>
 			</div>
 		</Fragment>
-	</Content>
+	</Content> -->
 
 	<!-- ==================== HOW IT WORKS ==================== -->
-	<Steps
+	<!-- <Steps
 		id="how-it-works"
 		title="Get your story organized in minutes"
 		items={[
@@ -655,7 +672,7 @@ const metadata = {
 				icon: 'tabler:sparkles',
 			},
 		]}
-	/>
+	/> -->
 
 	<!-- ==================== USE CASES ==================== -->
 	<Features2
@@ -736,7 +753,7 @@ const metadata = {
 	/>
 
 	<!-- ==================== PRICING COMPARISON ==================== -->
-	<div id="comparison" class="py-16 md:py-20">
+	<!-- <div id="comparison" class="py-16 md:py-20">
 		<div class="max-w-5xl mx-auto px-4 sm:px-6">
 			<div class="text-center mb-12">
 				<p class="text-brand-gradient font-bold uppercase tracking-widest text-sm mb-2">Comparison</p>
@@ -828,7 +845,7 @@ const metadata = {
 				</table>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<!-- ==================== ABOUT THE DEVELOPER ==================== -->
 	<div class="py-16 md:py-20">
@@ -910,22 +927,7 @@ const metadata = {
 			{
 				title: 'Is Neverkin really free?',
 				description:
-					'Yes! Neverkin is open source under the GPL-3.0 license. You can use the hosted version for free, or self-host it on your own server. There are no premium paywalls or feature gates.',
-			},
-			{
-				title: 'Can I use Neverkin as a DM tool for my TTRPG campaign?',
-				description:
-					'This is what I personally use it for! Session notes, NPC tracking, keeping the session timeline in check. After all, DMs are writers, and Neverkin is a writing tool.',
-			},
-			{
-				title: 'Is Neverkin a good story planner for novelists?',
-				description:
-					'I have interviewed a published German author to help shape this into a powerful tool for writers and novelists. Neverkin is designed with stories in mind, so yes, it strives to be a good tool for novelists.',
-			},
-			{
-				title: 'Can I use custom calendars for my fictional world?',
-				description:
-					'Absolutely. Any calendar system is supported — you define the months, days, hours, and epochs. Neverkin also ships with presets for Earth, Pathfinder 2e, Rimworld, and others as common starting points, but these are not special cases — the system is fully flexible.',
+					"Yes! Neverkin is open-source under the GPL-3.0 license. You can use the hosted version for free, download the desktop version, or self-host it on your own server. You can't pay even if you wanted to. Maybe Patreon at some point in the future.",
 			},
 			{
 				title: 'How does real-time collaboration work?',
@@ -935,12 +937,12 @@ const metadata = {
 			{
 				title: 'Can I keep parts of my world private?',
 				description:
-					'All your data is private by default — nothing is visible to anyone unless you explicitly share it. You can invite collaborators with read-only or editing access, or make a world publicly visible if you choose.',
+					'All your data is private by default - nothing is visible to anyone unless you explicitly share it. You can invite collaborators with read-only or editing access, or make a world publicly visible if you choose. If you self-host, then your creativity never leaves your machine.',
 			},
 			{
-				title: 'Is my data safe? Can I export it?',
+				title: 'Can I export my data from Neverkin?',
 				description:
-					'Your data is stored securely. Since Neverkin is open source, you can also self-host and maintain full control.',
+					'Yes! You can export or import your data as a JSON file to back up your worlds or to move them between environments. Other formats are coming... eventually.',
 			},
 			{
 				title: "I'm a developer. Can I contribute?",
@@ -948,9 +950,9 @@ const metadata = {
 					'I would love that! Neverkin has been built with development experience in mind. Check out the <a href="https://github.com/tenebrie/timelines" class="text-primary hover:underline">GitHub repository</a> to get started.',
 			},
 			{
-				title: "What's the best free writing app for organizing stories?",
+				title: 'I have a question or a suggestion. How do I get in touch?',
 				description:
-					'There are plenty of options around, but none as focused on the user as Neverkin is. I recommend you to give it a go. Mayhaps it will become an important part of your writing toolbelt. And yes, this is SEO bait.',
+					'Either through the <a href="/contact" class="text-primary hover:underline">contact form</a> or on <a href="https://discord.gg/rD3KdXmqDP" class="text-primary hover:underline">Discord</a>. Trust me, I do read them. On most days, you can expect a response within minutes.',
 			},
 		]}
 	/>
@@ -1196,25 +1198,17 @@ const metadata = {
 		actions={[
 			{
 				variant: 'primary',
-				text: 'Start Building',
+				text: 'Web Version',
 				href: 'https://app.neverkin.com',
-				icon: 'tabler:sparkles',
+				icon: 'tabler:pencil-heart',
 			},
-			{
-				variant: 'secondary',
-				text: 'View on GitHub',
-				href: 'https://github.com/tenebrie/timelines',
-				icon: 'tabler:brand-github',
-			},
+			{ text: 'Desktop App', href: '/download', icon: 'tabler:download' },
 		]}
 	>
-		<Fragment slot="title">
-			Ready to give your world<br class="hidden sm:inline" /> the home it deserves?
-		</Fragment>
+		<Fragment slot="title">Want to do some writing?</Fragment>
 
 		<Fragment slot="subtitle">
-			Your story organizer for characters, timelines, and lore.<br class="hidden md:inline" />Built by a
-			mermaid, for humans. Also supports AI, I guess.
+			A nice writing app has been pre-warmed for your convenience. <br />Right this way please!
 		</Fragment>
 	</CallToAction>
 </Layout>
