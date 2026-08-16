@@ -1,7 +1,10 @@
 import { CSSProperties, RefObject, useEffect, useRef } from 'react'
 import z from 'zod'
 
+import { DragDropState } from '@/app/features/dragDrop/DragDropState'
 import usePersistentStateRef from '@/app/hooks/usePersistentStateRef'
+
+import { useMindmapEdgeScroll } from './useMindmapEdgeScroll'
 
 const MIN_SCALE = 0.125
 const MAX_SCALE = 5
@@ -18,6 +21,9 @@ function isGestureEvent(event: Event): event is SafariGestureEvent {
 }
 
 export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
+	const { registerUpdateFunction, clearUpdateFunction, stopScroll, updateMousePosition } =
+		useMindmapEdgeScroll()
+
 	const [state, setState] = usePersistentStateRef(
 		'mindmap',
 		z.object({
@@ -93,6 +99,12 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 			})
 		update()
 
+		registerUpdateFunction((scroll) => {
+			navState.gridOffsetX += scroll.x
+			navState.gridOffsetY += scroll.y
+			update()
+		})
+
 		const zoomAt = (originX: number, originY: number, newScaleRaw: number) => {
 			const oldScale = navState.gridScale
 			const newScale = Math.min(Math.max(MIN_SCALE, newScaleRaw), MAX_SCALE)
@@ -113,6 +125,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		}
 
 		const handleMouseUp = (event: MouseEvent) => {
+			stopScroll()
 			if (!navState.isDragging) {
 				return
 			}
@@ -126,6 +139,9 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		}
 
 		const handleMouseMove = (event: MouseEvent) => {
+			if (DragDropState.current?.type === 'actorNodeLinking') {
+				updateMousePosition(event, navState.elementRect)
+			}
 			if (!navState.isDragging) {
 				return
 			}
@@ -134,6 +150,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 				navState.gridOffsetX += event.movementX
 				navState.gridOffsetY += event.movementY
 			}
+
 			update()
 		}
 
@@ -281,6 +298,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		window.addEventListener('mouseup', handleMouseUp)
 
 		return () => {
+			clearUpdateFunction()
 			resizeObserver.disconnect()
 			element.removeEventListener('mousedown', handleMouseDown)
 			element.removeEventListener('wheel', handleWheel)
@@ -294,7 +312,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [ref, setState, state])
+	}, [ref, registerUpdateFunction, setState, clearUpdateFunction, updateMousePosition, state])
 
 	return variables
 }
