@@ -42,12 +42,12 @@ export function Mindmap() {
 
 	// Initialize CSS variables
 	const variables = useRef({
-		'--grid-offset-x': `0px`,
-		'--grid-offset-y': `0px`,
-		'--grid-scale': 1,
-		'--small-grid-spacing': `${smallGridSpacing}px`,
-		'--medium-grid-spacing': `${mediumGridSpacing}px`,
-		'--large-grid-spacing': `${largeGridSpacing}px`,
+		'--grid-offset-x': `${state.current.position.x}px`,
+		'--grid-offset-y': `${state.current.position.y}px`,
+		'--grid-scale': state.current.scale,
+		'--small-grid-spacing': `${smallGridSpacing * state.current.scale}px`,
+		'--medium-grid-spacing': `${smallGridSpacing * state.current.scale * 4}px`,
+		'--large-grid-spacing': `${smallGridSpacing * state.current.scale * 16}px`,
 	} as CSSProperties)
 
 	const ref = useRef<HTMLDivElement>(null)
