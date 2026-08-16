@@ -1,4 +1,4 @@
-export const NODE_W = 250
+export const NODE_W = 300
 export const CORNER_R = 16
 
 export type WireEndpoints = {

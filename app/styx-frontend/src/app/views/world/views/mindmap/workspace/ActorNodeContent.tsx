@@ -9,6 +9,7 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { ArticleListItemIcon } from '../../wiki/articleList/icon/ArticleListItemIcon'
 import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 import { MindmapNodePort } from './MindmapNodePort'
+import { NODE_W } from './mindmapWireUtils'
 
 type Props = {
 	node?: MindmapNode
@@ -41,7 +42,7 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 		<Box
 			sx={{
 				userSelect: 'none',
-				width: '250px',
+				width: `${NODE_W}px`,
 				borderRadius: '14px',
 				overflow: 'hidden',
 				position: 'relative',
@@ -60,7 +61,7 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 				direction="row"
 				gap={1}
 				sx={{
-					padding: '12px 0 12px 12px',
+					padding: '12px',
 					cursor: 'grab',
 					'&:active': {
 						cursor: 'grabbing',
@@ -95,6 +96,7 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 										fontSize: '0.7rem',
 										color: parent.color,
 										textTransform: 'uppercase',
+										letterSpacing: 0.75,
 									}}
 								>
 									{parent.type}
@@ -110,7 +112,9 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 								</Box>
 							</Stack>
 						</Stack>
-						<MindmapNodePort node={node} parent={parent} />
+						<Box sx={{ marginTop: '0px', marginRight: '-12px' }}>
+							<MindmapNodePort node={node} parent={parent} />
+						</Box>
 					</Stack>
 
 					{/* Content */}
