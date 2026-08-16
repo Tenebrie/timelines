@@ -50,7 +50,7 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 				boxShadow:
 					theme.mode === 'light' ? '0 1px 4px rgba(20, 10, 50, 0.18)' : '0 1px 4px rgba(0, 0, 0, 0.4)',
 				transition: 'box-shadow 0.2s ease-out, transform 0.2s ease-out',
-				border: (theme) => `1px solid ${theme.palette.divider}`,
+				// border: (theme) => `1px solid ${theme.palette.divider}`,
 				'&:has([data-mindmap-header]:hover):not(:has([data-mindmap-port]:hover)):not(:has(body.cursor-grabbing))':
 					{
 						boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
@@ -62,11 +62,8 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 				gap={1}
 				sx={{
 					padding: '12px',
-					cursor: 'grab',
-					'&:active': {
-						cursor: 'grabbing',
-					},
 				}}
+				onClick={onHeaderClick}
 			>
 				<ArticleListItemIcon article={parent} highlighted={false} />
 
@@ -74,7 +71,6 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 					{/* Header */}
 					<Stack
 						data-mindmap-header
-						onClick={onHeaderClick}
 						sx={{
 							flexDirection: 'row',
 							userSelect: 'none',
@@ -121,10 +117,6 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 					{parent.type !== 'folder' && description.content.length > 0 && (
 						<Box
 							data-mindmap-content
-							onClick={(e) => {
-								e.stopPropagation()
-								onContentClick?.()
-							}}
 							sx={{
 								fontSize: '0.8rem',
 								lineHeight: 1.4,

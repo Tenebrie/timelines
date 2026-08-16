@@ -1,5 +1,6 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
+import { darken, lighten } from '@mui/material/styles'
 import { memo, useEffect, useLayoutEffect, useRef } from 'react'
 import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
@@ -162,11 +163,11 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			event.stopPropagation()
 
 			// Don't start dragging if clicking on content (but header is fine for dragging)
-			const target = event.target as HTMLElement
-			const contentElement = element.querySelector('[data-mindmap-content]')
-			if (contentElement?.contains(target)) {
-				return
-			}
+			// const target = event.target as HTMLElement
+			// const contentElement = element.querySelector('[data-mindmap-content]')
+			// if (contentElement?.contains(target)) {
+			// 	return
+			// }
 
 			dispatchGlobalEvent['mindmap/node/onGroupDragStart']({
 				sourceNodeId: node.id,
@@ -209,6 +210,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			if (!mouseState.isDragging && (Math.abs(mouseState.deltaX) > 3 || Math.abs(mouseState.deltaY) > 3)) {
 				mouseState.isDragging = true
 				mouseState.canClick = false
+				window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
 			}
 
 			if (mouseState.isDragging) {
@@ -279,6 +281,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			mouseState.isDragging = false
 			mouseState.deltaX = 0
 			mouseState.deltaY = 0
+			window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
 			element.style.setProperty('--inner-transition-duration', '0.1s')
 		}
 
@@ -316,16 +319,19 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				transform:
 					'translate(calc(var(--node-x) * var(--grid-scale) + var(--grid-offset-x)), calc(var(--node-y) * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',
-				outline: '2px solid',
-				outlineColor: 'transparent',
-				'&[data-selected="true"]': {
-					outlineColor: theme.material.palette.primary.main,
-				},
+				border: (theme) => `1px solid ${theme.palette.divider}`,
 				transition:
-					'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out, outline-color 0.2s ease-out',
-				borderRadius: '14px',
+					'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out, border-color 0.2s ease-out',
+				borderRadius: '15px',
+				'&[data-selected="true"]': {
+					borderColor: theme.material.palette.primary.main,
+					'&:hover': {
+						borderColor: lighten(theme.material.palette.primary.main, 0.3),
+					},
+				},
 				'&:hover': {
 					zIndex: 10,
+					borderColor: darken(theme.custom.palette.highlight, 0.4),
 				},
 			}}
 		>
