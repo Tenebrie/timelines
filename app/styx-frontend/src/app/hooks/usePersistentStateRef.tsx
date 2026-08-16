@@ -1,5 +1,10 @@
+import debounce from 'lodash.debounce'
 import { useCallback, useRef } from 'react'
 import { ZodSchema } from 'zod'
+
+const debouncedUpdate = debounce((storage: Storage, key: string, value: unknown) => {
+	storage.setItem(`userPreferences/${key}`, JSON.stringify(value))
+}, 100)
 
 function usePersistentStateRef<T>(
 	key: string,
@@ -30,7 +35,7 @@ function usePersistentStateRef<T>(
 			} else {
 				value.current = newValue
 			}
-			storage.setItem(`userPreferences/${key}`, JSON.stringify(value.current))
+			debouncedUpdate(storage, key, value.current)
 		},
 		[key, storage],
 	)
