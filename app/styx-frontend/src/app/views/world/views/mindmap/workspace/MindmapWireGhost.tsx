@@ -270,7 +270,7 @@ export function MindmapWireGhost({ existingWires }: Props) {
 				style={{
 					transform: 'translate(var(--grid-offset-x), var(--grid-offset-y)) scale(var(--grid-scale))',
 					transformOrigin: '0 0',
-					transition: 'transform var(--transition-duration) ease-out',
+					// transition: 'transform var(--transition-duration) ease-out',
 				}}
 			>
 				{sourceNodes.map((node) => {

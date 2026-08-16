@@ -212,6 +212,7 @@ export function MindmapWireLine({
 						fill="none"
 						strokeWidth={8}
 						pointerEvents="none"
+						vectorEffect="non-scaling-stroke"
 						style={{ stroke: `url(#${gradientId})`, opacity: 0.12, transition: 'opacity 0.25s ease' }}
 					/>
 					<g
@@ -227,6 +228,7 @@ export function MindmapWireLine({
 							fill="none"
 							pointerEvents="none"
 							strokeWidth={2}
+							vectorEffect="non-scaling-stroke"
 							style={{ stroke: `url(#${gradientId})` }}
 						/>
 						{!showSourceArrow && (

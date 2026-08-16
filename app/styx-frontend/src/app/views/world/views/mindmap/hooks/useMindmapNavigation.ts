@@ -312,7 +312,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [ref, registerUpdateFunction, setState, clearUpdateFunction, updateMousePosition, state])
+	}, [ref, registerUpdateFunction, setState, clearUpdateFunction, updateMousePosition, state, stopScroll])
 
 	return variables
 }

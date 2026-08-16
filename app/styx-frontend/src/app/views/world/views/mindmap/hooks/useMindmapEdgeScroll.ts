@@ -42,8 +42,8 @@ export function useMindmapEdgeScroll() {
 			}
 
 			const movementVector = { x: 0, y: 0 }
-			const threshold = 100
-			const speedMultiplier = 3
+			const threshold = 150
+			const speedMultiplier = 5
 
 			const distToLeft = lastSeenMousePosition.current.x - lastSeenElementRect.current.left
 			const distToRight = lastSeenElementRect.current.right - lastSeenMousePosition.current.x
