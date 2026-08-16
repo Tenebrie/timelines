@@ -3,12 +3,31 @@ import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
 import throttle from 'lodash.throttle'
 import { CSSProperties, useEffect, useRef } from 'react'
+import z from 'zod'
+
+import usePersistentStateRef from '@/app/hooks/usePersistentStateRef'
 
 import { MindmapContent } from './MindmapContent'
 import { MindmapClickArea } from './workspace/MindmapClickArea'
 import { MindmapHotkeys } from './workspace/MindmapHotkeys'
 
 export function Mindmap() {
+	const [state, setState] = usePersistentStateRef(
+		'mindmap',
+		z.object({
+			position: z.object({
+				x: z.number(),
+				y: z.number(),
+			}),
+			scale: z.number().min(0),
+		}),
+		{
+			position: { x: 0, y: 0 },
+			scale: 1,
+		},
+		sessionStorage,
+	)
+
 	// Small grid: the base grid
 	const smallGridSpacing = 32
 	const smallLineThickness = 1
@@ -42,10 +61,10 @@ export function Mindmap() {
 		const mouseState = {
 			isDragging: false,
 			dragMode: 'select' as 'select' | 'pan',
-			gridOffsetX: 0,
-			gridOffsetY: 0,
-			gridScale: 1,
-			gridScaleRaw: 1,
+			gridOffsetX: state.current.position.x,
+			gridOffsetY: state.current.position.y,
+			gridScale: state.current.scale,
+			gridScaleRaw: state.current.scale,
 			scaleAdjustmentPending: 0,
 
 			deltaX: 0,
@@ -77,7 +96,16 @@ export function Mindmap() {
 			element.style.setProperty('--medium-grid-spacing', `${effectiveMediumSpacing}px`)
 			element.style.setProperty('--large-grid-spacing', `${effectiveLargeSpacing}px`)
 			element.style.setProperty('--transition-duration', `${mouseState.isDragging ? 0.0 : 0.1}s`)
+
+			setState(() => ({
+				position: {
+					x: mouseState.gridOffsetX,
+					y: mouseState.gridOffsetY,
+				},
+				scale: mouseState.gridScale,
+			}))
 		}, 4)
+		update()
 
 		const handleMouseDown = (event: MouseEvent) => {
 			if (event.button === 0) {
@@ -152,7 +180,7 @@ export function Mindmap() {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [largeGridSpacing, mediumGridSpacing, ref])
+	}, [largeGridSpacing, mediumGridSpacing, ref, setState, state])
 
 	const theme = useTheme()
 	const lineColor = theme.palette.divider

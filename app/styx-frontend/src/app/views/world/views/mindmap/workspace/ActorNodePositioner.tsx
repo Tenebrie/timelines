@@ -313,25 +313,27 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				} as React.CSSProperties
 			}
 			sx={{
+				'--node-border-width': 'calc(1px / var(--grid-scale))',
+				'--node-border-color': theme.material.palette.divider,
 				pointerEvents: 'auto',
 				background: theme.custom.palette.background.timeline,
 				position: 'absolute',
 				transform:
 					'translate(calc(var(--node-x) * var(--grid-scale) + var(--grid-offset-x)), calc(var(--node-y) * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',
-				border: (theme) => `1px solid ${theme.palette.divider}`,
+				boxShadow: 'inset 0 0 0 var(--node-border-width) var(--node-border-color)',
 				transition:
-					'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out, border-color 0.2s ease-out',
+					'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out, --node-border-color 0.2s ease-out',
 				borderRadius: '15px',
 				'&[data-selected="true"]': {
-					borderColor: theme.material.palette.primary.main,
+					'--node-border-color': theme.material.palette.primary.main,
 					'&:hover': {
-						borderColor: lighten(theme.material.palette.primary.main, 0.3),
+						'--node-border-color': lighten(theme.material.palette.primary.main, 0.0),
 					},
 				},
 				'&:hover': {
 					zIndex: 10,
-					borderColor: darken(theme.custom.palette.highlight, 0.4),
+					'--node-border-color': darken(theme.custom.palette.highlight, 0.4),
 				},
 			}}
 		>

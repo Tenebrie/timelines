@@ -1,5 +1,4 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { useMemo } from 'react'
@@ -51,10 +50,9 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 					theme.mode === 'light' ? '0 1px 4px rgba(20, 10, 50, 0.18)' : '0 1px 4px rgba(0, 0, 0, 0.4)',
 				transition: 'box-shadow 0.2s ease-out, transform 0.2s ease-out',
 				// border: (theme) => `1px solid ${theme.palette.divider}`,
-				'&:has([data-mindmap-header]:hover):not(:has([data-mindmap-port]:hover)):not(:has(body.cursor-grabbing))':
-					{
-						boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
-					},
+				'&:has(:hover):not(:has([data-mindmap-port]:hover)):not(:has(body.cursor-grabbing))': {
+					boxShadow: '0 6px 10px rgba(0,0,0,0.2)',
+				},
 			}}
 		>
 			<Stack
@@ -65,7 +63,9 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 				}}
 				onClick={onHeaderClick}
 			>
-				<ArticleListItemIcon article={parent} highlighted={false} />
+				<Box sx={{ width: 24, height: 24 }}>
+					<ArticleListItemIcon article={parent} highlighted={false} />
+				</Box>
 
 				<Box sx={{ width: 1 }}>
 					{/* Header */}
@@ -132,28 +132,6 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 							<Box>
 								<div>{description.content}</div>
 							</Box>
-							{description.more && (
-								<Stack
-									direction="row"
-									sx={{
-										marginTop: 1,
-										width: 'fit-content',
-										marginInline: 'auto',
-										alignItems: 'center',
-										justifyContent: 'center',
-										gap: 0.25,
-										padding: '4px 10px',
-										borderRadius: '999px',
-										background: theme.custom.palette.background.soft,
-										fontWeight: 600,
-										fontSize: '0.75rem',
-										color: theme.material.palette.text.secondary,
-									}}
-								>
-									Click to see more
-									<KeyboardArrowDown sx={{ fontSize: '1rem' }} />
-								</Stack>
-							)}
 						</Box>
 					)}
 				</Box>
