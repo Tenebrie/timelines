@@ -128,7 +128,15 @@ export function MindmapWireLine({
 	const selectedRef = useRef(false)
 
 	useLayoutEffect(() => {
-		registerWire(wire.id, ep)
+		const freshEp = pickEdgePoints(
+			source.node.positionX,
+			source.node.positionY,
+			getNodeHeight(source.node.id),
+			target.node.positionX,
+			target.node.positionY,
+			getNodeHeight(target.node.id),
+		)
+		updateDom(freshEp)
 	})
 	useEffect(() => () => unregisterWire(wire.id), [wire.id])
 

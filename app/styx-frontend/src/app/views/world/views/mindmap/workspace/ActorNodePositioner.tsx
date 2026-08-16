@@ -169,10 +169,6 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			// 	return
 			// }
 
-			dispatchGlobalEvent['mindmap/node/onGroupDragStart']({
-				sourceNodeId: node.id,
-			})
-
 			if (!selectedRef.current && !isMultiselectEvent(event)) {
 				dispatch(clearSelections())
 			}
@@ -211,6 +207,9 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				mouseState.isDragging = true
 				mouseState.canClick = false
 				window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
+				dispatchGlobalEvent['mindmap/node/onGroupDragStart']({
+					sourceNodeId: node.id,
+				})
 			}
 
 			if (mouseState.isDragging) {

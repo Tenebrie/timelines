@@ -35,7 +35,6 @@ export function Mindmap() {
 		'--grid-offset-x': `${state.current.position.x}px`,
 		'--grid-offset-y': `${state.current.position.y}px`,
 		'--grid-scale': state.current.scale,
-		'--grid-spacing': `${gridSpacing * state.current.scale}px`,
 	} as CSSProperties)
 
 	const ref = useRef<HTMLDivElement>(null)
@@ -61,20 +60,16 @@ export function Mindmap() {
 
 		// Throttle the update to avoid excessive recalculations.
 		const update = throttle(() => {
-			const effectiveSpacing = Math.round(gridSpacing * mouseState.gridScale)
-
 			variables.current = {
 				'--grid-offset-x': `${mouseState.gridOffsetX}px`,
 				'--grid-offset-y': `${mouseState.gridOffsetY}px`,
 				'--grid-scale': mouseState.gridScale,
-				'--grid-spacing': `${effectiveSpacing}px`,
 				'--transition-duration': `${mouseState.isDragging ? 0.0 : 0.1}s`,
 			} as CSSProperties
 
 			element.style.setProperty('--grid-offset-x', `${mouseState.gridOffsetX}px`)
 			element.style.setProperty('--grid-offset-y', `${mouseState.gridOffsetY}px`)
 			element.style.setProperty('--grid-scale', mouseState.gridScale.toString())
-			element.style.setProperty('--grid-spacing', `${effectiveSpacing}px`)
 			element.style.setProperty('--transition-duration', `${mouseState.isDragging ? 0.0 : 0.1}s`)
 
 			setState(() => ({
@@ -134,7 +129,7 @@ export function Mindmap() {
 			mouseState.gridScaleRaw = newScaleRaw
 
 			const oldScale = mouseState.gridScale
-			const newScale = Math.round(gridSpacing * newScaleRaw) / gridSpacing
+			const newScale = newScaleRaw
 
 			const scaleFactor = newScale / oldScale
 			mouseState.gridOffsetX = centerX - scaleFactor * (centerX - mouseState.gridOffsetX)
@@ -188,8 +183,9 @@ export function Mindmap() {
 						pointerEvents: 'none',
 						backgroundPosition: 'var(--grid-offset-x) var(--grid-offset-y)',
 						backgroundImage: `radial-gradient(circle, ${dotColor} calc(${dotSize}px * var(--grid-scale)), transparent calc(${dotSize}px * var(--grid-scale)))`,
-						backgroundSize: 'var(--grid-spacing) var(--grid-spacing)',
-						transition: 'all var(--transition-duration) ease-out',
+						backgroundSize: `calc(${gridSpacing}px * var(--grid-scale)) calc(${gridSpacing}px * var(--grid-scale))`,
+						transition:
+							'background-position var(--transition-duration) ease-out, background-size var(--transition-duration) ease-out',
 					}}
 				/>
 				<Box

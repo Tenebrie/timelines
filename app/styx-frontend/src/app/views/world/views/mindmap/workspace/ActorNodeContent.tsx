@@ -17,7 +17,7 @@ type Props = {
 	onContentClick?: () => void
 }
 
-export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }: Props) {
+export function ActorNodeContent({ node, parent, onHeaderClick }: Props) {
 	const theme = useCustomTheme()
 
 	const description = useMemo(() => {
@@ -102,6 +102,11 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 										fontWeight: 'bold',
 										fontSize: '0.9rem',
 										color: theme.material.palette.text.primary,
+										display: '-webkit-box',
+										WebkitLineClamp: 2,
+										WebkitBoxOrient: 'vertical',
+										overflow: 'hidden',
+										textOverflow: 'ellipsis',
 									}}
 								>
 									{parent.name}
@@ -121,17 +126,14 @@ export function ActorNodeContent({ node, parent, onHeaderClick, onContentClick }
 								fontSize: '0.8rem',
 								lineHeight: 1.4,
 								marginTop: 2,
-								// background: theme.custom.palette.background.softest,
-								// cursor: 'pointer',
-								// transition: 'background 0.2s ease-out',
-								// '&:hover': {
-								// background: theme.custom.palette.background.softer,
-								// },
+								display: '-webkit-box',
+								WebkitLineClamp: 3,
+								WebkitBoxOrient: 'vertical',
+								overflow: 'hidden',
+								textOverflow: 'ellipsis',
 							}}
 						>
-							<Box>
-								<div>{description.content}</div>
-							</Box>
+							{description.content.slice(0, 150)}
 						</Box>
 					)}
 				</Box>
