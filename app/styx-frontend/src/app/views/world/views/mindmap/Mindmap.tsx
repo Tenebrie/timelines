@@ -28,26 +28,14 @@ export function Mindmap() {
 		sessionStorage,
 	)
 
-	// Small grid: the base grid
-	const smallGridSpacing = 32
-	const smallLineThickness = 1
+	const gridSpacing = 64
+	const dotSize = 2
 
-	// Medium grid: every 4 small grids
-	const mediumGridSpacing = smallGridSpacing * 4 // 128px
-	const mediumLineThickness = 2
-
-	// Large grid: every 4 medium grids
-	const largeGridSpacing = mediumGridSpacing * 4 // 512px
-	const largeLineThickness = 3
-
-	// Initialize CSS variables
 	const variables = useRef({
 		'--grid-offset-x': `${state.current.position.x}px`,
 		'--grid-offset-y': `${state.current.position.y}px`,
 		'--grid-scale': state.current.scale,
-		'--small-grid-spacing': `${smallGridSpacing * state.current.scale}px`,
-		'--medium-grid-spacing': `${smallGridSpacing * state.current.scale * 4}px`,
-		'--large-grid-spacing': `${smallGridSpacing * state.current.scale * 16}px`,
+		'--grid-spacing': `${gridSpacing * state.current.scale}px`,
 	} as CSSProperties)
 
 	const ref = useRef<HTMLDivElement>(null)
@@ -73,28 +61,20 @@ export function Mindmap() {
 
 		// Throttle the update to avoid excessive recalculations.
 		const update = throttle(() => {
-			// Compute effective grid spacings as whole numbers.
-			const effectiveSmallSpacing = Math.round(smallGridSpacing * mouseState.gridScale)
-			const effectiveMediumSpacing = effectiveSmallSpacing * 4
-			const effectiveLargeSpacing = effectiveMediumSpacing * 4
+			const effectiveSpacing = Math.round(gridSpacing * mouseState.gridScale)
 
 			variables.current = {
 				'--grid-offset-x': `${mouseState.gridOffsetX}px`,
 				'--grid-offset-y': `${mouseState.gridOffsetY}px`,
 				'--grid-scale': mouseState.gridScale,
-				'--small-grid-spacing': `${effectiveSmallSpacing}px`,
-				'--medium-grid-spacing': `${effectiveMediumSpacing}px`,
-				'--large-grid-spacing': `${effectiveLargeSpacing}px`,
+				'--grid-spacing': `${effectiveSpacing}px`,
 				'--transition-duration': `${mouseState.isDragging ? 0.0 : 0.1}s`,
 			} as CSSProperties
 
-			// Update the element's CSS variables.
 			element.style.setProperty('--grid-offset-x', `${mouseState.gridOffsetX}px`)
 			element.style.setProperty('--grid-offset-y', `${mouseState.gridOffsetY}px`)
 			element.style.setProperty('--grid-scale', mouseState.gridScale.toString())
-			element.style.setProperty('--small-grid-spacing', `${effectiveSmallSpacing}px`)
-			element.style.setProperty('--medium-grid-spacing', `${effectiveMediumSpacing}px`)
-			element.style.setProperty('--large-grid-spacing', `${effectiveLargeSpacing}px`)
+			element.style.setProperty('--grid-spacing', `${effectiveSpacing}px`)
 			element.style.setProperty('--transition-duration', `${mouseState.isDragging ? 0.0 : 0.1}s`)
 
 			setState(() => ({
@@ -154,7 +134,7 @@ export function Mindmap() {
 			mouseState.gridScaleRaw = newScaleRaw
 
 			const oldScale = mouseState.gridScale
-			const newScale = Math.round(smallGridSpacing * newScaleRaw) / smallGridSpacing
+			const newScale = Math.round(gridSpacing * newScaleRaw) / gridSpacing
 
 			const scaleFactor = newScale / oldScale
 			mouseState.gridOffsetX = centerX - scaleFactor * (centerX - mouseState.gridOffsetX)
@@ -180,10 +160,10 @@ export function Mindmap() {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [largeGridSpacing, mediumGridSpacing, ref, setState, state])
+	}, [ref, setState, state])
 
 	const theme = useTheme()
-	const lineColor = theme.palette.divider
+	const dotColor = theme.palette.divider
 
 	return (
 		<Stack sx={{ width: '100%', height: '100%' }}>
@@ -205,28 +185,10 @@ export function Mindmap() {
 						position: 'absolute',
 						width: '100%',
 						height: '100%',
-						opacity: 0.2,
 						pointerEvents: 'none',
 						backgroundPosition: 'var(--grid-offset-x) var(--grid-offset-y)',
-						backgroundImage: `
-							/* Large grid lines */
-							linear-gradient(to right, ${lineColor} ${largeLineThickness}px, transparent ${largeLineThickness}px),
-							linear-gradient(to bottom, ${lineColor} ${largeLineThickness}px, transparent ${largeLineThickness}px),
-							/* Medium grid lines */
-							linear-gradient(to right, ${lineColor} ${mediumLineThickness}px, transparent ${mediumLineThickness}px),
-							linear-gradient(to bottom, ${lineColor} ${mediumLineThickness}px, transparent ${mediumLineThickness}px),
-							/* Small grid lines */
-							linear-gradient(to right, ${lineColor} ${smallLineThickness}px, transparent ${smallLineThickness}px),
-							linear-gradient(to bottom, ${lineColor} ${smallLineThickness}px, transparent ${smallLineThickness}px)
-						`,
-						backgroundSize: `
-							var(--large-grid-spacing) var(--large-grid-spacing),
-							var(--large-grid-spacing) var(--large-grid-spacing),
-							var(--medium-grid-spacing) var(--medium-grid-spacing),
-							var(--medium-grid-spacing) var(--medium-grid-spacing),
-							var(--small-grid-spacing) var(--small-grid-spacing),
-							var(--small-grid-spacing) var(--small-grid-spacing)
-						`,
+						backgroundImage: `radial-gradient(circle, ${dotColor} calc(${dotSize}px * var(--grid-scale)), transparent calc(${dotSize}px * var(--grid-scale)))`,
+						backgroundSize: 'var(--grid-spacing) var(--grid-spacing)',
 						transition: 'all var(--transition-duration) ease-out',
 					}}
 				/>
