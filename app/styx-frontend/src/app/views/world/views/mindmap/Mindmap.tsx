@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
-import throttle from 'lodash.throttle'
 import { CSSProperties, useEffect, useRef } from 'react'
 import z from 'zod'
 
@@ -51,35 +50,37 @@ export function Mindmap() {
 			gridOffsetX: state.current.position.x,
 			gridOffsetY: state.current.position.y,
 			gridScale: state.current.scale,
-			gridScaleRaw: state.current.scale,
 			scaleAdjustmentPending: 0,
+			elementRect: element.getBoundingClientRect(),
 
 			deltaX: 0,
 			deltaY: 0,
 		}
+		const resizeObserver = new ResizeObserver((entries) => {
+			for (const entry of entries) {
+				if (entry.target === element) {
+					mouseState.elementRect = entry.contentRect
+					update()
+				}
+			}
+		})
+		resizeObserver.observe(element)
 
-		// Throttle the update to avoid excessive recalculations.
-		const update = throttle(() => {
-			variables.current = {
-				'--grid-offset-x': `${mouseState.gridOffsetX}px`,
-				'--grid-offset-y': `${mouseState.gridOffsetY}px`,
-				'--grid-scale': mouseState.gridScale,
-				'--transition-duration': `${mouseState.isDragging ? 0.0 : 0.1}s`,
-			} as CSSProperties
+		const update = () =>
+			requestAnimationFrame(() => {
+				element.style.setProperty('--grid-offset-x', `${mouseState.gridOffsetX}px`)
+				element.style.setProperty('--grid-offset-y', `${mouseState.gridOffsetY}px`)
+				element.style.setProperty('--grid-scale', mouseState.gridScale.toString())
+				element.style.setProperty('--transition-duration', `${mouseState.isDragging ? 0.0 : 0.1}s`)
 
-			element.style.setProperty('--grid-offset-x', `${mouseState.gridOffsetX}px`)
-			element.style.setProperty('--grid-offset-y', `${mouseState.gridOffsetY}px`)
-			element.style.setProperty('--grid-scale', mouseState.gridScale.toString())
-			element.style.setProperty('--transition-duration', `${mouseState.isDragging ? 0.0 : 0.1}s`)
-
-			setState(() => ({
-				position: {
-					x: mouseState.gridOffsetX,
-					y: mouseState.gridOffsetY,
-				},
-				scale: mouseState.gridScale,
-			}))
-		}, 4)
+				setState(() => ({
+					position: {
+						x: mouseState.gridOffsetX,
+						y: mouseState.gridOffsetY,
+					},
+					scale: mouseState.gridScale,
+				}))
+			})
 		update()
 
 		const handleMouseDown = (event: MouseEvent) => {
@@ -120,16 +121,13 @@ export function Mindmap() {
 		const handleWheel = (event: WheelEvent) => {
 			event.preventDefault()
 
-			const rect = element.getBoundingClientRect()
-			const centerX = rect.width / 2
-			const centerY = rect.height / 2
+			const centerX = mouseState.elementRect.width / 2
+			const centerY = mouseState.elementRect.height / 2
 
-			let newScaleRaw = mouseState.gridScaleRaw * (1 - event.deltaY / 800)
-			newScaleRaw = Math.min(Math.max(0.25, newScaleRaw), 5)
-			mouseState.gridScaleRaw = newScaleRaw
+			const newScaleRaw = mouseState.gridScale * (1 - event.deltaY / 800)
 
 			const oldScale = mouseState.gridScale
-			const newScale = newScaleRaw
+			const newScale = Math.min(Math.max(0.25, newScaleRaw), 5)
 
 			const scaleFactor = newScale / oldScale
 			mouseState.gridOffsetX = centerX - scaleFactor * (centerX - mouseState.gridOffsetX)
@@ -149,6 +147,7 @@ export function Mindmap() {
 		window.addEventListener('mouseup', handleMouseUp)
 
 		return () => {
+			resizeObserver.disconnect()
 			element.removeEventListener('mousedown', handleMouseDown)
 			element.removeEventListener('wheel', handleWheel)
 			element.removeEventListener('contextmenu', handleContextMenu)
@@ -184,8 +183,8 @@ export function Mindmap() {
 						backgroundPosition: 'var(--grid-offset-x) var(--grid-offset-y)',
 						backgroundImage: `radial-gradient(circle, ${dotColor} calc(${dotSize}px * var(--grid-scale)), transparent calc(${dotSize}px * var(--grid-scale)))`,
 						backgroundSize: `calc(${gridSpacing}px * var(--grid-scale)) calc(${gridSpacing}px * var(--grid-scale))`,
-						transition:
-							'background-position var(--transition-duration) ease-out, background-size var(--transition-duration) ease-out',
+						// transition:
+						// 	'background-position var(--transition-duration) ease-out, background-size var(--transition-duration) ease-out',
 					}}
 				/>
 				<Box

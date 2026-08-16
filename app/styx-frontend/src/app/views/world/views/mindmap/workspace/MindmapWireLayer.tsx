@@ -89,7 +89,7 @@ export function MindmapWireLayer({ actorsWithNodes }: Props) {
 						willChange: 'transform',
 						transform: 'translate(var(--grid-offset-x), var(--grid-offset-y)) scale(var(--grid-scale))',
 						transformOrigin: '0 0',
-						transition: 'transform var(--transition-duration) ease-out',
+						// transition: 'transform var(--transition-duration) ease-out',
 					}}
 				></g>
 			</svg>

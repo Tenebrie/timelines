@@ -1,6 +1,8 @@
 import Box from '@mui/material/Box'
 import { memo, RefObject, useEffect, useRef } from 'react'
 
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+
 export type SelectionRect = {
 	visible: boolean
 	x: number
@@ -149,13 +151,16 @@ export function SelectionBoxComponent({ ref, onClick, onUpdateSelection, onFinal
 		}
 	}, [onClick, onUpdateSelection, onFinalizeSelection, ref])
 
+	const theme = useCustomTheme()
+
 	return (
 		<Box
 			ref={selectionBoxRef}
 			sx={{
 				zIndex: 1000,
-				backgroundColor: '#fff3',
+				backgroundColor: theme.custom.palette.background.hard,
 				position: 'absolute',
+				borderRadius: '2px',
 				top: 0,
 				left: 0,
 				width: 0,

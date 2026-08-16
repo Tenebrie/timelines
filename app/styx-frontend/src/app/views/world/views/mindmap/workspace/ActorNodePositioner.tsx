@@ -321,8 +321,9 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 					'translate(calc(var(--node-x) * var(--grid-scale) + var(--grid-offset-x)), calc(var(--node-y) * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',
 				boxShadow: 'inset 0 0 0 var(--node-border-width) var(--node-border-color)',
-				transition:
-					'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out, --node-border-color 0.2s ease-out',
+				// transition:
+				// 	'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out, --node-border-color 0.2s ease-out',
+				transition: '--node-border-color 0.2s ease-out',
 				borderRadius: '15px',
 				'&[data-selected="true"]': {
 					'--node-border-color': theme.material.palette.primary.main,
