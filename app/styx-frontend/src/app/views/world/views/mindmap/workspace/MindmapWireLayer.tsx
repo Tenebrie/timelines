@@ -1,25 +1,19 @@
-import { useGetMindmapQuery } from '@api/mindmapApi'
-import { MindmapNode } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
-import { useCallback, useMemo, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { Fragment, useCallback, useRef, useState } from 'react'
 
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
-import { getWorldState } from '../../../WorldSliceSelectors'
-import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
+import { BoxedMindmapWire } from '../hooks/useBoxedMindmapContent'
 import { MindmapWireGhost } from './MindmapWireGhost'
 import { MindmapWireLine } from './MindmapWireLine'
 import { MindmapWirePopover, MindmapWireState } from './MindmapWirePopover'
 
 type Props = {
-	actorsWithNodes: { id: string; parent: BoxedWikiEntity; node: MindmapNode }[]
+	nodeLinks: BoxedMindmapWire[]
+	existingWires: Set<string>
 }
 
-export function MindmapWireLayer({ actorsWithNodes }: Props) {
-	const { id: worldId } = useSelector(getWorldState, (a, b) => a.id === b.id && a.actors === b.actors)
-	const { data } = useGetMindmapQuery({ worldId }, { skip: !worldId })
-
+export function MindmapWireLayer({ nodeLinks, existingWires }: Props) {
 	const svgDefsRef = useRef<SVGDefsElement>(null)
 	const svgGroupRef = useRef<SVGGElement>(null)
 	const [refsReady, setRefsReady] = useState(false)
@@ -40,37 +34,6 @@ export function MindmapWireLayer({ actorsWithNodes }: Props) {
 		},
 		[],
 	)
-
-	const { nodeLinks, existingWires } = useMemo(() => {
-		if (!data) {
-			return {
-				nodeLinks: [],
-				existingWires: new Set<string>(),
-			}
-		}
-
-		const nodeLinks = data.wires
-			.map((link) => {
-				const sourceNode = actorsWithNodes.find((node) => node.id === link.sourceNodeId)
-				const targetNode = actorsWithNodes.find((node) => node.id === link.targetNodeId)
-				if (!sourceNode || !targetNode) {
-					return null
-				}
-				return {
-					...link,
-					sourceNode,
-					targetNode,
-				}
-			})
-			.filter((link): link is NonNullable<typeof link> => link !== null)
-
-		const existingWires = new Set<string>()
-		nodeLinks.forEach((link) => {
-			existingWires.add(`${link.sourceNode.id}->${link.targetNode.id}`)
-		})
-
-		return { nodeLinks, existingWires }
-	}, [data, actorsWithNodes])
 
 	return (
 		<Box
@@ -95,15 +58,16 @@ export function MindmapWireLayer({ actorsWithNodes }: Props) {
 			</svg>
 			{refsReady &&
 				nodeLinks.map((link) => (
-					<MindmapWireLine
-						key={link.id}
-						wire={link}
-						source={link.sourceNode}
-						target={link.targetNode}
-						svgDefsPortal={svgDefsRef.current!}
-						svgGroupPortal={svgGroupRef.current!}
-						onOpenPopover={(position, mode) => onOpenPopover(link.id, position, mode)}
-					/>
+					<Fragment key={link.id}>
+						<MindmapWireLine
+							wire={link}
+							source={link.sourceNode}
+							target={link.targetNode}
+							svgDefsPortal={svgDefsRef.current!}
+							svgGroupPortal={svgGroupRef.current!}
+							onOpenPopover={(position, mode) => onOpenPopover(link.id, position, mode)}
+						/>
+					</Fragment>
 				))}
 			<MindmapWireGhost existingWires={existingWires} />
 			<MindmapWirePopover

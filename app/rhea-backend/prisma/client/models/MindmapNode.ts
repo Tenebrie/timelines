@@ -40,6 +40,7 @@ export type MindmapNodeMinAggregateOutputType = {
   id: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  name: string | null
   positionX: number | null
   positionY: number | null
   parentActorId: string | null
@@ -54,6 +55,7 @@ export type MindmapNodeMaxAggregateOutputType = {
   id: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  name: string | null
   positionX: number | null
   positionY: number | null
   parentActorId: string | null
@@ -68,6 +70,7 @@ export type MindmapNodeCountAggregateOutputType = {
   id: number
   createdAt: number
   updatedAt: number
+  name: number
   positionX: number
   positionY: number
   parentActorId: number
@@ -94,6 +97,7 @@ export type MindmapNodeMinAggregateInputType = {
   id?: true
   createdAt?: true
   updatedAt?: true
+  name?: true
   positionX?: true
   positionY?: true
   parentActorId?: true
@@ -108,6 +112,7 @@ export type MindmapNodeMaxAggregateInputType = {
   id?: true
   createdAt?: true
   updatedAt?: true
+  name?: true
   positionX?: true
   positionY?: true
   parentActorId?: true
@@ -122,6 +127,7 @@ export type MindmapNodeCountAggregateInputType = {
   id?: true
   createdAt?: true
   updatedAt?: true
+  name?: true
   positionX?: true
   positionY?: true
   parentActorId?: true
@@ -223,6 +229,7 @@ export type MindmapNodeGroupByOutputType = {
   id: string
   createdAt: Date
   updatedAt: Date
+  name: string
   positionX: number
   positionY: number
   parentActorId: string | null
@@ -260,6 +267,7 @@ export type MindmapNodeWhereInput = {
   id?: Prisma.StringFilter<"MindmapNode"> | string
   createdAt?: Prisma.DateTimeFilter<"MindmapNode"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MindmapNode"> | Date | string
+  name?: Prisma.StringFilter<"MindmapNode"> | string
   positionX?: Prisma.IntFilter<"MindmapNode"> | number
   positionY?: Prisma.IntFilter<"MindmapNode"> | number
   parentActorId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
@@ -282,6 +290,7 @@ export type MindmapNodeOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   positionX?: Prisma.SortOrder
   positionY?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -307,6 +316,7 @@ export type MindmapNodeWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.MindmapNodeWhereInput | Prisma.MindmapNodeWhereInput[]
   createdAt?: Prisma.DateTimeFilter<"MindmapNode"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MindmapNode"> | Date | string
+  name?: Prisma.StringFilter<"MindmapNode"> | string
   positionX?: Prisma.IntFilter<"MindmapNode"> | number
   positionY?: Prisma.IntFilter<"MindmapNode"> | number
   parentActorId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
@@ -329,6 +339,7 @@ export type MindmapNodeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   positionX?: Prisma.SortOrder
   positionY?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -351,6 +362,7 @@ export type MindmapNodeScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"MindmapNode"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MindmapNode"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"MindmapNode"> | Date | string
+  name?: Prisma.StringWithAggregatesFilter<"MindmapNode"> | string
   positionX?: Prisma.IntWithAggregatesFilter<"MindmapNode"> | number
   positionY?: Prisma.IntWithAggregatesFilter<"MindmapNode"> | number
   parentActorId?: Prisma.StringNullableWithAggregatesFilter<"MindmapNode"> | string | null
@@ -365,6 +377,7 @@ export type MindmapNodeCreateInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
@@ -381,6 +394,7 @@ export type MindmapNodeUncheckedCreateInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -397,6 +411,7 @@ export type MindmapNodeUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
@@ -413,6 +428,7 @@ export type MindmapNodeUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -429,6 +445,7 @@ export type MindmapNodeCreateManyInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -443,6 +460,7 @@ export type MindmapNodeUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -451,6 +469,7 @@ export type MindmapNodeUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -475,6 +494,7 @@ export type MindmapNodeCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   positionX?: Prisma.SortOrder
   positionY?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrder
@@ -494,6 +514,7 @@ export type MindmapNodeMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   positionX?: Prisma.SortOrder
   positionY?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrder
@@ -508,6 +529,7 @@ export type MindmapNodeMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  name?: Prisma.SortOrder
   positionX?: Prisma.SortOrder
   positionY?: Prisma.SortOrder
   parentActorId?: Prisma.SortOrder
@@ -812,6 +834,7 @@ export type MindmapNodeCreateWithoutParentActorInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentArticle?: Prisma.WikiArticleCreateNestedOneWithoutNodesInput
@@ -827,6 +850,7 @@ export type MindmapNodeUncheckedCreateWithoutParentActorInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentArticleId?: string | null
@@ -871,6 +895,7 @@ export type MindmapNodeScalarWhereInput = {
   id?: Prisma.StringFilter<"MindmapNode"> | string
   createdAt?: Prisma.DateTimeFilter<"MindmapNode"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MindmapNode"> | Date | string
+  name?: Prisma.StringFilter<"MindmapNode"> | string
   positionX?: Prisma.IntFilter<"MindmapNode"> | number
   positionY?: Prisma.IntFilter<"MindmapNode"> | number
   parentActorId?: Prisma.StringNullableFilter<"MindmapNode"> | string | null
@@ -885,6 +910,7 @@ export type MindmapNodeCreateWithoutLinksInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
@@ -900,6 +926,7 @@ export type MindmapNodeUncheckedCreateWithoutLinksInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -920,6 +947,7 @@ export type MindmapNodeCreateWithoutLinkedByInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
@@ -935,6 +963,7 @@ export type MindmapNodeUncheckedCreateWithoutLinkedByInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -966,6 +995,7 @@ export type MindmapNodeUpdateWithoutLinksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
@@ -981,6 +1011,7 @@ export type MindmapNodeUncheckedUpdateWithoutLinksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1007,6 +1038,7 @@ export type MindmapNodeUpdateWithoutLinkedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
@@ -1022,6 +1054,7 @@ export type MindmapNodeUncheckedUpdateWithoutLinkedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1037,6 +1070,7 @@ export type MindmapNodeCreateWithoutParentTagInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
@@ -1052,6 +1086,7 @@ export type MindmapNodeUncheckedCreateWithoutParentTagInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -1093,6 +1128,7 @@ export type MindmapNodeCreateWithoutParentArticleInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
@@ -1108,6 +1144,7 @@ export type MindmapNodeUncheckedCreateWithoutParentArticleInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -1149,6 +1186,7 @@ export type MindmapNodeCreateWithoutParentFolderInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
@@ -1164,6 +1202,7 @@ export type MindmapNodeUncheckedCreateWithoutParentFolderInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -1205,6 +1244,7 @@ export type MindmapNodeCreateWithoutWorldInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
@@ -1220,6 +1260,7 @@ export type MindmapNodeUncheckedCreateWithoutWorldInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -1261,6 +1302,7 @@ export type MindmapNodeCreateWithoutParentEventInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActor?: Prisma.ActorCreateNestedOneWithoutNodesInput
@@ -1276,6 +1318,7 @@ export type MindmapNodeUncheckedCreateWithoutParentEventInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -1317,6 +1360,7 @@ export type MindmapNodeCreateManyParentActorInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentArticleId?: string | null
@@ -1330,6 +1374,7 @@ export type MindmapNodeUpdateWithoutParentActorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentArticle?: Prisma.WikiArticleUpdateOneWithoutNodesNestedInput
@@ -1345,6 +1390,7 @@ export type MindmapNodeUncheckedUpdateWithoutParentActorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1360,6 +1406,7 @@ export type MindmapNodeUncheckedUpdateManyWithoutParentActorInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1373,6 +1420,7 @@ export type MindmapNodeCreateManyParentTagInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -1386,6 +1434,7 @@ export type MindmapNodeUpdateWithoutParentTagInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
@@ -1401,6 +1450,7 @@ export type MindmapNodeUncheckedUpdateWithoutParentTagInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1416,6 +1466,7 @@ export type MindmapNodeUncheckedUpdateManyWithoutParentTagInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1429,6 +1480,7 @@ export type MindmapNodeCreateManyParentArticleInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -1442,6 +1494,7 @@ export type MindmapNodeUpdateWithoutParentArticleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
@@ -1457,6 +1510,7 @@ export type MindmapNodeUncheckedUpdateWithoutParentArticleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1472,6 +1526,7 @@ export type MindmapNodeUncheckedUpdateManyWithoutParentArticleInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1485,6 +1540,7 @@ export type MindmapNodeCreateManyParentFolderInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -1498,6 +1554,7 @@ export type MindmapNodeUpdateWithoutParentFolderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
@@ -1513,6 +1570,7 @@ export type MindmapNodeUncheckedUpdateWithoutParentFolderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1528,6 +1586,7 @@ export type MindmapNodeUncheckedUpdateManyWithoutParentFolderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1541,6 +1600,7 @@ export type MindmapNodeCreateManyWorldInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -1554,6 +1614,7 @@ export type MindmapNodeUpdateWithoutWorldInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
@@ -1569,6 +1630,7 @@ export type MindmapNodeUncheckedUpdateWithoutWorldInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1584,6 +1646,7 @@ export type MindmapNodeUncheckedUpdateManyWithoutWorldInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1597,6 +1660,7 @@ export type MindmapNodeCreateManyParentEventInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  name?: string
   positionX: number
   positionY: number
   parentActorId?: string | null
@@ -1610,6 +1674,7 @@ export type MindmapNodeUpdateWithoutParentEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActor?: Prisma.ActorUpdateOneWithoutNodesNestedInput
@@ -1625,6 +1690,7 @@ export type MindmapNodeUncheckedUpdateWithoutParentEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1640,6 +1706,7 @@ export type MindmapNodeUncheckedUpdateManyWithoutParentEventInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
   positionY?: Prisma.IntFieldUpdateOperationsInput | number
   parentActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1693,6 +1760,7 @@ export type MindmapNodeSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  name?: boolean
   positionX?: boolean
   positionY?: boolean
   parentActorId?: boolean
@@ -1716,6 +1784,7 @@ export type MindmapNodeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  name?: boolean
   positionX?: boolean
   positionY?: boolean
   parentActorId?: boolean
@@ -1736,6 +1805,7 @@ export type MindmapNodeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  name?: boolean
   positionX?: boolean
   positionY?: boolean
   parentActorId?: boolean
@@ -1756,6 +1826,7 @@ export type MindmapNodeSelectScalar = {
   id?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  name?: boolean
   positionX?: boolean
   positionY?: boolean
   parentActorId?: boolean
@@ -1766,7 +1837,7 @@ export type MindmapNodeSelectScalar = {
   worldId?: boolean
 }
 
-export type MindmapNodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "positionX" | "positionY" | "parentActorId" | "parentArticleId" | "parentEventId" | "parentFolderId" | "parentTagId" | "worldId", ExtArgs["result"]["mindmapNode"]>
+export type MindmapNodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "positionX" | "positionY" | "parentActorId" | "parentArticleId" | "parentEventId" | "parentFolderId" | "parentTagId" | "worldId", ExtArgs["result"]["mindmapNode"]>
 export type MindmapNodeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parentActor?: boolean | Prisma.MindmapNode$parentActorArgs<ExtArgs>
   parentArticle?: boolean | Prisma.MindmapNode$parentArticleArgs<ExtArgs>
@@ -1811,6 +1882,7 @@ export type $MindmapNodePayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     createdAt: Date
     updatedAt: Date
+    name: string
     positionX: number
     positionY: number
     parentActorId: string | null
@@ -2253,6 +2325,7 @@ export interface MindmapNodeFieldRefs {
   readonly id: Prisma.FieldRef<"MindmapNode", 'String'>
   readonly createdAt: Prisma.FieldRef<"MindmapNode", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"MindmapNode", 'DateTime'>
+  readonly name: Prisma.FieldRef<"MindmapNode", 'String'>
   readonly positionX: Prisma.FieldRef<"MindmapNode", 'Int'>
   readonly positionY: Prisma.FieldRef<"MindmapNode", 'Int'>
   readonly parentActorId: Prisma.FieldRef<"MindmapNode", 'String'>

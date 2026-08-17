@@ -1,8 +1,38 @@
 import { useGetMindmapQuery } from '@api/mindmapApi'
+import { MindmapNode } from '@api/types/mindmapTypes'
+import { Actor, WorldEvent, WorldTag } from '@api/types/worldTypes'
+import { WikiArticle } from '@api/types/worldWikiTypes'
 import { useSelector } from 'react-redux'
 
 import { store } from '@/app/store'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
+
+type ResolvedMention =
+	| {
+			type: 'event'
+			entity: WorldEvent
+			node?: MindmapNode
+	  }
+	| {
+			type: 'node'
+			entity: MindmapNode
+			node?: MindmapNode
+	  }
+	| {
+			type: 'actor'
+			entity: Actor
+			node?: MindmapNode
+	  }
+	| {
+			type: 'article'
+			entity: WikiArticle
+			node?: MindmapNode
+	  }
+	| {
+			type: 'tag'
+			entity: WorldTag
+			node?: MindmapNode
+	  }
 
 export function useEntityResolver() {
 	const {
@@ -18,10 +48,10 @@ export function useEntityResolver() {
 	// const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
 	// const { articles } = useSelector(getWikiState, (a, b) => a.articles === b.articles)
 
-	const resolveEntity = (entityId: string) => {
+	const resolveEntity = (entityId: string): ResolvedMention | null => {
 		const event = events.find((e) => e.id === entityId)
 		if (event) {
-			return { type: 'event', entity: event } as const
+			return { type: 'event', entity: event }
 		}
 
 		const markers = store.getState().timeline.markers
@@ -30,31 +60,48 @@ export function useEntityResolver() {
 		if (marker) {
 			const event = events.find((e) => e.id === marker.eventId)
 			if (event) {
-				return { type: 'event', entity: event, node: null } as const
+				return { type: 'event', entity: event }
 			}
 		}
 
 		const node = mindmapData?.nodes.find((n) => n.id === entityId)
 		if (node) {
-			const actor = actors.find((e) => e.id === node.parentActorId)
-			if (actor) {
-				return { type: 'actor', entity: actor, node } as const
+			const parentId =
+				node.parentActorId ??
+				node.parentArticleId ??
+				node.parentEventId ??
+				node.parentFolderId ??
+				node.parentTagId
+
+			if (parentId) {
+				const resolvedEntity = resolveEntity(parentId)
+				if (resolvedEntity) {
+					return {
+						...resolvedEntity,
+						node,
+					}
+				}
+			}
+			return {
+				type: 'node',
+				entity: node,
+				node,
 			}
 		}
 
 		const actor = actors.find((a) => a.id === entityId)
 		if (actor) {
-			return { type: 'actor', entity: actor, node: null } as const
+			return { type: 'actor', entity: actor }
 		}
 
 		const article = articles.find((a) => a.id === entityId)
 		if (article) {
-			return { type: 'article', entity: article, node: null } as const
+			return { type: 'article', entity: article }
 		}
 
 		const tag = tags.find((t) => t.id === entityId)
 		if (tag) {
-			return { type: 'tag', entity: tag, node: null } as const
+			return { type: 'tag', entity: tag }
 		}
 
 		return null
@@ -65,7 +112,7 @@ export function useEntityResolver() {
 		if (node) {
 			const actor = actors.find((e) => e.id === node.parentActorId)
 			if (actor) {
-				return { type: 'actor', entity: actor } as const
+				return { type: 'actor', entity: actor }
 			}
 		}
 		return null

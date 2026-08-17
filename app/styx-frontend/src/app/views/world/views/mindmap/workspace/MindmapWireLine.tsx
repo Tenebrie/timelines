@@ -4,11 +4,11 @@ import { createPortal } from 'react-dom'
 import { useDispatch } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 
 import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 import { mindmapSlice } from '../MindmapSlice'
+import { MindmapWireLabel } from './MindmapWireLabel'
 import {
 	arrowPath,
 	buildPathD,
@@ -158,15 +158,6 @@ export function MindmapWireLine({
 		ignoreDelay: true,
 	})
 
-	const theme = useCustomTheme()
-
-	const maxLabelLength = 24
-	const labelText = wire.content
-		? wire.content.length > maxLabelLength
-			? wire.content.slice(0, maxLabelLength) + '…'
-			: wire.content
-		: ''
-
 	const applyVisualState = useCallback(() => {
 		const isSel = selectedRef.current
 		const isHov = isHoveredRef.current
@@ -212,7 +203,6 @@ export function MindmapWireLine({
 						fill="none"
 						strokeWidth={8}
 						pointerEvents="none"
-						vectorEffect="non-scaling-stroke"
 						style={{ stroke: `url(#${gradientId})`, opacity: 0.12, transition: 'opacity 0.25s ease' }}
 					/>
 					<g
@@ -228,7 +218,6 @@ export function MindmapWireLine({
 							fill="none"
 							pointerEvents="none"
 							strokeWidth={2}
-							vectorEffect="non-scaling-stroke"
 							style={{ stroke: `url(#${gradientId})` }}
 						/>
 						{!showSourceArrow && (
@@ -309,7 +298,7 @@ export function MindmapWireLine({
 							applyVisualState()
 						}}
 					/>
-					{labelText && (
+					{/* {labelText && (
 						<text
 							ref={labelRef}
 							x={pathMidpoint(ep).x}
@@ -329,9 +318,16 @@ export function MindmapWireLine({
 						>
 							{labelText}
 						</text>
-					)}
+					)} */}
 				</>,
 				svgGroupPortal,
+			)}
+			{wire.content && (
+				<MindmapWireLabel
+					wire={wire}
+					position={pathMidpoint(ep)}
+					onClick={(event) => triggerClick(event, { multiselect: event.shiftKey, event })}
+				/>
 			)}
 		</>
 	)

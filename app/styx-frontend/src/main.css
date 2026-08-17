@@ -111,3 +111,9 @@ svg.mention-chip-tag-icon {
 	top: 2px;
 	font-size: 17px;
 }
+
+@property --node-border-color {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: transparent;
+}

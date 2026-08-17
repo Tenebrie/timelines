@@ -367,6 +367,7 @@ export const MindmapNodeScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  name: 'name',
   positionX: 'positionX',
   positionY: 'positionY',
   parentActorId: 'parentActorId',

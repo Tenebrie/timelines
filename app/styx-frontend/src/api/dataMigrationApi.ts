@@ -313,6 +313,7 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				id: string
 				createdAt: string
 				updatedAt: string
+				name: string
 				parentFolderId?: null | string
 				parentActorId?: null | string
 				parentEventId?: null | string

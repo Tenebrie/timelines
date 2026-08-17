@@ -1,7 +1,7 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
@@ -17,7 +17,9 @@ type Props = {
 	onContentClick?: () => void
 }
 
-export function ActorNodeContent({ node, parent, onHeaderClick }: Props) {
+export const ActorNodeContent = memo(ActorNodeContentComponent)
+
+function ActorNodeContentComponent({ node, parent, onHeaderClick }: Props) {
 	const theme = useCustomTheme()
 
 	const description = useMemo(() => {

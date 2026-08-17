@@ -4701,6 +4701,7 @@ export interface operations {
                                     createdAt: string;
                                     /** Format: date-time */
                                     updatedAt: string;
+                                    name: string;
                                     parentFolderId?: null | string;
                                     parentActorId?: null | string;
                                     parentEventId?: null | string;
@@ -5136,6 +5137,7 @@ export interface operations {
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
+                            name: string;
                             parentFolderId?: null | string;
                             parentActorId?: null | string;
                             parentEventId?: null | string;
@@ -5206,6 +5208,7 @@ export interface operations {
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
                         parentFolderId?: null | string;
                         parentActorId?: null | string;
                         parentEventId?: null | string;
@@ -5278,6 +5281,7 @@ export interface operations {
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
                         parentFolderId?: null | string;
                         parentActorId?: null | string;
                         parentEventId?: null | string;
@@ -5326,6 +5330,7 @@ export interface operations {
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
                         parentFolderId?: null | string;
                         parentActorId?: null | string;
                         parentEventId?: null | string;
@@ -7327,6 +7332,7 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
+                                name: string;
                                 parentFolderId?: null | string;
                                 parentActorId?: null | string;
                                 parentEventId?: null | string;
