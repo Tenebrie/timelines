@@ -213,6 +213,7 @@ function MindmapWireLineComponent({
 	}, [highlightState])
 
 	const { sourceColor, targetColor } = useMemo(() => {
+		const alwaysShowColor = true
 		const baseColor = lighten(theme.custom.palette.background.timeline, 0.2)
 
 		if (highlightState === 'dim') {
@@ -236,10 +237,22 @@ function MindmapWireLineComponent({
 			}
 		}
 
-		if (highlightState === 'brightGradient') {
+		if (highlightState === 'brightGradient' && alwaysShowColor) {
+			return {
+				sourceColor: target.parent.color,
+				targetColor: source.parent.color,
+			}
+		} else if (highlightState === 'brightGradient') {
 			return {
 				sourceColor: source.parent.color,
 				targetColor: target.parent.color,
+			}
+		}
+
+		if (alwaysShowColor) {
+			return {
+				sourceColor: target.parent.color,
+				targetColor: source.parent.color,
 			}
 		}
 
@@ -248,6 +261,8 @@ function MindmapWireLineComponent({
 			targetColor: baseColor,
 		}
 	}, [highlightState, source.parent.color, target.parent.color, theme.custom.palette.background.timeline])
+
+	const midColor = `color-mix(in oklch shorter hue, ${sourceColor}, ${targetColor})`
 
 	return (
 		<Box
@@ -271,6 +286,7 @@ function MindmapWireLineComponent({
 					y2={y2}
 				>
 					<stop offset="0%" style={{ stopColor: sourceColor, transition: 'stop-color 0.25s ease' }} />
+					<stop offset="50%" style={{ stopColor: midColor, transition: 'stop-color 0.25s ease' }} />
 					<stop offset="100%" style={{ stopColor: targetColor, transition: 'stop-color 0.25s ease' }} />
 				</linearGradient>,
 				svgDefsPortal,

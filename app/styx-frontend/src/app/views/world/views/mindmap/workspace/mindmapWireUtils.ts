@@ -22,6 +22,16 @@ export function getNodeHeight(nodeId: string): number {
 	)
 }
 
+export function isPointInsideNode(
+	rectX: number,
+	rectY: number,
+	nodeH: number,
+	pointX: number,
+	pointY: number,
+): boolean {
+	return pointX >= rectX && pointX <= rectX + NODE_W && pointY >= rectY && pointY <= rectY + nodeH
+}
+
 /**
  * Given a ray from the rect center toward a target point, find where it exits the
  * rounded-rect perimeter. On flat edges the exit is trivial; in corner regions the

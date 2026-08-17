@@ -13,6 +13,7 @@ import { isEmptyMindmapSpot } from '../utils/isEmptyMindmapSpot'
 import {
 	buildPathD,
 	getNodeHeight,
+	isPointInsideNode,
 	nearestEdgePoint,
 	NODE_W,
 	pickEdgePoints,
@@ -232,6 +233,12 @@ export function MindmapWireGhost({ existingWires }: Props) {
 				let ep: WireEndpoints
 				let activeColorStart = strokeColorStart
 				let activeColorEnd = strokeColorEnd
+
+				if (!snappedId && isPointInsideNode(srcX, srcY, srcH, mouseGridX, mouseGridY)) {
+					wireGroup.setAttribute('display', 'none')
+					continue
+				}
+				wireGroup.setAttribute('display', 'inline')
 
 				if (snappedId) {
 					ep = pickEdgePoints(srcX, srcY, srcH, snappedX, snappedY, snappedH)
