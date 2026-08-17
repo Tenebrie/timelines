@@ -1,3 +1,5 @@
+import { ContentEntityType } from '@src/schema/ContentEntityType.js'
+
 import { ActorService } from './ActorService.js'
 import { ContentService } from './ContentService.js'
 import { TagService } from './TagService.js'
@@ -11,7 +13,7 @@ export const EntityResolverService = {
 		entityId,
 	}: {
 		worldId: string
-		entityType: 'actor' | 'event' | 'article' | 'tag'
+		entityType: ContentEntityType | 'tag'
 		entityId: string
 	}) => {
 		if (entityType === 'actor') {
@@ -36,7 +38,7 @@ export const EntityResolverService = {
 		entityId,
 	}: {
 		worldId: string
-		entityType: 'actor' | 'event' | 'article'
+		entityType: ContentEntityType
 		entityId: string
 	}) => {
 		try {

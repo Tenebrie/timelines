@@ -24,6 +24,7 @@ const makeMention = (sourceId: string, targetId: string, overrides: Record<strin
 		sourceEventId: null,
 		sourceArticleId: null,
 		sourceTagId: null,
+		sourceNodeId: null,
 		targetActorId: null,
 		targetEventId: targetId,
 		targetArticleId: null,
@@ -141,49 +142,56 @@ const makeFolder = (
 		...overrides,
 	}) satisfies ExportedWorld['articles'][number]
 
-const makePage = (id = 'page-1', overrides: Record<string, unknown> = {}) => ({
-	id,
-	createdAt: now,
-	updatedAt: now,
-	name: 'Page',
-	content: '',
-	contentRich: '',
-	parentType:
-		'parentEventId' in overrides
-			? ('Event' as const)
-			: 'parentArticleId' in overrides
-				? ('Article' as const)
-				: ('Actor' as const),
-	parentActorId: null as string | null,
-	parentEventId: null as string | null,
-	parentArticleId: null as string | null,
-	...overrides,
-})
+const makePage = (id = 'page-1', overrides: Record<string, unknown> = {}) =>
+	({
+		id,
+		createdAt: now,
+		updatedAt: now,
+		name: 'Page',
+		content: '',
+		contentRich: '',
+		parentType:
+			'parentEventId' in overrides
+				? ('Event' as const)
+				: 'parentArticleId' in overrides
+					? ('Article' as const)
+					: ('Actor' as const),
+		parentActorId: null as string | null,
+		parentEventId: null as string | null,
+		parentArticleId: null as string | null,
+		parentNodeId: null as string | null,
+		...overrides,
+	}) satisfies ExportedWorld['articles'][number]['pages'][number]
 
-const makeMindmapNode = (
-	worldId: string,
-	id = 'node-1',
-	links: ReturnType<typeof makeMindmapLink>[] = [],
-) => ({
-	id,
-	createdAt: now,
-	updatedAt: now,
-	worldId,
-	parentActorId: null as string | null,
-	positionX: 0,
-	positionY: 0,
-	links,
-})
+const makeMindmapNode = (worldId: string, id = 'node-1', links: ReturnType<typeof makeMindmapLink>[] = []) =>
+	({
+		id,
+		createdAt: now,
+		updatedAt: now,
+		name: '',
+		content: '',
+		contentRich: '',
+		worldId,
+		positionX: 0,
+		positionY: 0,
+		parentActorId: null as string | null,
+		parentArticleId: null as string | null,
+		parentEventId: null as string | null,
+		parentFolderId: null as string | null,
+		parentTagId: null as string | null,
+		links,
+	}) satisfies ExportedWorld['mindmapNodes'][number]
 
-const makeMindmapLink = (sourceNodeId: string, targetNodeId: string, id = 'link-1') => ({
-	id,
-	createdAt: now,
-	updatedAt: now,
-	direction: 'Normal' as const,
-	sourceNodeId,
-	targetNodeId,
-	content: '',
-})
+const makeMindmapLink = (sourceNodeId: string, targetNodeId: string, id = 'link-1') =>
+	({
+		id,
+		createdAt: now,
+		updatedAt: now,
+		direction: 'Normal' as const,
+		sourceNodeId,
+		targetNodeId,
+		content: '',
+	}) satisfies ExportedWorld['mindmapNodes'][number]['links'][number]
 
 const makeTrack = (worldId: string, id = 'track-1') => ({
 	id,

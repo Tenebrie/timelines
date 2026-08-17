@@ -135,11 +135,11 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		worldId: string
 		id: string
@@ -161,11 +161,11 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		deltaStates: {
 			description?: null | string
@@ -195,11 +195,11 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	tags: {
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		description: string
 		worldId: string

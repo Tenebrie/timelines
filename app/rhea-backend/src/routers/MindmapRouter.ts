@@ -54,6 +54,7 @@ router.post('/api/world/:worldId/mindmap/nodes', async (ctx) => {
 		id: z.uuid().optional(),
 		positionX: z.number(),
 		positionY: z.number(),
+		name: z.string().optional(),
 		parentActorId: z.string().optional(),
 		parentArticleId: z.string().optional(),
 		parentEventId: z.string().optional(),
@@ -129,6 +130,9 @@ router.patch('/api/world/:worldId/mindmap/nodes/:nodeId', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		positionX: z.number().optional(),
 		positionY: z.number().optional(),
+		name: z.string().optional(),
+		content: z.string().optional(),
+		contentRich: z.string().optional(),
 	})
 
 	const node = await MindmapService.updateNode(nodeId, params)

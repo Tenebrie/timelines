@@ -13,15 +13,15 @@ import { RootState } from '@/app/store'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
-import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
+import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { mindmapSlice } from '../MindmapSlice'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { ActorNode } from './ActorNode'
 import { nodePositions } from './mindmapWireUtils'
 
 type Props = {
-	parent: BoxedWikiEntity
+	parent: BoxedMindmapParent
 	node: MindmapNode
 }
 

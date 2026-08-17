@@ -7,11 +7,11 @@ import { DragTrigger } from '@/app/features/dragDrop/DragTrigger'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
-import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
+import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 
 type Props = {
 	node?: MindmapNode
-	parent: BoxedWikiEntity
+	parent: BoxedMindmapParent
 }
 
 export function MindmapNodePort({ node, parent }: Props) {

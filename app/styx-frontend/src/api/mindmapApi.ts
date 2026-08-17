@@ -81,6 +81,8 @@ export type GetMindmapApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
+		content: string
+		contentRich: string
 		parentFolderId?: null | string
 		parentActorId?: null | string
 		parentEventId?: null | string
@@ -94,9 +96,9 @@ export type GetMindmapApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		content: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		sourceNodeId: string
 		targetNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 	}[]
 }
 export type GetMindmapApiArg = {
@@ -108,6 +110,8 @@ export type CreateNodeApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	content: string
+	contentRich: string
 	parentFolderId?: null | string
 	parentActorId?: null | string
 	parentEventId?: null | string
@@ -122,6 +126,7 @@ export type CreateNodeApiArg = {
 		id?: string
 		positionX: number
 		positionY: number
+		name?: string
 		parentActorId?: string
 		parentArticleId?: string
 		parentEventId?: string
@@ -142,6 +147,8 @@ export type UpdateNodeApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	content: string
+	contentRich: string
 	parentFolderId?: null | string
 	parentActorId?: null | string
 	parentEventId?: null | string
@@ -156,6 +163,9 @@ export type UpdateNodeApiArg = {
 	body: {
 		positionX?: number
 		positionY?: number
+		name?: string
+		content?: string
+		contentRich?: string
 	}
 }
 export type MoveMindmapNodesApiResponse = /** status 200  */ {
@@ -164,6 +174,8 @@ export type MoveMindmapNodesApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	content: string
+	contentRich: string
 	parentFolderId?: null | string
 	parentActorId?: null | string
 	parentEventId?: null | string
@@ -186,18 +198,18 @@ export type CreateMindmapWiresApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		content: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		sourceNodeId: string
 		targetNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 	}[]
 	updated: {
 		id: string
 		createdAt: string
 		updatedAt: string
 		content: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		sourceNodeId: string
 		targetNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 	}[]
 }
 export type CreateMindmapWiresApiArg = {
@@ -219,9 +231,9 @@ export type UpdateMindmapWireApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	content: string
-	direction: 'Normal' | 'Reversed' | 'TwoWay'
 	sourceNodeId: string
 	targetNodeId: string
+	direction: 'Normal' | 'Reversed' | 'TwoWay'
 }
 export type UpdateMindmapWireApiArg = {
 	worldId: string

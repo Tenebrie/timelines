@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const SUPPORTED_CONTENT_ENTITIES = ['actor', 'event', 'article'] as const
+export const SUPPORTED_CONTENT_ENTITIES = ['actor', 'event', 'article', 'node'] as const
 
 export const ContentEntityTypeSchema = z.enum(SUPPORTED_CONTENT_ENTITIES)
 

@@ -9,10 +9,10 @@ import { useFormatTimestamp } from '@/app/features/time/calendar/hooks/useFormat
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
 
-import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
+import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 
 type Props = {
-	parent: BoxedWikiEntity
+	parent: BoxedMindmapParent
 }
 
 export function ActorNodeContentMeta({ parent }: Props) {

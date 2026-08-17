@@ -46,12 +46,13 @@ export type CreateActorApiResponse = /** status 200  */ {
 		id: string
 		sourceId: string
 		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
 		sourceTagId?: null | string
+		sourceNodeId?: null | string
 		targetActorId?: null | string
 		targetEventId?: null | string
 		targetArticleId?: null | string
@@ -62,12 +63,13 @@ export type CreateActorApiResponse = /** status 200  */ {
 		id: string
 		sourceId: string
 		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
 		sourceTagId?: null | string
+		sourceNodeId?: null | string
 		targetActorId?: null | string
 		targetEventId?: null | string
 		targetArticleId?: null | string
@@ -108,12 +110,13 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		id: string
 		sourceId: string
 		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
 		sourceTagId?: null | string
+		sourceNodeId?: null | string
 		targetActorId?: null | string
 		targetEventId?: null | string
 		targetArticleId?: null | string
@@ -124,12 +127,13 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		id: string
 		sourceId: string
 		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
 		sourceTagId?: null | string
+		sourceNodeId?: null | string
 		targetActorId?: null | string
 		targetEventId?: null | string
 		targetArticleId?: null | string
@@ -182,7 +186,7 @@ export type DeleteActorApiArg = {
 	actorId: string
 }
 export type GetActorBacklinksApiResponse = /** status 200  */ {
-	type: 'Actor' | 'Event' | 'Article' | 'Tag'
+	type: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	id: string
 	name: string
 }[]

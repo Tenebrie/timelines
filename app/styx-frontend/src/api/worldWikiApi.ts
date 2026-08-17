@@ -52,11 +52,11 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	}[]
 	mentions: {
 		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	mentionedIn: {
 		sourceId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	worldId: string
 	id: string

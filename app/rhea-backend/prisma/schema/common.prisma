@@ -13,10 +13,12 @@ model ContentPage {
     parentActorId   String?
     parentEventId   String?
     parentArticleId String?
+    parentNodeId    String?
 
     parentActor   Actor?       @relation(fields: [parentActorId], references: [id], onDelete: Cascade, name: "ActorContentPage")
     parentEvent   WorldEvent?  @relation(fields: [parentEventId], references: [id], onDelete: Cascade, name: "EventContentPage")
     parentArticle WikiArticle? @relation(fields: [parentArticleId], references: [id], onDelete: Cascade, name: "ArticleContentPage")
+    parentNode    MindmapNode? @relation(fields: [parentNodeId], references: [id], onDelete: Cascade, name: "NodeContentPage")
 
 	mentions Mention[] @relation("PageMention")
     assetRefs AssetReference[] @relation("PageAssetReference")

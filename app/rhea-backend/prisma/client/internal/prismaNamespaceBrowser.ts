@@ -162,6 +162,7 @@ export const AssetReferenceScalarFieldEnum = {
   holderEventId: 'holderEventId',
   holderArticleId: 'holderArticleId',
   holderTagId: 'holderTagId',
+  holderNodeId: 'holderNodeId',
   pageId: 'pageId',
   worldId: 'worldId'
 } as const
@@ -312,7 +313,8 @@ export const ContentPageScalarFieldEnum = {
   parentType: 'parentType',
   parentActorId: 'parentActorId',
   parentEventId: 'parentEventId',
-  parentArticleId: 'parentArticleId'
+  parentArticleId: 'parentArticleId',
+  parentNodeId: 'parentNodeId'
 } as const
 
 export type ContentPageScalarFieldEnum = (typeof ContentPageScalarFieldEnum)[keyof typeof ContentPageScalarFieldEnum]
@@ -353,6 +355,7 @@ export const MentionScalarFieldEnum = {
   sourceEventId: 'sourceEventId',
   sourceArticleId: 'sourceArticleId',
   sourceTagId: 'sourceTagId',
+  sourceNodeId: 'sourceNodeId',
   targetActorId: 'targetActorId',
   targetEventId: 'targetEventId',
   targetArticleId: 'targetArticleId',
@@ -368,6 +371,8 @@ export const MindmapNodeScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   name: 'name',
+  content: 'content',
+  contentRich: 'contentRich',
   positionX: 'positionX',
   positionY: 'positionY',
   parentActorId: 'parentActorId',

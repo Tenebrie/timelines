@@ -9,7 +9,7 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 
-import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
+import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { mindmapSlice } from '../MindmapSlice'
 import { MindmapWireLabel } from './MindmapWireLabel'
 import {
@@ -28,11 +28,11 @@ type Props = {
 	wire: MindmapWire
 	source: {
 		node: MindmapNode
-		parent: BoxedWikiEntity
+		parent: BoxedMindmapParent
 	}
 	target: {
 		node: MindmapNode
-		parent: BoxedWikiEntity
+		parent: BoxedMindmapParent
 	}
 	svgDefsPortal: SVGDefsElement
 	svgGroupPortal: SVGGElement

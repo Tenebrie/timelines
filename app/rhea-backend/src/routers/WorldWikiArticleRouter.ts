@@ -76,7 +76,7 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 			worldId,
 			contentString: contentRich,
 		})
-		parsedContent = parsed.contentPlain
+		parsedContent = parsed.content
 		parsedContentRich = contentRich
 		mentions = parsed.mentions
 	}

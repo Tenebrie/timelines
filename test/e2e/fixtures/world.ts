@@ -75,11 +75,12 @@ export async function createEvent(page: Page, title: string) {
 
 export async function createActor(page: Page, name: string) {
 	await page.getByTestId('NavigateToMindmap').click()
-	await page.getByText('Create actor').click()
-	await page.getByTestId('ModalBackdrop').getByRole('textbox').fill(name)
+	await page.getByRole('button', { name: 'Create new object' }).click()
+	await page.getByRole('button', { name: 'Actor', exact: true }).click()
+	await page.getByPlaceholder('Name').fill(name)
 	await withCreatedActor(
 		page,
-		async () => await page.getByTestId('ModalBackdrop').getByText('Create', { exact: true }).click(),
+		async () => await page.getByRole('button', { name: 'Create', exact: true }).click(),
 	)
 }
 

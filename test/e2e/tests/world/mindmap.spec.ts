@@ -1,6 +1,7 @@
 import { createNewUser, deleteAccount } from '@fixtures/auth'
-import { createActor, navigateToMindmap } from '@fixtures/world'
+import { closeModal, createActor, navigateToMindmap } from '@fixtures/world'
 import test, { expect } from '@playwright/test'
+import { makeUrl } from '@tests/utils'
 
 test.describe('World Mindmap', () => {
 	test.beforeEach(async ({ page }) => {
@@ -12,25 +13,22 @@ test.describe('World Mindmap', () => {
 
 		// --- Create first actor ---
 		await createActor(page, 'Actor One')
-		await expect(
-			page.getByTestId('OutlinerItemActor').filter({ has: page.getByText('Actor One') }),
-		).toBeVisible()
+		await expect(page.getByTestId('ArticleListItem/Actor One/0')).toBeVisible()
 
 		// --- Create second actor ---
 		await createActor(page, 'Actor Two')
-		await expect(
-			page.getByTestId('OutlinerItemActor').filter({ has: page.getByText('Actor Two') }),
-		).toBeVisible()
+		await expect(page.getByTestId('ArticleListItem/Actor Two/0')).toBeVisible()
 
 		// --- Drag first actor from outliner to workspace ---
 		const grid = page.getByTestId('MindmapGrid')
 		const gridBox = await grid.boundingBox()
 		expect(gridBox).toBeTruthy()
 
-		const dropX1 = gridBox!.x + gridBox!.width / 2 - 100
+		// Placed proportionally: the sidebar width varies, and a fixed pixel gap can fall outside the grid
+		const dropX1 = gridBox!.x + gridBox!.width * 0.3
 		const dropY1 = gridBox!.y + gridBox!.height / 2
 
-		const actorOneItem = page.getByTestId('OutlinerItemActor').filter({ has: page.getByText('Actor One') })
+		const actorOneItem = page.getByTestId('ArticleListItem/Actor One/0')
 
 		const createNodeRequest1 = page.waitForRequest(
 			(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
@@ -43,10 +41,10 @@ test.describe('World Mindmap', () => {
 
 		await expect(page.getByTestId('MindmapNode')).toHaveCount(1)
 
-		const dropX2 = dropX1 + 500
+		const dropX2 = gridBox!.x + gridBox!.width * 0.75
 		const dropY2 = dropY1
 
-		const actorTwoItem = page.getByTestId('OutlinerItemActor').filter({ has: page.getByText('Actor Two') })
+		const actorTwoItem = page.getByTestId('ArticleListItem/Actor Two/0')
 
 		const createNodeRequest2 = page.waitForRequest(
 			(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
@@ -76,7 +74,7 @@ test.describe('World Mindmap', () => {
 			steps: 20,
 		})
 		await page.waitForTimeout(100)
-		await nodeTwo.locator('[data-mindmap-content]').dispatchEvent('mouseup')
+		await nodeTwo.locator('[data-mindmap-header]').dispatchEvent('mouseup')
 		await page.mouse.up()
 
 		// Wire should appear immediately (optimistic update)
@@ -111,12 +109,8 @@ test.describe('World Mindmap', () => {
 
 		await expect(page.getByTestId('MindmapNode')).toHaveCount(2)
 		await expect(page.getByTestId('MindmapWire')).toHaveCount(1)
-		await expect(
-			page.getByTestId('OutlinerItemActor').filter({ has: page.getByText('Actor One') }),
-		).toBeVisible()
-		await expect(
-			page.getByTestId('OutlinerItemActor').filter({ has: page.getByText('Actor Two') }),
-		).toBeVisible()
+		await expect(page.getByTestId('ArticleListItem/Actor One/0')).toBeVisible()
+		await expect(page.getByTestId('ArticleListItem/Actor Two/0')).toBeVisible()
 
 		// --- Delete the wire ---
 		const wire = page.getByTestId('MindmapWire')
@@ -164,12 +158,8 @@ test.describe('World Mindmap', () => {
 		await expect(page.getByTestId('MindmapWire')).toHaveCount(0)
 
 		// Actors still exist in outliner
-		await expect(
-			page.getByTestId('OutlinerItemActor').filter({ has: page.getByText('Actor One') }),
-		).toBeVisible()
-		await expect(
-			page.getByTestId('OutlinerItemActor').filter({ has: page.getByText('Actor Two') }),
-		).toBeVisible()
+		await expect(page.getByTestId('ArticleListItem/Actor One/0')).toBeVisible()
+		await expect(page.getByTestId('ArticleListItem/Actor Two/0')).toBeVisible()
 	})
 
 	test('mass selection, move, wire toggle, and delete', async ({ page }) => {
@@ -179,7 +169,7 @@ test.describe('World Mindmap', () => {
 		const actorNames = ['Alpha', 'Beta', 'Gamma', 'Delta']
 		for (const name of actorNames) {
 			await createActor(page, name)
-			await expect(page.getByTestId('OutlinerItemActor').filter({ has: page.getByText(name) })).toBeVisible()
+			await expect(page.getByTestId(`ArticleListItem/${name}/0`)).toBeVisible()
 		}
 
 		// --- Drop all 4 actors onto the grid as nodes ---
@@ -196,7 +186,7 @@ test.describe('World Mindmap', () => {
 		]
 
 		for (let i = 0; i < actorNames.length; i++) {
-			const actorItem = page.getByTestId('OutlinerItemActor').filter({ has: page.getByText(actorNames[i]) })
+			const actorItem = page.getByTestId(`ArticleListItem/${actorNames[i]}/0`)
 
 			const createNodeRequest = page.waitForRequest(
 				(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
@@ -287,7 +277,7 @@ test.describe('World Mindmap', () => {
 			{ steps: 20 },
 		)
 		await page.waitForTimeout(100)
-		await targetNode.locator('[data-mindmap-content]').dispatchEvent('mouseup')
+		await targetNode.locator('[data-mindmap-header]').dispatchEvent('mouseup')
 		await page.mouse.up()
 		await createWiresRequest
 
@@ -312,7 +302,7 @@ test.describe('World Mindmap', () => {
 			{ steps: 20 },
 		)
 		await page.waitForTimeout(100)
-		await targetNode.locator('[data-mindmap-content]').dispatchEvent('mouseup')
+		await targetNode.locator('[data-mindmap-header]').dispatchEvent('mouseup')
 		await page.mouse.up()
 		await deleteWiresRequest
 
@@ -334,8 +324,83 @@ test.describe('World Mindmap', () => {
 
 		// Actors still exist in outliner
 		for (const name of actorNames) {
-			await expect(page.getByTestId('OutlinerItemActor').filter({ has: page.getByText(name) })).toBeVisible()
+			await expect(page.getByTestId(`ArticleListItem/${name}/0`)).toBeVisible()
 		}
+	})
+
+	test('plain node lifecycle', async ({ page }) => {
+		await navigateToMindmap(page, 'createWorld')
+
+		const grid = page.getByTestId('MindmapGrid')
+		const gridBox = await grid.boundingBox()
+		expect(gridBox).toBeTruthy()
+
+		const spawnX = gridBox!.x + gridBox!.width / 2
+		const spawnY = gridBox!.y + gridBox!.height / 2
+
+		// --- Welcome state is offered while the map is empty and nothing is typed ---
+		await page.mouse.move(spawnX, spawnY)
+		await page.keyboard.press(' ')
+		const welcomeState = page.getByTestId('QuickSelectListWelcomeState')
+		await expect(welcomeState).toBeVisible()
+
+		// --- Quick create a plain node, which has no backing entity ---
+		const createNodeRequest = page.waitForRequest(
+			(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
+		)
+		await page.keyboard.type('Quick draft')
+		await expect(welcomeState).toBeHidden()
+		await page.getByRole('menuitem').filter({ hasText: 'Node:' }).click()
+		await createNodeRequest
+
+		const node = page.getByTestId('MindmapNode')
+		await expect(node).toHaveCount(1)
+		await expect(node.getByText('Quick draft')).toBeVisible()
+
+		const worldId = page.url().match(/\/world\/([a-zA-Z0-9-]+)\//)![1]
+		const nodeId = (await node.getAttribute('data-mindmap-node'))!
+
+		// --- A plain node is not an actor, so it stays out of the outliner ---
+		await expect(page.getByTestId(/^ArticleListItem/)).toHaveCount(0)
+
+		// --- Write content, which reaches Rhea through the collaboration pipeline ---
+		await node.getByText('Quick draft').dblclick()
+		const editor = page.locator('.ProseMirror').first()
+		await expect(editor).toBeVisible()
+		await editor.click()
+		await page.keyboard.type('Placeholder body text.')
+
+		// Calliope flushes the document server-side, so poll Rhea rather than the browser
+		await expect
+			.poll(
+				async () => {
+					const response = await page.request.get(makeUrl(`/api/world/${worldId}/node/${nodeId}/content`))
+					if (!response.ok()) {
+						return ''
+					}
+					return (await response.json()).contentHtml as string
+				},
+				{ timeout: 20000 },
+			)
+			.toContain('Placeholder body text.')
+
+		// --- Content survives a reload, so it came back from the database ---
+		await page.reload()
+		await expect(page.locator('.ProseMirror').first()).toContainText('Placeholder body text.')
+
+		// --- Deleting the node takes its content with it ---
+		await closeModal(page)
+		await node.getByText('Quick draft').click()
+
+		const deleteNodeRequest = page.waitForRequest(
+			(req) => req.method() === 'DELETE' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
+		)
+		await page.keyboard.press('Delete')
+		await deleteNodeRequest
+		await expect(node).toHaveCount(0)
+
+		await page.reload()
+		await expect(page.getByTestId('MindmapNode')).toHaveCount(0)
 	})
 
 	test.afterEach(async ({ page }) => {

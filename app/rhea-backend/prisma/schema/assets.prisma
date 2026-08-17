@@ -43,6 +43,7 @@ enum ReferenceHoldingEntity {
   Event
   Article
   Tag
+  Node
 }
 
 model AssetReference {
@@ -60,11 +61,13 @@ model AssetReference {
   holderEventId   String?
   holderArticleId String?
   holderTagId     String?
+  holderNodeId    String?
 
   holderActor   Actor?       @relation(fields: [holderActorId], references: [id], onDelete: Cascade, name: "ActorAssetReference")
   holderEvent   WorldEvent?  @relation(fields: [holderEventId], references: [id], onDelete: Cascade, name: "EventAssetReference")
   holderArticle WikiArticle? @relation(fields: [holderArticleId], references: [id], onDelete: Cascade, name: "ArticleAssetReference")
   holderTag     Tag?         @relation(fields: [holderTagId], references: [id], onDelete: Cascade, name: "TagAssetReference")
+  holderNode    MindmapNode? @relation(fields: [holderNodeId], references: [id], onDelete: Cascade, name: "NodeAssetReference")
 
   pageId String?
   page   ContentPage? @relation(fields: [pageId], references: [id], onDelete: Cascade, name: "PageAssetReference")

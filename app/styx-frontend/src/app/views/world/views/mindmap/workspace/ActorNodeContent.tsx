@@ -6,16 +6,17 @@ import Stack from '@mui/material/Stack'
 import { memo, useMemo } from 'react'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
 import { ArticleListItemIcon } from '../../wiki/articleList/icon/ArticleListItemIcon'
-import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
+import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { ActorNodeContentMeta } from './ActorNodeContentMeta'
 import { MindmapNodePort } from './MindmapNodePort'
 import { NODE_W } from './mindmapWireUtils'
 
 type Props = {
 	node?: MindmapNode
-	parent: BoxedWikiEntity
+	parent: BoxedMindmapParent
 	onHeaderClick?: (e: React.MouseEvent) => void
 	onContentClick?: () => void
 }
@@ -69,7 +70,11 @@ function ActorNodeContentComponent({ node, parent, onHeaderClick }: Props) {
 				onClick={onHeaderClick}
 			>
 				<Box sx={{ width: 24, height: 24 }}>
-					<ArticleListItemIcon article={parent} highlighted={false} />
+					{parent.type === 'node' ? (
+						<EntityIcon variant="node" height={24} color={parent.color} />
+					) : (
+						<ArticleListItemIcon article={parent} highlighted={false} />
+					)}
 				</Box>
 
 				<Box sx={{ width: 1 }}>

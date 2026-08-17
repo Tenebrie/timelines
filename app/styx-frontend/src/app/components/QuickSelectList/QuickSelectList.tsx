@@ -4,7 +4,7 @@ import Divider from '@mui/material/Divider'
 import Input from '@mui/material/Input'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { useQuickCreateActor } from '@/api/hooks/useQuickCreateActor'
 import { useQuickCreateEvent } from '@/api/hooks/useQuickCreateEvent'
@@ -21,12 +21,19 @@ import {
 import { QuickSelectListItem } from './QuickSelectListItem'
 import { QuickSelectListItemQuickCreate } from './QuickSelectListItemQuickCreate'
 import { QuickSelectListSectionHeader } from './QuickSelectListSectionHeader'
+import { QuickSelectListWelcomeState } from './QuickSelectListWelcomeState'
 
 type Props = {
 	isFocused: boolean
 	onSelect: (params: { query: string; entity: { id: string; type: MentionedEntity; name: string } }) => void
 	inputProps?: InputProps
 	forceDirection?: 'bottom'
+	onCreatePlainNode?: (name: string) => void
+}
+
+type QuickCreateOption = {
+	type: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+	run: () => Promise<void> | void
 }
 
 type InputProps = {
@@ -42,7 +49,13 @@ const NAVIGATION_KEYS = ['ArrowUp', 'ArrowDown', 'Tab', 'Enter', 'PageUp', 'Page
 
 export const QuickSelectList = memo(QuickSelectListComponent)
 
-export function QuickSelectListComponent({ isFocused, onSelect, inputProps, forceDirection }: Props) {
+export function QuickSelectListComponent({
+	isFocused,
+	onSelect,
+	inputProps,
+	forceDirection,
+	onCreatePlainNode,
+}: Props) {
 	const [visible, setVisible] = useState(false)
 	const [pos, setPos] = useState<Position>({ top: 0, bottom: 0, left: 0 })
 	const [query, setQuery] = useState('')
@@ -109,6 +122,7 @@ export function QuickSelectListComponent({ isFocused, onSelect, inputProps, forc
 				onClose={close}
 				inputProps={inputProps}
 				forceDirection={forceDirection}
+				onCreatePlainNode={onCreatePlainNode}
 			/>
 		</Box>
 	)
@@ -121,9 +135,18 @@ type ContentProps = {
 	onClose: () => void
 	inputProps?: InputProps
 	forceDirection?: 'bottom'
+	onCreatePlainNode?: (name: string) => void
 }
 
-function QuickSelectListContent({ pos, query, onSelect, onClose, inputProps, forceDirection }: ContentProps) {
+function QuickSelectListContent({
+	pos,
+	query,
+	onSelect,
+	onClose,
+	inputProps,
+	forceDirection,
+	onCreatePlainNode,
+}: ContentProps) {
 	const [selectedIndex, setSelectedIndex] = useState(0)
 
 	const { mentions, actorCount, eventCount, articleCount, tagCount } = useDisplayedMentions({ query })
@@ -133,8 +156,39 @@ function QuickSelectListContent({ pos, query, onSelect, onClose, inputProps, for
 	const [createArticle] = useCreateArticle()
 	const createTag = useQuickCreateTag()
 
-	const quickCreateVisible = query.length > 0
-	const lastItemIndex = quickCreateVisible ? mentions.length + 3 : mentions.length - 1
+	const selectCreated = useCallback(
+		(type: MentionedEntity, id: string | undefined) => {
+			if (!id) {
+				return
+			}
+			onSelect({ query, entity: { id, type, name: query } })
+		},
+		[onSelect, query],
+	)
+
+	const quickCreateVisible = query.trim().length > 0
+	const quickCreateOptions = useMemo(() => {
+		const options: QuickCreateOption[] = [
+			{ type: 'Actor', run: async () => selectCreated('Actor', (await createActor({ query }))?.id) },
+			{ type: 'Event', run: async () => selectCreated('Event', (await createEvent({ query }))?.id) },
+			{
+				type: 'Article',
+				run: async () => selectCreated('Article', (await createArticle({ name: query }))?.id),
+			},
+			{ type: 'Tag', run: async () => selectCreated('Tag', (await createTag({ query }))?.id) },
+		]
+		if (onCreatePlainNode) {
+			options.unshift({ type: 'Node', run: async () => onCreatePlainNode(query) })
+		}
+		return options
+	}, [createActor, createArticle, createEvent, createTag, onCreatePlainNode, query, selectCreated])
+
+	const lastItemIndex = quickCreateVisible
+		? mentions.length + quickCreateOptions.length - 1
+		: mentions.length - 1
+
+	const showWelcomeState = !!inputProps
+	const welcomeVisible = !!showWelcomeState && !quickCreateVisible && mentions.length === 0
 
 	useShortcut(
 		Shortcut.Escape,
@@ -148,39 +202,21 @@ function QuickSelectListContent({ pos, query, onSelect, onClose, inputProps, for
 	const selectEntity = useCallback(
 		async (index: number) => {
 			const selectedMention = mentions[index]
-
-			let entityType: MentionedEntity = selectedMention?.type
-			let createdEntityId: string | undefined = undefined
-			if (!selectedMention && index === mentions.length) {
-				entityType = 'Actor'
-				createdEntityId = (await createActor({ query }))?.id
-			} else if (!selectedMention && index === mentions.length + 1) {
-				entityType = 'Event'
-				createdEntityId = (await createEvent({ query }))?.id
-			} else if (!selectedMention && index === mentions.length + 2) {
-				entityType = 'Article'
-				createdEntityId = (await createArticle({ name: query }))?.id
-			} else if (!selectedMention && index === mentions.length + 3) {
-				entityType = 'Tag'
-				createdEntityId = (await createTag({ query }))?.id
-			}
-
-			if (!selectedMention && !createdEntityId) {
+			if (selectedMention) {
+				onSelect({
+					query,
+					entity: {
+						id: selectedMention.id,
+						type: selectedMention.type,
+						name: selectedMention.name,
+					},
+				})
 				return
 			}
 
-			const entityId = createdEntityId ?? selectedMention.id
-
-			onSelect({
-				query,
-				entity: {
-					id: entityId,
-					type: entityType,
-					name: selectedMention?.name ?? query,
-				},
-			})
+			await quickCreateOptions[index - mentions.length]?.run()
 		},
-		[createActor, createArticle, createEvent, createTag, mentions, onSelect, query],
+		[mentions, onSelect, query, quickCreateOptions],
 	)
 
 	const handleKeyPress = useCallback(
@@ -190,9 +226,8 @@ function QuickSelectListContent({ pos, query, onSelect, onClose, inputProps, for
 					return prev > 0 ? prev - 1 : lastItemIndex
 				})
 			} else if (key === 'ArrowDown' || key === 'Tab') {
-				const maxIndex = mentions.length - (query.length > 0 ? -3 : 1)
 				setSelectedIndex((prev) => {
-					const targetIndex = prev + 1 > maxIndex ? 0 : prev + 1
+					const targetIndex = prev + 1 > lastItemIndex ? 0 : prev + 1
 					return targetIndex
 				})
 			} else if (key === 'Enter') {
@@ -203,7 +238,7 @@ function QuickSelectListContent({ pos, query, onSelect, onClose, inputProps, for
 				setSelectedIndex(lastItemIndex)
 			}
 		},
-		[lastItemIndex, mentions.length, query.length, selectEntity, selectedIndex],
+		[lastItemIndex, selectEntity, selectedIndex],
 	)
 
 	useEventBusSubscribe['quickSelect/onKeyDown']({
@@ -321,6 +356,7 @@ function QuickSelectListContent({ pos, query, onSelect, onClose, inputProps, for
 					/>
 				</Stack>
 			)}
+			{welcomeVisible && <QuickSelectListWelcomeState />}
 			{mentionTypes
 				.filter((type) => type.mentions.length > 0)
 				.map((type) => (
@@ -347,30 +383,15 @@ function QuickSelectListContent({ pos, query, onSelect, onClose, inputProps, for
 				<>
 					<QuickSelectListSectionHeader label="Quick create" disableGutter={mentions.length === 0} />
 					<Divider style={{ marginBottom: 0 }} />
-					<QuickSelectListItemQuickCreate
-						type="Actor"
-						selected={selectedIndex === mentions.length}
-						onClick={() => selectEntity(mentions.length)}
-						query={query}
-					/>
-					<QuickSelectListItemQuickCreate
-						type="Event"
-						selected={selectedIndex === mentions.length + 1}
-						onClick={() => selectEntity(mentions.length + 1)}
-						query={query}
-					/>
-					<QuickSelectListItemQuickCreate
-						type="Article"
-						selected={selectedIndex === mentions.length + 2}
-						onClick={() => selectEntity(mentions.length + 2)}
-						query={query}
-					/>
-					<QuickSelectListItemQuickCreate
-						type="Tag"
-						selected={selectedIndex === mentions.length + 3}
-						onClick={() => selectEntity(mentions.length + 3)}
-						query={query}
-					/>
+					{quickCreateOptions.map((option, index) => (
+						<QuickSelectListItemQuickCreate
+							key={option.type}
+							type={option.type}
+							selected={selectedIndex === mentions.length + index}
+							onClick={() => selectEntity(mentions.length + index)}
+							query={query}
+						/>
+					))}
 				</>
 			)}
 		</Paper>

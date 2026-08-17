@@ -59,11 +59,11 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 	}[]
 	mentions: {
 		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	mentionedIn: {
 		sourceId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	deltaStates: {
 		description?: null | string
@@ -114,11 +114,11 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	}[]
 	mentions: {
 		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	mentionedIn: {
 		sourceId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	deltaStates: {
 		description?: null | string
@@ -217,7 +217,7 @@ export type UnrevokeWorldEventApiArg = {
 	eventId: string
 }
 export type GetWorldEventBacklinksApiResponse = /** status 200  */ {
-	type: 'Actor' | 'Event' | 'Article' | 'Tag'
+	type: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	id: string
 	name: string
 }[]

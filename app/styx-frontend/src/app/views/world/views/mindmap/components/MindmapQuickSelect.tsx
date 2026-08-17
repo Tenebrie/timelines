@@ -49,8 +49,8 @@ export function MindmapQuickSelect() {
 		},
 	})
 
-	const handleSelect = useCallback(
-		async ({ entity }: Parameters<QuickSelectListProps['onSelect']>[0]) => {
+	const spawnNode = useCallback(
+		async (body: Omit<Parameters<typeof createMindmapNode>[0], 'positionX' | 'positionY'>) => {
 			const sourceNodeIds = wireSourceIds.current
 			dispatchGlobalEvent['quickSelect/requestClose']()
 
@@ -60,12 +60,9 @@ export function MindmapQuickSelect() {
 			}
 
 			const createdNode = await createMindmapNode({
+				...body,
 				positionX: Math.round(gridPos.x) - NODE_W / 2,
 				positionY: Math.round(gridPos.y) - NODE_FALLBACK_H / 2,
-				parentActorId: entity.type === 'Actor' ? entity.id : undefined,
-				parentArticleId: entity.type === 'Article' ? entity.id : undefined,
-				parentEventId: entity.type === 'Event' ? entity.id : undefined,
-				parentTagId: entity.type === 'Tag' ? entity.id : undefined,
 			})
 
 			if (!createdNode || sourceNodeIds.length === 0) {
@@ -82,11 +79,25 @@ export function MindmapQuickSelect() {
 		[createLinks, createMindmapNode],
 	)
 
+	const handleSelect = useCallback(
+		({ entity }: Parameters<QuickSelectListProps['onSelect']>[0]) =>
+			spawnNode({
+				parentActorId: entity.type === 'Actor' ? entity.id : undefined,
+				parentArticleId: entity.type === 'Article' ? entity.id : undefined,
+				parentEventId: entity.type === 'Event' ? entity.id : undefined,
+				parentTagId: entity.type === 'Tag' ? entity.id : undefined,
+			}),
+		[spawnNode],
+	)
+
+	const handleCreatePlainNode = useCallback((name: string) => spawnNode({ name }), [spawnNode])
+
 	return (
 		<QuickSelectList
 			isFocused={selectedEntityIds.length === 0}
 			forceDirection="bottom"
 			onSelect={handleSelect}
+			onCreatePlainNode={handleCreatePlainNode}
 			inputProps={{
 				autoFocus: true,
 				placeholder: 'Search...',

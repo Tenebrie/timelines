@@ -17,12 +17,7 @@ export const useUpdateMindmapNode = () => {
 				mindmapApi.util.updateQueryData('getMindmap', { worldId }, (draft) => {
 					const node = draft.nodes.find((n) => n.id === nodeId)
 					if (node) {
-						if (body.positionX !== undefined) {
-							node.positionX = body.positionX
-						}
-						if (body.positionY !== undefined) {
-							node.positionY = body.positionY
-						}
+						Object.assign(node, body)
 					}
 				}),
 			)
@@ -50,5 +45,5 @@ export const useUpdateMindmapNode = () => {
 		[updateCachedNode, updateMindmapNode, worldId],
 	)
 
-	return [perform, state] as const
+	return [perform, state, updateCachedNode] as const
 }

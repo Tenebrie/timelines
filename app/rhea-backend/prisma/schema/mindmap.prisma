@@ -3,9 +3,11 @@ model MindmapNode {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  name      String @default("")
-  positionX Int
-  positionY Int
+  name        String @default("")
+  content     String @default("")
+  contentRich String @default("")
+  positionX   Int
+  positionY   Int
 
   parentActor     Actor?       @relation(fields: [parentActorId], references: [id], onDelete: Cascade)
   parentActorId   String?
@@ -17,6 +19,10 @@ model MindmapNode {
   parentFolderId  String?
   parentTag       Tag?         @relation(fields: [parentTagId], references: [id], onDelete: Cascade)
   parentTagId     String?
+
+  pages     ContentPage[]    @relation("NodeContentPage")
+  mentions  Mention[]        @relation("NodeMentionSource")
+  assetRefs AssetReference[] @relation("NodeAssetReference")
 
   links    MindmapLink[] @relation("MindmapLinkSource")
   linkedBy MindmapLink[] @relation("MindmapLinkTarget")

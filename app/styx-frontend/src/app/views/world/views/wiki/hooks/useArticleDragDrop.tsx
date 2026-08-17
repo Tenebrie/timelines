@@ -99,7 +99,7 @@ export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 			if (!isTopHalf && article.type === 'folder' && isFolderExpanded) {
 				await moveEntity({
 					entityId: params.article.id,
-					entityType: params.article.type,
+					entityType: article.type,
 					parentId: article.id,
 					position: -1,
 				})
@@ -108,7 +108,7 @@ export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 
 			await moveEntity({
 				entityId: params.article.id,
-				entityType: params.article.type,
+				entityType: article.type,
 				parentId: article.entity.parentFolderId,
 				position: article.position + delta,
 			})

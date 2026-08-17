@@ -19,6 +19,8 @@ export const useCreateMindmapNode = () => {
 					draft.nodes.push({
 						worldId,
 						name: '',
+						content: '',
+						contentRich: '',
 						createdAt: new Date().toISOString(),
 						updatedAt: new Date().toISOString(),
 						...body,

@@ -76,7 +76,7 @@ export const RheaService = {
 		lastUserId: string
 		worldId: string
 		entityId: string
-		entityType: 'actor' | 'event' | 'article'
+		entityType: 'actor' | 'event' | 'article' | 'node'
 		contentRich: string
 	}) => {
 		if (contentRich.length >= 1_131_000) {

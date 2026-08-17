@@ -8,14 +8,14 @@ import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropRe
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
-import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
+import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { useNodeLinking } from '../hooks/useNodeLinking'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { ActorNodeContent } from './ActorNodeContent'
 
 type Props = {
 	node: MindmapNode
-	parent: BoxedWikiEntity
+	parent: BoxedMindmapParent
 	onHeaderClick: (e: React.MouseEvent) => void
 	onContentClick: () => void
 }

@@ -142,21 +142,23 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					name: string
 					content: string
 					contentRich: string
-					parentType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					parentType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 					parentActorId?: null | string
 					parentEventId?: null | string
 					parentArticleId?: null | string
+					parentNodeId?: null | string
 				}[]
 				mentions: {
 					id: string
 					sourceId: string
 					targetId: string
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 					sourceActorId?: null | string
 					sourceEventId?: null | string
 					sourceArticleId?: null | string
 					sourceTagId?: null | string
+					sourceNodeId?: null | string
 					targetActorId?: null | string
 					targetEventId?: null | string
 					targetArticleId?: null | string
@@ -184,21 +186,23 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					name: string
 					content: string
 					contentRich: string
-					parentType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					parentType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 					parentActorId?: null | string
 					parentEventId?: null | string
 					parentArticleId?: null | string
+					parentNodeId?: null | string
 				}[]
 				mentions: {
 					id: string
 					sourceId: string
 					targetId: string
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 					sourceActorId?: null | string
 					sourceEventId?: null | string
 					sourceArticleId?: null | string
 					sourceTagId?: null | string
+					sourceNodeId?: null | string
 					targetActorId?: null | string
 					targetEventId?: null | string
 					targetArticleId?: null | string
@@ -228,21 +232,23 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					name: string
 					content: string
 					contentRich: string
-					parentType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					parentType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 					parentActorId?: null | string
 					parentEventId?: null | string
 					parentArticleId?: null | string
+					parentNodeId?: null | string
 				}[]
 				mentions: {
 					id: string
 					sourceId: string
 					targetId: string
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 					sourceActorId?: null | string
 					sourceEventId?: null | string
 					sourceArticleId?: null | string
 					sourceTagId?: null | string
+					sourceNodeId?: null | string
 					targetActorId?: null | string
 					targetEventId?: null | string
 					targetArticleId?: null | string
@@ -277,12 +283,13 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					id: string
 					sourceId: string
 					targetId: string
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 					sourceActorId?: null | string
 					sourceEventId?: null | string
 					sourceArticleId?: null | string
 					sourceTagId?: null | string
+					sourceNodeId?: null | string
 					targetActorId?: null | string
 					targetEventId?: null | string
 					targetArticleId?: null | string
@@ -305,8 +312,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					createdAt: string
 					updatedAt: string
 					content: string
-					direction: 'Normal' | 'Reversed' | 'TwoWay'
 					sourceNodeId: string
+					direction: 'Normal' | 'Reversed' | 'TwoWay'
 					targetNodeId: string
 				}[]
 				worldId: string
@@ -314,6 +321,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				createdAt: string
 				updatedAt: string
 				name: string
+				content: string
+				contentRich: string
 				parentFolderId?: null | string
 				parentActorId?: null | string
 				parentEventId?: null | string

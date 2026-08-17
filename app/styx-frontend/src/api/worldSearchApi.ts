@@ -29,11 +29,11 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		nodes: {
 			worldId: string
@@ -41,6 +41,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			createdAt: string
 			updatedAt: string
 			name: string
+			content: string
+			contentRich: string
 			parentFolderId?: null | string
 			parentActorId?: null | string
 			parentEventId?: null | string
@@ -69,11 +71,11 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		worldId: string
 		id: string
@@ -94,11 +96,11 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		deltaStates: {
 			description?: null | string
@@ -128,11 +130,11 @@ export type SearchWorldApiResponse = /** status 200  */ {
 	tags: {
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		description: string
 		worldId: string

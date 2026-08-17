@@ -3,6 +3,7 @@ enum MentionedEntity {
   Event
   Article
   Tag
+  Node
 }
 
 model Mention {
@@ -18,6 +19,7 @@ model Mention {
   sourceEventId   String?
   sourceArticleId String?
   sourceTagId     String?
+  sourceNodeId    String?
 
   targetActorId   String?
   targetEventId   String?
@@ -28,6 +30,7 @@ model Mention {
   sourceEvent   WorldEvent?  @relation(fields: [sourceEventId], references: [id], onDelete: Cascade, name: "EventMentionSource")
   sourceArticle WikiArticle? @relation(fields: [sourceArticleId], references: [id], onDelete: Cascade, name: "ArticleMentionSource")
   sourceTag     Tag?         @relation(fields: [sourceTagId], references: [id], onDelete: Cascade, name: "TagMentionSource")
+  sourceNode    MindmapNode? @relation(fields: [sourceNodeId], references: [id], onDelete: Cascade, name: "NodeMentionSource")
 
   targetActor   Actor?       @relation(fields: [targetActorId], references: [id], onDelete: Cascade, name: "ActorMentionTarget")
   targetEvent   WorldEvent?  @relation(fields: [targetEventId], references: [id], onDelete: Cascade, name: "EventMentionTarget")

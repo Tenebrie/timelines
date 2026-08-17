@@ -9,10 +9,37 @@ import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 import { boxActor, boxArticle, boxEvent, boxFolder, boxTag } from '../../wiki/utils/boxEntity'
 import { getWikiState } from '../../wiki/WikiSliceSelectors'
 
+/**
+ * A node with no backing entity. It lives only on the mindmap, so it is boxed as its own parent.
+ */
+export type BoxedPlainNode = {
+	type: 'node'
+	entity: MindmapNode
+	id: string
+	name: string
+	position: number
+	color: string | undefined
+}
+
+export type BoxedMindmapParent = BoxedWikiEntity | BoxedPlainNode
+
+export function boxPlainNode(node: MindmapNode): BoxedPlainNode {
+	return {
+		type: 'node',
+		entity: node,
+		id: node.id,
+		name: node.name,
+		position: 0,
+		color: PLAIN_NODE_COLOR,
+	}
+}
+
+const PLAIN_NODE_COLOR = '#6b7a99'
+
 export type BoxedMindmapNode = {
 	id: string
 	node: MindmapNode
-	parent: BoxedWikiEntity
+	parent: BoxedMindmapParent
 }
 
 export type BoxedMindmapWire = MindmapWire & {
@@ -53,7 +80,7 @@ export function useBoxedMindmapContent() {
 
 		function stableNode(
 			identity: MindmapNode,
-			parent: BoxedWikiEntity,
+			parent: BoxedMindmapParent,
 			make: () => BoxedMindmapNode,
 		): BoxedMindmapNode {
 			const cached = prevNodeCache.get(identity)
@@ -70,6 +97,13 @@ export function useBoxedMindmapContent() {
 		const nodeById = new Map<string, BoxedMindmapNode>()
 
 		for (const node of data.nodes) {
+			const parentId =
+				node.parentActorId ??
+				node.parentArticleId ??
+				node.parentEventId ??
+				node.parentFolderId ??
+				node.parentTagId
+
 			const parent =
 				(node.parentActorId &&
 					(() => {
@@ -96,7 +130,7 @@ export function useBoxedMindmapContent() {
 						const t = tags.find((t) => t.id === node.parentTagId)
 						return t && boxTag(t)
 					})()) ??
-				null
+				(parentId ? null : boxPlainNode(node))
 
 			if (!parent) continue
 

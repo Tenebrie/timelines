@@ -2,6 +2,7 @@ import {
 	Actor,
 	ContentPage,
 	MentionedEntity,
+	MindmapNode,
 	Prisma,
 	ReferenceHoldingEntity,
 	WikiArticle,
@@ -16,7 +17,7 @@ import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { MentionsService } from './MentionsService.js'
 import { DocumentContent } from './RichTextService.js'
 
-type ContentEntity = Actor | WorldEvent | WikiArticle
+type ContentEntity = Actor | WorldEvent | WikiArticle | MindmapNode
 
 const CONFIG = {
 	actor: {
@@ -33,6 +34,11 @@ const CONFIG = {
 		mentionType: MentionedEntity.Article,
 		holderType: ReferenceHoldingEntity.Article,
 		parentColumn: 'parentArticleId' satisfies keyof ContentPage,
+	},
+	node: {
+		mentionType: MentionedEntity.Node,
+		holderType: ReferenceHoldingEntity.Node,
+		parentColumn: 'parentNodeId' satisfies keyof ContentPage,
 	},
 }
 
@@ -231,6 +237,8 @@ async function findEntity(
 			return client.worldEvent.findUnique({ where: { id: entityId, worldId } })
 		case 'article':
 			return client.wikiArticle.findUnique({ where: { id: entityId, worldId } })
+		case 'node':
+			return client.mindmapNode.findUnique({ where: { id: entityId, worldId } })
 	}
 }
 
@@ -263,6 +271,8 @@ async function updateEntityContent(
 			return client.worldEvent.update({ where: { id: entityId, worldId }, data })
 		case 'article':
 			return client.wikiArticle.update({ where: { id: entityId, worldId }, data })
+		case 'node':
+			return client.mindmapNode.update({ where: { id: entityId, worldId }, data })
 	}
 }
 
@@ -271,6 +281,7 @@ function mentionSourceColumn(entityType: ContentEntityType, entityId: string) {
 		sourceActorId: entityType === 'actor' ? entityId : undefined,
 		sourceEventId: entityType === 'event' ? entityId : undefined,
 		sourceArticleId: entityType === 'article' ? entityId : undefined,
+		sourceNodeId: entityType === 'node' ? entityId : undefined,
 	}
 }
 

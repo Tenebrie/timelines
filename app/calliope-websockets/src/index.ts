@@ -82,7 +82,7 @@ app.ws.use(
 				throw new Error('Missing worldId, entityType, or documentId')
 			}
 
-			if (!['actor', 'event', 'article'].includes(entityType)) {
+			if (!['actor', 'event', 'article', 'node'].includes(entityType)) {
 				throw new Error('Invalid entityType')
 			}
 
@@ -93,7 +93,7 @@ app.ws.use(
 				userId,
 				worldId,
 				entityId: documentId,
-				entityType: entityType as 'actor' | 'event' | 'article',
+				entityType: entityType as 'actor' | 'event' | 'article' | 'node',
 				docName,
 			})
 

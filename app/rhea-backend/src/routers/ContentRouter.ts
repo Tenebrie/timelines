@@ -1,4 +1,4 @@
-import { Actor, WikiArticle, WorldEvent } from '@prisma/client'
+import { Actor, MindmapNode, WikiArticle, WorldEvent } from '@prisma/client'
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { ContentEntityType, ContentEntityTypeSchema } from '@src/schema/ContentEntityType.js'
@@ -221,7 +221,7 @@ function notifyEntityUpdate(
 	ctx: Parameters<typeof RedisService.notifyAboutActorUpdate>[0],
 	entityType: ContentEntityType,
 	worldId: string,
-	entity: Actor | WorldEvent | WikiArticle,
+	entity: Actor | WorldEvent | WikiArticle | MindmapNode,
 ) {
 	switch (entityType) {
 		case 'actor':
@@ -232,6 +232,9 @@ function notifyEntityUpdate(
 			return
 		case 'article':
 			RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article: entity as WikiArticle })
+			return
+		case 'node':
+			RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes: [entity as MindmapNode] })
 			return
 	}
 }

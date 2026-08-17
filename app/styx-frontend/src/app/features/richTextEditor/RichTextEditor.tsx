@@ -25,7 +25,7 @@ type Props = {
 	allowReadMode?: boolean
 	// Collaboration params (optional)
 	collaboration?: {
-		entityType: 'actor' | 'event' | 'article'
+		entityType: 'actor' | 'event' | 'article' | 'node'
 		documentId: string
 	}
 	autoFocus?: boolean

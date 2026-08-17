@@ -73,6 +73,11 @@ export function useMindmapEdgeScroll() {
 	})
 
 	const updateMousePosition = useCallback((event: MouseEvent, element: Rect) => {
+		if (event.buttons === 0) {
+			updateLoopRunning.current = false
+			return
+		}
+
 		lastSeenMousePosition.current = { x: event.clientX, y: event.clientY }
 		lastSeenElementRect.current = element
 		if (!updateLoopRunning.current) {

@@ -1,4 +1,5 @@
 import { MentionedEntity } from '@prisma/client'
+import { ContentEntityType } from '@src/schema/ContentEntityType.js'
 import { asyncFilter } from '@src/utils/asyncFilter.js'
 import { load } from 'cheerio'
 import { AnyNode } from 'domhandler'
@@ -166,7 +167,7 @@ export const RichTextService = {
 		newContentRich: string
 		worldId: string
 		entityId: string
-		entityType: 'actor' | 'event' | 'article'
+		entityType: ContentEntityType
 	}) => {
 		const { contentRich } = await EntityResolverService.resolveEntityContent({
 			worldId,
