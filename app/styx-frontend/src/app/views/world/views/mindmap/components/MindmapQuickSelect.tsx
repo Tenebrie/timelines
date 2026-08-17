@@ -7,7 +7,9 @@ import { useMousePositionRef } from '@/app/hooks/useMousePositionRef'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { useCreateMindmapNode } from '../api/useCreateMindmapNode'
+import { useNodeLinking } from '../hooks/useNodeLinking'
 import { getMindmapGridPosition } from '../utils/getMindmapGridPosition'
+import { NODE_FALLBACK_H, NODE_W } from '../workspace/mindmapWireUtils'
 
 export function MindmapQuickSelect() {
 	const selectedEntityIds = useSearch({
@@ -17,6 +19,7 @@ export function MindmapQuickSelect() {
 
 	const mousePos = useMousePositionRef()
 	const [createMindmapNode] = useCreateMindmapNode()
+	const { createLinks } = useNodeLinking()
 
 	useShortcut(Shortcut.OpenQuickSelect, () => {
 		dispatchGlobalEvent['quickSelect/requestOpen']({
@@ -34,8 +37,21 @@ export function MindmapQuickSelect() {
 		},
 	})
 
+	const wireSourceIds = useRef<string[]>([])
+	useEventBusSubscribe['mindmap/wire/requestNodeTarget']({
+		callback: ({ sourceNodeIds }) => {
+			wireSourceIds.current = sourceNodeIds
+		},
+	})
+	useEventBusSubscribe['quickSelect/onClosed']({
+		callback: () => {
+			wireSourceIds.current = []
+		},
+	})
+
 	const handleSelect = useCallback(
-		({ entity }: Parameters<QuickSelectListProps['onSelect']>[0]) => {
+		async ({ entity }: Parameters<QuickSelectListProps['onSelect']>[0]) => {
+			const sourceNodeIds = wireSourceIds.current
 			dispatchGlobalEvent['quickSelect/requestClose']()
 
 			const gridPos = getMindmapGridPosition({ screenX: spawnPos.current.x, screenY: spawnPos.current.y })
@@ -43,16 +59,27 @@ export function MindmapQuickSelect() {
 				return
 			}
 
-			createMindmapNode({
-				positionX: Math.round(gridPos.x),
-				positionY: Math.round(gridPos.y),
+			const createdNode = await createMindmapNode({
+				positionX: Math.round(gridPos.x) - NODE_W / 2,
+				positionY: Math.round(gridPos.y) - NODE_FALLBACK_H / 2,
 				parentActorId: entity.type === 'Actor' ? entity.id : undefined,
 				parentArticleId: entity.type === 'Article' ? entity.id : undefined,
 				parentEventId: entity.type === 'Event' ? entity.id : undefined,
 				parentTagId: entity.type === 'Tag' ? entity.id : undefined,
 			})
+
+			if (!createdNode || sourceNodeIds.length === 0) {
+				return
+			}
+
+			createLinks(
+				sourceNodeIds.map((sourceNodeId) => ({
+					sourceNodeId,
+					targetNodeId: createdNode.id,
+				})),
+			)
 		},
-		[createMindmapNode],
+		[createLinks, createMindmapNode],
 	)
 
 	return (

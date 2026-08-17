@@ -53,6 +53,9 @@ export type EventParams = {
 	'mindmap/node/onGroupDragEnd': {
 		sourceNodeId: string
 	}
+	'mindmap/wire/requestNodeTarget': {
+		sourceNodeIds: string[]
+	}
 	'mindmap/selection/changed': {
 		selectedNodeIds: Set<string>
 		selectedWireIds: Set<string>
@@ -90,6 +93,7 @@ export type EventParams = {
 		query: string
 	}
 	'quickSelect/requestClose': void
+	'quickSelect/onClosed': void
 	'richEditor/mentionRender/onStart': { node: ProseMirrorNode }
 	'richEditor/mentionRender/onEnd': { node: ProseMirrorNode }
 	'richEditor/requestFocus': void

@@ -3,10 +3,13 @@ import { useStore } from 'react-redux'
 
 import { IsDragDropStateOfType } from '@/app/features/dragDrop/DragDropState'
 import { useDragDropBusSubscribe } from '@/app/features/dragDrop/hooks/useDragDropBus'
+import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useMousePositionRef } from '@/app/hooks/useMousePositionRef'
 import { RootState } from '@/app/store'
 
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
+import { isEmptyMindmapSpot } from '../utils/isEmptyMindmapSpot'
 import {
 	buildPathD,
 	getNodeHeight,
@@ -28,22 +31,77 @@ type Props = {
 
 export function MindmapWireGhost({ existingWires }: Props) {
 	const [isDragging, setIsDragging] = useState(false)
+	const [awaitingSelection, setAwaitingSelection] = useState(false)
 	const [sourceNodes, setSourceNodes] = useState<SourceNode[]>([])
 	const containerRef = useRef<SVGGElement>(null)
 	const theme = useCustomTheme()
 	const store = useStore<RootState>()
 
+	const mousePos = useMousePositionRef()
+
+	const ghostState = useRef({ isDragging, awaitingSelection, sourceNodes })
+	ghostState.current = { isDragging, awaitingSelection, sourceNodes }
+
+	// Escape and right click cancel the drag without a left button release
+	const dropButton = useRef<number | null>(null)
+	useEffect(() => {
+		if (!isDragging || awaitingSelection) {
+			return
+		}
+
+		const onMouseUp = (event: MouseEvent) => {
+			dropButton.current = event.button
+		}
+
+		window.addEventListener('mouseup', onMouseUp)
+		return () => {
+			window.removeEventListener('mouseup', onMouseUp)
+		}
+	}, [awaitingSelection, isDragging])
+
+	const clearGhost = useCallback(() => {
+		setIsDragging(false)
+		setAwaitingSelection(false)
+		setSourceNodes([])
+	}, [])
+
+	useEventBusSubscribe['quickSelect/onClosed']({
+		condition: () => ghostState.current.awaitingSelection,
+		callback: clearGhost,
+	})
+
 	useDragDropBusSubscribe({
 		callback: useCallback(
-			(state) => {
-				if (!IsDragDropStateOfType(state, 'actorNodeLinking')) {
+			(dragState) => {
+				if (!IsDragDropStateOfType(dragState, 'actorNodeLinking')) {
+					if (ghostState.current.awaitingSelection) {
+						return
+					}
+					if (
+						ghostState.current.isDragging &&
+						dropButton.current === 0 &&
+						isEmptyMindmapSpot({ screenX: mousePos.current.x, screenY: mousePos.current.y })
+					) {
+						setAwaitingSelection(true)
+						dispatchGlobalEvent['quickSelect/requestOpen']({
+							query: '',
+							screenPosTop: mousePos.current.y,
+							screenPosBottom: mousePos.current.y,
+							screenPosLeft: mousePos.current.x,
+						})
+						dispatchGlobalEvent['mindmap/wire/requestNodeTarget']({
+							sourceNodeIds: ghostState.current.sourceNodes.map((node) => node.id),
+						})
+						return
+					}
 					setIsDragging(false)
 					return
 				}
 				setIsDragging(true)
+				dropButton.current = null
 
 				const selectedKeys = getSelectedNodeKeys(store.getState())
-				const sourceId = state.params.sourceNode.id
+				const sourceId = dragState.params.sourceNode.id
 
 				if (selectedKeys.includes(sourceId)) {
 					const nodes: SourceNode[] = []
@@ -62,8 +120,8 @@ export function MindmapWireGhost({ existingWires }: Props) {
 							: [
 									{
 										id: sourceId,
-										positionX: state.params.sourceNode.positionX,
-										positionY: state.params.sourceNode.positionY,
+										positionX: dragState.params.sourceNode.positionX,
+										positionY: dragState.params.sourceNode.positionY,
 									},
 								],
 					)
@@ -71,13 +129,13 @@ export function MindmapWireGhost({ existingWires }: Props) {
 					setSourceNodes([
 						{
 							id: sourceId,
-							positionX: state.params.sourceNode.positionX,
-							positionY: state.params.sourceNode.positionY,
+							positionX: dragState.params.sourceNode.positionX,
+							positionY: dragState.params.sourceNode.positionY,
 						},
 					])
 				}
 			},
-			[store],
+			[mousePos, store],
 		),
 	})
 
@@ -89,7 +147,7 @@ export function MindmapWireGhost({ existingWires }: Props) {
 	const duplicateColorEnd = theme.mode === 'dark' ? 'rgba(255, 100, 100, 0.4)' : 'rgba(200, 30, 30, 0.4)'
 
 	useEffect(() => {
-		if (!isDragging || sourceNodes.length === 0) {
+		if (!isDragging || awaitingSelection || sourceNodes.length === 0) {
 			return
 		}
 
@@ -215,6 +273,7 @@ export function MindmapWireGhost({ existingWires }: Props) {
 			window.removeEventListener('mousemove', handleMouseMove)
 		}
 	}, [
+		awaitingSelection,
 		existingWires,
 		isDragging,
 		sourceNodes,

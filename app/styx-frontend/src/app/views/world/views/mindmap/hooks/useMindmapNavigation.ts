@@ -120,12 +120,14 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		const handleMouseDown = (event: MouseEvent) => {
 			if (event.button === 0) {
 				if (!navState.isDragging) {
+					navState.canClick = true
 					navState.totalOffsetFromStart = 0
 				}
 				navState.isDragging = true
 				navState.dragMode = 'select'
 			} else if (event.button === 2) {
 				if (!navState.isDragging) {
+					navState.canClick = true
 					navState.totalOffsetFromStart = 0
 				}
 				navState.isDragging = true
@@ -146,9 +148,10 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 
 		const handleMouseUp = (event: MouseEvent) => {
 			stopScroll()
-			if (navState.totalOffsetFromStart < 5) {
+			if (navState.totalOffsetFromStart < 5 && navState.canClick) {
 				handleClick(event)
 			}
+			navState.canClick = false
 			if (!navState.isDragging) {
 				return
 			}

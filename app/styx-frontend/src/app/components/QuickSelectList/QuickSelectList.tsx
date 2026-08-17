@@ -47,10 +47,15 @@ export function QuickSelectListComponent({ isFocused, onSelect, inputProps, forc
 	const [pos, setPos] = useState<Position>({ top: 0, bottom: 0, left: 0 })
 	const [query, setQuery] = useState('')
 
+	const close = useCallback(() => {
+		setVisible(false)
+		dispatchGlobalEvent['quickSelect/onClosed']()
+	}, [])
+
 	useShortcut(
 		Shortcut.Escape,
 		() => {
-			setVisible(false)
+			close()
 		},
 		visible && ShortcutPriorities.Mentions,
 	)
@@ -75,7 +80,7 @@ export function QuickSelectListComponent({ isFocused, onSelect, inputProps, forc
 	})
 	useEventBusSubscribe['quickSelect/requestClose']({
 		callback: () => {
-			setVisible(false)
+			close()
 		},
 	})
 
@@ -87,14 +92,14 @@ export function QuickSelectListComponent({ isFocused, onSelect, inputProps, forc
 		<Box
 			sx={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 100 }}
 			onClick={() => {
-				setVisible(false)
+				close()
 			}}
 		>
 			<QuickSelectListContent
 				pos={pos}
 				query={query}
 				onSelect={onSelect}
-				onClose={() => setVisible(false)}
+				onClose={close}
 				inputProps={inputProps}
 				forceDirection={forceDirection}
 			/>
