@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { useEffect, useRef } from 'react'
 
+import { DragTrigger } from '@/app/features/dragDrop/DragTrigger'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
@@ -19,6 +20,7 @@ export function MindmapNodePort({ node, parent }: Props) {
 
 	const { ref, ghostElement } = useDragDrop({
 		type: 'actorNodeLinking',
+		trigger: DragTrigger.MindmapNodePortWire,
 		ghostFactory: () => null,
 		params: {
 			sourceNode: node!,

@@ -43,22 +43,10 @@ export function useNewNodeReceiver({ ref }: Props) {
 		})
 	}
 
-	// // @deprecated
-	// useDragDropReceiver({
-	// 	type: 'newMindmapNode',
-	// 	receiverRef: ref,
-	// 	onDrop: ({ params, targetPos }) => {
-	// 		createNodeAt(targetPos, params.actor.id)
-	// 	},
-	// })
-
 	useDragDropReceiver({
 		type: 'articleListItem',
 		receiverRef: ref,
 		onDrop: ({ params, targetPos }, { markHandled }) => {
-			// if (params.article.type !== 'actor') {
-			// 	return
-			// }
 			markHandled()
 			createNodeAt({
 				targetPos,

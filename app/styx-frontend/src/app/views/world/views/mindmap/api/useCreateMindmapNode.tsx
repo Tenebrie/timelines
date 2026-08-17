@@ -1,6 +1,7 @@
 import { CreateNodeApiArg, mindmapApi, useCreateNodeMutation } from '@api/mindmapApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { v4 as getRandomId } from 'uuid'
 
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
@@ -31,7 +32,8 @@ export const useCreateMindmapNode = () => {
 
 	const perform = useCallback(
 		async (body: CreateNodeApiArg['body']) => {
-			const patchResult = addCachedNode(body.id ?? `temp-${Math.random()}`, body)
+			body.id = body.id ?? getRandomId()
+			const patchResult = addCachedNode(body.id, body)
 
 			const { response, error } = parseApiResponse(
 				await createMindmapNode({

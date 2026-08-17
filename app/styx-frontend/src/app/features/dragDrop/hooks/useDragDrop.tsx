@@ -3,6 +3,7 @@ import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { getTransformAlign, GhostWrapper } from '../components/GhostWrapper'
+import { DragTrigger, DragTriggerType, matchesDragTrigger } from '../DragTrigger'
 import { AllowedDraggableType, DraggableParams } from '../types'
 import { useDragDropBusSubscribe } from './useDragDropBus'
 import { useDragDropState } from './useDragDropState'
@@ -19,6 +20,7 @@ type Props<T extends AllowedDraggableType> = {
 		pos: { x: number; y: number },
 		startingPos: { x: number; y: number },
 	) => { x: number; y: number }
+	trigger?: DragTriggerType
 	disabled?: boolean
 }
 
@@ -28,6 +30,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 	ghostAlign,
 	ghostFactory,
 	adjustPosition,
+	trigger = DragTrigger.Default,
 	disabled,
 }: Props<T>) => {
 	const isDraggingNow = useRef(false)
@@ -70,22 +73,21 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		)
 	}, [])
 
-	const onMouseDown = useCallback((event: MouseEvent) => {
-		if (!containerRef.current || event.shiftKey) {
-			return
-		}
-		// Only handle left-click (button 0) for dragging
-		if (event.button !== 0) {
-			return
-		}
-		isPreparingToDrag.current = true
-		const boundingRect = containerRef.current.getBoundingClientRect()
-		rootPos.current = {
-			x: boundingRect.left,
-			y: boundingRect.top,
-		}
-		dragFromPos.current = { x: event.clientX, y: event.clientY }
-	}, [])
+	const onMouseDown = useCallback(
+		(event: MouseEvent) => {
+			if (!containerRef.current || !matchesDragTrigger(event, trigger)) {
+				return
+			}
+			isPreparingToDrag.current = true
+			const boundingRect = containerRef.current.getBoundingClientRect()
+			rootPos.current = {
+				x: boundingRect.left,
+				y: boundingRect.top,
+			}
+			dragFromPos.current = { x: event.clientX, y: event.clientY }
+		},
+		[trigger],
+	)
 
 	const startDragging = useCallback(
 		(event: MouseEvent) => {

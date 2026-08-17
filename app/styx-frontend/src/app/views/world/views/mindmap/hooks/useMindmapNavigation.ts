@@ -22,8 +22,7 @@ function isGestureEvent(event: Event): event is SafariGestureEvent {
 }
 
 export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
-	const { registerUpdateFunction, clearUpdateFunction, stopScroll, updateMousePosition } =
-		useMindmapEdgeScroll()
+	const { registerUpdateFunction, clearUpdateFunction, updateMousePosition } = useMindmapEdgeScroll()
 
 	const [state, setState] = usePersistentStateRef(
 		'mindmap',
@@ -54,7 +53,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		}
 
 		const navState = {
-			canClick: true,
+			canClick: false,
 			totalOffsetFromStart: 0,
 			isDragging: false,
 			dragMode: 'select' as 'select' | 'pan',
@@ -147,7 +146,6 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		}
 
 		const handleMouseUp = (event: MouseEvent) => {
-			stopScroll()
 			if (navState.totalOffsetFromStart < 5 && navState.canClick) {
 				handleClick(event)
 			}
@@ -339,7 +337,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [ref, registerUpdateFunction, setState, clearUpdateFunction, updateMousePosition, state, stopScroll])
+	}, [ref, registerUpdateFunction, setState, clearUpdateFunction, updateMousePosition, state])
 
 	return variables
 }

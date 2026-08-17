@@ -1,6 +1,8 @@
 import { isMacOS } from '@tiptap/core'
 import { useCallback, useEffect } from 'react'
 
+import { parseInputCombos } from '@/app/utils/parseInputCombos'
+
 export const Shortcut = {
 	Enter: 'Enter',
 	CtrlEnter: 'Ctrl+Enter',
@@ -94,23 +96,14 @@ export const useShortcutManager = () => {
 			if (shortcut === Shortcut.DeleteSelected && (isTargetingInput || isTargetingRichInput)) {
 				return
 			}
-			const defKeys = shortcut
-				.split('|')
-				.filter((part) => {
-					if (part.startsWith('macos:')) {
-						return isMacOS()
-					}
-					return true
-				})
-				.map((part) => {
-					const colonIndex = part.indexOf(':')
-					return colonIndex === -1 ? part : part.slice(colonIndex + 1)
-				})
-				.flatMap((part) => part.split('+'))
-			const ctrlKeyNeeded = defKeys.some((key) => key === 'Ctrl')
-			const shiftKeyNeeded = defKeys.some((key) => key === 'Shift')
+			const isMatch = parseInputCombos(shortcut).some(
+				(defKeys) =>
+					ctrlKey === defKeys.includes('Ctrl') &&
+					shiftKey === defKeys.includes('Shift') &&
+					defKeys.includes(key),
+			)
 
-			if (ctrlKey === ctrlKeyNeeded && shiftKey === shiftKeyNeeded && defKeys.includes(key)) {
+			if (isMatch) {
 				const callback = RegisteredShortcuts[shortcut]
 					.filter((shc) => shc.priority !== false)
 					.sort((a, b) => parsePriority(b.priority) - parsePriority(a.priority))[0]

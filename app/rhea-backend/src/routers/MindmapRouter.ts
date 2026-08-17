@@ -51,7 +51,7 @@ router.post('/api/world/:worldId/mindmap/nodes', async (ctx) => {
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 
 	const params = useRequestBody(ctx, {
-		id: z.string().optional(),
+		id: z.uuid().optional(),
 		positionX: z.number(),
 		positionY: z.number(),
 		parentActorId: z.string().optional(),

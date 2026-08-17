@@ -4,6 +4,8 @@ import { memo, useEffect, useLayoutEffect, useRef } from 'react'
 import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { DragTrigger, matchesDragTrigger } from '@/app/features/dragDrop/DragTrigger'
+import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
@@ -76,6 +78,15 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 	})
 
 	const ref = useRef<HTMLDivElement>(null)
+
+	const { ref: linkingRef, ghostElement: linkingGhost } = useDragDrop({
+		type: 'actorNodeLinking',
+		ghostFactory: () => null,
+		trigger: DragTrigger.MindmapForceNewWire,
+		params: {
+			sourceNode: node,
+		},
+	})
 
 	useEventBusSubscribe['mindmap/node/onGroupDragStart']({
 		callback: ({ sourceNodeId }) => {
@@ -188,12 +199,10 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			}
 			event.stopPropagation()
 
-			// Don't start dragging if clicking on content (but header is fine for dragging)
-			// const target = event.target as HTMLElement
-			// const contentElement = element.querySelector('[data-mindmap-content]')
-			// if (contentElement?.contains(target)) {
-			// 	return
-			// }
+			const isMoveTrigger = matchesDragTrigger(event, DragTrigger.MoveElements)
+			if (!isMoveTrigger) {
+				return
+			}
 
 			if (!selectedRef.current && !isMultiselectEvent(event)) {
 				dispatch(clearSelections())
@@ -339,7 +348,10 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 
 	return (
 		<Box
-			ref={ref}
+			ref={(element: HTMLDivElement | null) => {
+				ref.current = element
+				linkingRef.current = element
+			}}
 			data-testid="MindmapNode"
 			data-mindmap-node={node.id}
 			data-entity-id={parent.id}
@@ -368,6 +380,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				onHeaderClick={(e) => onHeaderClick(e, { multiselect: isMultiselectEvent(e) })}
 				onContentClick={onContentClick}
 			/>
+			{linkingGhost}
 		</Box>
 	)
 }

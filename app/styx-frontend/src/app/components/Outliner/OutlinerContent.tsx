@@ -15,7 +15,6 @@ import { OutlinerEmptyState } from './components/OutlinerEmptyState'
 import { useVisibleActors } from './hooks/useVisibleActors'
 import { useVisibleEvents } from './hooks/useVisibleEvents'
 import { useVisibleTags } from './hooks/useVisibleTags'
-import { OutlinerItemActor } from './items/OutlinerItemActor'
 import { OutlinerItemEvent } from './items/OutlinerItemEvent'
 import { OutlinerItemHeader } from './items/OutlinerItemHeader'
 import { OutlinerItemTag } from './items/OutlinerItemTag'
@@ -118,8 +117,6 @@ export function OutlinerContentComponent() {
 
 						const row = resolveRow(rawIndex)
 						switch (row.kind) {
-							case 'actor':
-								return <OutlinerItemActor actor={row.actor} />
 							case 'event':
 								return <OutlinerItemEvent event={row.event} />
 							case 'tag':

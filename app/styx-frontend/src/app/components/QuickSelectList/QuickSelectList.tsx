@@ -94,6 +94,13 @@ export function QuickSelectListComponent({ isFocused, onSelect, inputProps, forc
 			onClick={() => {
 				close()
 			}}
+			onContextMenu={(event) => {
+				if (event.shiftKey) {
+					return
+				}
+				event.preventDefault()
+				close()
+			}}
 		>
 			<QuickSelectListContent
 				pos={pos}
