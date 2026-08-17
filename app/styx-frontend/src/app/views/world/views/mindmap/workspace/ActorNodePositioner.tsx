@@ -5,7 +5,6 @@ import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
-import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { RootState } from '@/app/store'
@@ -30,13 +29,12 @@ export const ActorNodePositioner = memo(
 )
 
 function ActorNodePositionerComponent({ parent, node }: Props) {
-	const theme = useCustomTheme()
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 	const [moveMindmapNodes] = useMoveMindmapNodes()
 
 	const positionRef = useRef({ x: node.positionX, y: node.positionY })
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		positionRef.current = { x: node.positionX, y: node.positionY }
 		const el = ref.current
 		if (el) {
@@ -119,7 +117,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 		const el = ref.current
 		const scale = el ? parseFloat(getComputedStyle(el).getPropertyValue('--grid-scale')) || 1 : 1
 		const height = el ? el.getBoundingClientRect().height / scale : 80
-		nodePositions.set(node.id, { x: node.positionX, y: node.positionY, height })
+		nodePositions.set(node.id, { ...positionRef.current, height })
 	})
 	useEffect(
 		() => () => {

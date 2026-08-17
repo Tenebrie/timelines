@@ -52,7 +52,9 @@ function MindmapWireLineComponent({
 	svgGroupPortal,
 	onOpenPopover,
 }: Props) {
-	const [highlightState, setHighlightState] = useState<'none' | 'bright' | 'dim'>('none')
+	const [highlightState, setHighlightState] = useState<
+		'none' | 'brightGradient' | 'brightSource' | 'brightTarget' | 'dim'
+	>('none')
 
 	const containerRef = useRef<HTMLDivElement>(null)
 	const pathRef = useRef<SVGPathElement>(null)
@@ -150,6 +152,7 @@ function MindmapWireLineComponent({
 	useEffect(() => () => unregisterWire(wire.id), [wire.id])
 
 	const { addWireToSelection, removeWireFromSelection } = mindmapSlice.actions
+	const { addWireToHover, removeWireFromHover } = mindmapSlice.actions
 	const dispatch = useDispatch()
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean; event: React.MouseEvent }>({
@@ -186,9 +189,13 @@ function MindmapWireLineComponent({
 		},
 	})
 	useEventBusSubscribe['mindmap/hover/changed']({
-		callback: ({ hoveredNodeIds }) => {
-			if (hoveredNodeIds.has(source.node.id) || hoveredNodeIds.has(target.node.id)) {
-				setHighlightState('bright')
+		callback: ({ hoveredNodeIds, hoveredWireIds }) => {
+			if (hoveredWireIds.has(wire.id)) {
+				setHighlightState('brightGradient')
+			} else if (hoveredNodeIds.has(source.node.id)) {
+				setHighlightState('brightSource')
+			} else if (hoveredNodeIds.has(target.node.id)) {
+				setHighlightState('brightTarget')
 			} else if (hoveredNodeIds.size > 0) {
 				setHighlightState('dim')
 			} else {
@@ -215,11 +222,24 @@ function MindmapWireLineComponent({
 			}
 		}
 
-		if (highlightState === 'bright') {
-			// Wires show the color of the opposite node
+		if (highlightState === 'brightSource') {
 			return {
 				sourceColor: target.parent.color,
+				targetColor: target.parent.color,
+			}
+		}
+
+		if (highlightState === 'brightTarget') {
+			return {
+				sourceColor: source.parent.color,
 				targetColor: source.parent.color,
+			}
+		}
+
+		if (highlightState === 'brightGradient') {
+			return {
+				sourceColor: source.parent.color,
+				targetColor: target.parent.color,
 			}
 		}
 
@@ -349,11 +369,13 @@ function MindmapWireLineComponent({
 						onClick={(event) => triggerClick(event, { multiselect: event.shiftKey, event })}
 						onMouseEnter={() => {
 							isHoveredRef.current = true
+							dispatch(addWireToHover(wire.id))
 							applyVisualState()
 						}}
 						onMouseLeave={() => {
 							isHoveredRef.current = false
 							isActiveRef.current = false
+							dispatch(removeWireFromHover(wire.id))
 							applyVisualState()
 						}}
 						onMouseDown={() => {
