@@ -17,6 +17,7 @@ export const useCreateMindmapNode = () => {
 				mindmapApi.util.updateQueryData('getMindmap', { worldId }, (draft) => {
 					draft.nodes.push({
 						worldId,
+						name: '',
 						createdAt: new Date().toISOString(),
 						updatedAt: new Date().toISOString(),
 						...body,

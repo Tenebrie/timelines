@@ -86,6 +86,9 @@ export type EventParams = {
 		screenPosBottom: number
 		screenPosLeft: number
 	}
+	'quickSelect/requestUpdateQuery': {
+		query: string
+	}
 	'quickSelect/requestClose': void
 	'richEditor/mentionRender/onStart': { node: ProseMirrorNode }
 	'richEditor/mentionRender/onEnd': { node: ProseMirrorNode }

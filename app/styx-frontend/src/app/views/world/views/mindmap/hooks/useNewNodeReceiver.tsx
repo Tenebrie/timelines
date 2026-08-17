@@ -5,6 +5,7 @@ import { getGhostElementRect } from '@/app/features/dragDrop/components/GhostWra
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 
 import { useCreateMindmapNode } from '../api/useCreateMindmapNode'
+import { getMindmapGridPosition } from '../utils/getMindmapGridPosition'
 
 type Props = {
 	ref: RefObject<HTMLDivElement | null>
@@ -22,19 +23,18 @@ export function useNewNodeReceiver({ ref }: Props) {
 		parentId: string
 		parentType: WikiEntityType
 	}) {
-		const boundingBox = ref.current!.getBoundingClientRect()
-		const style = getComputedStyle(ref.current!)
-		const offsetX = parseFloat(style.getPropertyValue('--grid-offset-x'))
-		const offsetY = parseFloat(style.getPropertyValue('--grid-offset-y'))
-		const scale = parseFloat(style.getPropertyValue('--grid-scale'))
+		const gridPos = getMindmapGridPosition({ screenX: targetPos.x, screenY: targetPos.y })
+		if (!gridPos) {
+			return
+		}
 
 		const ghostRect = getGhostElementRect()
 		const ghostHalfWidth = ghostRect ? ghostRect.width / 2 : 0
 		const ghostHalfHeight = ghostRect ? ghostRect.height / 2 : 0
 
 		createMindmapNode({
-			positionX: Math.round((targetPos.x - boundingBox.x - offsetX) / scale - ghostHalfWidth),
-			positionY: Math.round((targetPos.y - boundingBox.y - offsetY) / scale - ghostHalfHeight),
+			positionX: Math.round(gridPos.x - ghostHalfWidth),
+			positionY: Math.round(gridPos.y - ghostHalfHeight),
 			parentActorId: parentType === 'actor' ? parentId : undefined,
 			parentArticleId: parentType === 'article' ? parentId : undefined,
 			parentEventId: parentType === 'event' ? parentId : undefined,

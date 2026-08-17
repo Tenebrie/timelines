@@ -2,6 +2,7 @@ import { CSSProperties, RefObject, useEffect, useRef } from 'react'
 import z from 'zod'
 
 import { DragDropState } from '@/app/features/dragDrop/DragDropState'
+import { dispatchGlobalEvent } from '@/app/features/eventBus'
 import usePersistentStateRef from '@/app/hooks/usePersistentStateRef'
 
 import { useMindmapEdgeScroll } from './useMindmapEdgeScroll'
@@ -53,6 +54,8 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		}
 
 		const navState = {
+			canClick: true,
+			totalOffsetFromStart: 0,
 			isDragging: false,
 			dragMode: 'select' as 'select' | 'pan',
 			gridOffsetX: state.current.position.x,
@@ -116,16 +119,36 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 
 		const handleMouseDown = (event: MouseEvent) => {
 			if (event.button === 0) {
+				if (!navState.isDragging) {
+					navState.totalOffsetFromStart = 0
+				}
 				navState.isDragging = true
 				navState.dragMode = 'select'
 			} else if (event.button === 2) {
+				if (!navState.isDragging) {
+					navState.totalOffsetFromStart = 0
+				}
 				navState.isDragging = true
 				navState.dragMode = 'pan'
 			}
 		}
 
+		const handleClick = (event: MouseEvent) => {
+			if (event.button === 2) {
+				dispatchGlobalEvent['quickSelect/requestOpen']({
+					query: '',
+					screenPosTop: event.clientY,
+					screenPosBottom: event.clientY,
+					screenPosLeft: event.clientX,
+				})
+			}
+		}
+
 		const handleMouseUp = (event: MouseEvent) => {
 			stopScroll()
+			if (navState.totalOffsetFromStart < 5) {
+				handleClick(event)
+			}
 			if (!navState.isDragging) {
 				return
 			}
@@ -146,6 +169,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 				return
 			}
 
+			navState.totalOffsetFromStart += Math.abs(event.movementX) + Math.abs(event.movementY)
 			if (navState.dragMode === 'pan') {
 				navState.gridOffsetX += event.movementX
 				navState.gridOffsetY += event.movementY

@@ -1,5 +1,7 @@
 import { MentionedEntity } from '@api/types/worldTypes'
+import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
+import Input from '@mui/material/Input'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
@@ -7,7 +9,7 @@ import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 
 import { useQuickCreateActor } from '@/api/hooks/useQuickCreateActor'
 import { useQuickCreateEvent } from '@/api/hooks/useQuickCreateEvent'
 import { useQuickCreateTag } from '@/api/hooks/useQuickCreateTag'
-import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useCreateArticle } from '@/app/views/world/views/wiki/api/useCreateArticle'
@@ -23,13 +25,24 @@ import { QuickSelectListSectionHeader } from './QuickSelectListSectionHeader'
 type Props = {
 	isFocused: boolean
 	onSelect: (params: { query: string; entity: { id: string; type: MentionedEntity; name: string } }) => void
+	inputProps?: InputProps
+	forceDirection?: 'bottom'
 }
+
+type InputProps = {
+	autoFocus?: boolean
+	placeholder?: string
+}
+
+export type QuickSelectListProps = Props
 
 type Position = { top: number; bottom: number; left: number }
 
+const NAVIGATION_KEYS = ['ArrowUp', 'ArrowDown', 'Tab', 'Enter', 'PageUp', 'PageDown']
+
 export const QuickSelectList = memo(QuickSelectListComponent)
 
-export function QuickSelectListComponent({ isFocused, onSelect }: Props) {
+export function QuickSelectListComponent({ isFocused, onSelect, inputProps, forceDirection }: Props) {
 	const [visible, setVisible] = useState(false)
 	const [pos, setPos] = useState<Position>({ top: 0, bottom: 0, left: 0 })
 	const [query, setQuery] = useState('')
@@ -55,6 +68,11 @@ export function QuickSelectListComponent({ isFocused, onSelect }: Props) {
 			setPos({ top: screenPosTop, bottom: screenPosBottom, left: screenPosLeft })
 		},
 	})
+	useEventBusSubscribe['quickSelect/requestUpdateQuery']({
+		callback: ({ query }) => {
+			setQuery(query)
+		},
+	})
 	useEventBusSubscribe['quickSelect/requestClose']({
 		callback: () => {
 			setVisible(false)
@@ -66,7 +84,21 @@ export function QuickSelectListComponent({ isFocused, onSelect }: Props) {
 	}
 
 	return (
-		<QuickSelectListContent pos={pos} query={query} onSelect={onSelect} onClose={() => setVisible(false)} />
+		<Box
+			sx={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 100 }}
+			onClick={() => {
+				setVisible(false)
+			}}
+		>
+			<QuickSelectListContent
+				pos={pos}
+				query={query}
+				onSelect={onSelect}
+				onClose={() => setVisible(false)}
+				inputProps={inputProps}
+				forceDirection={forceDirection}
+			/>
+		</Box>
 	)
 }
 
@@ -75,9 +107,11 @@ type ContentProps = {
 	query: string
 	onSelect: (params: { query: string; entity: { id: string; type: MentionedEntity; name: string } }) => void
 	onClose: () => void
+	inputProps?: InputProps
+	forceDirection?: 'bottom'
 }
 
-function QuickSelectListContent({ pos, query, onSelect, onClose }: ContentProps) {
+function QuickSelectListContent({ pos, query, onSelect, onClose, inputProps, forceDirection }: ContentProps) {
 	const [selectedIndex, setSelectedIndex] = useState(0)
 
 	const { mentions, actorCount, eventCount, articleCount, tagCount } = useDisplayedMentions({ query })
@@ -176,6 +210,7 @@ function QuickSelectListContent({ pos, query, onSelect, onClose }: ContentProps)
 
 	const [adjustedTop, setAdjustedTop] = useState(pos.top)
 	const [adjustedLeft, setAdjustedLeft] = useState(pos.left)
+	const [maxHeight, setMaxHeight] = useState<number | undefined>(undefined)
 	const paperRef = useRef<HTMLDivElement>(null)
 
 	const recalculatePosition = useCallback(() => {
@@ -184,24 +219,24 @@ function QuickSelectListContent({ pos, query, onSelect, onClose }: ContentProps)
 			return
 		}
 
+		const viewportWidth = document.documentElement.clientWidth
+		const viewportHeight = document.documentElement.clientHeight
 		const elWidth = el.offsetWidth
-		const elHeight = el.offsetHeight
+		const elHeight = el.scrollHeight
 
-		const currentLeft = pos.left
-		const currentBottom = pos.bottom
+		setAdjustedLeft(Math.max(0, Math.min(pos.left, viewportWidth - elWidth)))
 
-		if (currentLeft + elWidth > window.innerWidth) {
-			setAdjustedLeft(Math.max(0, pos.left - (currentLeft + elWidth - window.innerWidth)))
+		const spaceBelow = viewportHeight - pos.bottom
+		const spaceAbove = pos.top
+
+		if (forceDirection === 'bottom' || elHeight <= spaceBelow || spaceBelow >= spaceAbove) {
+			setAdjustedTop(pos.bottom)
+			setMaxHeight(spaceBelow)
 		} else {
-			setAdjustedLeft(currentLeft)
-		}
-
-		if (currentBottom + elHeight > window.innerHeight) {
 			setAdjustedTop(Math.max(0, pos.top - elHeight))
-		} else {
-			setAdjustedTop(currentBottom)
+			setMaxHeight(spaceAbove)
 		}
-	}, [pos.bottom, pos.left, pos.top])
+	}, [forceDirection, pos.bottom, pos.left, pos.top])
 
 	useLayoutEffect(() => {
 		recalculatePosition()
@@ -246,8 +281,34 @@ function QuickSelectListContent({ pos, query, onSelect, onClose }: ContentProps)
 				top: adjustedTop,
 				left: adjustedLeft,
 				minWidth: '350px',
+				maxHeight,
+				overflowY: 'auto',
 			}}
 		>
+			{inputProps && (
+				<Stack gap={1} sx={{ padding: '8px 16px' }}>
+					<Input
+						size="small"
+						value={query}
+						{...inputProps}
+						onChange={(event) => {
+							dispatchGlobalEvent['quickSelect/requestUpdateQuery']({
+								query: event.target.value,
+							})
+						}}
+						onKeyDown={async (event) => {
+							if (!NAVIGATION_KEYS.includes(event.key)) {
+								return
+							}
+							event.preventDefault()
+							await handleKeyPress(event.key, event.shiftKey)
+							if (event.key === 'Enter') {
+								onClose()
+							}
+						}}
+					/>
+				</Stack>
+			)}
 			{mentionTypes
 				.filter((type) => type.mentions.length > 0)
 				.map((type) => (

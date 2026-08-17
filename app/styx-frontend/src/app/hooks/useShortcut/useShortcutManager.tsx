@@ -18,6 +18,7 @@ export const Shortcut = {
 	LargeNudgeRight: 'Shift+ArrowRight',
 	AscendMarkerTrack: 'ArrowUp',
 	DescendMarkerTrack: 'ArrowDown',
+	OpenQuickSelect: ' ',
 } as const
 
 /**
@@ -59,6 +60,7 @@ export const RegisteredShortcuts: Record<
 	[Shortcut.LargeNudgeRight]: [],
 	[Shortcut.AscendMarkerTrack]: [],
 	[Shortcut.DescendMarkerTrack]: [],
+	[Shortcut.OpenQuickSelect]: [],
 }
 
 export const useShortcutManager = () => {

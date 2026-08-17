@@ -124,8 +124,9 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 	useEffect(
 		() => () => {
 			nodePositions.delete(node.id)
+			dispatch(mindmapSlice.actions.removeNodeFromHover(node.id))
 		},
-		[node.id],
+		[dispatch, node.id],
 	)
 
 	useEventBusSubscribe['mindmap/selection/changed']({

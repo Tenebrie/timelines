@@ -3,6 +3,7 @@ import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
 import { useRef } from 'react'
 
+import { MindmapQuickSelect } from './components/MindmapQuickSelect'
 import { useMindmapNavigation } from './hooks/useMindmapNavigation'
 import { MindmapContent } from './MindmapContent'
 import { MindmapClickArea } from './workspace/MindmapClickArea'
@@ -60,6 +61,7 @@ export function Mindmap() {
 				</Box>
 			</Box>
 			<MindmapHotkeys />
+			<MindmapQuickSelect />
 		</Stack>
 	)
 }
