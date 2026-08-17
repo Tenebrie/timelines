@@ -31,6 +31,9 @@ function MindmapSelectionBridge() {
 	const { selectedNodes, selectedWires } = useSelector(getMindmapState, (a, b) => {
 		return a.selectedNodes === b.selectedNodes && a.selectedWires === b.selectedWires
 	})
+	const { hoveredNodes, hoveredWires } = useSelector(getMindmapState, (a, b) => {
+		return a.hoveredNodes === b.hoveredNodes && a.hoveredWires === b.hoveredWires
+	})
 
 	useEffect(() => {
 		dispatchGlobalEvent['mindmap/selection/changed']({
@@ -38,6 +41,13 @@ function MindmapSelectionBridge() {
 			selectedWireIds: new Set(selectedWires),
 		})
 	}, [selectedNodes, selectedWires])
+
+	useEffect(() => {
+		dispatchGlobalEvent['mindmap/hover/changed']({
+			hoveredNodeIds: new Set(hoveredNodes.map((n) => n.key)),
+			hoveredWireIds: new Set(hoveredWires),
+		})
+	}, [hoveredNodes, hoveredWires, selectedNodes, selectedWires])
 
 	return null
 }

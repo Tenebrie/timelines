@@ -3,6 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export const initialState = {
 	selectedNodes: [] as { key: string; actorId: string }[],
 	selectedWires: [] as string[],
+	hoveredNodes: [] as { key: string; entityId: string }[],
+	hoveredWires: [] as string[],
 }
 
 export const mindmapSlice = createSlice({
@@ -71,6 +73,21 @@ export const mindmapSlice = createSlice({
 		clearSelections: (state) => {
 			state.selectedNodes = []
 			state.selectedWires = []
+		},
+
+		addNodeToHover: (state, { payload }: PayloadAction<{ key: string; entityId: string }>) => {
+			state.hoveredNodes = state.hoveredNodes.filter((node) => node.key !== payload.key)
+			state.hoveredNodes = [...state.hoveredNodes, payload]
+		},
+		removeNodeFromHover: (state, { payload }: PayloadAction<string>) => {
+			state.hoveredNodes = state.hoveredNodes.filter((node) => node.key !== payload)
+		},
+		addWireToHover: (state, { payload }: PayloadAction<string>) => {
+			state.hoveredWires = state.hoveredWires.filter((wireId) => wireId !== payload)
+			state.hoveredWires = [...state.hoveredWires, payload]
+		},
+		removeWireFromHover: (state, { payload }: PayloadAction<string>) => {
+			state.hoveredWires = state.hoveredWires.filter((wireId) => wireId !== payload)
 		},
 	},
 })

@@ -57,6 +57,10 @@ export type EventParams = {
 		selectedNodeIds: Set<string>
 		selectedWireIds: Set<string>
 	}
+	'mindmap/hover/changed': {
+		hoveredNodeIds: Set<string>
+		hoveredWireIds: Set<string>
+	}
 	'world/requestNavigation': NavigateOptions
 	'calliope/onReconnected': void
 	'calliope/requestSendMessage': ClientToCalliopeMessage

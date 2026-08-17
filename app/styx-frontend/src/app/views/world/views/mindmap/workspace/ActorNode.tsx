@@ -1,9 +1,12 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
-import React from 'react'
+import { darken, lighten } from '@mui/material/styles'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
+import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 import { useNodeLinking } from '../hooks/useNodeLinking'
@@ -18,8 +21,11 @@ type Props = {
 }
 
 export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props) {
-	const { createLinks } = useNodeLinking()
+	const [dimmed, setDimmed] = useState(false)
+	const { createLinks, checkLinkExists } = useNodeLinking()
 	const selectedNodeKeys = useSelector(getSelectedNodeKeys)
+
+	const theme = useCustomTheme()
 
 	const { ref } = useDragDropReceiver({
 		type: 'actorNodeLinking',
@@ -38,8 +44,48 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 		},
 	})
 
+	useEventBusSubscribe['mindmap/hover/changed']({
+		callback: ({ hoveredNodeIds }) => {
+			if (hoveredNodeIds.size === 0 || hoveredNodeIds.has(node.id)) {
+				setDimmed(false)
+				return
+			}
+
+			const anyHovered = [...hoveredNodeIds].some((nodeId) => checkLinkExists(node.id, nodeId))
+			setDimmed(!anyHovered)
+		},
+	})
+
 	return (
-		<Box ref={ref}>
+		<Box
+			ref={ref}
+			sx={{
+				opacity: dimmed ? 0.35 : 1,
+				background: theme.custom.palette.background.timeline,
+
+				// Non-scaling border
+				borderRadius: '15px',
+				boxShadow: 'inset 0 0 0 var(--node-border-width) var(--node-border-color)',
+				'--node-border-width': 'calc(1px / var(--grid-scale))',
+				'--node-border-color': theme.material.palette.divider,
+				transition: 'opacity 0.2s, --node-border-color 0.2s ease-out',
+				'[data-selected="true"] > &': {
+					'--node-border-color': theme.material.palette.primary.main,
+					'&:hover': {
+						'--node-border-color': lighten(theme.material.palette.primary.main, 0.0),
+					},
+					'&:active': {
+						'--node-border-color': darken(theme.material.palette.primary.main, 0.3),
+					},
+				},
+				'&:hover': {
+					'--node-border-color': darken(theme.custom.palette.highlight, 0.0),
+				},
+				'&:active': {
+					'--node-border-color': darken(theme.custom.palette.highlight, 0.3),
+				},
+			}}
+		>
 			<ActorNodeContent
 				node={node}
 				parent={parent}

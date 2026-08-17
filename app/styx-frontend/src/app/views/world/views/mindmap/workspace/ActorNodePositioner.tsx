@@ -1,6 +1,5 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
-import { darken, lighten } from '@mui/material/styles'
 import { memo, useEffect, useLayoutEffect, useRef } from 'react'
 import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
@@ -299,12 +298,23 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 		}
 	}, [positionRef, moveMindmapNodes, node.id, nodeRef, store, dispatch, clearSelections, selectedRef])
 
+	const { addNodeToHover, removeNodeFromHover } = mindmapSlice.actions
+	const handleMouseEnter = useEvent(() => {
+		dispatch(addNodeToHover({ key: node.id, entityId: parent.id }))
+	})
+
+	const handleMouseLeave = useEvent(() => {
+		dispatch(removeNodeFromHover(node.id))
+	})
+
 	return (
 		<Box
 			ref={ref}
 			data-testid="MindmapNode"
 			data-mindmap-node={node.id}
 			data-entity-id={parent.id}
+			onMouseEnter={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}
 			style={
 				{
 					'--node-x': `${node.positionX}px`,
@@ -312,32 +322,13 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				} as React.CSSProperties
 			}
 			sx={{
-				'--node-border-width': 'calc(1px / var(--grid-scale))',
-				'--node-border-color': theme.material.palette.divider,
 				pointerEvents: 'auto',
-				background: theme.custom.palette.background.timeline,
 				position: 'absolute',
 				transform:
 					'translate(calc(var(--node-x) * var(--grid-scale) + var(--grid-offset-x)), calc(var(--node-y) * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',
-				boxShadow: 'inset 0 0 0 var(--node-border-width) var(--node-border-color)',
-				transition: '--node-border-color 0.2s ease-out',
-				borderRadius: '15px',
-				'&[data-selected="true"]': {
-					'--node-border-color': theme.material.palette.primary.main,
-					'&:hover': {
-						'--node-border-color': lighten(theme.material.palette.primary.main, 0.0),
-					},
-					'&:active': {
-						'--node-border-color': darken(theme.material.palette.primary.main, 0.3),
-					},
-				},
 				'&:hover': {
 					zIndex: 10,
-					'--node-border-color': darken(theme.custom.palette.highlight, 0.0),
-				},
-				'&:active': {
-					'--node-border-color': darken(theme.custom.palette.highlight, 0.3),
 				},
 			}}
 		>

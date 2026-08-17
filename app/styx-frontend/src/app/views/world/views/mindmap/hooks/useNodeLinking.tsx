@@ -71,8 +71,24 @@ export function useNodeLinking() {
 		[createMindmapWires, data, deleteMindmapWires],
 	)
 
+	const checkLinkExists = useCallback(
+		(sourceNodeId: string, targetNodeId: string) => {
+			if (!data) {
+				return false
+			}
+
+			return data.wires.some(
+				(link) =>
+					(link.sourceNodeId === sourceNodeId && link.targetNodeId === targetNodeId) ||
+					(link.sourceNodeId === targetNodeId && link.targetNodeId === sourceNodeId),
+			)
+		},
+		[data],
+	)
+
 	return {
 		createLink,
 		createLinks,
+		checkLinkExists,
 	}
 }
