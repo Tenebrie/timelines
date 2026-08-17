@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { Fragment, useCallback, useRef, useState } from 'react'
+import { Fragment, memo, useCallback, useRef, useState } from 'react'
 
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
@@ -13,7 +13,9 @@ type Props = {
 	existingWires: Set<string>
 }
 
-export function MindmapWireLayer({ nodeLinks, existingWires }: Props) {
+export const MindmapWireLayer = memo(MindmapWireLayerComponent)
+
+function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 	const svgDefsRef = useRef<SVGDefsElement>(null)
 	const svgGroupRef = useRef<SVGGElement>(null)
 	const [refsReady, setRefsReady] = useState(false)
@@ -29,7 +31,7 @@ export function MindmapWireLayer({ nodeLinks, existingWires }: Props) {
 	})
 
 	const onOpenPopover = useCallback(
-		(wireId: string, position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => {
+		(position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => {
 			setPopoverState({ open: true, position, mode })
 		},
 		[],
@@ -65,7 +67,7 @@ export function MindmapWireLayer({ nodeLinks, existingWires }: Props) {
 							target={link.targetNode}
 							svgDefsPortal={svgDefsRef.current!}
 							svgGroupPortal={svgGroupRef.current!}
-							onOpenPopover={(position, mode) => onOpenPopover(link.id, position, mode)}
+							onOpenPopover={onOpenPopover}
 						/>
 					</Fragment>
 				))}

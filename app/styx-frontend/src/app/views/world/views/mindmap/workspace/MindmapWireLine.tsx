@@ -1,5 +1,6 @@
 import { MindmapNode, MindmapWire } from '@api/types/mindmapTypes'
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import Box from '@mui/material/Box'
+import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch } from 'react-redux'
 
@@ -39,7 +40,9 @@ type Props = {
 const ARROW_SIZE = 8
 const TRANSITION = 'filter 0.25s ease'
 
-export function MindmapWireLine({
+export const MindmapWireLine = memo(MindmapWireLineComponent)
+
+function MindmapWireLineComponent({
 	wire,
 	source,
 	target,
@@ -47,6 +50,7 @@ export function MindmapWireLine({
 	svgGroupPortal,
 	onOpenPopover,
 }: Props) {
+	const containerRef = useRef<HTMLDivElement>(null)
 	const pathRef = useRef<SVGPathElement>(null)
 	const glowPathRef = useRef<SVGPathElement>(null)
 	const hitPathRef = useRef<SVGPathElement>(null)
@@ -55,7 +59,6 @@ export function MindmapWireLine({
 	const tgtPortRef = useRef<SVGGElement>(null)
 	const srcArrowRef = useRef<SVGPathElement>(null)
 	const tgtArrowRef = useRef<SVGPathElement>(null)
-	const labelRef = useRef<SVGTextElement>(null)
 	const visibleGroupRef = useRef<SVGGElement>(null)
 
 	const gradientId = `link-gradient-${source.node.id}-${target.node.id}`
@@ -88,8 +91,10 @@ export function MindmapWireLine({
 			tgtArrowRef.current?.setAttribute('d', arrowPath(ep.x2, ep.y2, -ep.nx2, -ep.ny2, ARROW_SIZE))
 		}
 		const mid = pathMidpoint(ep)
-		labelRef.current?.setAttribute('x', String(mid.x))
-		labelRef.current?.setAttribute('y', String(mid.y))
+		containerRef.current?.setAttribute(
+			'style',
+			`--label-position-x: ${mid.x}px; --label-position-y: ${mid.y}px`,
+		)
 		registerWire(wire.id, ep)
 	}
 
@@ -178,7 +183,13 @@ export function MindmapWireLine({
 	})
 
 	return (
-		<>
+		<Box
+			ref={containerRef}
+			sx={{
+				'--label-position-x': `${pathMidpoint(ep).x}px`,
+				'--label-position-y': `${pathMidpoint(ep).y}px`,
+			}}
+		>
 			{createPortal(
 				<linearGradient
 					ref={gradientRef}
@@ -298,37 +309,15 @@ export function MindmapWireLine({
 							applyVisualState()
 						}}
 					/>
-					{/* {labelText && (
-						<text
-							ref={labelRef}
-							x={pathMidpoint(ep).x}
-							y={pathMidpoint(ep).y}
-							textAnchor="middle"
-							dominantBaseline="middle"
-							pointerEvents="none"
-							fontSize="16"
-							fill={theme.mode === 'light' ? '#333' : '#ddd'}
-							style={{
-								paintOrder: 'stroke',
-								stroke: theme.mode === 'light' ? '#fff' : theme.custom.palette.background.timeline,
-								strokeWidth: 3,
-								strokeLinejoin: 'round',
-								userSelect: 'none',
-							}}
-						>
-							{labelText}
-						</text>
-					)} */}
 				</>,
 				svgGroupPortal,
 			)}
 			{wire.content && (
 				<MindmapWireLabel
 					wire={wire}
-					position={pathMidpoint(ep)}
 					onClick={(event) => triggerClick(event, { multiselect: event.shiftKey, event })}
 				/>
 			)}
-		</>
+		</Box>
 	)
 }

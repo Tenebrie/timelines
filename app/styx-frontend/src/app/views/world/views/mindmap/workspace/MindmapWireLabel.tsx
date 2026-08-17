@@ -9,11 +9,10 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 type Props = {
 	wire: MindmapWire
-	position: { x: number; y: number }
 	onClick: (event: React.MouseEvent) => void
 }
 
-export function MindmapWireLabel({ wire, position, onClick }: Props) {
+export function MindmapWireLabel({ wire, onClick }: Props) {
 	const theme = useCustomTheme()
 	const maxLabelLength = 24
 	const labelText = wire.content
@@ -42,7 +41,7 @@ export function MindmapWireLabel({ wire, position, onClick }: Props) {
 				left: 0,
 				top: 0,
 				transform: `translate( 
-					calc(${position.x}px * var(--grid-scale) + var(--grid-offset-x) - 50%), calc(${position.y}px * var(--grid-scale) + var(--grid-offset-y) - 50%)
+					calc(var(--label-position-x) * var(--grid-scale) + var(--grid-offset-x) - 50%), calc(var(--label-position-y) * var(--grid-scale) + var(--grid-offset-y) - 50%)
 					) scale(var(--grid-scale))`,
 
 				'--node-border-width': 'calc(1px / var(--grid-scale))',
