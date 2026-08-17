@@ -1,5 +1,7 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
+import { alpha } from '@mui/material'
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { memo, useMemo } from 'react'
 
@@ -7,6 +9,7 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 import { ArticleListItemIcon } from '../../wiki/articleList/icon/ArticleListItemIcon'
 import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
+import { ActorNodeContentMeta } from './ActorNodeContentMeta'
 import { MindmapNodePort } from './MindmapNodePort'
 import { NODE_W } from './mindmapWireUtils'
 
@@ -140,6 +143,12 @@ function ActorNodeContentComponent({ node, parent, onHeaderClick }: Props) {
 					)}
 				</Box>
 			</Stack>
+			<Divider
+				sx={{
+					borderColor: (theme) => alpha(theme.palette.divider, 0.05),
+				}}
+			/>
+			<ActorNodeContentMeta parent={parent} />
 		</Box>
 	)
 }

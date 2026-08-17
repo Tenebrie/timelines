@@ -95,7 +95,6 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			}
 
 			setDragHover(true)
-			ref.current?.style.setProperty('--inner-transition-duration', '0.0s')
 		},
 	})
 	useEventBusSubscribe['mindmap/node/onGroupDragUpdate']({
@@ -120,7 +119,6 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			}
 
 			setDragHover(false)
-			ref.current?.style.setProperty('--inner-transition-duration', '0.1s')
 		},
 	})
 
@@ -153,6 +151,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 
 	const setDragHover = useEvent((isDragging: boolean) => {
 		isDraggingRef.current = isDragging
+		ref.current?.setAttribute('data-dragging', String(isDragging))
 		if (isDragging) {
 			dispatch(addNodeToHover({ key: node.id, entityId: parent.id }))
 		} else if (!ref.current?.matches(':hover')) {
@@ -191,7 +190,6 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			deltaX: 0,
 			deltaY: 0,
 		}
-		element.style.setProperty('--inner-transition-duration', '0.1s')
 
 		const handleMouseDown = (event: MouseEvent) => {
 			if (event.button !== 0) {
@@ -212,7 +210,6 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			mouseState.positionY = positionRef.current.y
 			mouseState.isButtonDown = true
 			mouseState.gridScale = parseFloat(getComputedStyle(element).getPropertyValue('--grid-scale'))
-			element.style.setProperty('--inner-transition-duration', '0.00s')
 		}
 
 		const handleMouseClick = (event: MouseEvent) => {
@@ -318,7 +315,6 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			mouseState.deltaY = 0
 			setDragHover(false)
 			window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
-			element.style.setProperty('--inner-transition-duration', '0.1s')
 		}
 
 		element.addEventListener('mousedown', handleMouseDown)
@@ -369,7 +365,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				transform:
 					'translate(calc(var(--node-x) * var(--grid-scale) + var(--grid-offset-x)), calc(var(--node-y) * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',
-				'&:hover': {
+				'&:hover, &[data-dragging="true"]': {
 					zIndex: 10,
 				},
 			}}

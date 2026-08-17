@@ -50,8 +50,6 @@ export function MindmapWireLabel({ wire, onClick }: Props) {
 				userSelect: 'none',
 
 				boxShadow: 'inset 0 0 0 var(--node-border-width) var(--node-border-color)',
-				// transition:
-				// 	'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out, --node-border-color 0.2s ease-out',
 				transition: '--node-border-color 0.25s ease-out',
 				'&[data-selected="true"]': {
 					'--node-border-color': theme.material.palette.primary.main,
