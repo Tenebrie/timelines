@@ -115,7 +115,7 @@ function ActorNodeContentComponent({ node, parent, onHeaderClick }: Props) {
 								</Box>
 							</Stack>
 						</Stack>
-						<Box sx={{ marginTop: '0px', marginRight: '-12px' }}>
+						<Box sx={{ marginTop: '-12px', marginRight: '-12px' }}>
 							<MindmapNodePort node={node} parent={parent} />
 						</Box>
 					</Stack>

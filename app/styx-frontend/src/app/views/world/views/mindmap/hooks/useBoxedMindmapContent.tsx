@@ -51,9 +51,13 @@ export function useBoxedMindmapContent() {
 		const prevNodeCache = nodeCache.current
 		const nextNodeCache = new Map<object, BoxedMindmapNode>()
 
-		function stableNode(identity: MindmapNode, make: () => BoxedMindmapNode): BoxedMindmapNode {
+		function stableNode(
+			identity: MindmapNode,
+			parent: BoxedWikiEntity,
+			make: () => BoxedMindmapNode,
+		): BoxedMindmapNode {
 			const cached = prevNodeCache.get(identity)
-			if (cached) {
+			if (cached && cached.parent.entity === parent.entity) {
 				nextNodeCache.set(identity, cached)
 				return cached
 			}
@@ -96,7 +100,7 @@ export function useBoxedMindmapContent() {
 
 			if (!parent) continue
 
-			const boxed = stableNode(node, () => ({ id: node.id, node, parent }))
+			const boxed = stableNode(node, parent, () => ({ id: node.id, node, parent }))
 			actorsWithNodes.push(boxed)
 			nodeById.set(node.id, boxed)
 		}

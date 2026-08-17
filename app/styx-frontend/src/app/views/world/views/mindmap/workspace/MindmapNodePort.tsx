@@ -59,7 +59,7 @@ export function MindmapNodePort({ node, parent }: Props) {
 				ref={ref}
 				sx={{
 					width: '42px',
-					height: '100%',
+					height: '42px',
 					alignItems: 'center',
 					justifyContent: 'center',
 					cursor: 'pointer',
