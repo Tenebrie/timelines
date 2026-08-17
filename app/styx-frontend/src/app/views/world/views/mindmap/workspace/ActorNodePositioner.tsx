@@ -83,6 +83,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				return
 			}
 
+			setDragHover(true)
 			ref.current?.style.setProperty('--inner-transition-duration', '0.0s')
 		},
 	})
@@ -107,6 +108,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				return
 			}
 
+			setDragHover(false)
 			ref.current?.style.setProperty('--inner-transition-duration', '0.1s')
 		},
 	})
@@ -132,6 +134,32 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			selectedRef.current = isSelected
 			ref.current?.setAttribute('data-selected', String(isSelected))
 		},
+	})
+
+	const { addNodeToHover, removeNodeFromHover } = mindmapSlice.actions
+	const isDraggingRef = useRef(false)
+
+	const setDragHover = useEvent((isDragging: boolean) => {
+		isDraggingRef.current = isDragging
+		if (isDragging) {
+			dispatch(addNodeToHover({ key: node.id, entityId: parent.id }))
+		} else if (!ref.current?.matches(':hover')) {
+			dispatch(removeNodeFromHover(node.id))
+		}
+	})
+
+	const handleMouseEnter = useEvent(() => {
+		if (isDraggingRef.current) {
+			return
+		}
+		dispatch(addNodeToHover({ key: node.id, entityId: parent.id }))
+	})
+
+	const handleMouseLeave = useEvent(() => {
+		if (isDraggingRef.current) {
+			return
+		}
+		dispatch(removeNodeFromHover(node.id))
 	})
 
 	useEffect(() => {
@@ -203,6 +231,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			if (!mouseState.isDragging && (Math.abs(mouseState.deltaX) > 3 || Math.abs(mouseState.deltaY) > 3)) {
 				mouseState.isDragging = true
 				mouseState.canClick = false
+				setDragHover(true)
 				window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
 				dispatchGlobalEvent['mindmap/node/onGroupDragStart']({
 					sourceNodeId: node.id,
@@ -277,6 +306,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			mouseState.isDragging = false
 			mouseState.deltaX = 0
 			mouseState.deltaY = 0
+			setDragHover(false)
 			window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
 			element.style.setProperty('--inner-transition-duration', '0.1s')
 		}
@@ -294,16 +324,17 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [positionRef, moveMindmapNodes, node.id, nodeRef, store, dispatch, clearSelections, selectedRef])
-
-	const { addNodeToHover, removeNodeFromHover } = mindmapSlice.actions
-	const handleMouseEnter = useEvent(() => {
-		dispatch(addNodeToHover({ key: node.id, entityId: parent.id }))
-	})
-
-	const handleMouseLeave = useEvent(() => {
-		dispatch(removeNodeFromHover(node.id))
-	})
+	}, [
+		positionRef,
+		moveMindmapNodes,
+		node.id,
+		nodeRef,
+		store,
+		dispatch,
+		clearSelections,
+		selectedRef,
+		setDragHover,
+	])
 
 	return (
 		<Box

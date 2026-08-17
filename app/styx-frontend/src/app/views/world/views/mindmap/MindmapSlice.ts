@@ -76,17 +76,27 @@ export const mindmapSlice = createSlice({
 		},
 
 		addNodeToHover: (state, { payload }: PayloadAction<{ key: string; entityId: string }>) => {
-			state.hoveredNodes = state.hoveredNodes.filter((node) => node.key !== payload.key)
-			state.hoveredNodes = [...state.hoveredNodes, payload]
+			if (state.hoveredNodes.some((node) => node.key === payload.key && node.entityId === payload.entityId)) {
+				return
+			}
+			state.hoveredNodes = [...state.hoveredNodes.filter((node) => node.key !== payload.key), payload]
 		},
 		removeNodeFromHover: (state, { payload }: PayloadAction<string>) => {
+			if (!state.hoveredNodes.some((node) => node.key === payload)) {
+				return
+			}
 			state.hoveredNodes = state.hoveredNodes.filter((node) => node.key !== payload)
 		},
 		addWireToHover: (state, { payload }: PayloadAction<string>) => {
-			state.hoveredWires = state.hoveredWires.filter((wireId) => wireId !== payload)
+			if (state.hoveredWires.includes(payload)) {
+				return
+			}
 			state.hoveredWires = [...state.hoveredWires, payload]
 		},
 		removeWireFromHover: (state, { payload }: PayloadAction<string>) => {
+			if (!state.hoveredWires.includes(payload)) {
+				return
+			}
 			state.hoveredWires = state.hoveredWires.filter((wireId) => wireId !== payload)
 		},
 	},

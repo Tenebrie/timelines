@@ -104,6 +104,28 @@ function MindmapWireLineComponent({
 		registerWire(wire.id, ep)
 	}
 
+	/**
+	 * Live node positions are authoritative — they follow a drag in progress, while the props only
+	 * catch up once the move is committed. Props are the fallback for nodes that aren't mounted.
+	 */
+	const resolveEndpoints = (): WireEndpoints => {
+		const srcPos = nodePositions.get(source.node.id)
+		const tgtPos = nodePositions.get(target.node.id)
+		const pos = posRef.current
+		pos.srcX = srcPos?.x ?? source.node.positionX
+		pos.srcY = srcPos?.y ?? source.node.positionY
+		pos.tgtX = tgtPos?.x ?? target.node.positionX
+		pos.tgtY = tgtPos?.y ?? target.node.positionY
+		return pickEdgePoints(
+			pos.srcX,
+			pos.srcY,
+			srcPos?.height ?? getNodeHeight(source.node.id),
+			pos.tgtX,
+			pos.tgtY,
+			tgtPos?.height ?? getNodeHeight(target.node.id),
+		)
+	}
+
 	useEventBusSubscribe['mindmap/node/onMove']({
 		callback: () => {
 			if (!pathRef.current || !gradientRef.current) return
@@ -113,25 +135,11 @@ function MindmapWireLineComponent({
 			if (!srcPos || !tgtPos) return
 			if (pos.srcX === srcPos.x && pos.srcY === srcPos.y && pos.tgtX === tgtPos.x && pos.tgtY === tgtPos.y)
 				return
-			pos.srcX = srcPos.x
-			pos.srcY = srcPos.y
-			pos.tgtX = tgtPos.x
-			pos.tgtY = tgtPos.y
-			const ep = pickEdgePoints(pos.srcX, pos.srcY, srcPos.height, pos.tgtX, pos.tgtY, tgtPos.height)
-			updateDom(ep)
+			updateDom(resolveEndpoints())
 		},
 	})
 
-	const srcH = getNodeHeight(source.node.id)
-	const tgtH = getNodeHeight(target.node.id)
-	const ep = pickEdgePoints(
-		source.node.positionX,
-		source.node.positionY,
-		srcH,
-		target.node.positionX,
-		target.node.positionY,
-		tgtH,
-	)
+	const ep = resolveEndpoints()
 	const { x1, y1, x2, y2, nx1, ny1, nx2, ny2 } = ep
 
 	const isHoveredRef = useRef(false)
@@ -139,15 +147,7 @@ function MindmapWireLineComponent({
 	const selectedRef = useRef(false)
 
 	useLayoutEffect(() => {
-		const freshEp = pickEdgePoints(
-			source.node.positionX,
-			source.node.positionY,
-			getNodeHeight(source.node.id),
-			target.node.positionX,
-			target.node.positionY,
-			getNodeHeight(target.node.id),
-		)
-		updateDom(freshEp)
+		updateDom(resolveEndpoints())
 	})
 	useEffect(() => () => unregisterWire(wire.id), [wire.id])
 
