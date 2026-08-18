@@ -50,6 +50,24 @@ a {
 	text-decoration: none;
 }
 
+@property --grid-offset-x {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --grid-offset-y {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --grid-scale {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
 a:hover {
 	text-decoration: underline;
 }

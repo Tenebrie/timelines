@@ -44,6 +44,8 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		'--grid-offset-x': `${state.current.position.x}px`,
 		'--grid-offset-y': `${state.current.position.y}px`,
 		'--grid-scale': state.current.scale,
+		transition:
+			'--grid-offset-x var(--transition-duration) ease-out, --grid-offset-y var(--transition-duration) ease-out, --grid-scale var(--transition-duration) ease-out',
 	} as CSSProperties)
 
 	useEffect(() => {
@@ -192,10 +194,6 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 				return
 			}
 
-			// Two-finger trackpad scroll pans; a discrete mouse wheel zooms. There is no
-			// reliable API to tell them apart, so detect trackpads by their pixel-mode,
-			// often-fractional, often-horizontal deltas and keep the decision sticky
-			// through the gesture to absorb fast integer-delta flicks mid-scroll.
 			const looksLikeTrackpad =
 				event.deltaMode === WheelEvent.DOM_DELTA_PIXEL &&
 				(event.deltaX !== 0 || !Number.isInteger(event.deltaY) || Math.abs(event.deltaY) < 40)
@@ -207,7 +205,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 				return
 			}
 
-			zoomAt(originX, originY, navState.gridScale * Math.exp(-event.deltaY / 800))
+			zoomAt(originX, originY, navState.gridScale * Math.exp(-event.deltaY / 50))
 			update()
 		}
 
