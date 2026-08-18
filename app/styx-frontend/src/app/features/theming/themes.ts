@@ -149,6 +149,7 @@ export const customLightTheme = {
 		outline: 'rgb(60 40 120 / 18%)',
 		outlineStrong: 'rgb(60 40 120 / 40%)',
 		hintText: 'rgb(0 0 0 / 60%)',
+		highlight: 'hsla(31, 100%, 50%, 1.00)',
 		neutralBackground: {
 			contrastText: 'rgb(0 0 0 / 38%)',
 			normal: 'rgb(0 0 0 / 20%)',
@@ -184,6 +185,7 @@ export const customDarkTheme: typeof customLightTheme = {
 		outline: 'rgb(180 170 220 / 18%)',
 		outlineStrong: 'rgb(180 170 220 / 40%)',
 		hintText: 'rgb(255 255 255 / 50%)',
+		highlight: 'hsla(31, 100%, 50%, 1.00)',
 		neutralBackground: {
 			contrastText: 'rgb(255, 255, 255, 38%)',
 			normal: 'rgb(255 255 255 / 10%)',

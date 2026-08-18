@@ -1,26 +1,29 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
-import { Actor } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { useEffect, useRef } from 'react'
 
+import { DragTrigger } from '@/app/features/dragDrop/DragTrigger'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
+import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
+
 type Props = {
-	node: MindmapNode
-	actor: Actor
+	node?: MindmapNode
+	parent: BoxedMindmapParent
 }
 
-export function MindmapNodePort({ node, actor }: Props) {
+export function MindmapNodePort({ node, parent }: Props) {
 	const isDragging = useRef(false)
 	const theme = useCustomTheme()
 
 	const { ref, ghostElement } = useDragDrop({
 		type: 'actorNodeLinking',
+		trigger: DragTrigger.MindmapNodePortWire,
 		ghostFactory: () => null,
 		params: {
-			sourceNode: node,
+			sourceNode: node!,
 		},
 	})
 
@@ -43,13 +46,14 @@ export function MindmapNodePort({ node, actor }: Props) {
 		return () => {
 			box.removeEventListener('mousedown', onMouseDown)
 		}
-	}, [node.id, ref])
+	}, [node?.id, ref])
 
 	return (
 		<>
 			<Stack
 				data-testid="MindmapNodePort"
 				data-mindmap-port
+				title="Drag to connect"
 				onClick={(e) => {
 					e.stopPropagation()
 					e.preventDefault()
@@ -57,14 +61,17 @@ export function MindmapNodePort({ node, actor }: Props) {
 				ref={ref}
 				sx={{
 					width: '42px',
-					height: '100%',
+					height: '42px',
 					alignItems: 'center',
 					justifyContent: 'center',
 					cursor: 'pointer',
+					opacity: 0.35,
+					transition: 'opacity 0.15s ease-out',
 					'--fill-color': theme.custom.palette.background.timeline,
 					'--hover-opacity': 0.0,
 					'--active-opacity': 0.0,
 					'&:hover': {
+						opacity: 1,
 						'--hover-opacity': 1.0,
 					},
 					'&:active': {
@@ -91,7 +98,7 @@ export function MindmapNodePort({ node, actor }: Props) {
 							cy="8"
 							r="7"
 							fill="var(--fill-color)"
-							stroke={actor.color}
+							stroke={parent.color}
 							strokeWidth="2"
 							style={{ transition: 'fill 120ms ease-out' }}
 						/>

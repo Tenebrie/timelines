@@ -103,7 +103,6 @@ export function registerSearchWorldTool(server: McpServer) {
 						title?: string
 						timestamp?: string
 						description?: string
-						descriptionRich?: string
 						contentRich?: string
 					}>,
 					type: string,
@@ -115,7 +114,7 @@ export function registerSearchWorldTool(server: McpServer) {
 							if (!showSummary) {
 								return firstLine
 							}
-							const contentLine = item.contentRich ?? item.descriptionRich ?? item.descriptionRich ?? ''
+							const contentLine = item.contentRich ?? item.description ?? ''
 							return `${firstLine}\n${toSummary(contentLine)}\n`
 						})
 						.join('\n')

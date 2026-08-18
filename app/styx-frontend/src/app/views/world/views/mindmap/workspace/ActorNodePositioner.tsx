@@ -1,12 +1,12 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
-import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { memo, useEffect, useLayoutEffect, useRef } from 'react'
 import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { DragTrigger, matchesDragTrigger } from '@/app/features/dragDrop/DragTrigger'
+import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
-import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { RootState } from '@/app/store'
@@ -14,29 +14,29 @@ import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
+import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { mindmapSlice } from '../MindmapSlice'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { ActorNode } from './ActorNode'
 import { nodePositions } from './mindmapWireUtils'
 
 type Props = {
-	actor: ActorDetails
+	parent: BoxedMindmapParent
 	node: MindmapNode
 }
 
 export const ActorNodePositioner = memo(
 	ActorNodePositionerComponent,
-	(prev, next) => prev.actor === next.actor && prev.node === next.node,
+	(prev, next) => prev.parent === next.parent && prev.node === next.node,
 )
 
-function ActorNodePositionerComponent({ actor, node }: Props) {
-	const theme = useCustomTheme()
+function ActorNodePositionerComponent({ parent, node }: Props) {
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 	const [moveMindmapNodes] = useMoveMindmapNodes()
 
 	const positionRef = useRef({ x: node.positionX, y: node.positionY })
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		positionRef.current = { x: node.positionX, y: node.positionY }
 		const el = ref.current
 		if (el) {
@@ -55,26 +55,38 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			if (selectedRef.current) {
 				dispatch(removeNodeFromSelection(node.id))
 			} else {
-				dispatch(addNodeToSelection({ key: node.id, actorId: actor.id, multiselect }))
+				dispatch(addNodeToSelection({ key: node.id, actorId: parent.id, multiselect }))
 			}
 		},
 		onDoubleClick: () => {
 			onContentClick()
-			dispatch(addNodeToSelection({ key: node.id, actorId: actor.id, multiselect: false }))
+			dispatch(addNodeToSelection({ key: node.id, actorId: parent.id, multiselect: false }))
 		},
 		ignoreDelay: true,
 	})
 
 	const onContentClick = useEvent(() => {
+		if (parent.type === 'folder') {
+			return
+		}
 		navigate({
 			search: (prev) => ({
 				...prev,
-				navi: [actor.id],
+				navi: [parent.id],
 			}),
 		})
 	})
 
 	const ref = useRef<HTMLDivElement>(null)
+
+	const { ref: linkingRef, ghostElement: linkingGhost } = useDragDrop({
+		type: 'actorNodeLinking',
+		ghostFactory: () => null,
+		trigger: DragTrigger.MindmapForceNewWire,
+		params: {
+			sourceNode: node,
+		},
+	})
 
 	useEventBusSubscribe['mindmap/node/onGroupDragStart']({
 		callback: ({ sourceNodeId }) => {
@@ -82,7 +94,7 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 				return
 			}
 
-			ref.current?.style.setProperty('--inner-transition-duration', '0.0s')
+			setDragHover(true)
 		},
 	})
 	useEventBusSubscribe['mindmap/node/onGroupDragUpdate']({
@@ -106,7 +118,7 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 				return
 			}
 
-			ref.current?.style.setProperty('--inner-transition-duration', '0.1s')
+			setDragHover(false)
 		},
 	})
 
@@ -116,13 +128,14 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 		const el = ref.current
 		const scale = el ? parseFloat(getComputedStyle(el).getPropertyValue('--grid-scale')) || 1 : 1
 		const height = el ? el.getBoundingClientRect().height / scale : 80
-		nodePositions.set(node.id, { x: node.positionX, y: node.positionY, height })
+		nodePositions.set(node.id, { ...positionRef.current, height })
 	})
 	useEffect(
 		() => () => {
 			nodePositions.delete(node.id)
+			dispatch(mindmapSlice.actions.removeNodeFromHover(node.id))
 		},
-		[node.id],
+		[dispatch, node.id],
 	)
 
 	useEventBusSubscribe['mindmap/selection/changed']({
@@ -131,6 +144,33 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			selectedRef.current = isSelected
 			ref.current?.setAttribute('data-selected', String(isSelected))
 		},
+	})
+
+	const { addNodeToHover, removeNodeFromHover } = mindmapSlice.actions
+	const isDraggingRef = useRef(false)
+
+	const setDragHover = useEvent((isDragging: boolean) => {
+		isDraggingRef.current = isDragging
+		ref.current?.setAttribute('data-dragging', String(isDragging))
+		if (isDragging) {
+			dispatch(addNodeToHover({ key: node.id, entityId: parent.id }))
+		} else if (!ref.current?.matches(':hover')) {
+			dispatch(removeNodeFromHover(node.id))
+		}
+	})
+
+	const handleMouseEnter = useEvent(() => {
+		if (isDraggingRef.current) {
+			return
+		}
+		dispatch(addNodeToHover({ key: node.id, entityId: parent.id }))
+	})
+
+	const handleMouseLeave = useEvent(() => {
+		if (isDraggingRef.current) {
+			return
+		}
+		dispatch(removeNodeFromHover(node.id))
 	})
 
 	useEffect(() => {
@@ -150,7 +190,6 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			deltaX: 0,
 			deltaY: 0,
 		}
-		element.style.setProperty('--inner-transition-duration', '0.1s')
 
 		const handleMouseDown = (event: MouseEvent) => {
 			if (event.button !== 0) {
@@ -158,16 +197,10 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			}
 			event.stopPropagation()
 
-			// Don't start dragging if clicking on content (but header is fine for dragging)
-			const target = event.target as HTMLElement
-			const contentElement = element.querySelector('[data-mindmap-content]')
-			if (contentElement?.contains(target)) {
+			const isMoveTrigger = matchesDragTrigger(event, DragTrigger.MoveElements)
+			if (!isMoveTrigger) {
 				return
 			}
-
-			dispatchGlobalEvent['mindmap/node/onGroupDragStart']({
-				sourceNodeId: node.id,
-			})
 
 			if (!selectedRef.current && !isMultiselectEvent(event)) {
 				dispatch(clearSelections())
@@ -177,7 +210,6 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			mouseState.positionY = positionRef.current.y
 			mouseState.isButtonDown = true
 			mouseState.gridScale = parseFloat(getComputedStyle(element).getPropertyValue('--grid-scale'))
-			element.style.setProperty('--inner-transition-duration', '0.00s')
 		}
 
 		const handleMouseClick = (event: MouseEvent) => {
@@ -206,6 +238,11 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			if (!mouseState.isDragging && (Math.abs(mouseState.deltaX) > 3 || Math.abs(mouseState.deltaY) > 3)) {
 				mouseState.isDragging = true
 				mouseState.canClick = false
+				setDragHover(true)
+				window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
+				dispatchGlobalEvent['mindmap/node/onGroupDragStart']({
+					sourceNodeId: node.id,
+				})
 			}
 
 			if (mouseState.isDragging) {
@@ -240,8 +277,8 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			}
 
 			const snappedPosition = {
-				x: Math.round(positionRef.current.x / 10) * 10,
-				y: Math.round(positionRef.current.y / 10) * 10,
+				x: Math.round(positionRef.current.x / 1) * 1,
+				y: Math.round(positionRef.current.y / 1) * 1,
 			}
 
 			positionRef.current = snappedPosition
@@ -276,7 +313,8 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			mouseState.isDragging = false
 			mouseState.deltaX = 0
 			mouseState.deltaY = 0
-			element.style.setProperty('--inner-transition-duration', '0.1s')
+			setDragHover(false)
+			window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
 		}
 
 		element.addEventListener('mousedown', handleMouseDown)
@@ -292,14 +330,29 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [positionRef, moveMindmapNodes, node.id, nodeRef, store, dispatch, clearSelections, selectedRef])
+	}, [
+		positionRef,
+		moveMindmapNodes,
+		node.id,
+		nodeRef,
+		store,
+		dispatch,
+		clearSelections,
+		selectedRef,
+		setDragHover,
+	])
 
 	return (
 		<Box
-			ref={ref}
+			ref={(element: HTMLDivElement | null) => {
+				ref.current = element
+				linkingRef.current = element
+			}}
 			data-testid="MindmapNode"
 			data-mindmap-node={node.id}
-			data-actor-id={actor.id}
+			data-entity-id={parent.id}
+			onMouseEnter={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}
 			style={
 				{
 					'--node-x': `${node.positionX}px`,
@@ -308,30 +361,22 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			}
 			sx={{
 				pointerEvents: 'auto',
-				background: theme.custom.palette.background.timeline,
 				position: 'absolute',
 				transform:
 					'translate(calc(var(--node-x) * var(--grid-scale) + var(--grid-offset-x)), calc(var(--node-y) * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',
-				outline: '2px solid',
-				outlineColor: 'transparent',
-				'&[data-selected="true"]': {
-					outlineColor: theme.material.palette.primary.main,
-				},
-				transition:
-					'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out, outline-color 0.2s ease-out',
-				borderRadius: 2,
-				'&:hover': {
+				'&:hover, &[data-dragging="true"]': {
 					zIndex: 10,
 				},
 			}}
 		>
 			<ActorNode
-				actor={actor}
+				parent={parent}
 				node={node}
 				onHeaderClick={(e) => onHeaderClick(e, { multiselect: isMultiselectEvent(e) })}
 				onContentClick={onContentClick}
 			/>
+			{linkingGhost}
 		</Box>
 	)
 }

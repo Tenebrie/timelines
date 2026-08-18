@@ -21,6 +21,7 @@ export function CustomEntityIcon({ icon, color, height }: Props) {
 			<Icon
 				icon={icon === 'default' ? 'mdi:event' : (icon ?? 'mdi:event')}
 				color={color}
+				ssr
 				style={{
 					width: height ?? 'unset',
 					height: height ?? 'unset',

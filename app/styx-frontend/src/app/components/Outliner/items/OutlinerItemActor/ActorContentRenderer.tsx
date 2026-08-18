@@ -13,8 +13,7 @@ type Props = {
 }
 
 export const ActorContentRenderer = ({ actor, active }: Props) => {
-	const paragraphs =
-		actor.description.length > 0 ? [actor.descriptionRich] : ['<i>No description provided.</i>']
+	const paragraphs = actor.content.length > 0 ? [actor.contentRich] : ['<i>No description provided.</i>']
 
 	return (
 		<>

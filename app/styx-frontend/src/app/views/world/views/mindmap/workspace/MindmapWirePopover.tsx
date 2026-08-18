@@ -52,7 +52,6 @@ export function MindmapWirePopover({ open, position, onClose }: MindmapWireState
 				top: position.y - 16,
 				pointerEvents: open ? 'auto' : 'none',
 			}}
-			slotProps={{ paper: { sx: { willChange: 'transform' } } }}
 			onContextMenu={(event) => {
 				event.preventDefault()
 				handleClose()

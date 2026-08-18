@@ -24,6 +24,7 @@ const makeMention = (sourceId: string, targetId: string, overrides: Record<strin
 		sourceEventId: null,
 		sourceArticleId: null,
 		sourceTagId: null,
+		sourceNodeId: null,
 		targetActorId: null,
 		targetEventId: targetId,
 		targetArticleId: null,
@@ -43,12 +44,12 @@ const makeActor = (
 		createdAt: now,
 		updatedAt: now,
 		name: 'Actor',
-		description: '',
+		content: '',
 		worldId,
 		title: '',
 		icon: '',
 		color: '',
-		descriptionRich: '',
+		contentRich: '',
 		mentions,
 		pages,
 		parentFolderId: null,
@@ -66,11 +67,11 @@ const makeEvent = (
 		createdAt: now,
 		updatedAt: now,
 		name: 'Event',
-		description: '',
+		content: '',
 		worldId,
 		icon: '',
 		color: '',
-		descriptionRich: '',
+		contentRich: '',
 		timestamp: BigInt(0),
 		revokedAt: null as bigint | null,
 		worldEventTrackId: null as string | null,
@@ -141,43 +142,56 @@ const makeFolder = (
 		...overrides,
 	}) satisfies ExportedWorld['articles'][number]
 
-const makePage = (id = 'page-1', overrides: Record<string, unknown> = {}) => ({
-	id,
-	createdAt: now,
-	updatedAt: now,
-	name: 'Page',
-	description: '',
-	descriptionRich: '',
-	parentActorId: null as string | null,
-	parentEventId: null as string | null,
-	parentArticleId: null as string | null,
-	...overrides,
-})
+const makePage = (id = 'page-1', overrides: Record<string, unknown> = {}) =>
+	({
+		id,
+		createdAt: now,
+		updatedAt: now,
+		name: 'Page',
+		content: '',
+		contentRich: '',
+		parentType:
+			'parentEventId' in overrides
+				? ('Event' as const)
+				: 'parentArticleId' in overrides
+					? ('Article' as const)
+					: ('Actor' as const),
+		parentActorId: null as string | null,
+		parentEventId: null as string | null,
+		parentArticleId: null as string | null,
+		parentNodeId: null as string | null,
+		...overrides,
+	}) satisfies ExportedWorld['articles'][number]['pages'][number]
 
-const makeMindmapNode = (
-	worldId: string,
-	id = 'node-1',
-	links: ReturnType<typeof makeMindmapLink>[] = [],
-) => ({
-	id,
-	createdAt: now,
-	updatedAt: now,
-	worldId,
-	parentActorId: null as string | null,
-	positionX: 0,
-	positionY: 0,
-	links,
-})
+const makeMindmapNode = (worldId: string, id = 'node-1', links: ReturnType<typeof makeMindmapLink>[] = []) =>
+	({
+		id,
+		createdAt: now,
+		updatedAt: now,
+		name: '',
+		content: '',
+		contentRich: '',
+		worldId,
+		positionX: 0,
+		positionY: 0,
+		parentActorId: null as string | null,
+		parentArticleId: null as string | null,
+		parentEventId: null as string | null,
+		parentFolderId: null as string | null,
+		parentTagId: null as string | null,
+		links,
+	}) satisfies ExportedWorld['mindmapNodes'][number]
 
-const makeMindmapLink = (sourceNodeId: string, targetNodeId: string, id = 'link-1') => ({
-	id,
-	createdAt: now,
-	updatedAt: now,
-	direction: 'Normal' as const,
-	sourceNodeId,
-	targetNodeId,
-	content: '',
-})
+const makeMindmapLink = (sourceNodeId: string, targetNodeId: string, id = 'link-1') =>
+	({
+		id,
+		createdAt: now,
+		updatedAt: now,
+		direction: 'Normal' as const,
+		sourceNodeId,
+		targetNodeId,
+		content: '',
+	}) satisfies ExportedWorld['mindmapNodes'][number]['links'][number]
 
 const makeTrack = (worldId: string, id = 'track-1') => ({
 	id,
@@ -325,7 +339,7 @@ const makeExportData = (
 	calendars = [makeCalendar({ ownerId: userId })],
 ) =>
 	({
-		version: 2 as const,
+		version: 3 as const,
 		user: { id: userId, worlds, calendars },
 	}) satisfies ExportedData
 
@@ -988,12 +1002,12 @@ describe('DataMigrationService', () => {
 			expect(result.isValid).toBe(false)
 		})
 
-		it('version check in code is unreachable because schema enforces version: 2', async () => {
+		it('version check in code is unreachable because schema enforces version: 3', async () => {
 			const prisma = makePrisma()
 			const result = await DataMigrationService.validateUserData(
 				ctx,
 				JSON.stringify({
-					version: 3,
+					version: 2,
 					user: { id: 'u', worlds: [], calendars: [] },
 				}),
 				prisma,

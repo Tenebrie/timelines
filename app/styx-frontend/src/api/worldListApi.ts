@@ -24,6 +24,11 @@ const injectedRtkApi = api
 export { injectedRtkApi as worldListApi }
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
+		collaborators: {
+			worldId: string
+			userId: string
+			access: 'ReadOnly' | 'Editing'
+		}[]
 		calendars: {
 			description: string
 			worldId?: null | string
@@ -35,11 +40,6 @@ export type GetWorldsApiResponse = /** status 200  */ {
 			position: number
 			originTime: string
 			dateFormat?: null | string
-		}[]
-		collaborators: {
-			worldId: string
-			userId: string
-			access: 'ReadOnly' | 'Editing'
 		}[]
 		description: string
 		id: string
@@ -52,6 +52,11 @@ export type GetWorldsApiResponse = /** status 200  */ {
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	contributableWorlds: {
+		collaborators: {
+			worldId: string
+			userId: string
+			access: 'ReadOnly' | 'Editing'
+		}[]
 		calendars: {
 			description: string
 			worldId?: null | string
@@ -63,11 +68,6 @@ export type GetWorldsApiResponse = /** status 200  */ {
 			position: number
 			originTime: string
 			dateFormat?: null | string
-		}[]
-		collaborators: {
-			worldId: string
-			userId: string
-			access: 'ReadOnly' | 'Editing'
 		}[]
 		description: string
 		id: string
@@ -80,6 +80,11 @@ export type GetWorldsApiResponse = /** status 200  */ {
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	visibleWorlds: {
+		collaborators: {
+			worldId: string
+			userId: string
+			access: 'ReadOnly' | 'Editing'
+		}[]
 		calendars: {
 			description: string
 			worldId?: null | string
@@ -91,11 +96,6 @@ export type GetWorldsApiResponse = /** status 200  */ {
 			position: number
 			originTime: string
 			dateFormat?: null | string
-		}[]
-		collaborators: {
-			worldId: string
-			userId: string
-			access: 'ReadOnly' | 'Editing'
 		}[]
 		description: string
 		id: string

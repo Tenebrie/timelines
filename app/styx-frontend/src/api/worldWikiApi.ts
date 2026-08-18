@@ -52,11 +52,11 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	}[]
 	mentions: {
 		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	mentionedIn: {
 		sourceId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	worldId: string
 	id: string
@@ -65,10 +65,10 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	parentFolderId?: null | string
-	parentFolderPosition: number
 	content: string
 	contentRich: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }[]
 export type GetArticlesApiArg = {
 	/** Any string value */
@@ -82,10 +82,10 @@ export type CreateArticleApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	parentFolderId?: null | string
-	parentFolderPosition: number
 	content: string
 	contentRich: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }
 export type CreateArticleApiArg = {
 	/** Any string value */
@@ -108,7 +108,7 @@ export type DeleteArticleApiArg = {
 export type MoveWikiEntityApiResponse = /** status 200  */ {
 	updates: {
 		entityId: string
-		entityType: 'actor' | 'tag' | 'article' | 'event' | 'folder'
+		entityType: 'actor' | 'tag' | 'event' | 'article' | 'folder'
 		position: number
 		folderId?: null | string
 	}[]
@@ -125,7 +125,7 @@ export type MoveWikiEntityApiArg = {
 export type BulkMoveWikiEntitiesApiResponse = /** status 200  */ {
 	updates: {
 		entityId: string
-		entityType: 'actor' | 'tag' | 'article' | 'event' | 'folder'
+		entityType: 'actor' | 'tag' | 'event' | 'article' | 'folder'
 		position: number
 		folderId?: null | string
 	}[]

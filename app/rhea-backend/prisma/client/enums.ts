@@ -43,7 +43,8 @@ export const ReferenceHoldingEntity = {
   Actor: 'Actor',
   Event: 'Event',
   Article: 'Article',
-  Tag: 'Tag'
+  Tag: 'Tag',
+  Node: 'Node'
 } as const
 
 export type ReferenceHoldingEntity = (typeof ReferenceHoldingEntity)[keyof typeof ReferenceHoldingEntity]
@@ -104,7 +105,8 @@ export const MentionedEntity = {
   Actor: 'Actor',
   Event: 'Event',
   Article: 'Article',
-  Tag: 'Tag'
+  Tag: 'Tag',
+  Node: 'Node'
 } as const
 
 export type MentionedEntity = (typeof MentionedEntity)[keyof typeof MentionedEntity]

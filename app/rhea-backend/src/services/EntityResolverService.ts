@@ -1,4 +1,7 @@
+import { ContentEntityType } from '@src/schema/ContentEntityType.js'
+
 import { ActorService } from './ActorService.js'
+import { ContentService } from './ContentService.js'
 import { TagService } from './TagService.js'
 import { WikiArticleService } from './WikiArticleService.js'
 import { WorldEventService } from './WorldEventService.js'
@@ -10,7 +13,7 @@ export const EntityResolverService = {
 		entityId,
 	}: {
 		worldId: string
-		entityType: 'actor' | 'event' | 'article' | 'tag'
+		entityType: ContentEntityType | 'tag'
 		entityId: string
 	}) => {
 		if (entityType === 'actor') {
@@ -35,27 +38,18 @@ export const EntityResolverService = {
 		entityId,
 	}: {
 		worldId: string
-		entityType: 'actor' | 'event' | 'article'
+		entityType: ContentEntityType
 		entityId: string
 	}) => {
-		if (entityType === 'actor') {
-			const actor = await ActorService.findActorWithContentDeltas({ worldId, actorId: entityId })
+		try {
+			const entity = await ContentService.getContent({ entityType, worldId, entityId })
 			return {
-				contentRich: actor?.descriptionRich ?? '',
+				contentRich: entity.contentRich,
 			}
-		} else if (entityType === 'event') {
-			const event = await WorldEventService.findEventById({ id: entityId, worldId })
+		} catch {
 			return {
-				contentRich: event?.descriptionRich ?? '',
+				contentRich: '',
 			}
-		} else if (entityType === 'article') {
-			const article = await WikiArticleService.findArticleByIdWithContentDeltas({ id: entityId, worldId })
-			return {
-				contentRich: article?.contentRich ?? '',
-			}
-		}
-		return {
-			contentRich: '',
 		}
 	},
 }

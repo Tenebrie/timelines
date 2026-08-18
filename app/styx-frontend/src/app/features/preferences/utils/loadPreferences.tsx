@@ -65,7 +65,9 @@ export const PreferencesStateSchema = z.object({
 	wiki: z
 		.object({
 			expandedFolders: z.array(z.string()).default([]),
-			visibleEntities: z.array(z.enum(['article', 'actor', 'event', 'tag'])).default(['article']),
+			visibleEntities: z
+				.array(z.enum(['article', 'actor', 'event', 'tag']))
+				.default(['article', 'actor', 'event', 'tag']),
 		})
 		.default({}),
 	imageGenerator: z

@@ -47,12 +47,38 @@ export const useDragDropReceiver = <T extends AllowedDraggableType, R extends Re
 			return
 		}
 
+		const onMouseEnter = () => {
+			const state = getState()
+			if (state === null || state.type !== type || state.isHandled) {
+				return
+			}
+			setStateImmediately({
+				...state,
+				hovered: [...state.hovered, container],
+			})
+		}
+
+		const onMouseLeave = () => {
+			const state = getState()
+			if (state === null || state.type !== type || state.isHandled) {
+				return
+			}
+			setStateImmediately({
+				...state,
+				hovered: state.hovered.filter((el) => el !== container),
+			})
+		}
+
+		container.addEventListener('mouseenter', onMouseEnter)
+		container.addEventListener('mouseleave', onMouseLeave)
 		container.addEventListener('mouseup', onDropCallback)
 
 		return () => {
+			container.removeEventListener('mouseenter', onMouseEnter)
+			container.removeEventListener('mouseleave', onMouseLeave)
 			container.removeEventListener('mouseup', onDropCallback)
 		}
-	}, [containerRef, receiverRef, onDropCallback])
+	}, [containerRef, receiverRef, onDropCallback, getState, type, setStateImmediately])
 
 	return {
 		ref: containerRef,

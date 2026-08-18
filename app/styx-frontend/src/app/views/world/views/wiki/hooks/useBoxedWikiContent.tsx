@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { getWikiPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
+import { boxActor, boxArticle, boxEvent, boxFolder, boxTag } from '../utils/boxEntity'
 import { getWikiState } from '../WikiSliceSelectors'
 
 type EntityWrapper =
@@ -87,16 +88,7 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 			if (filterFolderId !== undefined && folder.parentFolderId !== filterFolderId) {
 				continue
 			}
-			result.push(
-				stable(folder, folder.name, folder.parentFolderPosition, () => ({
-					id: folder.id,
-					type: 'folder',
-					entity: folder,
-					name: folder.name,
-					position: folder.parentFolderPosition,
-					color: folder.color,
-				})),
-			)
+			result.push(stable(folder, folder.name, folder.parentFolderPosition, () => boxFolder(folder)))
 		}
 		for (const article of articles) {
 			if (filterFolderId !== undefined && article.parentFolderId !== filterFolderId) {
@@ -106,16 +98,7 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 				hiddenEntities += 1
 				continue
 			}
-			result.push(
-				stable(article, article.name, article.parentFolderPosition, () => ({
-					id: article.id,
-					type: 'article',
-					entity: article,
-					name: article.name,
-					position: article.parentFolderPosition,
-					color: article.color,
-				})),
-			)
+			result.push(stable(article, article.name, article.parentFolderPosition, () => boxArticle(article)))
 		}
 		for (const actor of actors) {
 			if (filterFolderId !== undefined && actor.parentFolderId !== filterFolderId) {
@@ -125,16 +108,7 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 				hiddenEntities += 1
 				continue
 			}
-			result.push(
-				stable(actor, actor.name, actor.parentFolderPosition, () => ({
-					id: actor.id,
-					type: 'actor',
-					entity: actor,
-					name: actor.name,
-					position: actor.parentFolderPosition,
-					color: actor.color,
-				})),
-			)
+			result.push(stable(actor, actor.name, actor.parentFolderPosition, () => boxActor(actor)))
 		}
 		for (const event of events) {
 			if (filterFolderId !== undefined && event.parentFolderId !== filterFolderId) {
@@ -144,16 +118,7 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 				hiddenEntities += 1
 				continue
 			}
-			result.push(
-				stable(event, event.name, event.parentFolderPosition, () => ({
-					id: event.id,
-					type: 'event',
-					entity: event,
-					name: event.name,
-					position: event.parentFolderPosition,
-					color: event.color,
-				})),
-			)
+			result.push(stable(event, event.name, event.parentFolderPosition, () => boxEvent(event)))
 		}
 		for (const tag of tags) {
 			if (filterFolderId !== undefined && tag.parentFolderId !== filterFolderId) {
@@ -163,16 +128,7 @@ export function useBoxedWikiContent({ filterFolderId }: Props = {}) {
 				hiddenEntities += 1
 				continue
 			}
-			result.push(
-				stable(tag, tag.name, tag.parentFolderPosition, () => ({
-					id: tag.id,
-					type: 'tag',
-					entity: tag,
-					name: tag.name,
-					position: tag.parentFolderPosition,
-					color: '#9f2261',
-				})),
-			)
+			result.push(stable(tag, tag.name, tag.parentFolderPosition, () => boxTag(tag)))
 		}
 
 		wrapperCache.current = nextCache

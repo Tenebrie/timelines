@@ -134,6 +134,225 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 			dateFormat?: null | string
 		}[]
 		worlds: {
+			actors: {
+				pages: {
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					content: string
+					contentRich: string
+					parentType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					parentActorId?: null | string
+					parentEventId?: null | string
+					parentArticleId?: null | string
+					parentNodeId?: null | string
+				}[]
+				mentions: {
+					id: string
+					sourceId: string
+					targetId: string
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					sourceActorId?: null | string
+					sourceEventId?: null | string
+					sourceArticleId?: null | string
+					sourceTagId?: null | string
+					sourceNodeId?: null | string
+					targetActorId?: null | string
+					targetEventId?: null | string
+					targetArticleId?: null | string
+					targetTagId?: null | string
+					pageId?: null | string
+				}[]
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				title: string
+				icon: string
+				color: string
+				content: string
+				contentRich: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
+			}[]
+			events: {
+				pages: {
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					content: string
+					contentRich: string
+					parentType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					parentActorId?: null | string
+					parentEventId?: null | string
+					parentArticleId?: null | string
+					parentNodeId?: null | string
+				}[]
+				mentions: {
+					id: string
+					sourceId: string
+					targetId: string
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					sourceActorId?: null | string
+					sourceEventId?: null | string
+					sourceArticleId?: null | string
+					sourceTagId?: null | string
+					sourceNodeId?: null | string
+					targetActorId?: null | string
+					targetEventId?: null | string
+					targetArticleId?: null | string
+					targetTagId?: null | string
+					pageId?: null | string
+				}[]
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				icon: string
+				color: string
+				content: string
+				contentRich: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
+				timestamp: string
+				revokedAt?: null | string
+				worldEventTrackId?: null | string
+			}[]
+			articles: {
+				pages: {
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					content: string
+					contentRich: string
+					parentType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					parentActorId?: null | string
+					parentEventId?: null | string
+					parentArticleId?: null | string
+					parentNodeId?: null | string
+				}[]
+				mentions: {
+					id: string
+					sourceId: string
+					targetId: string
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					sourceActorId?: null | string
+					sourceEventId?: null | string
+					sourceArticleId?: null | string
+					sourceTagId?: null | string
+					sourceNodeId?: null | string
+					targetActorId?: null | string
+					targetEventId?: null | string
+					targetArticleId?: null | string
+					targetTagId?: null | string
+					pageId?: null | string
+				}[]
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				icon: string
+				color: string
+				content: string
+				contentRich: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
+			}[]
+			folders: {
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				icon: string
+				color: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
+			}[]
+			tags: {
+				mentions: {
+					id: string
+					sourceId: string
+					targetId: string
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+					sourceActorId?: null | string
+					sourceEventId?: null | string
+					sourceArticleId?: null | string
+					sourceTagId?: null | string
+					sourceNodeId?: null | string
+					targetActorId?: null | string
+					targetEventId?: null | string
+					targetArticleId?: null | string
+					targetTagId?: null | string
+					pageId?: null | string
+				}[]
+				description: string
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				color: string
+				parentFolderId?: null | string
+				parentFolderPosition: number
+			}[]
+			mindmapNodes: {
+				links: {
+					id: string
+					createdAt: string
+					updatedAt: string
+					content: string
+					sourceNodeId: string
+					direction: 'Normal' | 'Reversed' | 'TwoWay'
+					targetNodeId: string
+				}[]
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				content: string
+				contentRich: string
+				parentFolderId?: null | string
+				parentActorId?: null | string
+				parentEventId?: null | string
+				parentArticleId?: null | string
+				positionX: number
+				positionY: number
+				parentTagId?: null | string
+			}[]
+			worldEventTracks: {
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				position: number
+				visible: boolean
+			}[]
+			worldCommonIconSets: {
+				worldId: string
+				id: string
+				iconSet: string
+			}[]
+			savedColors: {
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				value: string
+				label?: null | string
+			}[]
 			calendars: {
 				units: {
 					children: {
@@ -214,208 +433,6 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				position: number
 				originTime: string
 				dateFormat?: null | string
-			}[]
-			actors: {
-				pages: {
-					description: string
-					id: string
-					createdAt: string
-					updatedAt: string
-					name: string
-					descriptionRich: string
-					parentActorId?: null | string
-					parentEventId?: null | string
-					parentArticleId?: null | string
-				}[]
-				mentions: {
-					id: string
-					pageId?: null | string
-					sourceId: string
-					targetId: string
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					sourceActorId?: null | string
-					sourceEventId?: null | string
-					sourceArticleId?: null | string
-					sourceTagId?: null | string
-					targetActorId?: null | string
-					targetEventId?: null | string
-					targetArticleId?: null | string
-					targetTagId?: null | string
-				}[]
-				description: string
-				worldId: string
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				title: string
-				icon: string
-				color: string
-				descriptionRich: string
-				parentFolderId?: null | string
-				parentFolderPosition: number
-			}[]
-			events: {
-				pages: {
-					description: string
-					id: string
-					createdAt: string
-					updatedAt: string
-					name: string
-					descriptionRich: string
-					parentActorId?: null | string
-					parentEventId?: null | string
-					parentArticleId?: null | string
-				}[]
-				mentions: {
-					id: string
-					pageId?: null | string
-					sourceId: string
-					targetId: string
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					sourceActorId?: null | string
-					sourceEventId?: null | string
-					sourceArticleId?: null | string
-					sourceTagId?: null | string
-					targetActorId?: null | string
-					targetEventId?: null | string
-					targetArticleId?: null | string
-					targetTagId?: null | string
-				}[]
-				description: string
-				worldId: string
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				icon: string
-				color: string
-				descriptionRich: string
-				parentFolderId?: null | string
-				parentFolderPosition: number
-				timestamp: string
-				revokedAt?: null | string
-				worldEventTrackId?: null | string
-			}[]
-			articles: {
-				pages: {
-					description: string
-					id: string
-					createdAt: string
-					updatedAt: string
-					name: string
-					descriptionRich: string
-					parentActorId?: null | string
-					parentEventId?: null | string
-					parentArticleId?: null | string
-				}[]
-				mentions: {
-					id: string
-					pageId?: null | string
-					sourceId: string
-					targetId: string
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					sourceActorId?: null | string
-					sourceEventId?: null | string
-					sourceArticleId?: null | string
-					sourceTagId?: null | string
-					targetActorId?: null | string
-					targetEventId?: null | string
-					targetArticleId?: null | string
-					targetTagId?: null | string
-				}[]
-				worldId: string
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				icon: string
-				color: string
-				parentFolderId?: null | string
-				parentFolderPosition: number
-				content: string
-				contentRich: string
-			}[]
-			folders: {
-				worldId: string
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				icon: string
-				color: string
-				parentFolderId?: null | string
-				parentFolderPosition: number
-			}[]
-			tags: {
-				mentions: {
-					id: string
-					pageId?: null | string
-					sourceId: string
-					targetId: string
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					sourceActorId?: null | string
-					sourceEventId?: null | string
-					sourceArticleId?: null | string
-					sourceTagId?: null | string
-					targetActorId?: null | string
-					targetEventId?: null | string
-					targetArticleId?: null | string
-					targetTagId?: null | string
-				}[]
-				description: string
-				worldId: string
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				color: string
-				parentFolderId?: null | string
-				parentFolderPosition: number
-			}[]
-			mindmapNodes: {
-				links: {
-					id: string
-					createdAt: string
-					updatedAt: string
-					content: string
-					direction: 'Normal' | 'Reversed' | 'TwoWay'
-					sourceNodeId: string
-					targetNodeId: string
-				}[]
-				worldId: string
-				id: string
-				createdAt: string
-				updatedAt: string
-				parentActorId?: null | string
-				positionX: number
-				positionY: number
-			}[]
-			worldEventTracks: {
-				worldId: string
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				position: number
-				visible: boolean
-			}[]
-			worldCommonIconSets: {
-				worldId: string
-				id: string
-				iconSet: string
-			}[]
-			savedColors: {
-				worldId: string
-				id: string
-				createdAt: string
-				updatedAt: string
-				value: string
-				label?: null | string
 			}[]
 			description: string
 			id: string

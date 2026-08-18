@@ -3,7 +3,9 @@ import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { getTransformAlign, GhostWrapper } from '../components/GhostWrapper'
+import { DragTrigger, DragTriggerType, matchesDragTrigger } from '../DragTrigger'
 import { AllowedDraggableType, DraggableParams } from '../types'
+import { useDragDropBusSubscribe } from './useDragDropBus'
 import { useDragDropState } from './useDragDropState'
 
 type Props<T extends AllowedDraggableType> = {
@@ -18,6 +20,7 @@ type Props<T extends AllowedDraggableType> = {
 		pos: { x: number; y: number },
 		startingPos: { x: number; y: number },
 	) => { x: number; y: number }
+	trigger?: DragTriggerType
 	disabled?: boolean
 }
 
@@ -27,6 +30,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 	ghostAlign,
 	ghostFactory,
 	adjustPosition,
+	trigger = DragTrigger.Default,
 	disabled,
 }: Props<T>) => {
 	const isDraggingNow = useRef(false)
@@ -36,6 +40,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 	const [ghostElement, setGhostElement] = useState<ReactNode | null>(null)
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const ghostWrapperRef = useRef<HTMLDivElement | null>(null)
+	const lastMouseEventRef = useRef<MouseEvent | null>(null)
 
 	// Store props in refs to keep callbacks stable across renders
 	const paramsRef = useRef(params)
@@ -49,22 +54,40 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 
 	const { getState, setStateQuietly, setStateImmediately, clearState } = useDragDropState()
 
-	const onMouseDown = useCallback((event: MouseEvent) => {
-		if (!containerRef.current || event.shiftKey) {
-			return
+	const renderGhost = useCallback((event: MouseEvent) => {
+		const align = {
+			top: ghostAlignRef.current?.top ?? ('start' as const),
+			left: ghostAlignRef.current?.left ?? ('start' as const),
 		}
-		// Only handle left-click (button 0) for dragging
-		if (event.button !== 0) {
-			return
-		}
-		isPreparingToDrag.current = true
-		const boundingRect = containerRef.current.getBoundingClientRect()
-		rootPos.current = {
-			x: boundingRect.left,
-			y: boundingRect.top,
-		}
-		dragFromPos.current = { x: event.clientX, y: event.clientY }
+		setGhostElement(
+			<GhostWrapper
+				ref={ghostWrapperRef}
+				initialLeft={rootPos.current.x}
+				initialTop={rootPos.current.y}
+				left={event.clientX}
+				top={event.clientY}
+				align={align}
+			>
+				{ghostFactoryRef.current(event)}
+			</GhostWrapper>,
+		)
 	}, [])
+
+	const onMouseDown = useCallback(
+		(event: MouseEvent) => {
+			if (!containerRef.current || !matchesDragTrigger(event, trigger)) {
+				return
+			}
+			isPreparingToDrag.current = true
+			const boundingRect = containerRef.current.getBoundingClientRect()
+			rootPos.current = {
+				x: boundingRect.left,
+				y: boundingRect.top,
+			}
+			dragFromPos.current = { x: event.clientX, y: event.clientY }
+		},
+		[trigger],
+	)
 
 	const startDragging = useCallback(
 		(event: MouseEvent) => {
@@ -78,31 +101,28 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 				targetPos: { x: event.clientX, y: event.clientY },
 				targetRootPos: { x: rootPos.current.x, y: rootPos.current.y },
 				isHandled: false,
+				hovered: [],
 			})
 			window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
-
-			const align = {
-				top: ghostAlignRef.current?.top ?? ('start' as const),
-				left: ghostAlignRef.current?.left ?? ('start' as const),
-			}
-			setGhostElement(
-				<GhostWrapper
-					ref={ghostWrapperRef}
-					initialLeft={rootPos.current.x}
-					initialTop={rootPos.current.y}
-					left={event.clientX}
-					top={event.clientY}
-					align={align}
-				>
-					{ghostFactoryRef.current(event)}
-				</GhostWrapper>,
-			)
+			renderGhost(event)
 		},
-		[setStateImmediately, type],
+		[setStateImmediately, type, renderGhost],
 	)
+
+	useDragDropBusSubscribe({
+		callback: (data) => {
+			if (!isDraggingNow.current || !lastMouseEventRef.current) {
+				return
+			}
+			if (data?.type === type) {
+				renderGhost(lastMouseEventRef.current)
+			}
+		},
+	})
 
 	const onMouseMove = useCallback(
 		(event: MouseEvent) => {
+			lastMouseEventRef.current = event
 			if (
 				isPreparingToDrag.current &&
 				(Math.abs(event.clientX - dragFromPos.current.x) > 3 ||

@@ -55,7 +55,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		name: RequiredParam(OptionalNameStringValidator),
 		icon: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(OptionalNameStringValidator),
-		descriptionRich: RequiredParam(ContentStringValidator),
+		contentRich: RequiredParam(ContentStringValidator),
 		timestamp: RequiredParam(TimestampValidator),
 		revokedAt: OptionalParam(NullableTimestampValidator),
 		customName: OptionalParam(BooleanValidator),
@@ -64,9 +64,9 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		parentFolderId: z.string().nullable().optional(),
 	})
 
-	const parsed = await RichTextService.parseContentString({
+	const documentContent = await RichTextService.parseContentString({
 		worldId,
-		contentString: params.descriptionRich,
+		contentString: params.contentRich,
 	})
 
 	const { event, world } = await WorldEventService.createWorldEvent({
@@ -79,9 +79,9 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		},
 		updateData: {
 			...params,
-			description: parsed.contentPlain,
-			descriptionRich: parsed.contentRich,
-			mentions: parsed.mentions,
+			content: documentContent.content,
+			contentRich: documentContent.contentRich,
+			mentions: documentContent.mentions,
 		},
 	})
 

@@ -1,4 +1,4 @@
-import type { paths } from '@neverkin/openapi-fetch'
+import type { operations, paths } from '@neverkin/openapi-fetch'
 import { IMPERSONATED_USER_HEADER, SERVICE_AUTH_TOKEN_HEADER } from '@src/ts-shared/const/constants.js'
 import createClient from 'openapi-fetch'
 
@@ -14,6 +14,8 @@ const rheaClient = createClient<paths>({
 
 type PermissionLevel =
 	keyof paths['/api/internal/auth/{userId}']['get']['responses']['200']['content']['application/json']
+
+type ContentEntityType = operations['getEntityContent']['parameters']['path']['entityType']
 
 export const RheaService = {
 	checkUserAccess: async ({
@@ -121,15 +123,17 @@ export const RheaService = {
 		return response.data
 	},
 
-	// Actor methods
-	getActorContent: async ({
+	// Content methods (actor, event, article)
+	getEntityContent: async ({
+		entityType,
 		worldId,
-		actorId,
+		entityId,
 		userId,
 		pageId,
 	}: {
+		entityType: ContentEntityType
 		worldId: string
-		actorId: string
+		entityId: string
 		userId: string
 		pageId?: string
 	}) => {
@@ -139,42 +143,157 @@ export const RheaService = {
 		}
 		const response = await (() => {
 			if (pageId) {
-				return rheaClient['GET']('/api/world/{worldId}/actor/{actorId}/content/pages/{pageId}', {
+				return rheaClient['GET']('/api/world/{worldId}/{entityType}/{entityId}/content/pages/{pageId}', {
 					params: {
-						path: { worldId, actorId, pageId },
+						path: { worldId, entityType, entityId, pageId },
 					},
 					headers,
 				})
 			}
-			return rheaClient['GET']('/api/world/{worldId}/actor/{actorId}/content', {
+			return rheaClient['GET']('/api/world/{worldId}/{entityType}/{entityId}/content', {
 				params: {
-					path: { worldId, actorId },
+					path: { worldId, entityType, entityId },
 				},
 				headers,
 			})
 		})()
 
 		if (!response.data || response.error) {
-			throw new Error('Failed to get actor content: ' + JSON.stringify(response.error))
+			throw new Error('Failed to get entity content: ' + JSON.stringify(response.error))
 		}
 
 		return response.data
 	},
 
+	updateEntityContent: async ({
+		entityType,
+		worldId,
+		entityId,
+		userId,
+		content,
+	}: {
+		entityType: ContentEntityType
+		worldId: string
+		entityId: string
+		userId: string
+		content: string
+	}) => {
+		await rheaClient['PUT']('/api/world/{worldId}/{entityType}/{entityId}/content', {
+			params: {
+				path: { worldId, entityType, entityId },
+			},
+			body: {
+				content,
+				reloadClients: true,
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
+	},
+
+	createEntityContentPage: async ({
+		entityType,
+		worldId,
+		entityId,
+		userId,
+		pageName,
+	}: {
+		entityType: ContentEntityType
+		worldId: string
+		entityId: string
+		userId: string
+		pageName: string
+	}) => {
+		const response = await rheaClient['POST']('/api/world/{worldId}/{entityType}/{entityId}/content/pages', {
+			params: {
+				path: { worldId, entityType, entityId },
+			},
+			body: {
+				name: pageName,
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
+		if (!response.data || response.error) {
+			throw new Error('Failed to create entity content page: ' + JSON.stringify(response.error))
+		}
+
+		return response.data
+	},
+
+	updateEntityContentPage: async ({
+		entityType,
+		worldId,
+		entityId,
+		userId,
+		content,
+		pageId,
+	}: {
+		entityType: ContentEntityType
+		worldId: string
+		entityId: string
+		userId: string
+		content: string
+		pageId: string
+	}) => {
+		await rheaClient['PUT']('/api/world/{worldId}/{entityType}/{entityId}/content/pages/{pageId}', {
+			params: {
+				path: { worldId, entityType, entityId, pageId },
+			},
+			body: {
+				content,
+				reloadClients: true,
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
+	},
+
+	deleteEntityContentPage: async ({
+		entityType,
+		worldId,
+		entityId,
+		userId,
+		pageId,
+	}: {
+		entityType: ContentEntityType
+		worldId: string
+		entityId: string
+		userId: string
+		pageId: string
+	}) => {
+		await rheaClient['DELETE']('/api/world/{worldId}/{entityType}/{entityId}/content/pages/{pageId}', {
+			params: {
+				path: { worldId, entityType, entityId, pageId },
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
+	},
+
+	// Actor methods
 	createActor: async ({
 		worldId,
 		userId,
 		name,
 		title,
 		color,
-		descriptionRich,
+		contentRich,
 	}: {
 		worldId: string
 		userId: string
 		name: string
 		title?: string
 		color?: string
-		descriptionRich?: string
+		contentRich?: string
 	}) => {
 		const response = await rheaClient['POST']('/api/world/{worldId}/actors', {
 			params: {
@@ -184,7 +303,7 @@ export const RheaService = {
 				name,
 				title,
 				color,
-				descriptionRich,
+				contentRich,
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -234,112 +353,6 @@ export const RheaService = {
 		return response.data
 	},
 
-	updateActorContent: async ({
-		worldId,
-		actorId,
-		userId,
-		content,
-	}: {
-		worldId: string
-		actorId: string
-		userId: string
-		content: string
-	}) => {
-		await rheaClient['PUT']('/api/world/{worldId}/actor/{actorId}/content', {
-			params: {
-				path: { worldId, actorId },
-			},
-			body: {
-				content,
-				reloadClients: true,
-			},
-			headers: {
-				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-				[IMPERSONATED_USER_HEADER]: userId,
-			},
-		})
-	},
-
-	createActorContentPage: async ({
-		worldId,
-		actorId,
-		userId,
-		pageName,
-	}: {
-		worldId: string
-		actorId: string
-		userId: string
-		pageName: string
-	}) => {
-		const response = await rheaClient['POST']('/api/world/{worldId}/actor/{actorId}/content/pages', {
-			params: {
-				path: { worldId, actorId },
-			},
-			body: {
-				name: pageName,
-			},
-			headers: {
-				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-				[IMPERSONATED_USER_HEADER]: userId,
-			},
-		})
-		if (!response.data || response.error) {
-			throw new Error('Failed to create actor content page: ' + JSON.stringify(response.error))
-		}
-
-		return response.data
-	},
-
-	updateActorContentPage: async ({
-		worldId,
-		actorId,
-		userId,
-		content,
-		pageId,
-	}: {
-		worldId: string
-		actorId: string
-		userId: string
-		content: string
-		pageId: string
-	}) => {
-		await rheaClient['PUT']('/api/world/{worldId}/actor/{actorId}/content/pages/{pageId}', {
-			params: {
-				path: { worldId, actorId, pageId },
-			},
-			body: {
-				content,
-				reloadClients: true,
-			},
-			headers: {
-				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-				[IMPERSONATED_USER_HEADER]: userId,
-			},
-		})
-	},
-
-	deleteActorContentPage: async ({
-		worldId,
-		actorId,
-		userId,
-		pageId,
-	}: {
-		worldId: string
-		actorId: string
-		userId: string
-		pageId: string
-	}) => {
-		await rheaClient['DELETE']('/api/world/{worldId}/actor/{actorId}/content/pages/{pageId}', {
-			params: {
-				path: { worldId, actorId, pageId },
-			},
-			headers: {
-				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-				[IMPERSONATED_USER_HEADER]: userId,
-			},
-		})
-	},
-
 	deleteActor: async ({ worldId, actorId, userId }: { worldId: string; actorId: string; userId: string }) => {
 		const response = await rheaClient['DELETE']('/api/world/{worldId}/actor/{actorId}', {
 			params: {
@@ -355,45 +368,20 @@ export const RheaService = {
 	},
 
 	// Event methods
-	getEventContent: async ({
-		worldId,
-		eventId,
-		userId,
-	}: {
-		worldId: string
-		eventId: string
-		userId: string
-	}) => {
-		const response = await rheaClient['GET']('/api/world/{worldId}/event/{eventId}/content', {
-			params: {
-				path: { worldId, eventId },
-			},
-			headers: {
-				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-				[IMPERSONATED_USER_HEADER]: userId,
-			},
-		})
-		if (!response.data || response.error) {
-			throw new Error('Failed to get event content: ' + JSON.stringify(response.error))
-		}
-
-		return response.data
-	},
-
 	createEvent: async ({
 		worldId,
 		userId,
 		name,
 		timestamp,
 		color,
-		descriptionRich,
+		contentRich,
 	}: {
 		worldId: string
 		userId: string
 		name: string
 		timestamp: string
 		color?: string
-		descriptionRich: string
+		contentRich: string
 	}) => {
 		const response = await rheaClient['POST']('/api/world/{worldId}/event', {
 			params: {
@@ -403,7 +391,7 @@ export const RheaService = {
 				name,
 				timestamp,
 				color,
-				descriptionRich,
+				contentRich,
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -453,32 +441,6 @@ export const RheaService = {
 		return response.data
 	},
 
-	updateEventContent: async ({
-		worldId,
-		eventId,
-		userId,
-		content,
-	}: {
-		worldId: string
-		eventId: string
-		userId: string
-		content: string
-	}) => {
-		await rheaClient['PUT']('/api/world/{worldId}/event/{eventId}/content', {
-			params: {
-				path: { worldId, eventId },
-			},
-			body: {
-				content,
-				reloadClients: true,
-			},
-			headers: {
-				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-				[IMPERSONATED_USER_HEADER]: userId,
-			},
-		})
-	},
-
 	deleteEvent: async ({ worldId, eventId, userId }: { worldId: string; eventId: string; userId: string }) => {
 		const response = await rheaClient['DELETE']('/api/world/{worldId}/event/{eventId}', {
 			params: {
@@ -494,30 +456,6 @@ export const RheaService = {
 	},
 
 	// Article methods
-	getArticleContent: async ({
-		worldId,
-		articleId,
-		userId,
-	}: {
-		worldId: string
-		articleId: string
-		userId: string
-	}) => {
-		const response = await rheaClient['GET']('/api/world/{worldId}/article/{articleId}/content', {
-			params: {
-				path: { worldId, articleId },
-			},
-			headers: {
-				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-				[IMPERSONATED_USER_HEADER]: userId,
-			},
-		})
-		if (!response.data || response.error) {
-			throw new Error('Failed to get article content: ' + JSON.stringify(response.error))
-		}
-
-		return response.data
-	},
 
 	createArticle: async ({
 		worldId,
@@ -584,32 +522,6 @@ export const RheaService = {
 		}
 
 		return response.data
-	},
-
-	updateArticleContent: async ({
-		worldId,
-		articleId,
-		userId,
-		content,
-	}: {
-		worldId: string
-		articleId: string
-		userId: string
-		content: string
-	}) => {
-		await rheaClient['PUT']('/api/world/{worldId}/article/{articleId}/content', {
-			params: {
-				path: { worldId, articleId },
-			},
-			body: {
-				content,
-				reloadClients: true,
-			},
-			headers: {
-				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-				[IMPERSONATED_USER_HEADER]: userId,
-			},
-		})
 	},
 
 	deleteArticle: async ({

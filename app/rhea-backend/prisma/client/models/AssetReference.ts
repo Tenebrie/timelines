@@ -35,6 +35,7 @@ export type AssetReferenceMinAggregateOutputType = {
   holderEventId: string | null
   holderArticleId: string | null
   holderTagId: string | null
+  holderNodeId: string | null
   pageId: string | null
   worldId: string | null
 }
@@ -50,6 +51,7 @@ export type AssetReferenceMaxAggregateOutputType = {
   holderEventId: string | null
   holderArticleId: string | null
   holderTagId: string | null
+  holderNodeId: string | null
   pageId: string | null
   worldId: string | null
 }
@@ -65,6 +67,7 @@ export type AssetReferenceCountAggregateOutputType = {
   holderEventId: number
   holderArticleId: number
   holderTagId: number
+  holderNodeId: number
   pageId: number
   worldId: number
   _all: number
@@ -82,6 +85,7 @@ export type AssetReferenceMinAggregateInputType = {
   holderEventId?: true
   holderArticleId?: true
   holderTagId?: true
+  holderNodeId?: true
   pageId?: true
   worldId?: true
 }
@@ -97,6 +101,7 @@ export type AssetReferenceMaxAggregateInputType = {
   holderEventId?: true
   holderArticleId?: true
   holderTagId?: true
+  holderNodeId?: true
   pageId?: true
   worldId?: true
 }
@@ -112,6 +117,7 @@ export type AssetReferenceCountAggregateInputType = {
   holderEventId?: true
   holderArticleId?: true
   holderTagId?: true
+  holderNodeId?: true
   pageId?: true
   worldId?: true
   _all?: true
@@ -200,6 +206,7 @@ export type AssetReferenceGroupByOutputType = {
   holderEventId: string | null
   holderArticleId: string | null
   holderTagId: string | null
+  holderNodeId: string | null
   pageId: string | null
   worldId: string
   _count: AssetReferenceCountAggregateOutputType | null
@@ -236,6 +243,7 @@ export type AssetReferenceWhereInput = {
   holderEventId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
   holderArticleId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
   holderTagId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
+  holderNodeId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
   pageId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
   worldId?: Prisma.StringFilter<"AssetReference"> | string
   asset?: Prisma.XOR<Prisma.AssetScalarRelationFilter, Prisma.AssetWhereInput>
@@ -243,6 +251,7 @@ export type AssetReferenceWhereInput = {
   holderEvent?: Prisma.XOR<Prisma.WorldEventNullableScalarRelationFilter, Prisma.WorldEventWhereInput> | null
   holderArticle?: Prisma.XOR<Prisma.WikiArticleNullableScalarRelationFilter, Prisma.WikiArticleWhereInput> | null
   holderTag?: Prisma.XOR<Prisma.TagNullableScalarRelationFilter, Prisma.TagWhereInput> | null
+  holderNode?: Prisma.XOR<Prisma.MindmapNodeNullableScalarRelationFilter, Prisma.MindmapNodeWhereInput> | null
   page?: Prisma.XOR<Prisma.ContentPageNullableScalarRelationFilter, Prisma.ContentPageWhereInput> | null
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
 }
@@ -258,6 +267,7 @@ export type AssetReferenceOrderByWithRelationInput = {
   holderEventId?: Prisma.SortOrderInput | Prisma.SortOrder
   holderArticleId?: Prisma.SortOrderInput | Prisma.SortOrder
   holderTagId?: Prisma.SortOrderInput | Prisma.SortOrder
+  holderNodeId?: Prisma.SortOrderInput | Prisma.SortOrder
   pageId?: Prisma.SortOrderInput | Prisma.SortOrder
   worldId?: Prisma.SortOrder
   asset?: Prisma.AssetOrderByWithRelationInput
@@ -265,6 +275,7 @@ export type AssetReferenceOrderByWithRelationInput = {
   holderEvent?: Prisma.WorldEventOrderByWithRelationInput
   holderArticle?: Prisma.WikiArticleOrderByWithRelationInput
   holderTag?: Prisma.TagOrderByWithRelationInput
+  holderNode?: Prisma.MindmapNodeOrderByWithRelationInput
   page?: Prisma.ContentPageOrderByWithRelationInput
   world?: Prisma.WorldOrderByWithRelationInput
 }
@@ -284,6 +295,7 @@ export type AssetReferenceWhereUniqueInput = Prisma.AtLeast<{
   holderEventId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
   holderArticleId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
   holderTagId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
+  holderNodeId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
   pageId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
   worldId?: Prisma.StringFilter<"AssetReference"> | string
   asset?: Prisma.XOR<Prisma.AssetScalarRelationFilter, Prisma.AssetWhereInput>
@@ -291,6 +303,7 @@ export type AssetReferenceWhereUniqueInput = Prisma.AtLeast<{
   holderEvent?: Prisma.XOR<Prisma.WorldEventNullableScalarRelationFilter, Prisma.WorldEventWhereInput> | null
   holderArticle?: Prisma.XOR<Prisma.WikiArticleNullableScalarRelationFilter, Prisma.WikiArticleWhereInput> | null
   holderTag?: Prisma.XOR<Prisma.TagNullableScalarRelationFilter, Prisma.TagWhereInput> | null
+  holderNode?: Prisma.XOR<Prisma.MindmapNodeNullableScalarRelationFilter, Prisma.MindmapNodeWhereInput> | null
   page?: Prisma.XOR<Prisma.ContentPageNullableScalarRelationFilter, Prisma.ContentPageWhereInput> | null
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
 }, "id" | "id" | "assetId_holderId_pageId">
@@ -306,6 +319,7 @@ export type AssetReferenceOrderByWithAggregationInput = {
   holderEventId?: Prisma.SortOrderInput | Prisma.SortOrder
   holderArticleId?: Prisma.SortOrderInput | Prisma.SortOrder
   holderTagId?: Prisma.SortOrderInput | Prisma.SortOrder
+  holderNodeId?: Prisma.SortOrderInput | Prisma.SortOrder
   pageId?: Prisma.SortOrderInput | Prisma.SortOrder
   worldId?: Prisma.SortOrder
   _count?: Prisma.AssetReferenceCountOrderByAggregateInput
@@ -327,6 +341,7 @@ export type AssetReferenceScalarWhereWithAggregatesInput = {
   holderEventId?: Prisma.StringNullableWithAggregatesFilter<"AssetReference"> | string | null
   holderArticleId?: Prisma.StringNullableWithAggregatesFilter<"AssetReference"> | string | null
   holderTagId?: Prisma.StringNullableWithAggregatesFilter<"AssetReference"> | string | null
+  holderNodeId?: Prisma.StringNullableWithAggregatesFilter<"AssetReference"> | string | null
   pageId?: Prisma.StringNullableWithAggregatesFilter<"AssetReference"> | string | null
   worldId?: Prisma.StringWithAggregatesFilter<"AssetReference"> | string
 }
@@ -342,6 +357,7 @@ export type AssetReferenceCreateInput = {
   holderEvent?: Prisma.WorldEventCreateNestedOneWithoutAssetRefsInput
   holderArticle?: Prisma.WikiArticleCreateNestedOneWithoutAssetRefsInput
   holderTag?: Prisma.TagCreateNestedOneWithoutAssetRefsInput
+  holderNode?: Prisma.MindmapNodeCreateNestedOneWithoutAssetRefsInput
   page?: Prisma.ContentPageCreateNestedOneWithoutAssetRefsInput
   world: Prisma.WorldCreateNestedOneWithoutAssetReferencesInput
 }
@@ -357,6 +373,7 @@ export type AssetReferenceUncheckedCreateInput = {
   holderEventId?: string | null
   holderArticleId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
   worldId: string
 }
@@ -372,6 +389,7 @@ export type AssetReferenceUpdateInput = {
   holderEvent?: Prisma.WorldEventUpdateOneWithoutAssetRefsNestedInput
   holderArticle?: Prisma.WikiArticleUpdateOneWithoutAssetRefsNestedInput
   holderTag?: Prisma.TagUpdateOneWithoutAssetRefsNestedInput
+  holderNode?: Prisma.MindmapNodeUpdateOneWithoutAssetRefsNestedInput
   page?: Prisma.ContentPageUpdateOneWithoutAssetRefsNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutAssetReferencesNestedInput
 }
@@ -387,6 +405,7 @@ export type AssetReferenceUncheckedUpdateInput = {
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -402,6 +421,7 @@ export type AssetReferenceCreateManyInput = {
   holderEventId?: string | null
   holderArticleId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
   worldId: string
 }
@@ -425,6 +445,7 @@ export type AssetReferenceUncheckedUpdateManyInput = {
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -456,6 +477,7 @@ export type AssetReferenceCountOrderByAggregateInput = {
   holderEventId?: Prisma.SortOrder
   holderArticleId?: Prisma.SortOrder
   holderTagId?: Prisma.SortOrder
+  holderNodeId?: Prisma.SortOrder
   pageId?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
 }
@@ -471,6 +493,7 @@ export type AssetReferenceMaxOrderByAggregateInput = {
   holderEventId?: Prisma.SortOrder
   holderArticleId?: Prisma.SortOrder
   holderTagId?: Prisma.SortOrder
+  holderNodeId?: Prisma.SortOrder
   pageId?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
 }
@@ -486,6 +509,7 @@ export type AssetReferenceMinOrderByAggregateInput = {
   holderEventId?: Prisma.SortOrder
   holderArticleId?: Prisma.SortOrder
   holderTagId?: Prisma.SortOrder
+  holderNodeId?: Prisma.SortOrder
   pageId?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
 }
@@ -617,6 +641,48 @@ export type AssetReferenceUncheckedUpdateManyWithoutPageNestedInput = {
   connect?: Prisma.AssetReferenceWhereUniqueInput | Prisma.AssetReferenceWhereUniqueInput[]
   update?: Prisma.AssetReferenceUpdateWithWhereUniqueWithoutPageInput | Prisma.AssetReferenceUpdateWithWhereUniqueWithoutPageInput[]
   updateMany?: Prisma.AssetReferenceUpdateManyWithWhereWithoutPageInput | Prisma.AssetReferenceUpdateManyWithWhereWithoutPageInput[]
+  deleteMany?: Prisma.AssetReferenceScalarWhereInput | Prisma.AssetReferenceScalarWhereInput[]
+}
+
+export type AssetReferenceCreateNestedManyWithoutHolderNodeInput = {
+  create?: Prisma.XOR<Prisma.AssetReferenceCreateWithoutHolderNodeInput, Prisma.AssetReferenceUncheckedCreateWithoutHolderNodeInput> | Prisma.AssetReferenceCreateWithoutHolderNodeInput[] | Prisma.AssetReferenceUncheckedCreateWithoutHolderNodeInput[]
+  connectOrCreate?: Prisma.AssetReferenceCreateOrConnectWithoutHolderNodeInput | Prisma.AssetReferenceCreateOrConnectWithoutHolderNodeInput[]
+  createMany?: Prisma.AssetReferenceCreateManyHolderNodeInputEnvelope
+  connect?: Prisma.AssetReferenceWhereUniqueInput | Prisma.AssetReferenceWhereUniqueInput[]
+}
+
+export type AssetReferenceUncheckedCreateNestedManyWithoutHolderNodeInput = {
+  create?: Prisma.XOR<Prisma.AssetReferenceCreateWithoutHolderNodeInput, Prisma.AssetReferenceUncheckedCreateWithoutHolderNodeInput> | Prisma.AssetReferenceCreateWithoutHolderNodeInput[] | Prisma.AssetReferenceUncheckedCreateWithoutHolderNodeInput[]
+  connectOrCreate?: Prisma.AssetReferenceCreateOrConnectWithoutHolderNodeInput | Prisma.AssetReferenceCreateOrConnectWithoutHolderNodeInput[]
+  createMany?: Prisma.AssetReferenceCreateManyHolderNodeInputEnvelope
+  connect?: Prisma.AssetReferenceWhereUniqueInput | Prisma.AssetReferenceWhereUniqueInput[]
+}
+
+export type AssetReferenceUpdateManyWithoutHolderNodeNestedInput = {
+  create?: Prisma.XOR<Prisma.AssetReferenceCreateWithoutHolderNodeInput, Prisma.AssetReferenceUncheckedCreateWithoutHolderNodeInput> | Prisma.AssetReferenceCreateWithoutHolderNodeInput[] | Prisma.AssetReferenceUncheckedCreateWithoutHolderNodeInput[]
+  connectOrCreate?: Prisma.AssetReferenceCreateOrConnectWithoutHolderNodeInput | Prisma.AssetReferenceCreateOrConnectWithoutHolderNodeInput[]
+  upsert?: Prisma.AssetReferenceUpsertWithWhereUniqueWithoutHolderNodeInput | Prisma.AssetReferenceUpsertWithWhereUniqueWithoutHolderNodeInput[]
+  createMany?: Prisma.AssetReferenceCreateManyHolderNodeInputEnvelope
+  set?: Prisma.AssetReferenceWhereUniqueInput | Prisma.AssetReferenceWhereUniqueInput[]
+  disconnect?: Prisma.AssetReferenceWhereUniqueInput | Prisma.AssetReferenceWhereUniqueInput[]
+  delete?: Prisma.AssetReferenceWhereUniqueInput | Prisma.AssetReferenceWhereUniqueInput[]
+  connect?: Prisma.AssetReferenceWhereUniqueInput | Prisma.AssetReferenceWhereUniqueInput[]
+  update?: Prisma.AssetReferenceUpdateWithWhereUniqueWithoutHolderNodeInput | Prisma.AssetReferenceUpdateWithWhereUniqueWithoutHolderNodeInput[]
+  updateMany?: Prisma.AssetReferenceUpdateManyWithWhereWithoutHolderNodeInput | Prisma.AssetReferenceUpdateManyWithWhereWithoutHolderNodeInput[]
+  deleteMany?: Prisma.AssetReferenceScalarWhereInput | Prisma.AssetReferenceScalarWhereInput[]
+}
+
+export type AssetReferenceUncheckedUpdateManyWithoutHolderNodeNestedInput = {
+  create?: Prisma.XOR<Prisma.AssetReferenceCreateWithoutHolderNodeInput, Prisma.AssetReferenceUncheckedCreateWithoutHolderNodeInput> | Prisma.AssetReferenceCreateWithoutHolderNodeInput[] | Prisma.AssetReferenceUncheckedCreateWithoutHolderNodeInput[]
+  connectOrCreate?: Prisma.AssetReferenceCreateOrConnectWithoutHolderNodeInput | Prisma.AssetReferenceCreateOrConnectWithoutHolderNodeInput[]
+  upsert?: Prisma.AssetReferenceUpsertWithWhereUniqueWithoutHolderNodeInput | Prisma.AssetReferenceUpsertWithWhereUniqueWithoutHolderNodeInput[]
+  createMany?: Prisma.AssetReferenceCreateManyHolderNodeInputEnvelope
+  set?: Prisma.AssetReferenceWhereUniqueInput | Prisma.AssetReferenceWhereUniqueInput[]
+  disconnect?: Prisma.AssetReferenceWhereUniqueInput | Prisma.AssetReferenceWhereUniqueInput[]
+  delete?: Prisma.AssetReferenceWhereUniqueInput | Prisma.AssetReferenceWhereUniqueInput[]
+  connect?: Prisma.AssetReferenceWhereUniqueInput | Prisma.AssetReferenceWhereUniqueInput[]
+  update?: Prisma.AssetReferenceUpdateWithWhereUniqueWithoutHolderNodeInput | Prisma.AssetReferenceUpdateWithWhereUniqueWithoutHolderNodeInput[]
+  updateMany?: Prisma.AssetReferenceUpdateManyWithWhereWithoutHolderNodeInput | Prisma.AssetReferenceUpdateManyWithWhereWithoutHolderNodeInput[]
   deleteMany?: Prisma.AssetReferenceScalarWhereInput | Prisma.AssetReferenceScalarWhereInput[]
 }
 
@@ -798,6 +864,7 @@ export type AssetReferenceCreateWithoutHolderActorInput = {
   holderEvent?: Prisma.WorldEventCreateNestedOneWithoutAssetRefsInput
   holderArticle?: Prisma.WikiArticleCreateNestedOneWithoutAssetRefsInput
   holderTag?: Prisma.TagCreateNestedOneWithoutAssetRefsInput
+  holderNode?: Prisma.MindmapNodeCreateNestedOneWithoutAssetRefsInput
   page?: Prisma.ContentPageCreateNestedOneWithoutAssetRefsInput
   world: Prisma.WorldCreateNestedOneWithoutAssetReferencesInput
 }
@@ -812,6 +879,7 @@ export type AssetReferenceUncheckedCreateWithoutHolderActorInput = {
   holderEventId?: string | null
   holderArticleId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
   worldId: string
 }
@@ -856,6 +924,7 @@ export type AssetReferenceScalarWhereInput = {
   holderEventId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
   holderArticleId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
   holderTagId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
+  holderNodeId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
   pageId?: Prisma.StringNullableFilter<"AssetReference"> | string | null
   worldId?: Prisma.StringFilter<"AssetReference"> | string
 }
@@ -870,6 +939,7 @@ export type AssetReferenceCreateWithoutAssetInput = {
   holderEvent?: Prisma.WorldEventCreateNestedOneWithoutAssetRefsInput
   holderArticle?: Prisma.WikiArticleCreateNestedOneWithoutAssetRefsInput
   holderTag?: Prisma.TagCreateNestedOneWithoutAssetRefsInput
+  holderNode?: Prisma.MindmapNodeCreateNestedOneWithoutAssetRefsInput
   page?: Prisma.ContentPageCreateNestedOneWithoutAssetRefsInput
   world: Prisma.WorldCreateNestedOneWithoutAssetReferencesInput
 }
@@ -884,6 +954,7 @@ export type AssetReferenceUncheckedCreateWithoutAssetInput = {
   holderEventId?: string | null
   holderArticleId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
   worldId: string
 }
@@ -925,6 +996,7 @@ export type AssetReferenceCreateWithoutPageInput = {
   holderEvent?: Prisma.WorldEventCreateNestedOneWithoutAssetRefsInput
   holderArticle?: Prisma.WikiArticleCreateNestedOneWithoutAssetRefsInput
   holderTag?: Prisma.TagCreateNestedOneWithoutAssetRefsInput
+  holderNode?: Prisma.MindmapNodeCreateNestedOneWithoutAssetRefsInput
   world: Prisma.WorldCreateNestedOneWithoutAssetReferencesInput
 }
 
@@ -939,6 +1011,7 @@ export type AssetReferenceUncheckedCreateWithoutPageInput = {
   holderEventId?: string | null
   holderArticleId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   worldId: string
 }
 
@@ -968,6 +1041,62 @@ export type AssetReferenceUpdateManyWithWhereWithoutPageInput = {
   data: Prisma.XOR<Prisma.AssetReferenceUpdateManyMutationInput, Prisma.AssetReferenceUncheckedUpdateManyWithoutPageInput>
 }
 
+export type AssetReferenceCreateWithoutHolderNodeInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  holderId: string
+  holderType: $Enums.ReferenceHoldingEntity
+  asset: Prisma.AssetCreateNestedOneWithoutReferencesInput
+  holderActor?: Prisma.ActorCreateNestedOneWithoutAssetRefsInput
+  holderEvent?: Prisma.WorldEventCreateNestedOneWithoutAssetRefsInput
+  holderArticle?: Prisma.WikiArticleCreateNestedOneWithoutAssetRefsInput
+  holderTag?: Prisma.TagCreateNestedOneWithoutAssetRefsInput
+  page?: Prisma.ContentPageCreateNestedOneWithoutAssetRefsInput
+  world: Prisma.WorldCreateNestedOneWithoutAssetReferencesInput
+}
+
+export type AssetReferenceUncheckedCreateWithoutHolderNodeInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assetId: string
+  holderId: string
+  holderType: $Enums.ReferenceHoldingEntity
+  holderActorId?: string | null
+  holderEventId?: string | null
+  holderArticleId?: string | null
+  holderTagId?: string | null
+  pageId?: string | null
+  worldId: string
+}
+
+export type AssetReferenceCreateOrConnectWithoutHolderNodeInput = {
+  where: Prisma.AssetReferenceWhereUniqueInput
+  create: Prisma.XOR<Prisma.AssetReferenceCreateWithoutHolderNodeInput, Prisma.AssetReferenceUncheckedCreateWithoutHolderNodeInput>
+}
+
+export type AssetReferenceCreateManyHolderNodeInputEnvelope = {
+  data: Prisma.AssetReferenceCreateManyHolderNodeInput | Prisma.AssetReferenceCreateManyHolderNodeInput[]
+  skipDuplicates?: boolean
+}
+
+export type AssetReferenceUpsertWithWhereUniqueWithoutHolderNodeInput = {
+  where: Prisma.AssetReferenceWhereUniqueInput
+  update: Prisma.XOR<Prisma.AssetReferenceUpdateWithoutHolderNodeInput, Prisma.AssetReferenceUncheckedUpdateWithoutHolderNodeInput>
+  create: Prisma.XOR<Prisma.AssetReferenceCreateWithoutHolderNodeInput, Prisma.AssetReferenceUncheckedCreateWithoutHolderNodeInput>
+}
+
+export type AssetReferenceUpdateWithWhereUniqueWithoutHolderNodeInput = {
+  where: Prisma.AssetReferenceWhereUniqueInput
+  data: Prisma.XOR<Prisma.AssetReferenceUpdateWithoutHolderNodeInput, Prisma.AssetReferenceUncheckedUpdateWithoutHolderNodeInput>
+}
+
+export type AssetReferenceUpdateManyWithWhereWithoutHolderNodeInput = {
+  where: Prisma.AssetReferenceScalarWhereInput
+  data: Prisma.XOR<Prisma.AssetReferenceUpdateManyMutationInput, Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderNodeInput>
+}
+
 export type AssetReferenceCreateWithoutHolderTagInput = {
   id?: string
   createdAt?: Date | string
@@ -978,6 +1107,7 @@ export type AssetReferenceCreateWithoutHolderTagInput = {
   holderActor?: Prisma.ActorCreateNestedOneWithoutAssetRefsInput
   holderEvent?: Prisma.WorldEventCreateNestedOneWithoutAssetRefsInput
   holderArticle?: Prisma.WikiArticleCreateNestedOneWithoutAssetRefsInput
+  holderNode?: Prisma.MindmapNodeCreateNestedOneWithoutAssetRefsInput
   page?: Prisma.ContentPageCreateNestedOneWithoutAssetRefsInput
   world: Prisma.WorldCreateNestedOneWithoutAssetReferencesInput
 }
@@ -992,6 +1122,7 @@ export type AssetReferenceUncheckedCreateWithoutHolderTagInput = {
   holderActorId?: string | null
   holderEventId?: string | null
   holderArticleId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
   worldId: string
 }
@@ -1032,6 +1163,7 @@ export type AssetReferenceCreateWithoutHolderArticleInput = {
   holderActor?: Prisma.ActorCreateNestedOneWithoutAssetRefsInput
   holderEvent?: Prisma.WorldEventCreateNestedOneWithoutAssetRefsInput
   holderTag?: Prisma.TagCreateNestedOneWithoutAssetRefsInput
+  holderNode?: Prisma.MindmapNodeCreateNestedOneWithoutAssetRefsInput
   page?: Prisma.ContentPageCreateNestedOneWithoutAssetRefsInput
   world: Prisma.WorldCreateNestedOneWithoutAssetReferencesInput
 }
@@ -1046,6 +1178,7 @@ export type AssetReferenceUncheckedCreateWithoutHolderArticleInput = {
   holderActorId?: string | null
   holderEventId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
   worldId: string
 }
@@ -1087,6 +1220,7 @@ export type AssetReferenceCreateWithoutWorldInput = {
   holderEvent?: Prisma.WorldEventCreateNestedOneWithoutAssetRefsInput
   holderArticle?: Prisma.WikiArticleCreateNestedOneWithoutAssetRefsInput
   holderTag?: Prisma.TagCreateNestedOneWithoutAssetRefsInput
+  holderNode?: Prisma.MindmapNodeCreateNestedOneWithoutAssetRefsInput
   page?: Prisma.ContentPageCreateNestedOneWithoutAssetRefsInput
 }
 
@@ -1101,6 +1235,7 @@ export type AssetReferenceUncheckedCreateWithoutWorldInput = {
   holderEventId?: string | null
   holderArticleId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
 }
 
@@ -1140,6 +1275,7 @@ export type AssetReferenceCreateWithoutHolderEventInput = {
   holderActor?: Prisma.ActorCreateNestedOneWithoutAssetRefsInput
   holderArticle?: Prisma.WikiArticleCreateNestedOneWithoutAssetRefsInput
   holderTag?: Prisma.TagCreateNestedOneWithoutAssetRefsInput
+  holderNode?: Prisma.MindmapNodeCreateNestedOneWithoutAssetRefsInput
   page?: Prisma.ContentPageCreateNestedOneWithoutAssetRefsInput
   world: Prisma.WorldCreateNestedOneWithoutAssetReferencesInput
 }
@@ -1154,6 +1290,7 @@ export type AssetReferenceUncheckedCreateWithoutHolderEventInput = {
   holderActorId?: string | null
   holderArticleId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
   worldId: string
 }
@@ -1194,6 +1331,7 @@ export type AssetReferenceCreateManyHolderActorInput = {
   holderEventId?: string | null
   holderArticleId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
   worldId: string
 }
@@ -1208,6 +1346,7 @@ export type AssetReferenceUpdateWithoutHolderActorInput = {
   holderEvent?: Prisma.WorldEventUpdateOneWithoutAssetRefsNestedInput
   holderArticle?: Prisma.WikiArticleUpdateOneWithoutAssetRefsNestedInput
   holderTag?: Prisma.TagUpdateOneWithoutAssetRefsNestedInput
+  holderNode?: Prisma.MindmapNodeUpdateOneWithoutAssetRefsNestedInput
   page?: Prisma.ContentPageUpdateOneWithoutAssetRefsNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutAssetReferencesNestedInput
 }
@@ -1222,6 +1361,7 @@ export type AssetReferenceUncheckedUpdateWithoutHolderActorInput = {
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1236,6 +1376,7 @@ export type AssetReferenceUncheckedUpdateManyWithoutHolderActorInput = {
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1250,6 +1391,7 @@ export type AssetReferenceCreateManyAssetInput = {
   holderEventId?: string | null
   holderArticleId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
   worldId: string
 }
@@ -1264,6 +1406,7 @@ export type AssetReferenceUpdateWithoutAssetInput = {
   holderEvent?: Prisma.WorldEventUpdateOneWithoutAssetRefsNestedInput
   holderArticle?: Prisma.WikiArticleUpdateOneWithoutAssetRefsNestedInput
   holderTag?: Prisma.TagUpdateOneWithoutAssetRefsNestedInput
+  holderNode?: Prisma.MindmapNodeUpdateOneWithoutAssetRefsNestedInput
   page?: Prisma.ContentPageUpdateOneWithoutAssetRefsNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutAssetReferencesNestedInput
 }
@@ -1278,6 +1421,7 @@ export type AssetReferenceUncheckedUpdateWithoutAssetInput = {
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1292,6 +1436,7 @@ export type AssetReferenceUncheckedUpdateManyWithoutAssetInput = {
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1307,6 +1452,7 @@ export type AssetReferenceCreateManyPageInput = {
   holderEventId?: string | null
   holderArticleId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   worldId: string
 }
 
@@ -1321,6 +1467,7 @@ export type AssetReferenceUpdateWithoutPageInput = {
   holderEvent?: Prisma.WorldEventUpdateOneWithoutAssetRefsNestedInput
   holderArticle?: Prisma.WikiArticleUpdateOneWithoutAssetRefsNestedInput
   holderTag?: Prisma.TagUpdateOneWithoutAssetRefsNestedInput
+  holderNode?: Prisma.MindmapNodeUpdateOneWithoutAssetRefsNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutAssetReferencesNestedInput
 }
 
@@ -1335,6 +1482,7 @@ export type AssetReferenceUncheckedUpdateWithoutPageInput = {
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -1349,6 +1497,67 @@ export type AssetReferenceUncheckedUpdateManyWithoutPageInput = {
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type AssetReferenceCreateManyHolderNodeInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assetId: string
+  holderId: string
+  holderType: $Enums.ReferenceHoldingEntity
+  holderActorId?: string | null
+  holderEventId?: string | null
+  holderArticleId?: string | null
+  holderTagId?: string | null
+  pageId?: string | null
+  worldId: string
+}
+
+export type AssetReferenceUpdateWithoutHolderNodeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  holderId?: Prisma.StringFieldUpdateOperationsInput | string
+  holderType?: Prisma.EnumReferenceHoldingEntityFieldUpdateOperationsInput | $Enums.ReferenceHoldingEntity
+  asset?: Prisma.AssetUpdateOneRequiredWithoutReferencesNestedInput
+  holderActor?: Prisma.ActorUpdateOneWithoutAssetRefsNestedInput
+  holderEvent?: Prisma.WorldEventUpdateOneWithoutAssetRefsNestedInput
+  holderArticle?: Prisma.WikiArticleUpdateOneWithoutAssetRefsNestedInput
+  holderTag?: Prisma.TagUpdateOneWithoutAssetRefsNestedInput
+  page?: Prisma.ContentPageUpdateOneWithoutAssetRefsNestedInput
+  world?: Prisma.WorldUpdateOneRequiredWithoutAssetReferencesNestedInput
+}
+
+export type AssetReferenceUncheckedUpdateWithoutHolderNodeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  holderId?: Prisma.StringFieldUpdateOperationsInput | string
+  holderType?: Prisma.EnumReferenceHoldingEntityFieldUpdateOperationsInput | $Enums.ReferenceHoldingEntity
+  holderActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type AssetReferenceUncheckedUpdateManyWithoutHolderNodeInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assetId?: Prisma.StringFieldUpdateOperationsInput | string
+  holderId?: Prisma.StringFieldUpdateOperationsInput | string
+  holderType?: Prisma.EnumReferenceHoldingEntityFieldUpdateOperationsInput | $Enums.ReferenceHoldingEntity
+  holderActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -1362,6 +1571,7 @@ export type AssetReferenceCreateManyHolderTagInput = {
   holderActorId?: string | null
   holderEventId?: string | null
   holderArticleId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
   worldId: string
 }
@@ -1376,6 +1586,7 @@ export type AssetReferenceUpdateWithoutHolderTagInput = {
   holderActor?: Prisma.ActorUpdateOneWithoutAssetRefsNestedInput
   holderEvent?: Prisma.WorldEventUpdateOneWithoutAssetRefsNestedInput
   holderArticle?: Prisma.WikiArticleUpdateOneWithoutAssetRefsNestedInput
+  holderNode?: Prisma.MindmapNodeUpdateOneWithoutAssetRefsNestedInput
   page?: Prisma.ContentPageUpdateOneWithoutAssetRefsNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutAssetReferencesNestedInput
 }
@@ -1390,6 +1601,7 @@ export type AssetReferenceUncheckedUpdateWithoutHolderTagInput = {
   holderActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1404,6 +1616,7 @@ export type AssetReferenceUncheckedUpdateManyWithoutHolderTagInput = {
   holderActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1418,6 +1631,7 @@ export type AssetReferenceCreateManyHolderArticleInput = {
   holderActorId?: string | null
   holderEventId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
   worldId: string
 }
@@ -1432,6 +1646,7 @@ export type AssetReferenceUpdateWithoutHolderArticleInput = {
   holderActor?: Prisma.ActorUpdateOneWithoutAssetRefsNestedInput
   holderEvent?: Prisma.WorldEventUpdateOneWithoutAssetRefsNestedInput
   holderTag?: Prisma.TagUpdateOneWithoutAssetRefsNestedInput
+  holderNode?: Prisma.MindmapNodeUpdateOneWithoutAssetRefsNestedInput
   page?: Prisma.ContentPageUpdateOneWithoutAssetRefsNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutAssetReferencesNestedInput
 }
@@ -1446,6 +1661,7 @@ export type AssetReferenceUncheckedUpdateWithoutHolderArticleInput = {
   holderActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1460,6 +1676,7 @@ export type AssetReferenceUncheckedUpdateManyWithoutHolderArticleInput = {
   holderActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1475,6 +1692,7 @@ export type AssetReferenceCreateManyWorldInput = {
   holderEventId?: string | null
   holderArticleId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
 }
 
@@ -1489,6 +1707,7 @@ export type AssetReferenceUpdateWithoutWorldInput = {
   holderEvent?: Prisma.WorldEventUpdateOneWithoutAssetRefsNestedInput
   holderArticle?: Prisma.WikiArticleUpdateOneWithoutAssetRefsNestedInput
   holderTag?: Prisma.TagUpdateOneWithoutAssetRefsNestedInput
+  holderNode?: Prisma.MindmapNodeUpdateOneWithoutAssetRefsNestedInput
   page?: Prisma.ContentPageUpdateOneWithoutAssetRefsNestedInput
 }
 
@@ -1503,6 +1722,7 @@ export type AssetReferenceUncheckedUpdateWithoutWorldInput = {
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -1517,6 +1737,7 @@ export type AssetReferenceUncheckedUpdateManyWithoutWorldInput = {
   holderEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -1530,6 +1751,7 @@ export type AssetReferenceCreateManyHolderEventInput = {
   holderActorId?: string | null
   holderArticleId?: string | null
   holderTagId?: string | null
+  holderNodeId?: string | null
   pageId?: string | null
   worldId: string
 }
@@ -1544,6 +1766,7 @@ export type AssetReferenceUpdateWithoutHolderEventInput = {
   holderActor?: Prisma.ActorUpdateOneWithoutAssetRefsNestedInput
   holderArticle?: Prisma.WikiArticleUpdateOneWithoutAssetRefsNestedInput
   holderTag?: Prisma.TagUpdateOneWithoutAssetRefsNestedInput
+  holderNode?: Prisma.MindmapNodeUpdateOneWithoutAssetRefsNestedInput
   page?: Prisma.ContentPageUpdateOneWithoutAssetRefsNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutAssetReferencesNestedInput
 }
@@ -1558,6 +1781,7 @@ export type AssetReferenceUncheckedUpdateWithoutHolderEventInput = {
   holderActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1572,6 +1796,7 @@ export type AssetReferenceUncheckedUpdateManyWithoutHolderEventInput = {
   holderActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   holderTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  holderNodeId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1589,6 +1814,7 @@ export type AssetReferenceSelect<ExtArgs extends runtime.Types.Extensions.Intern
   holderEventId?: boolean
   holderArticleId?: boolean
   holderTagId?: boolean
+  holderNodeId?: boolean
   pageId?: boolean
   worldId?: boolean
   asset?: boolean | Prisma.AssetDefaultArgs<ExtArgs>
@@ -1596,6 +1822,7 @@ export type AssetReferenceSelect<ExtArgs extends runtime.Types.Extensions.Intern
   holderEvent?: boolean | Prisma.AssetReference$holderEventArgs<ExtArgs>
   holderArticle?: boolean | Prisma.AssetReference$holderArticleArgs<ExtArgs>
   holderTag?: boolean | Prisma.AssetReference$holderTagArgs<ExtArgs>
+  holderNode?: boolean | Prisma.AssetReference$holderNodeArgs<ExtArgs>
   page?: boolean | Prisma.AssetReference$pageArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["assetReference"]>
@@ -1611,6 +1838,7 @@ export type AssetReferenceSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   holderEventId?: boolean
   holderArticleId?: boolean
   holderTagId?: boolean
+  holderNodeId?: boolean
   pageId?: boolean
   worldId?: boolean
   asset?: boolean | Prisma.AssetDefaultArgs<ExtArgs>
@@ -1618,6 +1846,7 @@ export type AssetReferenceSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   holderEvent?: boolean | Prisma.AssetReference$holderEventArgs<ExtArgs>
   holderArticle?: boolean | Prisma.AssetReference$holderArticleArgs<ExtArgs>
   holderTag?: boolean | Prisma.AssetReference$holderTagArgs<ExtArgs>
+  holderNode?: boolean | Prisma.AssetReference$holderNodeArgs<ExtArgs>
   page?: boolean | Prisma.AssetReference$pageArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["assetReference"]>
@@ -1633,6 +1862,7 @@ export type AssetReferenceSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   holderEventId?: boolean
   holderArticleId?: boolean
   holderTagId?: boolean
+  holderNodeId?: boolean
   pageId?: boolean
   worldId?: boolean
   asset?: boolean | Prisma.AssetDefaultArgs<ExtArgs>
@@ -1640,6 +1870,7 @@ export type AssetReferenceSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   holderEvent?: boolean | Prisma.AssetReference$holderEventArgs<ExtArgs>
   holderArticle?: boolean | Prisma.AssetReference$holderArticleArgs<ExtArgs>
   holderTag?: boolean | Prisma.AssetReference$holderTagArgs<ExtArgs>
+  holderNode?: boolean | Prisma.AssetReference$holderNodeArgs<ExtArgs>
   page?: boolean | Prisma.AssetReference$pageArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["assetReference"]>
@@ -1655,17 +1886,19 @@ export type AssetReferenceSelectScalar = {
   holderEventId?: boolean
   holderArticleId?: boolean
   holderTagId?: boolean
+  holderNodeId?: boolean
   pageId?: boolean
   worldId?: boolean
 }
 
-export type AssetReferenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "assetId" | "holderId" | "holderType" | "holderActorId" | "holderEventId" | "holderArticleId" | "holderTagId" | "pageId" | "worldId", ExtArgs["result"]["assetReference"]>
+export type AssetReferenceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "assetId" | "holderId" | "holderType" | "holderActorId" | "holderEventId" | "holderArticleId" | "holderTagId" | "holderNodeId" | "pageId" | "worldId", ExtArgs["result"]["assetReference"]>
 export type AssetReferenceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   asset?: boolean | Prisma.AssetDefaultArgs<ExtArgs>
   holderActor?: boolean | Prisma.AssetReference$holderActorArgs<ExtArgs>
   holderEvent?: boolean | Prisma.AssetReference$holderEventArgs<ExtArgs>
   holderArticle?: boolean | Prisma.AssetReference$holderArticleArgs<ExtArgs>
   holderTag?: boolean | Prisma.AssetReference$holderTagArgs<ExtArgs>
+  holderNode?: boolean | Prisma.AssetReference$holderNodeArgs<ExtArgs>
   page?: boolean | Prisma.AssetReference$pageArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
 }
@@ -1675,6 +1908,7 @@ export type AssetReferenceIncludeCreateManyAndReturn<ExtArgs extends runtime.Typ
   holderEvent?: boolean | Prisma.AssetReference$holderEventArgs<ExtArgs>
   holderArticle?: boolean | Prisma.AssetReference$holderArticleArgs<ExtArgs>
   holderTag?: boolean | Prisma.AssetReference$holderTagArgs<ExtArgs>
+  holderNode?: boolean | Prisma.AssetReference$holderNodeArgs<ExtArgs>
   page?: boolean | Prisma.AssetReference$pageArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
 }
@@ -1684,6 +1918,7 @@ export type AssetReferenceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Typ
   holderEvent?: boolean | Prisma.AssetReference$holderEventArgs<ExtArgs>
   holderArticle?: boolean | Prisma.AssetReference$holderArticleArgs<ExtArgs>
   holderTag?: boolean | Prisma.AssetReference$holderTagArgs<ExtArgs>
+  holderNode?: boolean | Prisma.AssetReference$holderNodeArgs<ExtArgs>
   page?: boolean | Prisma.AssetReference$pageArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
 }
@@ -1696,6 +1931,7 @@ export type $AssetReferencePayload<ExtArgs extends runtime.Types.Extensions.Inte
     holderEvent: Prisma.$WorldEventPayload<ExtArgs> | null
     holderArticle: Prisma.$WikiArticlePayload<ExtArgs> | null
     holderTag: Prisma.$TagPayload<ExtArgs> | null
+    holderNode: Prisma.$MindmapNodePayload<ExtArgs> | null
     page: Prisma.$ContentPagePayload<ExtArgs> | null
     world: Prisma.$WorldPayload<ExtArgs>
   }
@@ -1710,6 +1946,7 @@ export type $AssetReferencePayload<ExtArgs extends runtime.Types.Extensions.Inte
     holderEventId: string | null
     holderArticleId: string | null
     holderTagId: string | null
+    holderNodeId: string | null
     pageId: string | null
     worldId: string
   }, ExtArgs["result"]["assetReference"]>
@@ -2111,6 +2348,7 @@ export interface Prisma__AssetReferenceClient<T, Null = never, ExtArgs extends r
   holderEvent<T extends Prisma.AssetReference$holderEventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssetReference$holderEventArgs<ExtArgs>>): Prisma.Prisma__WorldEventClient<runtime.Types.Result.GetResult<Prisma.$WorldEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   holderArticle<T extends Prisma.AssetReference$holderArticleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssetReference$holderArticleArgs<ExtArgs>>): Prisma.Prisma__WikiArticleClient<runtime.Types.Result.GetResult<Prisma.$WikiArticlePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   holderTag<T extends Prisma.AssetReference$holderTagArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssetReference$holderTagArgs<ExtArgs>>): Prisma.Prisma__TagClient<runtime.Types.Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  holderNode<T extends Prisma.AssetReference$holderNodeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssetReference$holderNodeArgs<ExtArgs>>): Prisma.Prisma__MindmapNodeClient<runtime.Types.Result.GetResult<Prisma.$MindmapNodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   page<T extends Prisma.AssetReference$pageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AssetReference$pageArgs<ExtArgs>>): Prisma.Prisma__ContentPageClient<runtime.Types.Result.GetResult<Prisma.$ContentPagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   world<T extends Prisma.WorldDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldDefaultArgs<ExtArgs>>): Prisma.Prisma__WorldClient<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -2152,6 +2390,7 @@ export interface AssetReferenceFieldRefs {
   readonly holderEventId: Prisma.FieldRef<"AssetReference", 'String'>
   readonly holderArticleId: Prisma.FieldRef<"AssetReference", 'String'>
   readonly holderTagId: Prisma.FieldRef<"AssetReference", 'String'>
+  readonly holderNodeId: Prisma.FieldRef<"AssetReference", 'String'>
   readonly pageId: Prisma.FieldRef<"AssetReference", 'String'>
   readonly worldId: Prisma.FieldRef<"AssetReference", 'String'>
 }
@@ -2628,6 +2867,25 @@ export type AssetReference$holderTagArgs<ExtArgs extends runtime.Types.Extension
    */
   include?: Prisma.TagInclude<ExtArgs> | null
   where?: Prisma.TagWhereInput
+}
+
+/**
+ * AssetReference.holderNode
+ */
+export type AssetReference$holderNodeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MindmapNode
+   */
+  select?: Prisma.MindmapNodeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MindmapNode
+   */
+  omit?: Prisma.MindmapNodeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MindmapNodeInclude<ExtArgs> | null
+  where?: Prisma.MindmapNodeWhereInput
 }
 
 /**

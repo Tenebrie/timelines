@@ -40,35 +40,37 @@ export { injectedRtkApi as worldTagApi }
 export type CreateTagApiResponse = /** status 200  */ {
 	mentions: {
 		id: string
-		pageId?: null | string
 		sourceId: string
 		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
 		sourceTagId?: null | string
+		sourceNodeId?: null | string
 		targetActorId?: null | string
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
+		pageId?: null | string
 	}[]
 	mentionedIn: {
 		id: string
-		pageId?: null | string
 		sourceId: string
 		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
 		sourceTagId?: null | string
+		sourceNodeId?: null | string
 		targetActorId?: null | string
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
+		pageId?: null | string
 	}[]
 	description: string
 	worldId: string
@@ -92,11 +94,11 @@ export type CreateTagApiArg = {
 export type UpdateTagApiResponse = /** status 200  */ {
 	mentions: {
 		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	mentionedIn: {
 		sourceId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	description: string
 	worldId: string
@@ -138,25 +140,26 @@ export type DeleteTagApiArg = {
 }
 export type GetTagDetailsApiResponse = /** status 200  */ {
 	mentionedBy: {
-		type: 'Actor' | 'Event' | 'Article' | 'Tag'
+		type: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		id: string
 		name: string
 	}[]
 	mentions: {
 		id: string
-		pageId?: null | string
 		sourceId: string
 		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
 		sourceTagId?: null | string
+		sourceNodeId?: null | string
 		targetActorId?: null | string
 		targetEventId?: null | string
 		targetArticleId?: null | string
 		targetTagId?: null | string
+		pageId?: null | string
 	}[]
 	description: string
 	worldId: string

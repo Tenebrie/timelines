@@ -16,7 +16,7 @@ const injectedRtkApi = api
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['mindmap', 'mindmapNode'],
+				invalidatesTags: [],
 			}),
 			deleteNodes: build.mutation<DeleteNodesApiResponse, DeleteNodesApiArg>({
 				query: (queryArg) => ({
@@ -80,9 +80,16 @@ export type GetMindmapApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
+		content: string
+		contentRich: string
+		parentFolderId?: null | string
 		parentActorId?: null | string
+		parentEventId?: null | string
+		parentArticleId?: null | string
 		positionX: number
 		positionY: number
+		parentTagId?: null | string
 	}[]
 	wires: {
 		id: string
@@ -102,9 +109,16 @@ export type CreateNodeApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
+	content: string
+	contentRich: string
+	parentFolderId?: null | string
 	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
 	positionX: number
 	positionY: number
+	parentTagId?: null | string
 }
 export type CreateNodeApiArg = {
 	worldId: string
@@ -112,7 +126,12 @@ export type CreateNodeApiArg = {
 		id?: string
 		positionX: number
 		positionY: number
+		name?: string
 		parentActorId?: string
+		parentArticleId?: string
+		parentEventId?: string
+		parentFolderId?: string
+		parentTagId?: string
 	}
 }
 export type DeleteNodesApiResponse = /** status 200  */ {
@@ -127,9 +146,16 @@ export type UpdateNodeApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
+	content: string
+	contentRich: string
+	parentFolderId?: null | string
 	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
 	positionX: number
 	positionY: number
+	parentTagId?: null | string
 }
 export type UpdateNodeApiArg = {
 	worldId: string
@@ -137,6 +163,9 @@ export type UpdateNodeApiArg = {
 	body: {
 		positionX?: number
 		positionY?: number
+		name?: string
+		content?: string
+		contentRich?: string
 	}
 }
 export type MoveMindmapNodesApiResponse = /** status 200  */ {
@@ -144,9 +173,16 @@ export type MoveMindmapNodesApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
+	content: string
+	contentRich: string
+	parentFolderId?: null | string
 	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
 	positionX: number
 	positionY: number
+	parentTagId?: null | string
 }[]
 export type MoveMindmapNodesApiArg = {
 	worldId: string

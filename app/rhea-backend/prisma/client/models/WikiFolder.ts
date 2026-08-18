@@ -250,6 +250,7 @@ export type WikiFolderWhereInput = {
   parentFolderPosition?: Prisma.FloatFilter<"WikiFolder"> | number
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
   parent?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
+  nodes?: Prisma.MindmapNodeListRelationFilter
   children?: Prisma.WikiFolderListRelationFilter
   articles?: Prisma.WikiArticleListRelationFilter
   actors?: Prisma.ActorListRelationFilter
@@ -269,6 +270,7 @@ export type WikiFolderOrderByWithRelationInput = {
   parentFolderPosition?: Prisma.SortOrder
   world?: Prisma.WorldOrderByWithRelationInput
   parent?: Prisma.WikiFolderOrderByWithRelationInput
+  nodes?: Prisma.MindmapNodeOrderByRelationAggregateInput
   children?: Prisma.WikiFolderOrderByRelationAggregateInput
   articles?: Prisma.WikiArticleOrderByRelationAggregateInput
   actors?: Prisma.ActorOrderByRelationAggregateInput
@@ -291,6 +293,7 @@ export type WikiFolderWhereUniqueInput = Prisma.AtLeast<{
   parentFolderPosition?: Prisma.FloatFilter<"WikiFolder"> | number
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
   parent?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
+  nodes?: Prisma.MindmapNodeListRelationFilter
   children?: Prisma.WikiFolderListRelationFilter
   articles?: Prisma.WikiArticleListRelationFilter
   actors?: Prisma.ActorListRelationFilter
@@ -340,6 +343,7 @@ export type WikiFolderCreateInput = {
   parentFolderPosition?: number
   world: Prisma.WorldCreateNestedOneWithoutFoldersInput
   parent?: Prisma.WikiFolderCreateNestedOneWithoutChildrenInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderCreateNestedManyWithoutParentInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutParentFolderInput
   actors?: Prisma.ActorCreateNestedManyWithoutParentFolderInput
@@ -357,6 +361,7 @@ export type WikiFolderUncheckedCreateInput = {
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutParentInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentFolderInput
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutParentFolderInput
@@ -374,6 +379,7 @@ export type WikiFolderUpdateInput = {
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUpdateManyWithoutParentFolderNestedInput
@@ -391,6 +397,7 @@ export type WikiFolderUncheckedUpdateInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -505,6 +512,22 @@ export type WikiFolderUpdateOneWithoutActorsNestedInput = {
   delete?: Prisma.WikiFolderWhereInput | boolean
   connect?: Prisma.WikiFolderWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.WikiFolderUpdateToOneWithWhereWithoutActorsInput, Prisma.WikiFolderUpdateWithoutActorsInput>, Prisma.WikiFolderUncheckedUpdateWithoutActorsInput>
+}
+
+export type WikiFolderCreateNestedOneWithoutNodesInput = {
+  create?: Prisma.XOR<Prisma.WikiFolderCreateWithoutNodesInput, Prisma.WikiFolderUncheckedCreateWithoutNodesInput>
+  connectOrCreate?: Prisma.WikiFolderCreateOrConnectWithoutNodesInput
+  connect?: Prisma.WikiFolderWhereUniqueInput
+}
+
+export type WikiFolderUpdateOneWithoutNodesNestedInput = {
+  create?: Prisma.XOR<Prisma.WikiFolderCreateWithoutNodesInput, Prisma.WikiFolderUncheckedCreateWithoutNodesInput>
+  connectOrCreate?: Prisma.WikiFolderCreateOrConnectWithoutNodesInput
+  upsert?: Prisma.WikiFolderUpsertWithoutNodesInput
+  disconnect?: Prisma.WikiFolderWhereInput | boolean
+  delete?: Prisma.WikiFolderWhereInput | boolean
+  connect?: Prisma.WikiFolderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WikiFolderUpdateToOneWithWhereWithoutNodesInput, Prisma.WikiFolderUpdateWithoutNodesInput>, Prisma.WikiFolderUncheckedUpdateWithoutNodesInput>
 }
 
 export type WikiFolderCreateNestedOneWithoutTagsInput = {
@@ -665,6 +688,7 @@ export type WikiFolderCreateWithoutActorsInput = {
   parentFolderPosition?: number
   world: Prisma.WorldCreateNestedOneWithoutFoldersInput
   parent?: Prisma.WikiFolderCreateNestedOneWithoutChildrenInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderCreateNestedManyWithoutParentInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutParentFolderInput
   events?: Prisma.WorldEventCreateNestedManyWithoutParentFolderInput
@@ -681,6 +705,7 @@ export type WikiFolderUncheckedCreateWithoutActorsInput = {
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutParentInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentFolderInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutParentFolderInput
@@ -713,6 +738,7 @@ export type WikiFolderUpdateWithoutActorsInput = {
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutParentFolderNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutParentFolderNestedInput
@@ -729,8 +755,93 @@ export type WikiFolderUncheckedUpdateWithoutActorsInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
+  events?: Prisma.WorldEventUncheckedUpdateManyWithoutParentFolderNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutParentFolderNestedInput
+}
+
+export type WikiFolderCreateWithoutNodesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  icon?: string
+  color?: string
+  parentFolderPosition?: number
+  world: Prisma.WorldCreateNestedOneWithoutFoldersInput
+  parent?: Prisma.WikiFolderCreateNestedOneWithoutChildrenInput
+  children?: Prisma.WikiFolderCreateNestedManyWithoutParentInput
+  articles?: Prisma.WikiArticleCreateNestedManyWithoutParentFolderInput
+  actors?: Prisma.ActorCreateNestedManyWithoutParentFolderInput
+  events?: Prisma.WorldEventCreateNestedManyWithoutParentFolderInput
+  tags?: Prisma.TagCreateNestedManyWithoutParentFolderInput
+}
+
+export type WikiFolderUncheckedCreateWithoutNodesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  icon?: string
+  color?: string
+  worldId: string
+  parentFolderId?: string | null
+  parentFolderPosition?: number
+  children?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutParentInput
+  articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentFolderInput
+  actors?: Prisma.ActorUncheckedCreateNestedManyWithoutParentFolderInput
+  events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutParentFolderInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutParentFolderInput
+}
+
+export type WikiFolderCreateOrConnectWithoutNodesInput = {
+  where: Prisma.WikiFolderWhereUniqueInput
+  create: Prisma.XOR<Prisma.WikiFolderCreateWithoutNodesInput, Prisma.WikiFolderUncheckedCreateWithoutNodesInput>
+}
+
+export type WikiFolderUpsertWithoutNodesInput = {
+  update: Prisma.XOR<Prisma.WikiFolderUpdateWithoutNodesInput, Prisma.WikiFolderUncheckedUpdateWithoutNodesInput>
+  create: Prisma.XOR<Prisma.WikiFolderCreateWithoutNodesInput, Prisma.WikiFolderUncheckedCreateWithoutNodesInput>
+  where?: Prisma.WikiFolderWhereInput
+}
+
+export type WikiFolderUpdateToOneWithWhereWithoutNodesInput = {
+  where?: Prisma.WikiFolderWhereInput
+  data: Prisma.XOR<Prisma.WikiFolderUpdateWithoutNodesInput, Prisma.WikiFolderUncheckedUpdateWithoutNodesInput>
+}
+
+export type WikiFolderUpdateWithoutNodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
+  world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
+  parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
+  articles?: Prisma.WikiArticleUpdateManyWithoutParentFolderNestedInput
+  actors?: Prisma.ActorUpdateManyWithoutParentFolderNestedInput
+  events?: Prisma.WorldEventUpdateManyWithoutParentFolderNestedInput
+  tags?: Prisma.TagUpdateManyWithoutParentFolderNestedInput
+}
+
+export type WikiFolderUncheckedUpdateWithoutNodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
+  children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
+  articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
+  actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutParentFolderNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutParentFolderNestedInput
 }
@@ -745,6 +856,7 @@ export type WikiFolderCreateWithoutTagsInput = {
   parentFolderPosition?: number
   world: Prisma.WorldCreateNestedOneWithoutFoldersInput
   parent?: Prisma.WikiFolderCreateNestedOneWithoutChildrenInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderCreateNestedManyWithoutParentInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutParentFolderInput
   actors?: Prisma.ActorCreateNestedManyWithoutParentFolderInput
@@ -761,6 +873,7 @@ export type WikiFolderUncheckedCreateWithoutTagsInput = {
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutParentInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentFolderInput
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutParentFolderInput
@@ -793,6 +906,7 @@ export type WikiFolderUpdateWithoutTagsInput = {
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUpdateManyWithoutParentFolderNestedInput
@@ -809,6 +923,7 @@ export type WikiFolderUncheckedUpdateWithoutTagsInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -825,6 +940,7 @@ export type WikiFolderCreateWithoutArticlesInput = {
   parentFolderPosition?: number
   world: Prisma.WorldCreateNestedOneWithoutFoldersInput
   parent?: Prisma.WikiFolderCreateNestedOneWithoutChildrenInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderCreateNestedManyWithoutParentInput
   actors?: Prisma.ActorCreateNestedManyWithoutParentFolderInput
   events?: Prisma.WorldEventCreateNestedManyWithoutParentFolderInput
@@ -841,6 +957,7 @@ export type WikiFolderUncheckedCreateWithoutArticlesInput = {
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutParentInput
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutParentFolderInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutParentFolderInput
@@ -873,6 +990,7 @@ export type WikiFolderUpdateWithoutArticlesInput = {
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
   actors?: Prisma.ActorUpdateManyWithoutParentFolderNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutParentFolderNestedInput
@@ -889,6 +1007,7 @@ export type WikiFolderUncheckedUpdateWithoutArticlesInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -905,6 +1024,7 @@ export type WikiFolderCreateWithoutChildrenInput = {
   parentFolderPosition?: number
   world: Prisma.WorldCreateNestedOneWithoutFoldersInput
   parent?: Prisma.WikiFolderCreateNestedOneWithoutChildrenInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentFolderInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutParentFolderInput
   actors?: Prisma.ActorCreateNestedManyWithoutParentFolderInput
   events?: Prisma.WorldEventCreateNestedManyWithoutParentFolderInput
@@ -921,6 +1041,7 @@ export type WikiFolderUncheckedCreateWithoutChildrenInput = {
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentFolderInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentFolderInput
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutParentFolderInput
   events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutParentFolderInput
@@ -941,6 +1062,7 @@ export type WikiFolderCreateWithoutParentInput = {
   color?: string
   parentFolderPosition?: number
   world: Prisma.WorldCreateNestedOneWithoutFoldersInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderCreateNestedManyWithoutParentInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutParentFolderInput
   actors?: Prisma.ActorCreateNestedManyWithoutParentFolderInput
@@ -957,6 +1079,7 @@ export type WikiFolderUncheckedCreateWithoutParentInput = {
   color?: string
   worldId: string
   parentFolderPosition?: number
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutParentInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentFolderInput
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutParentFolderInput
@@ -995,6 +1118,7 @@ export type WikiFolderUpdateWithoutChildrenInput = {
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentFolderNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUpdateManyWithoutParentFolderNestedInput
   events?: Prisma.WorldEventUpdateManyWithoutParentFolderNestedInput
@@ -1011,6 +1135,7 @@ export type WikiFolderUncheckedUpdateWithoutChildrenInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentFolderNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -1057,6 +1182,7 @@ export type WikiFolderCreateWithoutWorldInput = {
   color?: string
   parentFolderPosition?: number
   parent?: Prisma.WikiFolderCreateNestedOneWithoutChildrenInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderCreateNestedManyWithoutParentInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutParentFolderInput
   actors?: Prisma.ActorCreateNestedManyWithoutParentFolderInput
@@ -1073,6 +1199,7 @@ export type WikiFolderUncheckedCreateWithoutWorldInput = {
   color?: string
   parentFolderId?: string | null
   parentFolderPosition?: number
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutParentInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentFolderInput
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutParentFolderInput
@@ -1116,6 +1243,7 @@ export type WikiFolderCreateWithoutEventsInput = {
   parentFolderPosition?: number
   world: Prisma.WorldCreateNestedOneWithoutFoldersInput
   parent?: Prisma.WikiFolderCreateNestedOneWithoutChildrenInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderCreateNestedManyWithoutParentInput
   articles?: Prisma.WikiArticleCreateNestedManyWithoutParentFolderInput
   actors?: Prisma.ActorCreateNestedManyWithoutParentFolderInput
@@ -1132,6 +1260,7 @@ export type WikiFolderUncheckedCreateWithoutEventsInput = {
   worldId: string
   parentFolderId?: string | null
   parentFolderPosition?: number
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentFolderInput
   children?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutParentInput
   articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutParentFolderInput
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutParentFolderInput
@@ -1164,6 +1293,7 @@ export type WikiFolderUpdateWithoutEventsInput = {
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUpdateManyWithoutParentFolderNestedInput
@@ -1180,6 +1310,7 @@ export type WikiFolderUncheckedUpdateWithoutEventsInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -1206,6 +1337,7 @@ export type WikiFolderUpdateWithoutParentInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   world?: Prisma.WorldUpdateOneRequiredWithoutFoldersNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUpdateManyWithoutParentFolderNestedInput
@@ -1222,6 +1354,7 @@ export type WikiFolderUncheckedUpdateWithoutParentInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -1260,6 +1393,7 @@ export type WikiFolderUpdateWithoutWorldInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
   parent?: Prisma.WikiFolderUpdateOneWithoutChildrenNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUpdateManyWithoutParentFolderNestedInput
@@ -1276,6 +1410,7 @@ export type WikiFolderUncheckedUpdateWithoutWorldInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   parentFolderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   parentFolderPosition?: Prisma.FloatFieldUpdateOperationsInput | number
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentFolderNestedInput
   children?: Prisma.WikiFolderUncheckedUpdateManyWithoutParentNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutParentFolderNestedInput
   actors?: Prisma.ActorUncheckedUpdateManyWithoutParentFolderNestedInput
@@ -1300,6 +1435,7 @@ export type WikiFolderUncheckedUpdateManyWithoutWorldInput = {
  */
 
 export type WikiFolderCountOutputType = {
+  nodes: number
   children: number
   articles: number
   actors: number
@@ -1308,6 +1444,7 @@ export type WikiFolderCountOutputType = {
 }
 
 export type WikiFolderCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  nodes?: boolean | WikiFolderCountOutputTypeCountNodesArgs
   children?: boolean | WikiFolderCountOutputTypeCountChildrenArgs
   articles?: boolean | WikiFolderCountOutputTypeCountArticlesArgs
   actors?: boolean | WikiFolderCountOutputTypeCountActorsArgs
@@ -1323,6 +1460,13 @@ export type WikiFolderCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.E
    * Select specific fields to fetch from the WikiFolderCountOutputType
    */
   select?: Prisma.WikiFolderCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * WikiFolderCountOutputType without action
+ */
+export type WikiFolderCountOutputTypeCountNodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MindmapNodeWhereInput
 }
 
 /**
@@ -1373,6 +1517,7 @@ export type WikiFolderSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   parentFolderPosition?: boolean
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.WikiFolder$parentArgs<ExtArgs>
+  nodes?: boolean | Prisma.WikiFolder$nodesArgs<ExtArgs>
   children?: boolean | Prisma.WikiFolder$childrenArgs<ExtArgs>
   articles?: boolean | Prisma.WikiFolder$articlesArgs<ExtArgs>
   actors?: boolean | Prisma.WikiFolder$actorsArgs<ExtArgs>
@@ -1425,6 +1570,7 @@ export type WikiFolderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type WikiFolderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.WikiFolder$parentArgs<ExtArgs>
+  nodes?: boolean | Prisma.WikiFolder$nodesArgs<ExtArgs>
   children?: boolean | Prisma.WikiFolder$childrenArgs<ExtArgs>
   articles?: boolean | Prisma.WikiFolder$articlesArgs<ExtArgs>
   actors?: boolean | Prisma.WikiFolder$actorsArgs<ExtArgs>
@@ -1446,6 +1592,7 @@ export type $WikiFolderPayload<ExtArgs extends runtime.Types.Extensions.Internal
   objects: {
     world: Prisma.$WorldPayload<ExtArgs>
     parent: Prisma.$WikiFolderPayload<ExtArgs> | null
+    nodes: Prisma.$MindmapNodePayload<ExtArgs>[]
     children: Prisma.$WikiFolderPayload<ExtArgs>[]
     articles: Prisma.$WikiArticlePayload<ExtArgs>[]
     actors: Prisma.$ActorPayload<ExtArgs>[]
@@ -1858,6 +2005,7 @@ export interface Prisma__WikiFolderClient<T, Null = never, ExtArgs extends runti
   readonly [Symbol.toStringTag]: "PrismaPromise"
   world<T extends Prisma.WorldDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldDefaultArgs<ExtArgs>>): Prisma.Prisma__WorldClient<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   parent<T extends Prisma.WikiFolder$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WikiFolder$parentArgs<ExtArgs>>): Prisma.Prisma__WikiFolderClient<runtime.Types.Result.GetResult<Prisma.$WikiFolderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  nodes<T extends Prisma.WikiFolder$nodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WikiFolder$nodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MindmapNodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   children<T extends Prisma.WikiFolder$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WikiFolder$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WikiFolderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   articles<T extends Prisma.WikiFolder$articlesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WikiFolder$articlesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WikiArticlePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   actors<T extends Prisma.WikiFolder$actorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WikiFolder$actorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ActorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2318,6 +2466,30 @@ export type WikiFolder$parentArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.WikiFolderInclude<ExtArgs> | null
   where?: Prisma.WikiFolderWhereInput
+}
+
+/**
+ * WikiFolder.nodes
+ */
+export type WikiFolder$nodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MindmapNode
+   */
+  select?: Prisma.MindmapNodeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MindmapNode
+   */
+  omit?: Prisma.MindmapNodeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MindmapNodeInclude<ExtArgs> | null
+  where?: Prisma.MindmapNodeWhereInput
+  orderBy?: Prisma.MindmapNodeOrderByWithRelationInput | Prisma.MindmapNodeOrderByWithRelationInput[]
+  cursor?: Prisma.MindmapNodeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MindmapNodeScalarFieldEnum | Prisma.MindmapNodeScalarFieldEnum[]
 }
 
 /**

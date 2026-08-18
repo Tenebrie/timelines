@@ -1,6 +1,6 @@
 import { CalendarDraftUnit, CalendarDraftUnitChildRelation } from '@api/types/calendarTypes'
 import { MindmapNode } from '@api/types/mindmapTypes'
-import { ActorDetails, MarkerType, TimelineEntity } from '@api/types/worldTypes'
+import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 
 import { BoxedWikiEntity } from '@/app/views/world/views/wiki/hooks/useBoxedWikiContent'
 
@@ -15,9 +15,6 @@ export type DraggableParams = {
 	}
 	['articleListItem']: {
 		article: BoxedWikiEntity
-	}
-	['newMindmapNode']: {
-		actor: ActorDetails
 	}
 	['calendarUnit']: {
 		unit: CalendarDraftUnit

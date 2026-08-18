@@ -6,6 +6,36 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
+				query: () => ({ url: `/api/constants/admin-levels` }),
+				providesTags: [],
+			}),
+			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
+				query: () => ({ url: `/api/constants/world-access-modes` }),
+				providesTags: [],
+			}),
+			listCalendarTemplates: build.query<ListCalendarTemplatesApiResponse, ListCalendarTemplatesApiArg>({
+				query: () => ({ url: `/api/constants/calendar-templates` }),
+				providesTags: [],
+			}),
+			listCalendarUnitFormatModes: build.query<
+				ListCalendarUnitFormatModesApiResponse,
+				ListCalendarUnitFormatModesApiArg
+			>({
+				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
+				providesTags: [],
+			}),
+			listImageGenerationModels: build.query<
+				ListImageGenerationModelsApiResponse,
+				ListImageGenerationModelsApiArg
+			>({
+				query: () => ({ url: `/api/constants/image-generation-models` }),
+				providesTags: [],
+			}),
+			listFeatureFlags: build.query<ListFeatureFlagsApiResponse, ListFeatureFlagsApiArg>({
+				query: () => ({ url: `/api/constants/feature-flags` }),
+				providesTags: [],
+			}),
 			sendContactFormMessage: build.mutation<SendContactFormMessageApiResponse, SendContactFormMessageApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/contact`, method: 'POST', body: queryArg.body }),
@@ -78,61 +108,6 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}/accept`, method: 'POST' }),
 				invalidatesTags: [],
 			}),
-			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
-				{
-					query: (queryArg) => ({
-						url: `/api/internal/auth/${queryArg.userId}`,
-						params: {
-							worldId: queryArg.worldId,
-						},
-					}),
-					providesTags: [],
-				},
-			),
-			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
-				query: () => ({ url: `/api/constants/admin-levels` }),
-				providesTags: [],
-			}),
-			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
-				query: () => ({ url: `/api/constants/world-access-modes` }),
-				providesTags: [],
-			}),
-			listCalendarTemplates: build.query<ListCalendarTemplatesApiResponse, ListCalendarTemplatesApiArg>({
-				query: () => ({ url: `/api/constants/calendar-templates` }),
-				providesTags: [],
-			}),
-			listCalendarUnitFormatModes: build.query<
-				ListCalendarUnitFormatModesApiResponse,
-				ListCalendarUnitFormatModesApiArg
-			>({
-				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
-				providesTags: [],
-			}),
-			listImageGenerationModels: build.query<
-				ListImageGenerationModelsApiResponse,
-				ListImageGenerationModelsApiArg
-			>({
-				query: () => ({ url: `/api/constants/image-generation-models` }),
-				providesTags: [],
-			}),
-			listFeatureFlags: build.query<ListFeatureFlagsApiResponse, ListFeatureFlagsApiArg>({
-				query: () => ({ url: `/api/constants/feature-flags` }),
-				providesTags: [],
-			}),
-			getWikiArticleContent: build.query<GetWikiArticleContentApiResponse, GetWikiArticleContentApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/article/${queryArg.articleId}/content`,
-				}),
-				providesTags: ['worldWikiArticle'],
-			}),
-			putWikiArticleContent: build.mutation<PutWikiArticleContentApiResponse, PutWikiArticleContentApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/article/${queryArg.articleId}/content`,
-					method: 'PUT',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['worldWikiArticle'],
-			}),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/wiki/article/${queryArg.articleId}`,
@@ -147,10 +122,102 @@ const injectedRtkApi = api
 				}),
 				providesTags: ['worldWikiArticle'],
 			}),
+			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
+				{
+					query: (queryArg) => ({
+						url: `/api/internal/auth/${queryArg.userId}`,
+						params: {
+							worldId: queryArg.worldId,
+						},
+					}),
+					providesTags: [],
+				},
+			),
+			getEntityContent: build.query<GetEntityContentApiResponse, GetEntityContentApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content`,
+				}),
+				providesTags: [],
+			}),
+			putEntityContent: build.mutation<PutEntityContentApiResponse, PutEntityContentApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content`,
+					method: 'PUT',
+					body: queryArg.body,
+				}),
+				invalidatesTags: [],
+			}),
+			getEntityContentPage: build.query<GetEntityContentPageApiResponse, GetEntityContentPageApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content/pages/${queryArg.pageId}`,
+				}),
+				providesTags: [],
+			}),
+			putEntityContentPage: build.mutation<PutEntityContentPageApiResponse, PutEntityContentPageApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content/pages/${queryArg.pageId}`,
+					method: 'PUT',
+					body: queryArg.body,
+				}),
+				invalidatesTags: [],
+			}),
+			deleteEntityContentPage: build.mutation<
+				DeleteEntityContentPageApiResponse,
+				DeleteEntityContentPageApiArg
+			>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content/pages/${queryArg.pageId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: [],
+			}),
+			createEntityContentPage: build.mutation<
+				CreateEntityContentPageApiResponse,
+				CreateEntityContentPageApiArg
+			>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content/pages`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: [],
+			}),
 		}),
 		overrideExisting: false,
 	})
 export { injectedRtkApi as otherApi }
+export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premium' | 'Admin')[]
+export type AdminGetUserLevelsApiArg = void
+export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
+export type ListWorldAccessModesApiArg = void
+export type ListCalendarTemplatesApiResponse = /** status 200  */ {
+	keys: ('earth_current' | 'martian' | 'pf2e_current' | 'rimworld' | 'exether')[]
+	templates: {
+		name: string
+		description: string
+		id: string
+	}[]
+}
+export type ListCalendarTemplatesApiArg = void
+export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
+	| 'Name'
+	| 'NameOneIndexed'
+	| 'Numeric'
+	| 'NumericOneIndexed'
+	| 'Hidden'
+)[]
+export type ListCalendarUnitFormatModesApiArg = void
+export type ListImageGenerationModelsApiResponse = /** status 200  */ {
+	models: {
+		id: string
+		name: string
+	}[]
+}
+export type ListImageGenerationModelsApiArg = void
+export type ListFeatureFlagsApiResponse = /** status 200  */ {
+	featureFlags: 'MindmapRework'[]
+}
+export type ListFeatureFlagsApiArg = void
 export type SendContactFormMessageApiResponse = unknown
 export type SendContactFormMessageApiArg = {
 	body: {
@@ -285,69 +352,6 @@ export type AcceptWorldShareLinkApiArg = {
 	/** Any string value */
 	slug: string
 }
-export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
-	owner: boolean
-	write: boolean
-	read: boolean
-}
-export type GetUserWorldAccessLevelApiArg = {
-	/** Any string value with at least one character */
-	userId: string
-	/** Any string value with at least one character */
-	worldId: string
-}
-export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premium' | 'Admin')[]
-export type AdminGetUserLevelsApiArg = void
-export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
-export type ListWorldAccessModesApiArg = void
-export type ListCalendarTemplatesApiResponse = /** status 200  */ {
-	keys: ('earth_current' | 'martian' | 'pf2e_current' | 'rimworld' | 'exether')[]
-	templates: {
-		name: string
-		description: string
-		id: string
-	}[]
-}
-export type ListCalendarTemplatesApiArg = void
-export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
-	| 'Name'
-	| 'NameOneIndexed'
-	| 'Numeric'
-	| 'NumericOneIndexed'
-	| 'Hidden'
-)[]
-export type ListCalendarUnitFormatModesApiArg = void
-export type ListImageGenerationModelsApiResponse = /** status 200  */ {
-	models: {
-		id: string
-		name: string
-	}[]
-}
-export type ListImageGenerationModelsApiArg = void
-export type ListFeatureFlagsApiResponse = /** status 200  */ {
-	featureFlags: 'MindmapRework'[]
-}
-export type ListFeatureFlagsApiArg = void
-export type GetWikiArticleContentApiResponse = /** status 200  */ {
-	contentHtml: string
-}
-export type GetWikiArticleContentApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	articleId: string
-}
-export type PutWikiArticleContentApiResponse = unknown
-export type PutWikiArticleContentApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	articleId: string
-	body: {
-		content: string
-		reloadClients?: boolean
-	}
-}
 export type UpdateArticleApiResponse = /** status 200  */ {
 	worldId: string
 	id: string
@@ -356,10 +360,10 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	parentFolderId?: null | string
-	parentFolderPosition: number
 	content: string
 	contentRich: string
+	parentFolderId?: null | string
+	parentFolderPosition: number
 }
 export type UpdateArticleApiArg = {
 	/** Any string value */
@@ -373,7 +377,7 @@ export type UpdateArticleApiArg = {
 	}
 }
 export type GetArticleBacklinksApiResponse = /** status 200  */ {
-	type: 'Actor' | 'Event' | 'Article' | 'Tag'
+	type: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	id: string
 	name: string
 }[]
@@ -383,7 +387,111 @@ export type GetArticleBacklinksApiArg = {
 	/** Any string value */
 	articleId: string
 }
+export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
+	owner: boolean
+	write: boolean
+	read: boolean
+}
+export type GetUserWorldAccessLevelApiArg = {
+	/** Any string value with at least one character */
+	userId: string
+	/** Any string value with at least one character */
+	worldId: string
+}
+export type GetEntityContentApiResponse = /** status 200  */ {
+	contentHtml: string
+}
+export type GetEntityContentApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article' | 'node'
+	/** Any string value */
+	entityId: string
+}
+export type PutEntityContentApiResponse = unknown
+export type PutEntityContentApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article' | 'node'
+	/** Any string value */
+	entityId: string
+	body: {
+		content: string
+		reloadClients?: boolean
+	}
+}
+export type GetEntityContentPageApiResponse = /** status 200  */ {
+	contentHtml: string
+}
+export type GetEntityContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article' | 'node'
+	/** Any string value */
+	entityId: string
+	/** Any string value */
+	pageId: string
+}
+export type PutEntityContentPageApiResponse = unknown
+export type PutEntityContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article' | 'node'
+	/** Any string value */
+	entityId: string
+	/** Any string value */
+	pageId: string
+	body: {
+		content: string
+		reloadClients?: boolean
+	}
+}
+export type DeleteEntityContentPageApiResponse = unknown
+export type DeleteEntityContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article' | 'node'
+	/** Any string value */
+	entityId: string
+	/** Any string value */
+	pageId: string
+}
+export type CreateEntityContentPageApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	content: string
+	contentRich: string
+	parentActorId?: null | string
+	parentArticleId?: null | string
+	parentEventId?: null | string
+	parentType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+	parentNodeId?: null | string
+}
+export type CreateEntityContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article' | 'node'
+	/** Any string value */
+	entityId: string
+	body: {
+		name: string
+	}
+}
 export const {
+	useAdminGetUserLevelsQuery,
+	useLazyAdminGetUserLevelsQuery,
+	useListWorldAccessModesQuery,
+	useLazyListWorldAccessModesQuery,
+	useListCalendarTemplatesQuery,
+	useLazyListCalendarTemplatesQuery,
+	useListCalendarUnitFormatModesQuery,
+	useLazyListCalendarUnitFormatModesQuery,
+	useListImageGenerationModelsQuery,
+	useLazyListImageGenerationModelsQuery,
+	useListFeatureFlagsQuery,
+	useLazyListFeatureFlagsQuery,
 	useSendContactFormMessageMutation,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
@@ -401,24 +509,17 @@ export const {
 	useVisitWorldShareLinkQuery,
 	useLazyVisitWorldShareLinkQuery,
 	useAcceptWorldShareLinkMutation,
-	useGetUserWorldAccessLevelQuery,
-	useLazyGetUserWorldAccessLevelQuery,
-	useAdminGetUserLevelsQuery,
-	useLazyAdminGetUserLevelsQuery,
-	useListWorldAccessModesQuery,
-	useLazyListWorldAccessModesQuery,
-	useListCalendarTemplatesQuery,
-	useLazyListCalendarTemplatesQuery,
-	useListCalendarUnitFormatModesQuery,
-	useLazyListCalendarUnitFormatModesQuery,
-	useListImageGenerationModelsQuery,
-	useLazyListImageGenerationModelsQuery,
-	useListFeatureFlagsQuery,
-	useLazyListFeatureFlagsQuery,
-	useGetWikiArticleContentQuery,
-	useLazyGetWikiArticleContentQuery,
-	usePutWikiArticleContentMutation,
 	useUpdateArticleMutation,
 	useGetArticleBacklinksQuery,
 	useLazyGetArticleBacklinksQuery,
+	useGetUserWorldAccessLevelQuery,
+	useLazyGetUserWorldAccessLevelQuery,
+	useGetEntityContentQuery,
+	useLazyGetEntityContentQuery,
+	usePutEntityContentMutation,
+	useGetEntityContentPageQuery,
+	useLazyGetEntityContentPageQuery,
+	usePutEntityContentPageMutation,
+	useDeleteEntityContentPageMutation,
+	useCreateEntityContentPageMutation,
 } = injectedRtkApi

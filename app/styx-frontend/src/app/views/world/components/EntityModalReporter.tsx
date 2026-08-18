@@ -66,13 +66,10 @@ export function EntityModalReporter() {
 
 		const node = mindmapData?.nodes.find((n) => n.id === selectedEntityIds[0])
 		if (node) {
-			const actor = actors.find((e) => e.id === node.parentActorId)
-			if (actor) {
-				closeCreateEventModal()
-				closeCreateActorModal()
-				open({ entityStack: selectedEntityIds, creatingNew: null })
-				return
-			}
+			closeCreateEventModal()
+			closeCreateActorModal()
+			open({ entityStack: selectedEntityIds, creatingNew: null })
+			return
 		}
 
 		const actor = actors.find((a) => a.id === selectedEntityIds[0])

@@ -3,6 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export const initialState = {
 	selectedNodes: [] as { key: string; actorId: string }[],
 	selectedWires: [] as string[],
+	hoveredNodes: [] as { key: string; entityId: string }[],
+	hoveredWires: [] as string[],
 }
 
 export const mindmapSlice = createSlice({
@@ -71,6 +73,31 @@ export const mindmapSlice = createSlice({
 		clearSelections: (state) => {
 			state.selectedNodes = []
 			state.selectedWires = []
+		},
+
+		addNodeToHover: (state, { payload }: PayloadAction<{ key: string; entityId: string }>) => {
+			if (state.hoveredNodes.some((node) => node.key === payload.key && node.entityId === payload.entityId)) {
+				return
+			}
+			state.hoveredNodes = [...state.hoveredNodes.filter((node) => node.key !== payload.key), payload]
+		},
+		removeNodeFromHover: (state, { payload }: PayloadAction<string>) => {
+			if (!state.hoveredNodes.some((node) => node.key === payload)) {
+				return
+			}
+			state.hoveredNodes = state.hoveredNodes.filter((node) => node.key !== payload)
+		},
+		addWireToHover: (state, { payload }: PayloadAction<string>) => {
+			if (state.hoveredWires.includes(payload)) {
+				return
+			}
+			state.hoveredWires = [...state.hoveredWires, payload]
+		},
+		removeWireFromHover: (state, { payload }: PayloadAction<string>) => {
+			if (!state.hoveredWires.includes(payload)) {
+				return
+			}
+			state.hoveredWires = state.hoveredWires.filter((wireId) => wireId !== payload)
 		},
 	},
 })
