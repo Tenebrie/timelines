@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
+import { useDraggableClick } from '@/app/hooks/useDraggableClick'
 
 import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { mindmapSlice } from '../MindmapSlice'
@@ -168,6 +169,13 @@ function MindmapWireLineComponent({
 			dispatch(addWireToSelection({ wireId: wire.id, multiselect }))
 		},
 		ignoreDelay: true,
+	})
+
+	const { onMouseDown, onMouseUp } = useDraggableClick({
+		onRightClick: (event) => {
+			onOpenPopover({ x: event.clientX, y: event.clientY }, 'contextMenu')
+			dispatch(addWireToSelection({ wireId: wire.id, multiselect: event.shiftKey }))
+		},
 	})
 
 	const applyVisualState = useCallback(() => {
@@ -397,10 +405,12 @@ function MindmapWireLineComponent({
 						onMouseDown={() => {
 							isActiveRef.current = true
 							applyVisualState()
+							onMouseDown()
 						}}
-						onMouseUp={() => {
+						onMouseUp={(event) => {
 							isActiveRef.current = false
 							applyVisualState()
+							onMouseUp(event)
 						}}
 					/>
 				</>,

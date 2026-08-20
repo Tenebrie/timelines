@@ -69,6 +69,7 @@ export function useBoxedMindmapContent() {
 	return useMemo(() => {
 		if (!data) {
 			return {
+				isLoaded: false,
 				actorsWithNodes: [] as BoxedMindmapNode[],
 				nodeLinks: [] as BoxedMindmapWire[],
 				existingWires: new Set<string>(),
@@ -167,6 +168,6 @@ export function useBoxedMindmapContent() {
 
 		wireCache.current = nextWireCache
 
-		return { actorsWithNodes, nodeLinks, existingWires }
+		return { isLoaded: true, actorsWithNodes, nodeLinks, existingWires }
 	}, [data, actors, articles, events, folders, tags])
 }

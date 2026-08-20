@@ -4,16 +4,17 @@ import { useSelector } from 'react-redux'
 
 import { dispatchGlobalEvent } from '@/app/features/eventBus'
 
+import { MindmapEmptyState } from './components/MindmapEmptyState'
 import { useBoxedMindmapContent } from './hooks/useBoxedMindmapContent'
 import { getMindmapState } from './MindmapSliceSelectors'
 import { ActorNodePositioner } from './workspace/ActorNodePositioner'
 import { MindmapWireLayer } from './workspace/MindmapWireLayer'
 
 export function MindmapContent() {
-	const { actorsWithNodes, nodeLinks, existingWires } = useBoxedMindmapContent()
+	const { isLoaded, actorsWithNodes, nodeLinks, existingWires } = useBoxedMindmapContent()
 
 	if (actorsWithNodes.length === 0) {
-		return null
+		return isLoaded ? <MindmapEmptyState /> : null
 	}
 
 	return (

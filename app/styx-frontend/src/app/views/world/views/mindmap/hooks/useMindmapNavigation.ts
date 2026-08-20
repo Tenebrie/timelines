@@ -137,7 +137,8 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		}
 
 		const handleClick = (event: MouseEvent) => {
-			if (event.button === 2) {
+			const target = event.target as HTMLElement
+			if (event.button === 2 && target.hasAttribute('data-mindmap-click-area')) {
 				dispatchGlobalEvent['quickSelect/requestOpen']({
 					query: '',
 					screenPosTop: event.clientY,
