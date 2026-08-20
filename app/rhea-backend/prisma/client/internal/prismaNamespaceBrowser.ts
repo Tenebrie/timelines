@@ -108,8 +108,8 @@ export const ActorScalarFieldEnum = {
   title: 'title',
   icon: 'icon',
   color: 'color',
-  description: 'description',
-  descriptionRich: 'descriptionRich',
+  content: 'content',
+  contentRich: 'contentRich',
   worldId: 'worldId',
   parentFolderId: 'parentFolderId',
   parentFolderPosition: 'parentFolderPosition'
@@ -162,6 +162,7 @@ export const AssetReferenceScalarFieldEnum = {
   holderEventId: 'holderEventId',
   holderArticleId: 'holderArticleId',
   holderTagId: 'holderTagId',
+  holderNodeId: 'holderNodeId',
   pageId: 'pageId',
   worldId: 'worldId'
 } as const
@@ -307,11 +308,13 @@ export const ContentPageScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   name: 'name',
-  description: 'description',
-  descriptionRich: 'descriptionRich',
+  content: 'content',
+  contentRich: 'contentRich',
+  parentType: 'parentType',
   parentActorId: 'parentActorId',
   parentEventId: 'parentEventId',
-  parentArticleId: 'parentArticleId'
+  parentArticleId: 'parentArticleId',
+  parentNodeId: 'parentNodeId'
 } as const
 
 export type ContentPageScalarFieldEnum = (typeof ContentPageScalarFieldEnum)[keyof typeof ContentPageScalarFieldEnum]
@@ -352,6 +355,7 @@ export const MentionScalarFieldEnum = {
   sourceEventId: 'sourceEventId',
   sourceArticleId: 'sourceArticleId',
   sourceTagId: 'sourceTagId',
+  sourceNodeId: 'sourceNodeId',
   targetActorId: 'targetActorId',
   targetEventId: 'targetEventId',
   targetArticleId: 'targetArticleId',
@@ -366,9 +370,16 @@ export const MindmapNodeScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  name: 'name',
+  content: 'content',
+  contentRich: 'contentRich',
   positionX: 'positionX',
   positionY: 'positionY',
   parentActorId: 'parentActorId',
+  parentArticleId: 'parentArticleId',
+  parentEventId: 'parentEventId',
+  parentFolderId: 'parentFolderId',
+  parentTagId: 'parentTagId',
   worldId: 'worldId'
 } as const
 
@@ -496,8 +507,8 @@ export const WorldEventScalarFieldEnum = {
   name: 'name',
   timestamp: 'timestamp',
   revokedAt: 'revokedAt',
-  description: 'description',
-  descriptionRich: 'descriptionRich',
+  content: 'content',
+  contentRich: 'contentRich',
   worldId: 'worldId',
   worldEventTrackId: 'worldEventTrackId',
   parentFolderId: 'parentFolderId',

@@ -17,7 +17,11 @@ export function MindmapClickArea() {
 
 	return (
 		<>
-			<Box ref={ref} sx={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0 }}></Box>
+			<Box
+				data-mindmap-click-area
+				ref={ref}
+				sx={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0 }}
+			></Box>
 			<MindmapSelectionBox ref={ref} />
 		</>
 	)
@@ -117,7 +121,7 @@ function checkNodeIntersection(parentElement: HTMLElement | null, selectionBox: 
 
 		if (intersects) {
 			const nodeId = nodeElement.getAttribute('data-mindmap-node')
-			const actorId = nodeElement.getAttribute('data-actor-id')
+			const actorId = nodeElement.getAttribute('data-entity-id')
 			if (nodeId && actorId) {
 				selectedNodeIds.add(JSON.stringify({ key: nodeId, actorId }))
 			}

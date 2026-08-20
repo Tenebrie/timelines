@@ -4,6 +4,7 @@ import useEvent from 'react-use-event-hook'
 import { ActorDetails } from '@/app/features/entityEditor/actor/details/ActorDetails'
 import { ArticleDetails } from '@/app/features/entityEditor/article/details/ArticleDetails'
 import { EventDetails } from '@/app/features/entityEditor/event/details/EventDetails'
+import { NodeDetails } from '@/app/features/entityEditor/node/details/NodeDetails'
 import { TagDetails } from '@/app/features/entityEditor/tag/details/TagDetails'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -102,6 +103,9 @@ export const EditEventModal = () => {
 					)}
 					{currentEntity?.type === 'tag' && currentEntity.entity && (
 						<TagDetails editedTag={currentEntity.entity} />
+					)}
+					{currentEntity?.type === 'node' && currentEntity.entity && (
+						<NodeDetails node={currentEntity.entity} surface="editEventModal" />
 					)}
 				</Stack>
 			</Stack>

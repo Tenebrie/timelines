@@ -1,14 +1,18 @@
 import { MindmapNode, MindmapWire } from '@api/types/mindmapTypes'
-import { ActorDetails } from '@api/types/worldTypes'
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import Box from '@mui/material/Box'
+import { alpha, lighten } from '@mui/material/styles'
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
+import { useDraggableClick } from '@/app/hooks/useDraggableClick'
 
+import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { mindmapSlice } from '../MindmapSlice'
+import { MindmapWireLabel } from './MindmapWireLabel'
 import {
 	arrowPath,
 	buildPathD,
@@ -25,11 +29,11 @@ type Props = {
 	wire: MindmapWire
 	source: {
 		node: MindmapNode
-		actor: ActorDetails
+		parent: BoxedMindmapParent
 	}
 	target: {
 		node: MindmapNode
-		actor: ActorDetails
+		parent: BoxedMindmapParent
 	}
 	svgDefsPortal: SVGDefsElement
 	svgGroupPortal: SVGGElement
@@ -37,9 +41,11 @@ type Props = {
 }
 
 const ARROW_SIZE = 8
-const TRANSITION = 'filter 0.25s ease'
+const SHAPE_TRANSITION = 'fill 0.25s ease, stroke 0.25s ease'
 
-export function MindmapWireLine({
+export const MindmapWireLine = memo(MindmapWireLineComponent)
+
+function MindmapWireLineComponent({
 	wire,
 	source,
 	target,
@@ -47,6 +53,11 @@ export function MindmapWireLine({
 	svgGroupPortal,
 	onOpenPopover,
 }: Props) {
+	const [highlightState, setHighlightState] = useState<
+		'none' | 'brightGradient' | 'brightSource' | 'brightTarget' | 'dim'
+	>('none')
+
+	const containerRef = useRef<HTMLDivElement>(null)
 	const pathRef = useRef<SVGPathElement>(null)
 	const glowPathRef = useRef<SVGPathElement>(null)
 	const hitPathRef = useRef<SVGPathElement>(null)
@@ -55,7 +66,6 @@ export function MindmapWireLine({
 	const tgtPortRef = useRef<SVGGElement>(null)
 	const srcArrowRef = useRef<SVGPathElement>(null)
 	const tgtArrowRef = useRef<SVGPathElement>(null)
-	const labelRef = useRef<SVGTextElement>(null)
 	const visibleGroupRef = useRef<SVGGElement>(null)
 
 	const gradientId = `link-gradient-${source.node.id}-${target.node.id}`
@@ -88,9 +98,33 @@ export function MindmapWireLine({
 			tgtArrowRef.current?.setAttribute('d', arrowPath(ep.x2, ep.y2, -ep.nx2, -ep.ny2, ARROW_SIZE))
 		}
 		const mid = pathMidpoint(ep)
-		labelRef.current?.setAttribute('x', String(mid.x))
-		labelRef.current?.setAttribute('y', String(mid.y))
+		containerRef.current?.setAttribute(
+			'style',
+			`--label-position-x: ${mid.x}px; --label-position-y: ${mid.y}px`,
+		)
 		registerWire(wire.id, ep)
+	}
+
+	/**
+	 * Live node positions are authoritative — they follow a drag in progress, while the props only
+	 * catch up once the move is committed. Props are the fallback for nodes that aren't mounted.
+	 */
+	const resolveEndpoints = (): WireEndpoints => {
+		const srcPos = nodePositions.get(source.node.id)
+		const tgtPos = nodePositions.get(target.node.id)
+		const pos = posRef.current
+		pos.srcX = srcPos?.x ?? source.node.positionX
+		pos.srcY = srcPos?.y ?? source.node.positionY
+		pos.tgtX = tgtPos?.x ?? target.node.positionX
+		pos.tgtY = tgtPos?.y ?? target.node.positionY
+		return pickEdgePoints(
+			pos.srcX,
+			pos.srcY,
+			srcPos?.height ?? getNodeHeight(source.node.id),
+			pos.tgtX,
+			pos.tgtY,
+			tgtPos?.height ?? getNodeHeight(target.node.id),
+		)
 	}
 
 	useEventBusSubscribe['mindmap/node/onMove']({
@@ -102,25 +136,11 @@ export function MindmapWireLine({
 			if (!srcPos || !tgtPos) return
 			if (pos.srcX === srcPos.x && pos.srcY === srcPos.y && pos.tgtX === tgtPos.x && pos.tgtY === tgtPos.y)
 				return
-			pos.srcX = srcPos.x
-			pos.srcY = srcPos.y
-			pos.tgtX = tgtPos.x
-			pos.tgtY = tgtPos.y
-			const ep = pickEdgePoints(pos.srcX, pos.srcY, srcPos.height, pos.tgtX, pos.tgtY, tgtPos.height)
-			updateDom(ep)
+			updateDom(resolveEndpoints())
 		},
 	})
 
-	const srcH = getNodeHeight(source.node.id)
-	const tgtH = getNodeHeight(target.node.id)
-	const ep = pickEdgePoints(
-		source.node.positionX,
-		source.node.positionY,
-		srcH,
-		target.node.positionX,
-		target.node.positionY,
-		tgtH,
-	)
+	const ep = resolveEndpoints()
 	const { x1, y1, x2, y2, nx1, ny1, nx2, ny2 } = ep
 
 	const isHoveredRef = useRef(false)
@@ -128,11 +148,12 @@ export function MindmapWireLine({
 	const selectedRef = useRef(false)
 
 	useLayoutEffect(() => {
-		registerWire(wire.id, ep)
+		updateDom(resolveEndpoints())
 	})
 	useEffect(() => () => unregisterWire(wire.id), [wire.id])
 
 	const { addWireToSelection, removeWireFromSelection } = mindmapSlice.actions
+	const { addWireToHover, removeWireFromHover } = mindmapSlice.actions
 	const dispatch = useDispatch()
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean; event: React.MouseEvent }>({
@@ -150,21 +171,19 @@ export function MindmapWireLine({
 		ignoreDelay: true,
 	})
 
-	const theme = useCustomTheme()
-
-	const maxLabelLength = 24
-	const labelText = wire.content
-		? wire.content.length > maxLabelLength
-			? wire.content.slice(0, maxLabelLength) + '…'
-			: wire.content
-		: ''
+	const { onMouseDown, onMouseUp } = useDraggableClick({
+		onRightClick: (event) => {
+			onOpenPopover({ x: event.clientX, y: event.clientY }, 'contextMenu')
+			dispatch(addWireToSelection({ wireId: wire.id, multiselect: event.shiftKey }))
+		},
+	})
 
 	const applyVisualState = useCallback(() => {
 		const isSel = selectedRef.current
 		const isHov = isHoveredRef.current
 		const isAct = isActiveRef.current
 
-		const glowOpacity = isSel ? '0.7' : isHov || isAct ? '0.4' : '0'
+		const glowOpacity = isSel ? '0.7' : isHov || isAct ? '0.4' : '0.12'
 		const brightness = isAct ? 'brightness(0.85)' : 'none'
 
 		glowPathRef.current?.style.setProperty('opacity', glowOpacity)
@@ -177,9 +196,93 @@ export function MindmapWireLine({
 			applyVisualState()
 		},
 	})
+	useEventBusSubscribe['mindmap/hover/changed']({
+		callback: ({ hoveredNodeIds, hoveredWireIds }) => {
+			if (hoveredWireIds.has(wire.id)) {
+				setHighlightState('brightGradient')
+			} else if (hoveredNodeIds.has(source.node.id)) {
+				setHighlightState('brightSource')
+			} else if (hoveredNodeIds.has(target.node.id)) {
+				setHighlightState('brightTarget')
+			} else if (hoveredNodeIds.size > 0) {
+				setHighlightState('dim')
+			} else {
+				setHighlightState('none')
+			}
+		},
+	})
+
+	const theme = useCustomTheme()
+	const opacity = useMemo(() => {
+		if (highlightState === 'dim') {
+			return 0.35
+		}
+		return 1
+	}, [highlightState])
+
+	const { sourceColor, targetColor } = useMemo(() => {
+		const alwaysShowColor = true
+		const baseColor = lighten(theme.custom.palette.background.timeline, 0.2)
+
+		if (highlightState === 'dim') {
+			return {
+				sourceColor: alpha(baseColor, 0.5),
+				targetColor: alpha(baseColor, 0.5),
+			}
+		}
+
+		if (highlightState === 'brightSource') {
+			return {
+				sourceColor: target.parent.color,
+				targetColor: target.parent.color,
+			}
+		}
+
+		if (highlightState === 'brightTarget') {
+			return {
+				sourceColor: source.parent.color,
+				targetColor: source.parent.color,
+			}
+		}
+
+		if (highlightState === 'brightGradient' && alwaysShowColor) {
+			return {
+				sourceColor: target.parent.color,
+				targetColor: source.parent.color,
+			}
+		} else if (highlightState === 'brightGradient') {
+			return {
+				sourceColor: source.parent.color,
+				targetColor: target.parent.color,
+			}
+		}
+
+		if (alwaysShowColor) {
+			return {
+				sourceColor: target.parent.color,
+				targetColor: source.parent.color,
+			}
+		}
+
+		return {
+			sourceColor: baseColor,
+			targetColor: baseColor,
+		}
+	}, [highlightState, source.parent.color, target.parent.color, theme.custom.palette.background.timeline])
+
+	const midColor = `color-mix(in oklch shorter hue, ${sourceColor}, ${targetColor})`
 
 	return (
-		<>
+		<Box
+			ref={containerRef}
+			sx={{
+				opacity,
+				zIndex: 100,
+				transition: 'opacity 0.2s',
+				'--label-position-x': `${pathMidpoint(ep).x}px`,
+				'--label-position-y': `${pathMidpoint(ep).y}px`,
+			}}
+		>
 			{createPortal(
 				<linearGradient
 					ref={gradientRef}
@@ -190,8 +293,9 @@ export function MindmapWireLine({
 					x2={x2}
 					y2={y2}
 				>
-					<stop offset="0%" stopColor={target.actor.color} />
-					<stop offset="100%" stopColor={source.actor.color} />
+					<stop offset="0%" style={{ stopColor: sourceColor, transition: 'stop-color 0.25s ease' }} />
+					<stop offset="50%" style={{ stopColor: midColor, transition: 'stop-color 0.25s ease' }} />
+					<stop offset="100%" style={{ stopColor: targetColor, transition: 'stop-color 0.25s ease' }} />
 				</linearGradient>,
 				svgDefsPortal,
 			)}
@@ -204,12 +308,12 @@ export function MindmapWireLine({
 						fill="none"
 						strokeWidth={8}
 						pointerEvents="none"
-						style={{ stroke: `url(#${gradientId})`, opacity: 0, transition: 'opacity 0.25s ease' }}
+						style={{ stroke: `url(#${gradientId})`, opacity: 0.12, transition: 'opacity 0.25s ease' }}
 					/>
 					<g
 						ref={visibleGroupRef}
 						style={{
-							transition: TRANSITION,
+							transition: 'filter 0.25s ease',
 						}}
 					>
 						<path
@@ -227,9 +331,12 @@ export function MindmapWireLine({
 									cx="0"
 									cy="0"
 									r="3"
-									fill={target.actor.color}
-									stroke={target.actor.color}
 									strokeWidth="2"
+									style={{
+										fill: sourceColor,
+										stroke: sourceColor,
+										transition: SHAPE_TRANSITION,
+									}}
 								/>
 							</g>
 						)}
@@ -239,9 +346,12 @@ export function MindmapWireLine({
 									cx="0"
 									cy="0"
 									r="3"
-									fill={source.actor.color}
-									stroke={source.actor.color}
 									strokeWidth="2"
+									style={{
+										fill: targetColor,
+										stroke: targetColor,
+										transition: SHAPE_TRANSITION,
+									}}
 								/>
 							</g>
 						)}
@@ -250,11 +360,11 @@ export function MindmapWireLine({
 								ref={srcArrowRef}
 								d={arrowPath(x1, y1, -nx1, -ny1, ARROW_SIZE)}
 								fill="none"
-								stroke={target.actor.color}
 								strokeWidth={2}
 								strokeLinecap="round"
 								strokeLinejoin="round"
 								pointerEvents="none"
+								style={{ stroke: targetColor, transition: SHAPE_TRANSITION }}
 							/>
 						)}
 						{showTargetArrow && (
@@ -262,11 +372,11 @@ export function MindmapWireLine({
 								ref={tgtArrowRef}
 								d={arrowPath(x2, y2, -nx2, -ny2, ARROW_SIZE)}
 								fill="none"
-								stroke={source.actor.color}
 								strokeWidth={2}
 								strokeLinecap="round"
 								strokeLinejoin="round"
 								pointerEvents="none"
+								style={{ stroke: targetColor, transition: SHAPE_TRANSITION }}
 							/>
 						)}
 					</g>
@@ -283,46 +393,35 @@ export function MindmapWireLine({
 						onClick={(event) => triggerClick(event, { multiselect: event.shiftKey, event })}
 						onMouseEnter={() => {
 							isHoveredRef.current = true
+							dispatch(addWireToHover(wire.id))
 							applyVisualState()
 						}}
 						onMouseLeave={() => {
 							isHoveredRef.current = false
 							isActiveRef.current = false
+							dispatch(removeWireFromHover(wire.id))
 							applyVisualState()
 						}}
 						onMouseDown={() => {
 							isActiveRef.current = true
 							applyVisualState()
+							onMouseDown()
 						}}
-						onMouseUp={() => {
+						onMouseUp={(event) => {
 							isActiveRef.current = false
 							applyVisualState()
+							onMouseUp(event)
 						}}
 					/>
-					{labelText && (
-						<text
-							ref={labelRef}
-							x={pathMidpoint(ep).x}
-							y={pathMidpoint(ep).y}
-							textAnchor="middle"
-							dominantBaseline="middle"
-							pointerEvents="none"
-							fontSize="16"
-							fill={theme.mode === 'light' ? '#333' : '#ddd'}
-							style={{
-								paintOrder: 'stroke',
-								stroke: theme.mode === 'light' ? '#fff' : theme.custom.palette.background.timeline,
-								strokeWidth: 3,
-								strokeLinejoin: 'round',
-								userSelect: 'none',
-							}}
-						>
-							{labelText}
-						</text>
-					)}
 				</>,
 				svgGroupPortal,
 			)}
-		</>
+			{wire.content && (
+				<MindmapWireLabel
+					wire={wire}
+					onClick={(event) => triggerClick(event, { multiselect: event.shiftKey, event })}
+				/>
+			)}
+		</Box>
 	)
 }

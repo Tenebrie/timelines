@@ -75,9 +75,10 @@ export function registerUpdateArticleTool(server: McpServer) {
 						articleData,
 					})
 
-					await RheaService.updateArticleContent({
+					await RheaService.updateEntityContent({
+						entityType: 'article',
 						worldId,
-						articleId: article.id,
+						entityId: article.id,
 						userId,
 						content: parsedContent,
 					})

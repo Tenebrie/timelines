@@ -10,6 +10,7 @@ export type DragDropStateType<T extends AllowedDraggableType> = {
 	targetPos: { x: number; y: number }
 	targetRootPos: { x: number; y: number }
 	isHandled: boolean
+	hovered: HTMLElement[]
 }
 
 export const IsDragDropStateOfType = <T extends AllowedDraggableType>(

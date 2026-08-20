@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
 type Props = {
-	type: 'Actor' | 'Event' | 'Article' | 'Tag'
+	type: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	selected: boolean
 	onClick: () => void
 	query: string

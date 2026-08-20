@@ -8,6 +8,6 @@ export const applyEventDelta = ({ event, timestamp }: { event: WorldEvent; times
 		return {
 			...total,
 			name: delta.name ?? total.name,
-			description: delta.description ?? total.description,
+			content: delta.description ?? total.content,
 		}
 	}, event)

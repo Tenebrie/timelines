@@ -1,31 +1,35 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
-import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import React from 'react'
-import { useStore } from 'react-redux'
+import { darken, lighten } from '@mui/material/styles'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
-import { RootState } from '@/app/store'
+import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
+import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { useNodeLinking } from '../hooks/useNodeLinking'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { ActorNodeContent } from './ActorNodeContent'
 
 type Props = {
 	node: MindmapNode
-	actor: ActorDetails
+	parent: BoxedMindmapParent
 	onHeaderClick: (e: React.MouseEvent) => void
 	onContentClick: () => void
 }
 
-export function ActorNode({ actor, node, onHeaderClick, onContentClick }: Props) {
-	const { createLinks } = useNodeLinking()
-	const store = useStore<RootState>()
+export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props) {
+	const [dimmed, setDimmed] = useState(false)
+	const { createLinks, checkLinkExists } = useNodeLinking()
+	const selectedNodeKeys = useSelector(getSelectedNodeKeys)
+
+	const theme = useCustomTheme()
 
 	const { ref } = useDragDropReceiver({
 		type: 'actorNodeLinking',
 		onDrop: (data) => {
-			const selectedNodeKeys = getSelectedNodeKeys(store.getState())
 			const sourceNodeId = data.params.sourceNode.id
 			const sourceIds = selectedNodeKeys.includes(sourceNodeId)
 				? [...new Set(selectedNodeKeys)]
@@ -40,11 +44,51 @@ export function ActorNode({ actor, node, onHeaderClick, onContentClick }: Props)
 		},
 	})
 
+	useEventBusSubscribe['mindmap/hover/changed']({
+		callback: ({ hoveredNodeIds }) => {
+			if (hoveredNodeIds.size === 0 || hoveredNodeIds.has(node.id)) {
+				setDimmed(false)
+				return
+			}
+
+			const anyHovered = [...hoveredNodeIds].some((nodeId) => checkLinkExists(node.id, nodeId))
+			setDimmed(!anyHovered)
+		},
+	})
+
 	return (
-		<Box ref={ref}>
+		<Box
+			ref={ref}
+			sx={{
+				opacity: dimmed ? 0.35 : 1,
+				background: theme.custom.palette.background.timeline,
+
+				// Non-scaling border
+				borderRadius: '15px',
+				boxShadow: 'inset 0 0 0 var(--node-border-width) var(--node-border-color)',
+				'--node-border-width': 'calc(1px / var(--grid-scale))',
+				'--node-border-color': theme.material.palette.divider,
+				transition: 'opacity 0.2s, --node-border-color 0.2s ease-out',
+				'[data-selected="true"] > &': {
+					'--node-border-color': theme.material.palette.primary.main,
+					'&:hover': {
+						'--node-border-color': lighten(theme.material.palette.primary.main, 0.0),
+					},
+					'&:active': {
+						'--node-border-color': darken(theme.material.palette.primary.main, 0.3),
+					},
+				},
+				'&:hover': {
+					'--node-border-color': darken(theme.custom.palette.highlight, 0.0),
+				},
+				'&:active': {
+					'--node-border-color': darken(theme.custom.palette.highlight, 0.3),
+				},
+			}}
+		>
 			<ActorNodeContent
 				node={node}
-				actor={actor}
+				parent={parent}
 				onHeaderClick={onHeaderClick}
 				onContentClick={onContentClick}
 			/>

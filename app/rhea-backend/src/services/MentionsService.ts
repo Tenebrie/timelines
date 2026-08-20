@@ -24,6 +24,7 @@ export const MentionsService = {
 			sourceEventId: sourceType === MentionedEntity.Event ? sourceId : undefined,
 			sourceArticleId: sourceType === MentionedEntity.Article ? sourceId : undefined,
 			sourceTagId: sourceType === MentionedEntity.Tag ? sourceId : undefined,
+			sourceNodeId: sourceType === MentionedEntity.Node ? sourceId : undefined,
 		}
 
 		const data = dedupeMentions(
@@ -117,5 +118,7 @@ async function getEntityWorldId(
 			return (await client.wikiArticle.findUnique({ where: { id: entityId } }))?.worldId
 		case MentionedEntity.Tag:
 			return (await client.tag.findUnique({ where: { id: entityId } }))?.worldId
+		case MentionedEntity.Node:
+			return (await client.mindmapNode.findUnique({ where: { id: entityId } }))?.worldId
 	}
 }

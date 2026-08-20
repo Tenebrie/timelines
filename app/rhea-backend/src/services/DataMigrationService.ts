@@ -5,7 +5,7 @@ import { TransactionClient } from '../../prisma/client/internal/prismaNamespace.
 import { exportedUserDataSchema } from './DataMigrationService.schema.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
-const CURRENT_VERSION = 2
+const CURRENT_VERSION = 3
 
 export const DataMigrationService = {
 	exportUserData: async (ctx: { user: { id: string } }) => {

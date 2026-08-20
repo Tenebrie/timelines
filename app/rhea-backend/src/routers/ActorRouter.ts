@@ -46,21 +46,21 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		title: OptionalParam(OptionalNameStringValidator),
 		icon: OptionalParam(NameStringValidator),
 		color: OptionalParam(NameStringValidator),
-		descriptionRich: OptionalParam(ContentStringValidator),
+		contentRich: OptionalParam(ContentStringValidator),
 		parentFolderId: z.string().nullable().optional(),
 	})
 
-	let description: string | undefined
-	let descriptionRich: string | undefined
+	let content: string | undefined
+	let contentRich: string | undefined
 	let mentions: MentionData[] | undefined
 	let referencedAssetIds: string[] | undefined
-	if (params.descriptionRich) {
+	if (params.contentRich) {
 		const parsed = await RichTextService.parseContentString({
 			worldId,
-			contentString: params.descriptionRich,
+			contentString: params.contentRich,
 		})
-		description = parsed.contentPlain
-		descriptionRich = params.descriptionRich
+		content = parsed.content
+		contentRich = params.contentRich
 		mentions = parsed.mentions
 		referencedAssetIds = parsed.referencedAssetIds
 	}
@@ -73,8 +73,8 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		},
 		updateData: {
 			...params,
-			description,
-			descriptionRich,
+			content,
+			contentRich,
 			mentions,
 			referencedAssetIds,
 		},

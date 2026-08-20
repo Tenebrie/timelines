@@ -9,7 +9,7 @@ import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 import { createCollaborationExtension, createCollaborationProvider } from './CollaborationExtension'
 
 type UseCollaborationParams = {
-	entityType: 'actor' | 'event' | 'article'
+	entityType: 'actor' | 'event' | 'article' | 'node'
 	documentId: string
 	enabled: boolean
 }

@@ -29,7 +29,7 @@ export type DocumentMetadata = {
 	lastWritingUserId: string | null
 	worldId: string
 	entityId: string
-	entityType: 'actor' | 'event' | 'article'
+	entityType: 'actor' | 'event' | 'article' | 'node'
 	isLoaded: boolean
 	isDirty: boolean
 	loadPromise: Promise<void> | null
@@ -52,7 +52,7 @@ export const YjsSyncService = {
 		userId: string
 		worldId: string
 		entityId: string
-		entityType: 'actor' | 'event' | 'article'
+		entityType: 'actor' | 'event' | 'article' | 'node'
 		docName: string
 	}) {
 		const doc = getYDoc(docName, true)

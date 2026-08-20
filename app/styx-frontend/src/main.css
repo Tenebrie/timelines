@@ -50,6 +50,24 @@ a {
 	text-decoration: none;
 }
 
+@property --grid-offset-x {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --grid-offset-y {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --grid-scale {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 1;
+}
+
 a:hover {
 	text-decoration: underline;
 }
@@ -110,4 +128,10 @@ svg.mention-chip-tag-icon {
 	left: -1px;
 	top: 2px;
 	font-size: 17px;
+}
+
+@property --node-border-color {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: transparent;
 }

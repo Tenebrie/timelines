@@ -7,6 +7,8 @@ import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropRe
 import { useDragHoverExpand } from '@/app/features/dragDrop/hooks/useDragHoverExpand'
 import { RootState } from '@/app/store'
 
+import { NewNodeGhost } from '../../mindmap/components/NewNodeGhost'
+import { getHoveredMindmapClickArea } from '../../mindmap/utils/getHoveredMindmapClickArea'
 import { useBulkWikiMove } from '../api/useBulkWikiMove'
 import { useMoveArticle } from '../api/useMoveArticle'
 import { useArticleCollapseControls } from '../articleList/hooks/useArticleCollapseControls'
@@ -32,26 +34,32 @@ export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 			top: 'center',
 			left: 'center',
 		},
-		ghostFactory: () => (
-			<Button
-				startIcon={<ArticleListItemIcon article={article} highlighted={false} />}
-				color="secondary"
-				variant="contained"
-				sx={{ justifyContent: 'start', opacity: 0.3, width: '300px', filter: 'grayscale(100%)' }}
-			>
-				<Box
-					sx={{
-						lineHeight: '1.3rem',
-						maxWidth: '100%',
-						overflow: 'hidden',
-						textOverflow: 'ellipsis',
-						whiteSpace: 'nowrap',
-					}}
+		ghostFactory: () => {
+			if (getHoveredMindmapClickArea()) {
+				return <NewNodeGhost entityHandle={article} />
+			}
+
+			return (
+				<Button
+					startIcon={<ArticleListItemIcon article={article} highlighted={false} />}
+					color="secondary"
+					variant="contained"
+					sx={{ justifyContent: 'start', opacity: 0.3, width: '300px', filter: 'grayscale(100%)' }}
 				>
-					{article.name}
-				</Box>
-			</Button>
-		),
+					<Box
+						sx={{
+							lineHeight: '1.3rem',
+							maxWidth: '100%',
+							overflow: 'hidden',
+							textOverflow: 'ellipsis',
+							whiteSpace: 'nowrap',
+						}}
+					>
+						{article.name}
+					</Box>
+				</Button>
+			)
+		},
 		params: { article },
 	})
 
@@ -91,7 +99,7 @@ export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 			if (!isTopHalf && article.type === 'folder' && isFolderExpanded) {
 				await moveEntity({
 					entityId: params.article.id,
-					entityType: params.article.type,
+					entityType: article.type,
 					parentId: article.id,
 					position: -1,
 				})
@@ -100,7 +108,7 @@ export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 
 			await moveEntity({
 				entityId: params.article.id,
-				entityType: params.article.type,
+				entityType: article.type,
 				parentId: article.entity.parentFolderId,
 				position: article.position + delta,
 			})

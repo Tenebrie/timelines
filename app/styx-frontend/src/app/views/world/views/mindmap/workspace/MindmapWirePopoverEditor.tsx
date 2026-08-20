@@ -38,12 +38,7 @@ export function MindmapWirePopoverEditor({
 	const sourceActor = resolveEntity(currentWire.sourceNodeId)
 	const targetActor = resolveEntity(currentWire.targetNodeId)
 
-	if (
-		sourceActor?.type !== 'actor' ||
-		targetActor?.type !== 'actor' ||
-		!sourceActor?.node ||
-		!targetActor?.node
-	) {
+	if (!sourceActor?.node || !targetActor?.node) {
 		return null
 	}
 

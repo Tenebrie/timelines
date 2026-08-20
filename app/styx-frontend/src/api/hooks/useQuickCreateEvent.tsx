@@ -18,10 +18,7 @@ export const useQuickCreateEvent = () => {
 		async ({
 			query,
 			...body
-		}: { query: string } & Omit<
-			CreateWorldEventApiArg['body'],
-			'name' | 'descriptionRich' | 'timestamp'
-		>) => {
+		}: { query: string } & Omit<CreateWorldEventApiArg['body'], 'name' | 'contentRich' | 'timestamp'>) => {
 			if (query.length === 0) {
 				return
 			}
@@ -32,7 +29,7 @@ export const useQuickCreateEvent = () => {
 					body: {
 						...body,
 						name: query,
-						descriptionRich: '',
+						contentRich: '',
 						timestamp: '0',
 					},
 				}),

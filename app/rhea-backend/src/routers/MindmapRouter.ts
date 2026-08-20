@@ -1,7 +1,6 @@
 import { MindmapLinkDirection } from '@prisma/client'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { UserAuthMiddleware } from '@src/middleware/UserAuthMiddleware.js'
-import { ActorService } from '@src/services/ActorService.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { MindmapService } from '@src/services/MindmapService.js'
 import { RedisService } from '@src/services/RedisService.js'
@@ -52,15 +51,60 @@ router.post('/api/world/:worldId/mindmap/nodes', async (ctx) => {
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 
 	const params = useRequestBody(ctx, {
-		id: z.string().optional(),
+		id: z.uuid().optional(),
 		positionX: z.number(),
 		positionY: z.number(),
+		name: z.string().optional(),
 		parentActorId: z.string().optional(),
+		parentArticleId: z.string().optional(),
+		parentEventId: z.string().optional(),
+		parentFolderId: z.string().optional(),
+		parentTagId: z.string().optional(),
 	})
 
-	const parentActor = await ActorService.findActor({ worldId, actorId: params.parentActorId })
-	if (!parentActor) {
-		throw new BadRequestError('Parent actor not found')
+	let owners = 0
+	if (params.parentActorId) {
+		owners += 1
+		await AuthorizationService.checkEntityWorldOwnership({
+			worldId,
+			entityId: params.parentActorId,
+			entityType: 'actor',
+		})
+	}
+	if (params.parentArticleId) {
+		owners += 1
+		await AuthorizationService.checkEntityWorldOwnership({
+			worldId,
+			entityId: params.parentArticleId,
+			entityType: 'article',
+		})
+	}
+	if (params.parentEventId) {
+		owners += 1
+		await AuthorizationService.checkEntityWorldOwnership({
+			worldId,
+			entityId: params.parentEventId,
+			entityType: 'event',
+		})
+	}
+	if (params.parentFolderId) {
+		owners += 1
+		await AuthorizationService.checkEntityWorldOwnership({
+			worldId,
+			entityId: params.parentFolderId,
+			entityType: 'folder',
+		})
+	}
+	if (params.parentTagId) {
+		owners += 1
+		await AuthorizationService.checkEntityWorldOwnership({
+			worldId,
+			entityId: params.parentTagId,
+			entityType: 'tag',
+		})
+	}
+	if (owners > 1) {
+		throw new BadRequestError("Node can't have multiple parents")
 	}
 
 	const node = await MindmapService.createNode({ worldId, ...params })
@@ -86,6 +130,9 @@ router.patch('/api/world/:worldId/mindmap/nodes/:nodeId', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		positionX: z.number().optional(),
 		positionY: z.number().optional(),
+		name: z.string().optional(),
+		content: z.string().optional(),
+		contentRich: z.string().optional(),
 	})
 
 	const node = await MindmapService.updateNode(nodeId, params)

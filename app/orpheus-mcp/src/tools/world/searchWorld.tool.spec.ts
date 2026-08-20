@@ -171,7 +171,7 @@ describe('search_world tool', () => {
 						id: 'e1',
 						name: 'The Siege',
 						timestamp: '250',
-						descriptionRich: '<p>The city was besieged for forty days.</p>',
+						contentRich: '<p>The city was besieged for forty days.</p>',
 					},
 				],
 				actors: [],
