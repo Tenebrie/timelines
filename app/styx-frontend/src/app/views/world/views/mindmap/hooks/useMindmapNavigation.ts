@@ -208,7 +208,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 				return
 			}
 
-			zoomAt(originX, originY, navState.gridScale * Math.exp(-event.deltaY / 800))
+			zoomAt(originX, originY, navState.gridScale * Math.exp(-event.deltaY / 50))
 			update()
 		}
 
