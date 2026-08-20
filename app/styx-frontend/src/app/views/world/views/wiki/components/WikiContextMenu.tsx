@@ -24,7 +24,7 @@ type Props = {
 
 export function WikiContextMenu({ article, popupState }: Props) {
 	const { bulkActionArticles } = useSelector(getWikiState)
-	const { open: openDeleteArticleModal } = useModal('deleteArticleModal')
+	const { open: openbulkDeleteEntitiesModal } = useModal('bulkDeleteEntitiesModal')
 	const { open: openRenameFolderModal } = useModal('renameFolderModal')
 
 	const { setLastCheckedArticle, addToBulkSelection, removeFromBulkSelection } = wikiSlice.actions
@@ -83,7 +83,7 @@ export function WikiContextMenu({ article, popupState }: Props) {
 			<MenuItem
 				color="error"
 				onClick={() => {
-					openDeleteArticleModal({ articles: [article.id] })
+					openbulkDeleteEntitiesModal({ articles: [article.id] })
 					popupState.close()
 				}}
 			>

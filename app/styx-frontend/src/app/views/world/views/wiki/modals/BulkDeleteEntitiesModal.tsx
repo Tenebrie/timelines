@@ -2,21 +2,28 @@ import Delete from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
-import { useListArticles } from '@/app/views/world/api/useListArticles'
 import { useBulkDelete } from '@/app/views/world/views/wiki/api/useBulkDelete'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
-export const DeleteArticleModal = () => {
+import { useEntityResolver } from '../../../modals/editEventModal/hooks/useEntityResolver'
+
+export function BulkDeleteEntitiesModal() {
 	const [deleteArticles, { isLoading }] = useBulkDelete()
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
-	const { data: baseArticles } = useListArticles()
+	const { isOpen, close, articles } = useModal('bulkDeleteEntitiesModal')
 
-	const { isOpen, close, articles } = useModal('deleteArticleModal')
+	const { resolveEntity } = useEntityResolver()
+	const entityToDelete = useMemo(() => {
+		if (articles.length !== 1) {
+			return
+		}
+		return resolveEntity(articles[0])
+	}, [articles, resolveEntity])
 
 	useModalCleanup({
 		isOpen,
@@ -45,19 +52,19 @@ export const DeleteArticleModal = () => {
 
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
-			<ModalHeader>Delete article</ModalHeader>
+			{entityToDelete && <ModalHeader>Delete {entityToDelete?.type}</ModalHeader>}
+			{articles.length > 1 && <ModalHeader>Bulk delete</ModalHeader>}
 			<Stack spacing={2}>
 				{articles.length === 1 && (
 					<div>
-						Attempting to permanently delete article &apos;
-						<b>{baseArticles?.find((a) => a.id === articles[0])?.name}</b>&apos;. This will also delete all
-						related data.
+						Attempting to permanently delete {entityToDelete?.type} &apos;
+						<b>{entityToDelete?.entity.name}</b>&apos;. This will also delete all related data.
 					</div>
 				)}
 				{articles.length > 1 && (
 					<div>
-						Attempting to permanently delete &apos;<b>{articles.length} articles</b>&apos;. This will also
-						delete related data.
+						Attempting to permanently delete <b>{articles.length}</b> entitites. This will also delete all
+						related data.
 					</div>
 				)}
 				<div>This action can&apos;t be reverted!</div>

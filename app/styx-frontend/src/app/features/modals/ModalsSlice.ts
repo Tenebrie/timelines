@@ -90,7 +90,7 @@ const modals = {
 	},
 
 	/* WorldWiki */
-	deleteArticleModal: {
+	bulkDeleteEntitiesModal: {
 		isOpen: false as boolean,
 		articles: [] as string[],
 	},
@@ -146,15 +146,17 @@ export const useModal = <T extends ValidModals>(id: T) => {
 	const open = useCallback(
 		(data: Omit<(typeof modals)[T], 'isOpen'>) => {
 			const modalData = isEventObject(data) ? {} : data
-			dispatch(
-				modalsSlice.actions.updateModal({
-					id,
-					data: {
-						...modalData,
-						isOpen: true,
-					},
-				}),
-			)
+			requestAnimationFrame(() => {
+				dispatch(
+					modalsSlice.actions.updateModal({
+						id,
+						data: {
+							...modalData,
+							isOpen: true,
+						},
+					}),
+				)
+			})
 		},
 		[dispatch, id],
 	)

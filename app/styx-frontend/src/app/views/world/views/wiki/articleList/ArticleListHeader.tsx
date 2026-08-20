@@ -19,7 +19,7 @@ export const ArticleListHeader = () => {
 	const { name } = useSelector(getWorldState, (a, b) => a.name === b.name)
 	const { isBulkSelecting, bulkActionArticles } = useSelector(getWikiState)
 	const allEntityIds = useSelector(getAllWikiEntityIds)
-	const { open: openDeleteArticleModal } = useModal('deleteArticleModal')
+	const { open: openbulkDeleteEntitiesModal } = useModal('bulkDeleteEntitiesModal')
 
 	const { isReadOnly } = useIsReadOnly()
 
@@ -89,7 +89,7 @@ export const ArticleListHeader = () => {
 							disabled={bulkActionArticles.length === 0}
 							sx={{ minWidth: 64 }}
 							startIcon={<Delete />}
-							onClick={() => openDeleteArticleModal({ articles: bulkActionArticles })}
+							onClick={() => openbulkDeleteEntitiesModal({ articles: bulkActionArticles })}
 						>
 							Delete
 						</Button>

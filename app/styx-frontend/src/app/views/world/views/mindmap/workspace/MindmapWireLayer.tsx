@@ -1,6 +1,9 @@
 import Box from '@mui/material/Box'
 import { Fragment, memo, useCallback, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 
+import { dispatchGlobalEvent } from '@/app/features/eventBus'
+import { RootState } from '@/app/store'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 import { BoxedMindmapWire } from '../hooks/useBoxedMindmapContent'
@@ -30,11 +33,22 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 		mode: 'doubleClick',
 	})
 
+	const isBulkSelectContext = useSelector((state: RootState) => {
+		const thingsSelected = state.mindmap.selectedNodes.length + state.mindmap.selectedWires.length
+		return thingsSelected > 1
+	})
+
 	const onOpenPopover = useCallback(
 		(position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => {
-			setPopoverState({ open: true, position, mode })
+			if (isBulkSelectContext) {
+				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
+					position,
+				})
+			} else {
+				setPopoverState({ open: true, position, mode })
+			}
 		},
-		[],
+		[isBulkSelectContext],
 	)
 
 	return (

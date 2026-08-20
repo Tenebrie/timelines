@@ -1,7 +1,7 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
 import { memo, useEffect, useLayoutEffect, useRef } from 'react'
-import { useDispatch, useStore } from 'react-redux'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { DragTrigger, matchesDragTrigger } from '@/app/features/dragDrop/DragTrigger'
@@ -9,6 +9,7 @@ import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
+import { useDraggableClick } from '@/app/hooks/useDraggableClick'
 import { RootState } from '@/app/store'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -21,8 +22,8 @@ import { ActorNode } from './ActorNode'
 import { nodePositions } from './mindmapWireUtils'
 
 type Props = {
-	parent: BoxedMindmapParent
 	node: MindmapNode
+	parent: BoxedMindmapParent
 }
 
 export const ActorNodePositioner = memo(
@@ -49,6 +50,11 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 	const store = useStore<RootState>()
 	const { addNodeToSelection, removeNodeFromSelection, clearSelections } = mindmapSlice.actions
 	const dispatch = useDispatch()
+
+	const isBulkSelectContext = useSelector((state: RootState) => {
+		const thingsSelected = state.mindmap.selectedNodes.length + state.mindmap.selectedWires.length
+		return thingsSelected > 1 && state.mindmap.selectedNodes.some((n) => n.key === node.id)
+	})
 
 	const { triggerClick: onHeaderClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
@@ -342,6 +348,29 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 		setDragHover,
 	])
 
+	const { onMouseDown, onMouseUp } = useDraggableClick({
+		onRightClick: (event) => {
+			if (isBulkSelectContext) {
+				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
+					position: {
+						x: event.clientX,
+						y: event.clientY,
+					},
+				})
+			} else {
+				dispatch(addNodeToSelection({ key: node.id, actorId: parent.id, multiselect: false }))
+				dispatchGlobalEvent['mindmap/node/requestOpenContextMenu']({
+					position: {
+						x: event.clientX,
+						y: event.clientY,
+					},
+					node,
+					parent,
+				})
+			}
+		},
+	})
+
 	return (
 		<Box
 			ref={(element: HTMLDivElement | null) => {
@@ -353,6 +382,8 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			data-entity-id={parent.id}
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
+			onMouseDown={onMouseDown}
+			onMouseUp={onMouseUp}
 			style={
 				{
 					'--node-x': `${node.positionX}px`,

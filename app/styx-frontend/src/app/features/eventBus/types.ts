@@ -1,7 +1,10 @@
+import { MindmapNode } from '@api/types/mindmapTypes'
 import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import type { NavigateOptions } from '@tanstack/react-router'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
+import { BoxedMindmapParent } from '@/app/views/world/views/mindmap/hooks/useBoxedMindmapContent'
+import { Position } from '@/app/views/world/views/timeline/utils/Position'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
 type ScrollTimelineToParams =
@@ -52,6 +55,14 @@ export type EventParams = {
 	}
 	'mindmap/node/onGroupDragEnd': {
 		sourceNodeId: string
+	}
+	'mindmap/node/requestOpenContextMenu': {
+		position: Position
+		node: MindmapNode
+		parent: BoxedMindmapParent
+	}
+	'mindmap/bulk/requestOpenContextMenu': {
+		position: Position
 	}
 	'mindmap/wire/requestNodeTarget': {
 		sourceNodeIds: string[]

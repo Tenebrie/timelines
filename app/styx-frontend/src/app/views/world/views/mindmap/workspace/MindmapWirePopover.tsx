@@ -1,6 +1,9 @@
 import { MindmapWireDirection } from '@api/types/mindmapTypes'
+import Delete from '@mui/icons-material/Delete'
 import Divider from '@mui/material/Divider'
-import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import MenuItem from '@mui/material/MenuItem'
 import MenuList from '@mui/material/MenuList'
 import Popover from '@mui/material/Popover'
 import { useCallback, useMemo, useState } from 'react'
@@ -68,17 +71,18 @@ export function MindmapWirePopover({ open, position, onClose }: MindmapWireState
 			)}
 			{currentWire && <Divider />}
 			<MenuList sx={{ minWidth: 200 }}>
-				{selectedWires.length > 1 && <ListItemButton disabled>Bulk actions</ListItemButton>}
-				{selectedWires.length > 1 && <Divider sx={{ my: 1 }} />}
-
-				<ListItemButton
+				<MenuItem
+					color="error"
 					onClick={() => {
 						deleteMindmapWires(selectedWires)
 						handleClose()
 					}}
 				>
-					Delete {selectedWires.length > 1 ? `${selectedWires.length} links` : 'link'}
-				</ListItemButton>
+					<ListItemIcon>
+						<Delete />
+					</ListItemIcon>
+					<ListItemText color="error">Delete link</ListItemText>
+				</MenuItem>
 			</MenuList>
 		</Popover>
 	)

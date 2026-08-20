@@ -6,8 +6,10 @@ import { useRef } from 'react'
 import { MindmapQuickSelect } from './components/MindmapQuickSelect'
 import { useMindmapNavigation } from './hooks/useMindmapNavigation'
 import { MindmapContent } from './MindmapContent'
+import { MindmapBulkContextMenu } from './workspace/MindmapBulkContextMenu'
 import { MindmapClickArea } from './workspace/MindmapClickArea'
 import { MindmapHotkeys } from './workspace/MindmapHotkeys'
+import { MindmapNodeContextMenu } from './workspace/MindmapNodeContextMenu'
 
 export function Mindmap() {
 	const gridSpacing = 64
@@ -62,6 +64,8 @@ export function Mindmap() {
 			</Box>
 			<MindmapHotkeys />
 			<MindmapQuickSelect />
+			<MindmapNodeContextMenu />
+			<MindmapBulkContextMenu />
 		</Stack>
 	)
 }
