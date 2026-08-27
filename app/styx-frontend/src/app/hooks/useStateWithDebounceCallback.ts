@@ -7,7 +7,7 @@ type Props<T> = {
 	debounceTimeout?: number
 }
 
-export const useStateWithDebounceCallback = <T,>({ initialValue, onDebounce, debounceTimeout }: Props<T>) => {
+export const useStateWithDebounceCallback = <T>({ initialValue, onDebounce, debounceTimeout }: Props<T>) => {
 	const [value, setValue] = useState(initialValue)
 
 	const setValueExternal = useCallback((newValue: T) => {

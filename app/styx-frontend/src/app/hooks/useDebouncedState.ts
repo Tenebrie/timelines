@@ -7,7 +7,7 @@ type Props<T> = {
 	delay?: number
 }
 
-export const useDebouncedState = <T,>({ initialValue, onDebounce, delay }: Props<T>) => {
+export const useDebouncedState = <T>({ initialValue, onDebounce, delay }: Props<T>) => {
 	const [value, setValue] = useState(initialValue)
 	const [nextValue, setNextValue] = useState(initialValue)
 

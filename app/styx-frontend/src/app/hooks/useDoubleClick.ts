@@ -7,7 +7,7 @@ type Props<ArgsT> = {
 	ignoreDelay?: boolean
 }
 
-export const useDoubleClick = <ArgsT,>({ onClick, onDoubleClick, ignoreDelay }: Props<ArgsT>) => {
+export const useDoubleClick = <ArgsT>({ onClick, onDoubleClick, ignoreDelay }: Props<ArgsT>) => {
 	const singleClickTimeout = useRef<number>(0)
 	const singleClickArguments = useRef<ArgsT | null>(null)
 	const lastClickTimestampRef = useRef<number>(0)

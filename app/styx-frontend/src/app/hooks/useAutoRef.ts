@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 
-export const useAutoRef = <T,>(value: T) => {
+export const useAutoRef = <T>(value: T) => {
 	const ref = useMemo(
 		() => ({
 			current: value,
