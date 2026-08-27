@@ -85,7 +85,7 @@ export function QuickSelectListComponent(props: Props) {
 				close()
 			}}
 		>
-			<QuickSelectListContent pos={pos} query={query} onClose={close} {...props} />
+			<QuickSelectListContent pos={pos} query={query} {...props} />
 		</Box>
 	)
 }

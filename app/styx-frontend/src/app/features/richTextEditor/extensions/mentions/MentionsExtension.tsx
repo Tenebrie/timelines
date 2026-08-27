@@ -45,10 +45,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 				if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'PageUp', 'PageDown'].includes(props.event.key)) {
 					dispatchGlobalEvent['quickSelect/onKeyDown']({
 						key: props.event.key,
-						ctrlKey: props.event.ctrlKey,
 						shiftKey: props.event.shiftKey,
-						altKey: props.event.altKey,
-						metaKey: props.event.metaKey,
 					})
 					return true
 				}

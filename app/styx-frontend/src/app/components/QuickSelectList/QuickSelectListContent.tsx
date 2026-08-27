@@ -6,7 +6,6 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import {
 	Mention,
@@ -22,14 +21,12 @@ import { QuickSelectRect } from './types'
 type ContentProps = Omit<QuickSelectListProps, 'isFocused'> & {
 	pos: QuickSelectRect
 	query: string
-	onClose: () => void
 }
 
 export function QuickSelectListContent({
 	pos,
 	query,
 	onSelect,
-	onClose,
 	inputProps,
 	forceDirection,
 	onCreatePlainNode,
@@ -46,15 +43,6 @@ export function QuickSelectListContent({
 
 	const showWelcomeState = !!inputProps
 	const welcomeVisible = !!showWelcomeState && !quickCreateVisible && mentions.length === 0
-
-	useShortcut(
-		Shortcut.Escape,
-		() => {
-			onClose()
-			setSelectedIndex(0)
-		},
-		ShortcutPriorities.Mentions,
-	)
 
 	const selectEntity = useCallback(
 		(index: number) => {

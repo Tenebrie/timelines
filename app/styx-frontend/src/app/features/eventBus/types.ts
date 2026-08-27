@@ -83,10 +83,7 @@ export type EventParams = {
 	'announcements/requestOpen': void
 	'quickSelect/onKeyDown': {
 		key: string
-		ctrlKey: boolean
 		shiftKey: boolean
-		altKey: boolean
-		metaKey: boolean
 	}
 	'quickSelect/requestOpen': {
 		query: string
