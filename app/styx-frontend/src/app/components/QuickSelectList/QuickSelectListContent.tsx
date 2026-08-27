@@ -41,8 +41,7 @@ export function QuickSelectListContent({
 		? mentions.length + getQuickCreateTypes(!!onCreatePlainNode).length - 1
 		: mentions.length - 1
 
-	const showWelcomeState = !!inputProps
-	const welcomeVisible = !!showWelcomeState && !quickCreateVisible && mentions.length === 0
+	const welcomeVisible = !!inputProps && !quickCreateVisible && mentions.length === 0
 
 	const selectEntity = useCallback(
 		(index: number) => {
