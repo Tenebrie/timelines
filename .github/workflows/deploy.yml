@@ -107,17 +107,25 @@ jobs:
             --prerelease --generate-notes
 
   build-echo:
-    name: Build Echo (${{ matrix.platform }})
+    name: Build Echo (${{ matrix.name }})
     needs: [check-commits, create-release]
     if: ${{ github.ref_name == 'dev' }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - name: Linux
+            os: ubuntu-latest
             platform: linux
-          - os: windows-latest
+            arch: x64
+          - name: MacOS
+            os: macos-latest
+            platform: darwin
+            arch: arm64
+          - name: Windows
+            os: windows-latest
             platform: win32
+            arch: x64
     runs-on: ${{ matrix.os }}
     defaults:
       run:
