@@ -34,13 +34,6 @@ export function ArticleListHeaderCreateButton({ folderId, slotProps, ...props }:
 
 	const types = ['folder', 'article', 'actor', 'event', 'tag'] as const
 	type Type = (typeof types)[number]
-	const typeLabels: Record<Type, string> = {
-		folder: 'Folder',
-		article: 'Article',
-		actor: 'Actor',
-		event: 'Event',
-		tag: 'Tag',
-	}
 	const [selectedType, setSelectedType] = useState<Type>('folder')
 
 	const handleCreate = useCallback(async () => {
@@ -102,7 +95,7 @@ export function ArticleListHeaderCreateButton({ folderId, slotProps, ...props }:
 								startIcon={<EntityIcon variant={type} />}
 								color="secondary"
 							>
-								{typeLabels[type]}
+								{type.charAt(0).toUpperCase() + type.slice(1)}
 							</Button>
 						))}
 					</ButtonGroup>
