@@ -2,15 +2,12 @@ import Divider from '@mui/material/Divider'
 import Input from '@mui/material/Input'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
-import {
-	Mention,
-	useDisplayedMentions,
-} from '../../features/richTextEditor/extensions/mentions/hooks/useDisplayedMentions'
+import { useDisplayedMentions } from '../../features/richTextEditor/extensions/mentions/hooks/useDisplayedMentions'
 import { QuickSelectListProps } from './QuickSelectList'
 import { getQuickCreateTypes, QuickSelectListCreate } from './QuickSelectListCreate'
 import { QuickSelectListItem } from './QuickSelectListItem'
@@ -129,32 +126,20 @@ export function QuickSelectListContent({
 		recalculatePosition()
 	}, [recalculatePosition, mentions.length, query])
 
-	const mentionTypes = [
-		{
-			label: 'Actors',
-			mentions: mentions.filter((m) => m.type === 'Actor') as Mention[],
-			indexStart: 0,
-			totalCount: actorCount,
-		},
-	]
-	mentionTypes.push({
-		label: 'Events',
-		mentions: mentions.filter((m) => m.type === 'Event'),
-		indexStart: mentionTypes.reduce((acc, type) => acc + type.mentions.length, 0),
-		totalCount: eventCount,
-	})
-	mentionTypes.push({
-		label: 'Articles',
-		mentions: mentions.filter((m) => m.type === 'Article'),
-		indexStart: mentionTypes.reduce((acc, type) => acc + type.mentions.length, 0),
-		totalCount: articleCount,
-	})
-	mentionTypes.push({
-		label: 'Tags',
-		mentions: mentions.filter((m) => m.type === 'Tag'),
-		indexStart: mentionTypes.reduce((acc, type) => acc + type.mentions.length, 0),
-		totalCount: tagCount,
-	})
+	const mentionTypes = useMemo(() => {
+		let indexStart = 0
+		return [
+			{ label: 'Actors', type: 'Actor', totalCount: actorCount },
+			{ label: 'Events', type: 'Event', totalCount: eventCount },
+			{ label: 'Articles', type: 'Article', totalCount: articleCount },
+			{ label: 'Tags', type: 'Tag', totalCount: tagCount },
+		].map(({ label, type, totalCount }) => {
+			const typeMentions = mentions.filter((m) => m.type === type)
+			const section = { label, mentions: typeMentions, indexStart, totalCount }
+			indexStart += typeMentions.length
+			return section
+		})
+	}, [mentions, actorCount, eventCount, articleCount, tagCount])
 	const theme = useCustomTheme()
 
 	return (
