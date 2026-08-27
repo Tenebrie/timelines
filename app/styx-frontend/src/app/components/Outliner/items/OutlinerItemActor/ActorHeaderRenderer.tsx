@@ -1,4 +1,3 @@
-import { ActorDetails } from '@api/types/worldTypes'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -11,6 +10,7 @@ import MenuList from '@mui/material/MenuList'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { ActorDetails } from '@/api/types/worldTypes'
 import { ActorAvatar } from '@/app/components/ActorAvatar/ActorAvatar'
 import { ShowHideChevron } from '@/app/components/ShowHideChevron'
 import { useModal } from '@/app/features/modals/ModalsSlice'

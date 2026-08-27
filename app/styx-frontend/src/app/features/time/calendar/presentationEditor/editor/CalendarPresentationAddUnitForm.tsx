@@ -1,6 +1,6 @@
-import { CalendarDraftUnit } from '@api/types/calendarTypes'
 import Box from '@mui/material/Box'
 
+import { CalendarDraftUnit } from '@/api/types/calendarTypes'
 import { NewEntityAutocomplete } from '@/ui-lib/components/Autocomplete/NewEntityAutocomplete'
 
 import { NewUnitData } from './CalendarPresentationEditorPanel'

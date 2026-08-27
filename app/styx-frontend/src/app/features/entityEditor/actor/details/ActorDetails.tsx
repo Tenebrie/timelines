@@ -1,9 +1,9 @@
-import { Actor } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { memo } from 'react'
 
+import { Actor } from '@/api/types/worldTypes'
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
 import { IconPicker } from '@/app/components/IconPicker/IconPicker'
 import { EntityEditorTabs } from '@/app/features/entityEditor/common/EntityEditorTabs'

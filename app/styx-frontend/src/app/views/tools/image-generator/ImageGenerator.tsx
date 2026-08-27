@@ -1,4 +1,3 @@
-import { useListImageGenerationModelsQuery } from '@api/otherApi'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -9,6 +8,7 @@ import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useListImageGenerationModelsQuery } from '@/api/otherApi'
 import { FormErrorBanner } from '@/app/components/FormErrorBanner'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useDebounce } from '@/app/hooks/useDebounce'

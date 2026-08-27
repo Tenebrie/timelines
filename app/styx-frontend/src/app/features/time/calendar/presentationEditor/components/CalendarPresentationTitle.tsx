@@ -1,8 +1,8 @@
-import { useUpdateCalendarPresentationMutation } from '@api/calendarApi'
-import { CalendarDraftPresentation } from '@api/types/calendarTypes'
 import { useDispatch, useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { useUpdateCalendarPresentationMutation } from '@/api/calendarApi'
+import { CalendarDraftPresentation } from '@/api/types/calendarTypes'
 import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 
 import { calendarEditorSlice } from '../../CalendarSlice'

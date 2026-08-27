@@ -15,9 +15,9 @@ import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScro
 import { RootState } from '@/app/store'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 
+import { useBulkWikiMove } from '../../../api/useBulkWikiMove'
+import { useMoveArticle } from '../../../api/useMoveArticle'
 import { getWorldStateLoaded } from '../../../WorldSliceSelectors'
-import { useBulkWikiMove } from '../api/useBulkWikiMove'
-import { useMoveArticle } from '../api/useMoveArticle'
 import { WikiContextMenu } from '../components/WikiContextMenu'
 import { BoxedWikiEntity, useBoxedWikiContent } from '../hooks/useBoxedWikiContent'
 import { getWikiState, getWikiStateLoaded } from '../WikiSliceSelectors'

@@ -1,4 +1,3 @@
-import { WorldBrief } from '@api/types/worldTypes'
 import Public from '@mui/icons-material/Public'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -6,6 +5,8 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useMemo } from 'react'
+
+import { WorldBrief } from '@/api/types/worldTypes'
 
 import { WorldListCreateNewButton } from './WorldListCreateNewButton'
 import { WorldListItem } from './WorldListItem'

@@ -1,4 +1,4 @@
-import { WorldCalendar, WorldCalendarPreview } from '@api/types/worldTypes'
+import { WorldCalendar, WorldCalendarPreview } from '@/api/types/worldTypes'
 
 export function mockCalendar(overrides: Partial<WorldCalendar>): WorldCalendar {
 	return {

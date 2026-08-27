@@ -1,4 +1,4 @@
-import { WikiEntityType } from '@api/types/worldTypes'
+import { WikiEntityType } from '@/api/types/worldTypes'
 
 export const DefaultColors: Record<WikiEntityType, string> = {
 	actor: '#32a995',

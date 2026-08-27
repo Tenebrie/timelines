@@ -1,4 +1,4 @@
-import { GetResponse } from '@api/utils'
+import { GetResponse } from '@/api/utils'
 
 export type Calendar = GetResponse<'/api/calendar/{calendarId}/preview'>
 

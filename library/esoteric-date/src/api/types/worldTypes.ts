@@ -1,4 +1,4 @@
-import { GetResponse } from '@api/utils'
+import { GetResponse } from '@/api/utils'
 
 export type WorldCalendar = Omit<GetResponse<'/api/world/{worldId}'>['calendars'][number], 'originTime'> & {
 	originTime: number

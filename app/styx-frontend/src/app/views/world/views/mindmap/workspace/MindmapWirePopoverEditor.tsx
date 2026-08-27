@@ -1,4 +1,3 @@
-import { MindmapWire, MindmapWireDirection } from '@api/types/mindmapTypes'
 import ArrowBack from '@mui/icons-material/ArrowBack'
 import ArrowForward from '@mui/icons-material/ArrowForward'
 import SwapHoriz from '@mui/icons-material/SwapHoriz'
@@ -9,6 +8,7 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { useEffect } from 'react'
 
+import { MindmapWire, MindmapWireDirection } from '@/api/types/mindmapTypes'
 import { MultiSwitch } from '@/ui-lib/components/MultiSwitch/MultiSwitch'
 
 import { useEntityResolver } from '../../../modals/editEventModal/hooks/useEntityResolver'

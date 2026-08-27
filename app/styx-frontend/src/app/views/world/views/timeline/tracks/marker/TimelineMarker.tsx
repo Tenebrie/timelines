@@ -1,9 +1,9 @@
-import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import { Icon } from '@iconify/react'
 import Close from '@mui/icons-material/Close'
 import { CSSProperties, memo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
+import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'

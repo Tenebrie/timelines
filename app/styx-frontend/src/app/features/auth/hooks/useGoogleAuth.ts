@@ -1,6 +1,6 @@
-import { useLoginWithGoogleMutation } from '@api/authApi'
 import { useCallback, useEffect, useState } from 'react'
 
+import { useLoginWithGoogleMutation } from '@/api/authApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import { useHandleUserLogin } from './useHandleUserLogin'

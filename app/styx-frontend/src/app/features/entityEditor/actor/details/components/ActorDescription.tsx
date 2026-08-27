@@ -1,8 +1,8 @@
-import { ActorDetails } from '@api/types/worldTypes'
 import debounce from 'lodash.debounce'
 import { useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { ActorDetails } from '@/api/types/worldTypes'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 

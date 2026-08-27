@@ -1,6 +1,6 @@
-import { MarkerType, TimelineEntity, WorldEvent } from '@api/types/worldTypes'
 import { useState } from 'react'
 
+import { MarkerType, TimelineEntity, WorldEvent } from '@/api/types/worldTypes'
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 
 export const HoveredTimelineEvents = {

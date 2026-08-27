@@ -1,7 +1,7 @@
-import AutoStories from '@mui/icons-material/AutoStories'
-import Person from '@mui/icons-material/Person'
+import AccountTreeIcon from '@mui/icons-material/AccountTreeRounded'
+import TimelineIcon from '@mui/icons-material/BarChartRounded'
+import WikiIcon from '@mui/icons-material/HistoryEduRounded'
 import Settings from '@mui/icons-material/Settings'
-import TimelineIcon from '@mui/icons-material/Timeline'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
@@ -62,7 +62,11 @@ export const WorldSidebar = () => {
 							data-testid="NavigateToWiki"
 						>
 							<StyledSmallButton variant={getButtonStyle(matchesWiki)}>
-								<AutoStories />
+								<WikiIcon
+									sx={{
+										transform: 'scale(1.2)',
+									}}
+								/>
 							</StyledSmallButton>
 						</NavigationLink>
 						<NavigationLink
@@ -72,7 +76,7 @@ export const WorldSidebar = () => {
 							data-testid="NavigateToMindmap"
 						>
 							<StyledSmallButton variant={getButtonStyle(matchesMindmap)}>
-								<Person />
+								<AccountTreeIcon />
 							</StyledSmallButton>
 						</NavigationLink>
 						<NavigationLink
@@ -82,7 +86,11 @@ export const WorldSidebar = () => {
 							data-testid="NavigateToTimeline"
 						>
 							<StyledSmallButton variant={getButtonStyle(matchesTimeline)}>
-								<TimelineIcon />
+								<TimelineIcon
+									sx={{
+										transform: 'rotate(90deg) scale(1.2)',
+									}}
+								/>
 							</StyledSmallButton>
 						</NavigationLink>
 						{/* <StyledSmallButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}> 

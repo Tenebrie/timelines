@@ -1,4 +1,3 @@
-import { useCreateWorldEventTrackMutation } from '@api/worldEventTracksApi'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import FormGroup from '@mui/material/FormGroup'
@@ -6,6 +5,7 @@ import TextField from '@mui/material/TextField'
 import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useCreateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { isEntityNameValid } from '@/app/utils/isEntityNameValid'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'

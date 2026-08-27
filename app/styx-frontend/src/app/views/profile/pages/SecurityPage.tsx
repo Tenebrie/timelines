@@ -1,4 +1,3 @@
-import { useChangePasswordMutation } from '@api/profileApi'
 import ClearIcon from '@mui/icons-material/ClearOutlined'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import LockResetIcon from '@mui/icons-material/LockReset'
@@ -11,6 +10,7 @@ import Typography from '@mui/material/Typography'
 import { useSelector } from 'react-redux'
 import { z } from 'zod'
 
+import { useChangePasswordMutation } from '@/api/profileApi'
 import { ApiErrorBanner } from '@/app/components/ApiErrorBanner'
 import { SaveButton } from '@/app/components/SaveButton'
 import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'

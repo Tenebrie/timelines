@@ -1,6 +1,7 @@
-import { CalendarDraftUnitChildRelation } from '@api/types/calendarTypes'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+
+import { CalendarDraftUnitChildRelation } from '@/api/types/calendarTypes'
 
 type Props = {
 	child: CalendarDraftUnitChildRelation

@@ -1,6 +1,6 @@
-import { WorldTag } from '@api/types/worldTypes'
 import { useCallback, useMemo, useRef, useState } from 'react'
 
+import { WorldTag } from '@/api/types/worldTypes'
 import { generateSetter } from '@/app/utils/autosave/generateSetter'
 
 type Props = {

@@ -1,10 +1,10 @@
-import { MindmapNode, MindmapWire } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
 import { alpha, lighten } from '@mui/material/styles'
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch } from 'react-redux'
 
+import { MindmapNode, MindmapWire } from '@/api/types/mindmapTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'

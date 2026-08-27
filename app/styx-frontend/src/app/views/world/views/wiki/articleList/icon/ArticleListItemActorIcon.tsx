@@ -1,5 +1,4 @@
-import { ActorDetails } from '@api/types/worldTypes'
-
+import { ActorDetails } from '@/api/types/worldTypes'
 import { ActorAvatar } from '@/app/components/ActorAvatar/ActorAvatar'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 

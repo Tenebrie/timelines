@@ -1,9 +1,9 @@
-import { WorldDetails } from '@api/types/worldTypes'
-import { useGetWorldCollaboratorsQuery } from '@api/worldCollaboratorsApi'
-import { useGetWorldInfoQuery } from '@api/worldDetailsApi'
 import { useParams } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
+import { WorldDetails } from '@/api/types/worldTypes'
+import { useGetWorldCollaboratorsQuery } from '@/api/worldCollaboratorsApi'
+import { useGetWorldInfoQuery } from '@/api/worldDetailsApi'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { ingestWorld } from '@/app/utils/ingestEntity'
 

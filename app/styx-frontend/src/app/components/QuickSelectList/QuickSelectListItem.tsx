@@ -4,6 +4,7 @@ import ListItemText from '@mui/material/ListItemText'
 import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
 
+import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { HighlightedText } from '@/ui-lib/components/HighlightedText/HighlightedText'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
@@ -17,6 +18,8 @@ type Props = {
 }
 
 export function QuickSelectListItem({ mention, query, selected, onClick }: Props) {
+	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], onClick, selected && ShortcutPriorities.Mentions)
+
 	const entityColor = (() => {
 		if (mention.type === 'Actor') {
 			return mention.actor.color

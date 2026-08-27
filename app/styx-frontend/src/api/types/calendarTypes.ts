@@ -2,8 +2,8 @@ import {
 	GetCalendarApiResponse,
 	GetCalendarPreviewApiResponse,
 	ListCalendarsApiResponse,
-} from '@api/calendarApi'
-import { ListCalendarUnitFormatModesApiResponse } from '@api/otherApi'
+} from '@/api/calendarApi'
+import { ListCalendarUnitFormatModesApiResponse } from '@/api/otherApi'
 
 export type Calendar = GetCalendarPreviewApiResponse
 export type CalendarUnit = Calendar['units'][number]

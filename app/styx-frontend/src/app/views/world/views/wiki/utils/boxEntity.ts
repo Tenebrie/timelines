@@ -1,5 +1,5 @@
-import { Actor, WorldEvent, WorldTag } from '@api/types/worldTypes'
-import { WikiArticle, WikiFolder } from '@api/types/worldWikiTypes'
+import { Actor, WorldEvent, WorldTag } from '@/api/types/worldTypes'
+import { WikiArticle, WikiFolder } from '@/api/types/worldWikiTypes'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 
@@ -54,6 +54,6 @@ export function boxTag(tag: WorldTag): BoxedWikiEntity {
 		entity: tag,
 		name: tag.name,
 		position: tag.parentFolderPosition,
-		color: '#9f2261',
+		color: tag.color,
 	}
 }

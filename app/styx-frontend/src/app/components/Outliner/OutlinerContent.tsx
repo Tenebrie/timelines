@@ -1,9 +1,9 @@
-import { Actor, WorldEvent, WorldTag } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { memo } from 'react'
 import { useSelector } from 'react-redux'
 import { Virtuoso } from 'react-virtuoso'
 
+import { Actor, WorldEvent, WorldTag } from '@/api/types/worldTypes'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { useOutlinerTabs } from '@/app/components/Outliner/hooks/useOutlinerTabs'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'

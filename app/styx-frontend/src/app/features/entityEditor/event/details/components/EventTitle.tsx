@@ -1,7 +1,7 @@
-import { WorldEvent } from '@api/types/worldTypes'
 import Stack from '@mui/material/Stack'
 import useEvent from 'react-use-event-hook'
 
+import { WorldEvent } from '@/api/types/worldTypes'
 import { EventColorIconPicker } from '@/app/components/ColorIconPicker/EventColorIconPicker'
 import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 

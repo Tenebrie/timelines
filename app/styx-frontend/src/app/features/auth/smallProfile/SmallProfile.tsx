@@ -1,5 +1,6 @@
-import { useCheckAuthenticationQuery } from '@api/authApi'
 import { useSelector } from 'react-redux'
+
+import { useCheckAuthenticationQuery } from '@/api/authApi'
 
 import { getAuthState } from '../AuthSliceSelectors'
 import { GuestDropdown } from './dropdowns/GuestDropdown'

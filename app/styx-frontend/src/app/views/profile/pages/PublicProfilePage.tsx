@@ -1,4 +1,3 @@
-import { useUpdateProfile } from '@api/hooks/useUpdateProfile'
 import SaveIcon from '@mui/icons-material/Save'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
@@ -9,6 +8,7 @@ import Typography from '@mui/material/Typography'
 import { useSelector } from 'react-redux'
 import { z } from 'zod'
 
+import { useUpdateProfile } from '@/api/hooks/useUpdateProfile'
 import { ApiErrorBanner } from '@/app/components/ApiErrorBanner'
 import { SaveButton } from '@/app/components/SaveButton'
 import { User } from '@/app/features/auth/AuthSlice'

@@ -1,8 +1,8 @@
-import { WorldEventTrack } from '@api/types/worldEventTracksTypes'
-import { MarkerType, TimelineEntity, WorldEvent, WorldEventDelta } from '@api/types/worldTypes'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
+import { WorldEventTrack } from '@/api/types/worldEventTracksTypes'
+import { MarkerType, TimelineEntity, WorldEvent, WorldEventDelta } from '@/api/types/worldTypes'
 import { applyEventDelta } from '@/app/utils/applyEventDelta'
 import { asMarkerType } from '@/app/utils/asMarkerType'
 import { findStartingFrom } from '@/app/utils/findStartingFrom'

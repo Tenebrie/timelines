@@ -1,4 +1,3 @@
-import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import { Icon } from '@iconify/react'
 import Close from '@mui/icons-material/Close'
 import Box from '@mui/material/Box'
@@ -8,6 +7,7 @@ import classNames from 'classnames'
 import { CSSProperties, memo, MouseEvent, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
 import { getTimelinePreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'

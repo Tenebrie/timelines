@@ -1,7 +1,8 @@
-import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { memo } from 'react'
 import { Fragment } from 'react/jsx-runtime'
+
+import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
 
 type OverviewMarkerProps = {
 	marker: MarkerWithHeight

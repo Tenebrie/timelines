@@ -1,4 +1,4 @@
-import { GetMindmapApiResponse } from '@api/mindmapApi'
+import { GetMindmapApiResponse } from '@/api/mindmapApi'
 
 export type MindmapNode = GetMindmapApiResponse['nodes'][number]
 export type MindmapWire = GetMindmapApiResponse['wires'][number]
