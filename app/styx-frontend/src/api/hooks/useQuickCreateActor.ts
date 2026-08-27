@@ -1,6 +1,6 @@
-import { CreateActorApiArg } from '@api/actorListApi'
 import { useCallback } from 'react'
 
+import { CreateActorApiArg } from '@/api/actorListApi'
 import { useCreateActor } from '@/app/views/world/api/useCreateActor'
 
 export const useQuickCreateActor = () => {

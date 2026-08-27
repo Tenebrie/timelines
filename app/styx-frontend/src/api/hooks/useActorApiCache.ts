@@ -1,8 +1,8 @@
-import { ActorDetails } from '@api/types/worldTypes'
-import { worldDetailsApi } from '@api/worldDetailsApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { ActorDetails } from '@/api/types/worldTypes'
+import { worldDetailsApi } from '@/api/worldDetailsApi'
 import { AppDispatch } from '@/app/store'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 

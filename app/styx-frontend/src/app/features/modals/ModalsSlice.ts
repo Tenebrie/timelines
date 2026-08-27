@@ -1,9 +1,9 @@
-import { ActorDetails, WorldEvent, WorldEventDelta, WorldTag } from '@api/types/worldTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { ActorDetails, WorldEvent, WorldEventDelta, WorldTag } from '@/api/types/worldTypes'
 import { isEventObject } from '@/app/utils/isEventObject'
 
 import { User } from '../auth/AuthSlice'

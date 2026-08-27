@@ -1,6 +1,6 @@
-import { AdminUpdateUserApiArg, useAdminUpdateUserMutation } from '@api/adminUsersApi'
 import { useCallback } from 'react'
 
+import { AdminUpdateUserApiArg, useAdminUpdateUserMutation } from '@/api/adminUsersApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 export function useAdminUpdateUser() {

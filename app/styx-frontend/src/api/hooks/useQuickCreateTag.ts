@@ -1,6 +1,6 @@
-import { CreateTagApiArg } from '@api/worldTagApi'
 import { useCallback } from 'react'
 
+import { CreateTagApiArg } from '@/api/worldTagApi'
 import { useCreateTag } from '@/app/views/world/api/useCreateTag'
 
 export const useQuickCreateTag = () => {

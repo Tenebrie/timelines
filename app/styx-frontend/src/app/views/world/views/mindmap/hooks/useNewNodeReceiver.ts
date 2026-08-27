@@ -1,6 +1,6 @@
-import { WikiEntityType } from '@api/types/worldTypes'
 import { RefObject } from 'react'
 
+import { WikiEntityType } from '@/api/types/worldTypes'
 import { getGhostElementRect } from '@/app/features/dragDrop/components/GhostWrapper'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 

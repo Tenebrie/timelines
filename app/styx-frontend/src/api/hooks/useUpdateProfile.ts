@@ -1,6 +1,6 @@
-import { UpdateProfileApiArg, useUpdateProfileMutation } from '@api/profileApi'
 import { useCallback } from 'react'
 
+import { UpdateProfileApiArg, useUpdateProfileMutation } from '@/api/profileApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import { useAuthApiCache } from './useAuthApiCache'

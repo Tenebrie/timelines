@@ -1,7 +1,7 @@
-import { CreateTagApiArg, useCreateTagMutation } from '@api/worldTagApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { CreateTagApiArg, useCreateTagMutation } from '@/api/worldTagApi'
 import { ingestTag } from '@/app/utils/ingestEntity'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { worldSlice } from '@/app/views/world/WorldSlice'

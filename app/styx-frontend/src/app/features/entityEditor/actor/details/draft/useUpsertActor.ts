@@ -1,6 +1,6 @@
-import { ActorDetails } from '@api/types/worldTypes'
 import { useEffect } from 'react'
 
+import { ActorDetails } from '@/api/types/worldTypes'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { useUpdateActor } from '@/app/views/world/api/useUpdateActor'

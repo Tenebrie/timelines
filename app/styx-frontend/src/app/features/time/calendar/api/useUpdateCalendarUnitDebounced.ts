@@ -1,6 +1,7 @@
-import { UpdateCalendarUnitApiArg, useUpdateCalendarUnitMutation } from '@api/calendarApi'
 import debounce from 'lodash.debounce'
 import { useMemo } from 'react'
+
+import { UpdateCalendarUnitApiArg, useUpdateCalendarUnitMutation } from '@/api/calendarApi'
 
 export function useUpdateCalendarUnitDebounced() {
 	const [updateUnitMutation, data] = useUpdateCalendarUnitMutation()

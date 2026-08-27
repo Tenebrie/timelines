@@ -1,10 +1,10 @@
-import { WikiArticle, WikiFolder, WikiPositionUpdate } from '@api/types/worldWikiTypes'
-import { worldDetailsApi } from '@api/worldDetailsApi'
-import { worldWikiApi } from '@api/worldWikiApi'
-import { worldWikiFolderApi } from '@api/worldWikiFolderApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { WikiArticle, WikiFolder, WikiPositionUpdate } from '@/api/types/worldWikiTypes'
+import { worldDetailsApi } from '@/api/worldDetailsApi'
+import { worldWikiApi } from '@/api/worldWikiApi'
+import { worldWikiFolderApi } from '@/api/worldWikiFolderApi'
 import { AppDispatch } from '@/app/store'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 

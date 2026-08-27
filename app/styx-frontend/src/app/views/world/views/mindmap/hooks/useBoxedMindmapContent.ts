@@ -1,8 +1,8 @@
-import { useGetMindmapQuery } from '@api/mindmapApi'
-import { MindmapNode, MindmapWire } from '@api/types/mindmapTypes'
 import { useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useGetMindmapQuery } from '@/api/mindmapApi'
+import { MindmapNode, MindmapWire } from '@/api/types/mindmapTypes'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'

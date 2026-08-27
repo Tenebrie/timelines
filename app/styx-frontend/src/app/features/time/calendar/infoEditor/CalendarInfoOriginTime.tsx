@@ -1,4 +1,3 @@
-import { useUpdateCalendarMutation } from '@api/calendarApi'
 import SaveIcon from '@mui/icons-material/Save'
 import UndoIcon from '@mui/icons-material/Undo'
 import Button from '@mui/material/Button'
@@ -10,6 +9,7 @@ import Typography from '@mui/material/Typography'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useUpdateCalendarMutation } from '@/api/calendarApi'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 
 import { getCalendarEditorState } from '../CalendarSliceSelectors'

@@ -1,8 +1,8 @@
-import { useGenerateFreeWorldShareLinkMutation } from '@api/otherApi'
 import debounce from 'lodash.debounce'
 import { useCallback, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useGenerateFreeWorldShareLinkMutation } from '@/api/otherApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'

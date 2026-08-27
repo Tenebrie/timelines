@@ -1,5 +1,6 @@
-import { useGetCalendarPreviewQuery } from '@api/calendarApi'
 import { useSelector } from 'react-redux'
+
+import { useGetCalendarPreviewQuery } from '@/api/calendarApi'
 
 import { getCalendarEditorState } from '../CalendarSliceSelectors'
 

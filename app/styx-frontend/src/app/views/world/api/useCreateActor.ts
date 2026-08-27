@@ -1,7 +1,7 @@
-import { CreateActorApiArg, useCreateActorMutation } from '@api/actorListApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { CreateActorApiArg, useCreateActorMutation } from '@/api/actorListApi'
 import { ingestActor } from '@/app/utils/ingestEntity'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { worldSlice } from '@/app/views/world/WorldSlice'

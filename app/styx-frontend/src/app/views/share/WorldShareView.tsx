@@ -1,4 +1,3 @@
-import { useAcceptWorldShareLinkMutation, useVisitWorldShareLinkQuery } from '@api/otherApi'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import Link from '@mui/material/Link'
@@ -9,6 +8,7 @@ import { Link as NavLink, useParams } from '@tanstack/react-router'
 import { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useAcceptWorldShareLinkMutation, useVisitWorldShareLinkQuery } from '@/api/otherApi'
 import { TenebrieLogo } from '@/app/components/TenebrieLogo'
 import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'

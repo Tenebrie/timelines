@@ -1,6 +1,6 @@
-import { WorldEvent } from '@api/types/worldTypes'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
+import { WorldEvent } from '@/api/types/worldTypes'
 import { generateSetter } from '@/app/utils/autosave/generateSetter'
 
 type Props = {

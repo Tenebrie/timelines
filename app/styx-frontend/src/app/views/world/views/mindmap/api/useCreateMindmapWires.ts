@@ -1,8 +1,8 @@
-import { CreateMindmapWiresApiArg, mindmapApi, useCreateMindmapWiresMutation } from '@api/mindmapApi'
-import { MindmapWire } from '@api/types/mindmapTypes'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { CreateMindmapWiresApiArg, mindmapApi, useCreateMindmapWiresMutation } from '@/api/mindmapApi'
+import { MindmapWire } from '@/api/types/mindmapTypes'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'

@@ -1,7 +1,8 @@
-import { useGetFavoriteIconsQuery } from '@api/favoriteIconsApi'
-import { GetIconifyIconsResponse, useGetIconifyIconsQuery } from '@api/iconify/iconifyApi'
-import { IconCollection } from '@api/types/iconTypes'
 import { useCallback, useEffect, useState } from 'react'
+
+import { useGetFavoriteIconsQuery } from '@/api/favoriteIconsApi'
+import { GetIconifyIconsResponse, useGetIconifyIconsQuery } from '@/api/iconify/iconifyApi'
+import { IconCollection } from '@/api/types/iconTypes'
 
 type ParsedResult = {
 	collections: (IconCollection & { favorite: boolean })[]

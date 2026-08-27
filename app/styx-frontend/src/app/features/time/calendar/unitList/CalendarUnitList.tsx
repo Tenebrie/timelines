@@ -1,5 +1,3 @@
-import { useCreateCalendarUnitMutation } from '@api/calendarApi'
-import { CalendarDraftUnit } from '@api/types/calendarTypes'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
@@ -8,6 +6,8 @@ import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useCreateCalendarUnitMutation } from '@/api/calendarApi'
+import { CalendarDraftUnit } from '@/api/types/calendarTypes'
 import { CreatePopoverIconButton } from '@/ui-lib/components/PopoverButton/CreatePopoverIconButton'
 
 import { getCalendarEditorState } from '../CalendarSliceSelectors'

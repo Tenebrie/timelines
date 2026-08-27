@@ -1,10 +1,10 @@
-import { useWikiApiCache } from '@api/hooks/useWikiApiCache'
-import { UpdateArticleApiArg, useUpdateArticleMutation } from '@api/otherApi'
-import { worldDetailsApi } from '@api/worldDetailsApi'
-import { useGetArticlesQuery } from '@api/worldWikiApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useWikiApiCache } from '@/api/hooks/useWikiApiCache'
+import { UpdateArticleApiArg, useUpdateArticleMutation } from '@/api/otherApi'
+import { worldDetailsApi } from '@/api/worldDetailsApi'
+import { useGetArticlesQuery } from '@/api/worldWikiApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 

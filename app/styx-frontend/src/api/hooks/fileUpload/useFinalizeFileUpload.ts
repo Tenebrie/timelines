@@ -1,6 +1,6 @@
-import { FinalizeAssetUploadApiArg, useFinalizeAssetUploadMutation } from '@api/assetApi'
 import { useCallback } from 'react'
 
+import { FinalizeAssetUploadApiArg, useFinalizeAssetUploadMutation } from '@/api/assetApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 export function useFinalizeFileUpload() {

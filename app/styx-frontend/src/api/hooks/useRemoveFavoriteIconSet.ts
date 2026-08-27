@@ -1,6 +1,6 @@
-import { useRemoveFavoriteIconMutation } from '@api/favoriteIconsApi'
 import { useCallback } from 'react'
 
+import { useRemoveFavoriteIconMutation } from '@/api/favoriteIconsApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 export function useRemoveFavoriteIconSet() {

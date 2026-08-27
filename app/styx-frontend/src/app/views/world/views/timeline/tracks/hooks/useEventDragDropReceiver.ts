@@ -1,7 +1,7 @@
-import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import { RefObject, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
 import { useUpdateWorldEventMutation } from '@/api/worldEventApi'
 import { useUpdateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'

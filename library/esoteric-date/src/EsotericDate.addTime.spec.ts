@@ -1,4 +1,3 @@
-import { WorldCalendar } from '@api/types/worldTypes'
 import { describe, expect, it } from 'vitest'
 
 import {
@@ -8,6 +7,7 @@ import {
 	mockCalendarUnitParentRelation,
 } from '@/api/mock/rheaModels.mock'
 import { CalendarUnit } from '@/api/types/calendarTypes'
+import { WorldCalendar } from '@/api/types/worldTypes'
 
 import { EsotericDate } from './EsotericDate'
 

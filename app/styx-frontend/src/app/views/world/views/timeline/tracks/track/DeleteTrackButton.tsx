@@ -1,6 +1,6 @@
-import { useDeleteWorldEventTrackMutation } from '@api/worldEventTracksApi'
 import { useSelector } from 'react-redux'
 
+import { useDeleteWorldEventTrackMutation } from '@/api/worldEventTracksApi'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 import { ConfirmPopoverButton } from '@/ui-lib/components/PopoverButton/ConfirmPopoverButton'
 

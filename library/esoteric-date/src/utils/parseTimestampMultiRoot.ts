@@ -1,4 +1,4 @@
-import { CalendarDraftUnit, CalendarUnit } from '@api/types/calendarTypes'
+import { CalendarDraftUnit, CalendarUnit } from '@/api/types/calendarTypes'
 
 import { ParsedTimestamp } from '../types.js'
 import { parseTimestampSingleRoot } from './parseTimestampSingleRoot.js'

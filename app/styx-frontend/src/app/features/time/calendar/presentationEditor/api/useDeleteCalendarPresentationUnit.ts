@@ -1,7 +1,7 @@
-import { useDeleteCalendarPresentationUnitMutation } from '@api/calendarApi'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useDeleteCalendarPresentationUnitMutation } from '@/api/calendarApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'

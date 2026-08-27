@@ -1,7 +1,7 @@
-import { WorldDetails } from '@api/types/worldTypes'
-import { UpdateWorldApiArg, useUpdateWorldMutation } from '@api/worldDetailsApi'
 import { useCallback, useEffect, useRef } from 'react'
 
+import { WorldDetails } from '@/api/types/worldTypes'
+import { UpdateWorldApiArg, useUpdateWorldMutation } from '@/api/worldDetailsApi'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useSettingsDraft } from '@/app/views/world/views/settings/hooks/useSettingsDraft'

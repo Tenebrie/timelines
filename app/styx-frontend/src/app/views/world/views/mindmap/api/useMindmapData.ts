@@ -1,5 +1,6 @@
-import { GetMindmapApiResponse, useGetMindmapQuery } from '@api/mindmapApi'
 import { useSelector } from 'react-redux'
+
+import { GetMindmapApiResponse, useGetMindmapQuery } from '@/api/mindmapApi'
 
 import { getWorldState } from '../../../WorldSliceSelectors'
 

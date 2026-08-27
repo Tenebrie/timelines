@@ -1,9 +1,3 @@
-import {
-	useExportUserDataMutation,
-	useImportUserDataMutation,
-	useValidateImportUserDataMutation,
-} from '@api/dataMigrationApi'
-import { useFileUpload } from '@api/hooks/fileUpload/useFileUpload'
 import ClearIcon from '@mui/icons-material/Clear'
 import DescriptionIcon from '@mui/icons-material/DescriptionOutlined'
 import ImportIcon from '@mui/icons-material/FileDownload'
@@ -17,6 +11,12 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useRef, useState } from 'react'
 
+import {
+	useExportUserDataMutation,
+	useImportUserDataMutation,
+	useValidateImportUserDataMutation,
+} from '@/api/dataMigrationApi'
+import { useFileUpload } from '@/api/hooks/fileUpload/useFileUpload'
 import { formatBytes } from '@/app/utils/formatBytes'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Button } from '@/ui-lib/components/Button/Button'

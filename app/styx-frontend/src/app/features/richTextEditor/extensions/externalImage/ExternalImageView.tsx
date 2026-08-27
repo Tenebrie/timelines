@@ -1,9 +1,10 @@
-import { useGetAssetQuery } from '@api/assetApi'
 import { useTheme } from '@mui/material/styles'
 import { NodeViewProps } from '@tiptap/core'
 import { DOMSerializer } from '@tiptap/pm/model'
 import { NodeViewWrapper } from '@tiptap/react'
 import { useEffect, useRef } from 'react'
+
+import { useGetAssetQuery } from '@/api/assetApi'
 
 export function ExternalImageView({ node, editor, selected, updateAttributes }: NodeViewProps) {
 	const assetId = node.attrs.assetId as string

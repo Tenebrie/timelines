@@ -1,10 +1,10 @@
-import { useWikiApiCache } from '@api/hooks/useWikiApiCache'
-import { UpdateArticleApiArg } from '@api/otherApi'
-import { worldDetailsApi } from '@api/worldDetailsApi'
-import { useGetFoldersQuery, useUpdateFolderMutation } from '@api/worldWikiFolderApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useWikiApiCache } from '@/api/hooks/useWikiApiCache'
+import { UpdateArticleApiArg } from '@/api/otherApi'
+import { worldDetailsApi } from '@/api/worldDetailsApi'
+import { useGetFoldersQuery, useUpdateFolderMutation } from '@/api/worldWikiFolderApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 

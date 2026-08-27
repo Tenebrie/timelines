@@ -1,10 +1,10 @@
-import { MentionedEntity } from '@api/types/worldTypes'
 import Divider from '@mui/material/Divider'
 import { useCallback } from 'react'
 
 import { useQuickCreateActor } from '@/api/hooks/useQuickCreateActor'
 import { useQuickCreateEvent } from '@/api/hooks/useQuickCreateEvent'
 import { useQuickCreateTag } from '@/api/hooks/useQuickCreateTag'
+import { MentionedEntity } from '@/api/types/worldTypes'
 import { useCreateArticle } from '@/app/views/world/api/useCreateArticle'
 
 import { QuickSelectListCreateItem } from './QuickSelectListCreateItem'

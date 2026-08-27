@@ -1,7 +1,7 @@
-import { useCheckAuthenticationQuery } from '@api/authApi'
-import { useGetWorldsQuery } from '@api/worldListApi'
 import { useSelector } from 'react-redux'
 
+import { useCheckAuthenticationQuery } from '@/api/authApi'
+import { useGetWorldsQuery } from '@/api/worldListApi'
 import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 
 export const useWorldListData = () => {

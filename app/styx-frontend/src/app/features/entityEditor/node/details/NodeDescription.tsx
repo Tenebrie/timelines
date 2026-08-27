@@ -1,8 +1,8 @@
-import { MindmapNode } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
 import debounce from 'lodash.debounce'
 import { useCallback, useRef } from 'react'
 
+import { MindmapNode } from '@/api/types/mindmapTypes'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useUpdateMindmapNode } from '@/app/views/world/views/mindmap/api/useUpdateMindmapNode'

@@ -1,7 +1,7 @@
-import { WorldEvent } from '@api/types/worldTypes'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { WorldEvent } from '@/api/types/worldTypes'
 import { worldDetailsApi } from '@/api/worldDetailsApi'
 import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '@/api/worldEventApi'
 import { ingestEvent } from '@/app/utils/ingestEntity'

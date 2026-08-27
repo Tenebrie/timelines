@@ -1,8 +1,8 @@
-import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { CSSProperties, memo, useCallback, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
+import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'

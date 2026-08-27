@@ -1,6 +1,6 @@
-import { useGetActorBacklinksQuery } from '@api/actorListApi'
 import { useSelector } from 'react-redux'
 
+import { useGetActorBacklinksQuery } from '@/api/actorListApi'
 import { EntityBacklinks } from '@/app/features/entityEditor/common/EntityBacklinks'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 

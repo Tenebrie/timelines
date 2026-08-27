@@ -1,9 +1,9 @@
-import { useGetMindmapQuery } from '@api/mindmapApi'
-import { MindmapNode } from '@api/types/mindmapTypes'
-import { Actor, WorldEvent, WorldTag } from '@api/types/worldTypes'
-import { WikiArticle } from '@api/types/worldWikiTypes'
 import { useSelector } from 'react-redux'
 
+import { useGetMindmapQuery } from '@/api/mindmapApi'
+import { MindmapNode } from '@/api/types/mindmapTypes'
+import { Actor, WorldEvent, WorldTag } from '@/api/types/worldTypes'
+import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { store } from '@/app/store'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 

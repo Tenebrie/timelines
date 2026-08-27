@@ -1,6 +1,6 @@
-import { useDeleteCalendarUnitMutation } from '@api/calendarApi'
 import { useSelector } from 'react-redux'
 
+import { useDeleteCalendarUnitMutation } from '@/api/calendarApi'
 import { ConfirmPopoverButton } from '@/ui-lib/components/PopoverButton/ConfirmPopoverButton'
 
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'

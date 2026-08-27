@@ -1,4 +1,3 @@
-import type { IconCollection as IconCollectionData } from '@api/types/iconTypes'
 import { Icon } from '@iconify/react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -7,6 +6,8 @@ import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { memo, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react'
+
+import type { IconCollection as IconCollectionData } from '@/api/types/iconTypes'
 
 import { FavoriteIconCollectionButton } from './FavoriteIconCollectionButton'
 

@@ -1,6 +1,6 @@
-import { useAdminBroadcastNotificationMutation } from '@api/adminNotificationsApi'
 import { useCallback } from 'react'
 
+import { useAdminBroadcastNotificationMutation } from '@/api/adminNotificationsApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 export function useAdminBroadcastNotification() {

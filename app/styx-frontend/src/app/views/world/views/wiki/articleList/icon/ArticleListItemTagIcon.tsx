@@ -1,5 +1,4 @@
-import { WorldTag } from '@api/types/worldTypes'
-
+import { WorldTag } from '@/api/types/worldTypes'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'

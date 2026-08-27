@@ -1,8 +1,8 @@
-import { MindmapNode } from '@api/types/mindmapTypes'
-import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import type { NavigateOptions } from '@tanstack/react-router'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
+import { MindmapNode } from '@/api/types/mindmapTypes'
+import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
 import { BoxedMindmapParent } from '@/app/views/world/views/mindmap/hooks/useBoxedMindmapContent'
 import { Position } from '@/app/views/world/views/timeline/utils/Position'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'

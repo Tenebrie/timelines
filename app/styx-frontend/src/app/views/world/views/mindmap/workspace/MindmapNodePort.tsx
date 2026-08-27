@@ -1,8 +1,8 @@
-import { MindmapNode } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { useEffect, useRef } from 'react'
 
+import { MindmapNode } from '@/api/types/mindmapTypes'
 import { DragTrigger } from '@/app/features/dragDrop/DragTrigger'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'

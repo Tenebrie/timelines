@@ -1,7 +1,7 @@
-import { MentionedEntity } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { memo, useCallback, useState } from 'react'
 
+import { MentionedEntity } from '@/api/types/worldTypes'
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 

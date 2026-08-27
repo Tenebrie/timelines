@@ -1,6 +1,7 @@
-import { WikiArticle, WikiFolder } from '@api/types/worldWikiTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
+
+import { WikiArticle, WikiFolder } from '@/api/types/worldWikiTypes'
 
 export const initialState = {
 	articlesLoaded: false,

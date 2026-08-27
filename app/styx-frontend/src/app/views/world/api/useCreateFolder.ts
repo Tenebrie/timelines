@@ -1,6 +1,6 @@
-import { CreateFolderApiArg, useCreateFolderMutation, worldWikiFolderApi } from '@api/worldWikiFolderApi'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { CreateFolderApiArg, useCreateFolderMutation, worldWikiFolderApi } from '@/api/worldWikiFolderApi'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'

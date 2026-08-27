@@ -1,6 +1,6 @@
-import { CreateWorldEventApiArg } from '@api/worldEventApi'
 import { useCallback } from 'react'
 
+import { CreateWorldEventApiArg } from '@/api/worldEventApi'
 import { useCreateEvent } from '@/app/views/world/api/useCreateEvent'
 
 export const useQuickCreateEvent = () => {

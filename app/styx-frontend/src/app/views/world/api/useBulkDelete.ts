@@ -1,7 +1,7 @@
-import { useBulkDeleteEntitiesMutation } from '@api/worldBulkApi'
-import { worldWikiApi } from '@api/worldWikiApi'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useBulkDeleteEntitiesMutation } from '@/api/worldBulkApi'
+import { worldWikiApi } from '@/api/worldWikiApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
 import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'

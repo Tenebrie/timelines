@@ -1,6 +1,6 @@
-import { useCreateGuestAccountMutation } from '@api/authApi'
 import { useSelector } from 'react-redux'
 
+import { useCreateGuestAccountMutation } from '@/api/authApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 

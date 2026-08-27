@@ -1,8 +1,8 @@
-import { useWikiApiCache } from '@api/hooks/useWikiApiCache'
-import { useUpdateArticleMutation } from '@api/otherApi'
-import { worldWikiApi } from '@api/worldWikiApi'
 import { useSelector } from 'react-redux'
 
+import { useWikiApiCache } from '@/api/hooks/useWikiApiCache'
+import { useUpdateArticleMutation } from '@/api/otherApi'
+import { worldWikiApi } from '@/api/worldWikiApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 

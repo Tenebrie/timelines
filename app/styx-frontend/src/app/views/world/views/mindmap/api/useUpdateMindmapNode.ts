@@ -1,7 +1,7 @@
-import { mindmapApi, UpdateNodeApiArg, useUpdateNodeMutation } from '@api/mindmapApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { mindmapApi, UpdateNodeApiArg, useUpdateNodeMutation } from '@/api/mindmapApi'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'

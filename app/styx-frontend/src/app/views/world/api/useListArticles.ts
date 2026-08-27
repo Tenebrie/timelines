@@ -1,6 +1,6 @@
-import { useGetArticlesQuery } from '@api/worldWikiApi'
 import { useSelector } from 'react-redux'
 
+import { useGetArticlesQuery } from '@/api/worldWikiApi'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 export const useListArticles = () => {

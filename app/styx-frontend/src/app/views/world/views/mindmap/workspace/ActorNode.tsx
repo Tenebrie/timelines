@@ -1,9 +1,9 @@
-import { MindmapNode } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
 import { darken, lighten } from '@mui/material/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'

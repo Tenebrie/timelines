@@ -1,7 +1,7 @@
-import { Actor, WorldEvent, WorldTag } from '@api/types/worldTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
+import { Actor, WorldEvent, WorldTag } from '@/api/types/worldTypes'
 import { BoxedWikiEntity } from '@/app/views/world/views/wiki/hooks/useBoxedWikiContent'
 
 import { ScaleLevel } from '../../schema/ScaleLevel'

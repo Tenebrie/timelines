@@ -1,4 +1,3 @@
-import { CalendarDraftUnit } from '@api/types/calendarTypes'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
@@ -9,6 +8,7 @@ import Typography from '@mui/material/Typography'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { CalendarDraftUnit } from '@/api/types/calendarTypes'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { getCalendarEditorPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 

@@ -1,4 +1,4 @@
-import { WorldCalendar, WorldCalendarUnit } from '@api/types/worldTypes'
+import { WorldCalendar, WorldCalendarUnit } from '@/api/types/worldTypes'
 
 type TimeBucket = {
 	bucket: string

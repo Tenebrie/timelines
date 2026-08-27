@@ -1,5 +1,5 @@
-import { Actor, WorldEvent, WorldTag } from '@api/types/worldTypes'
-import { WikiArticle, WikiFolder } from '@api/types/worldWikiTypes'
+import { Actor, WorldEvent, WorldTag } from '@/api/types/worldTypes'
+import { WikiArticle, WikiFolder } from '@/api/types/worldWikiTypes'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 

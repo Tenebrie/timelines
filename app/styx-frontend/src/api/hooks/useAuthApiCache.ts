@@ -1,6 +1,6 @@
-import { authApi, CheckAuthenticationApiResponse } from '@api/authApi'
 import { useDispatch } from 'react-redux'
 
+import { authApi, CheckAuthenticationApiResponse } from '@/api/authApi'
 import { User } from '@/app/features/auth/AuthSlice'
 import { AppDispatch } from '@/app/store'
 

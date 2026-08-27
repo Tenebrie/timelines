@@ -1,4 +1,3 @@
-import { CalendarDraftPresentationUnit } from '@api/types/calendarTypes'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -6,6 +5,7 @@ import debounce from 'lodash.debounce'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { CalendarDraftPresentationUnit } from '@/api/types/calendarTypes'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { ConfirmPopoverButton } from '@/ui-lib/components/PopoverButton/ConfirmPopoverButton'
 

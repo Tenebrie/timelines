@@ -1,8 +1,8 @@
-import { mockActorModel } from '@api/mock/rheaModels.mock'
-import { ActorDetails } from '@api/types/worldTypes'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
+import { mockActorModel } from '@/api/mock/rheaModels.mock'
+import { ActorDetails } from '@/api/types/worldTypes'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 type Props = {

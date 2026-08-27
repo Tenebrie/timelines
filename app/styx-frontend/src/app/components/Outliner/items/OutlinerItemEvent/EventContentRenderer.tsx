@@ -1,9 +1,9 @@
-import { Actor, WorldEvent } from '@api/types/worldTypes'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import { useCallback } from 'react'
 
+import { Actor, WorldEvent } from '@/api/types/worldTypes'
 import { StyledListItemButton, ZebraWrapper } from '@/app/components/Outliner/items/OutlinerItemActor/styles'
 import { TruncatedTypography } from '@/app/components/TruncatedTypography'
 import { useEventBusDispatch } from '@/app/features/eventBus'

@@ -1,8 +1,8 @@
-import { ActorDetails, WorldEvent, WorldTag } from '@api/types/worldTypes'
-import { WikiArticle, WikiFolder } from '@api/types/worldWikiTypes'
 import { useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
+import { ActorDetails, WorldEvent, WorldTag } from '@/api/types/worldTypes'
+import { WikiArticle, WikiFolder } from '@/api/types/worldWikiTypes'
 import { getWikiPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 

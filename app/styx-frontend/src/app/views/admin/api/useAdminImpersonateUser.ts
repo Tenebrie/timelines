@@ -1,6 +1,6 @@
-import { useAdminImpersonateUserMutation } from '@api/adminUsersApi'
 import { useCallback } from 'react'
 
+import { useAdminImpersonateUserMutation } from '@/api/adminUsersApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 

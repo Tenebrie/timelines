@@ -1,8 +1,8 @@
-import { mockEventModel } from '@api/mock/rheaModels.mock'
-import { WorldEvent } from '@api/types/worldTypes'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
+import { mockEventModel } from '@/api/mock/rheaModels.mock'
+import { WorldEvent } from '@/api/types/worldTypes'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 type Props = {

@@ -1,6 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { ShareWorldApiArg } from '@api/worldCollaboratorsApi'
 import { describe, expect, it } from '@rstest/core'
 import { screen, within } from '@testing-library/react'
 
@@ -13,6 +12,7 @@ import {
 	mockRemoveCollaborator,
 	mockWorldBriefModel,
 } from '@/api/mock/rheaApi.mock'
+import { ShareWorldApiArg } from '@/api/worldCollaboratorsApi'
 import { worldInitialState } from '@/app/views/world/WorldSlice'
 import { mockRouter } from '@/router-utils/router.mock'
 import { renderWithProviders } from '@/test-utils/renderWithProviders'

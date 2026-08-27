@@ -1,10 +1,10 @@
-import { CalendarDraftUnit, CalendarDraftUnitChildRelation } from '@api/types/calendarTypes'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { CalendarDraftUnit, CalendarDraftUnitChildRelation } from '@/api/types/calendarTypes'
 import { useUpdateCalendarUnitDebounced } from '@/app/features/time/calendar/api/useUpdateCalendarUnitDebounced'
 import { calendarEditorSlice } from '@/app/features/time/calendar/CalendarSlice'
 import { getCalendarEditorState } from '@/app/features/time/calendar/CalendarSliceSelectors'

@@ -1,4 +1,3 @@
-import { useAdminGetUserLevelsQuery } from '@api/otherApi'
 import Cancel from '@mui/icons-material/Cancel'
 import Save from '@mui/icons-material/Save'
 import Button from '@mui/material/Button'
@@ -11,6 +10,7 @@ import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useAdminSetUserLevelMutation } from '@/api/adminUsersApi'
+import { useAdminGetUserLevelsQuery } from '@/api/otherApi'
 import { User } from '@/app/features/auth/AuthSlice'
 import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 

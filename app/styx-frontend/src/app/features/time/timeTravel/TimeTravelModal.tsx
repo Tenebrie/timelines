@@ -1,4 +1,3 @@
-import { WorldCalendar } from '@api/types/worldTypes'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import Divider from '@mui/material/Divider'
@@ -9,6 +8,7 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { WorldCalendar } from '@/api/types/worldTypes'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'

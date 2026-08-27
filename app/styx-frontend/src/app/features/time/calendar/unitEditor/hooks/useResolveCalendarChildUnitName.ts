@@ -1,6 +1,7 @@
-import { CalendarUnit } from '@api/types/calendarTypes'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+
+import { CalendarUnit } from '@/api/types/calendarTypes'
 
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'
 

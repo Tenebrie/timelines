@@ -1,5 +1,3 @@
-import { UpdateCalendarUnitApiArg } from '@api/calendarApi'
-import { CalendarDraftUnit } from '@api/types/calendarTypes'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
@@ -12,6 +10,8 @@ import { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { UpdateCalendarUnitApiArg } from '@/api/calendarApi'
+import { CalendarDraftUnit } from '@/api/types/calendarTypes'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { getCalendarEditorPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 

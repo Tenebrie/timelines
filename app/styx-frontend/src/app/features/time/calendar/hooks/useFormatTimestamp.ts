@@ -1,5 +1,5 @@
-import { Calendar, CalendarDraft } from '@api/types/calendarTypes'
-import { WorldCalendar } from '@api/types/worldTypes'
+import { Calendar, CalendarDraft } from '@/api/types/calendarTypes'
+import { WorldCalendar } from '@/api/types/worldTypes'
 
 import { useFormatTimestampUnits } from './useFormatTimestampUnits'
 

@@ -1,5 +1,4 @@
-import { WikiFolder } from '@api/types/worldWikiTypes'
-
+import { WikiFolder } from '@/api/types/worldWikiTypes'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'

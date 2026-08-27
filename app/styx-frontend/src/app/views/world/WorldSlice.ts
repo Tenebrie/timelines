@@ -1,3 +1,6 @@
+import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
+
 import {
 	ActorDetails,
 	MarkerType,
@@ -7,11 +10,8 @@ import {
 	WorldEvent,
 	WorldEventDelta,
 	WorldTag,
-} from '@api/types/worldTypes'
-import { WikiArticle } from '@api/types/worldWikiTypes'
-import type { PayloadAction } from '@reduxjs/toolkit'
-import { createSlice } from '@reduxjs/toolkit'
-
+} from '@/api/types/worldTypes'
+import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 
 import { ingestWorld } from '../../utils/ingestEntity'

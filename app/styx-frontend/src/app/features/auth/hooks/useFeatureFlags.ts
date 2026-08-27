@@ -1,5 +1,6 @@
-import { FeatureFlag } from '@api/types/otherTypes'
 import { useSelector } from 'react-redux'
+
+import { FeatureFlag } from '@/api/types/otherTypes'
 
 import { getAuthState } from '../AuthSliceSelectors'
 

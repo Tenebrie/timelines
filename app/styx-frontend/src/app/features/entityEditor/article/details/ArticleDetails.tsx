@@ -1,9 +1,9 @@
-import { WikiArticle } from '@api/types/worldWikiTypes'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import useEvent from 'react-use-event-hook'
 
+import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useEditArticle } from '@/app/views/world/api/useEditArticle'
 import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'

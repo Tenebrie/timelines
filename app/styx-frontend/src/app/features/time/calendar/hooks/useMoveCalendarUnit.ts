@@ -1,6 +1,6 @@
-import { useUpdateCalendarUnitMutation } from '@api/calendarApi'
 import { useSelector } from 'react-redux'
 
+import { useUpdateCalendarUnitMutation } from '@/api/calendarApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import { getCalendarEditorState } from '../CalendarSliceSelectors'

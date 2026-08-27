@@ -1,6 +1,7 @@
-import { useGetMindmapQuery } from '@api/mindmapApi'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
+
+import { useGetMindmapQuery } from '@/api/mindmapApi'
 
 import { getWorldIdState } from '../../../WorldSliceSelectors'
 import { useCreateMindmapWires } from '../api/useCreateMindmapWires'

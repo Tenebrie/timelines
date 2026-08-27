@@ -1,9 +1,9 @@
-import { MindmapNode } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
 import { memo, useEffect, useLayoutEffect, useRef } from 'react'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { MindmapNode } from '@/api/types/mindmapTypes'
 import { DragTrigger, matchesDragTrigger } from '@/app/features/dragDrop/DragTrigger'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'

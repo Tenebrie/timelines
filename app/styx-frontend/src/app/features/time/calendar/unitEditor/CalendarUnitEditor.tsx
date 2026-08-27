@@ -1,7 +1,8 @@
-import { CalendarDraftUnit } from '@api/types/calendarTypes'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { useSelector } from 'react-redux'
+
+import { CalendarDraftUnit } from '@/api/types/calendarTypes'
 
 import { getCalendarEditorState } from '../CalendarSliceSelectors'
 import { CalendarUnitTitle } from './components/CalendarUnitTitle'

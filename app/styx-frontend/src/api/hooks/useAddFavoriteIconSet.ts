@@ -1,6 +1,6 @@
-import { useAddFavoriteIconMutation } from '@api/favoriteIconsApi'
 import { useCallback } from 'react'
 
+import { useAddFavoriteIconMutation } from '@/api/favoriteIconsApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 export function useAddFavoriteIconSet() {

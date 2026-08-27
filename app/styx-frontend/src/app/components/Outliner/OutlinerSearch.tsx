@@ -1,7 +1,7 @@
-import { useSearchWorldQuery } from '@api/worldSearchApi'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useSearchWorldQuery } from '@/api/worldSearchApi'
 import { SearchInput } from '@/app/components/SearchInput'
 import { ingestEvent } from '@/app/utils/ingestEntity'
 import { worldSlice } from '@/app/views/world/WorldSlice'

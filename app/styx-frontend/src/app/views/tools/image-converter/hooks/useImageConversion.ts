@@ -1,6 +1,6 @@
-import { RequestImageConversionApiArg } from '@api/otherApi'
 import { useState } from 'react'
 
+import { RequestImageConversionApiArg } from '@/api/otherApi'
 import { useErrorState } from '@/app/utils/useErrorState'
 
 import { useFileUpload } from '../../../../../api/hooks/fileUpload/useFileUpload'

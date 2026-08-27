@@ -1,7 +1,7 @@
-import { useDeleteActorMutation } from '@api/actorListApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useDeleteActorMutation } from '@/api/actorListApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'

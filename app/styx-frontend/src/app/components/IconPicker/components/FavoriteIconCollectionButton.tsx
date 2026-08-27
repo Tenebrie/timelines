@@ -1,11 +1,12 @@
-import { useGetFavoriteIconsQuery } from '@api/favoriteIconsApi'
-import { useAddFavoriteIconSet } from '@api/hooks/useAddFavoriteIconSet'
-import { useRemoveFavoriteIconSet } from '@api/hooks/useRemoveFavoriteIconSet'
-import type { IconCollection } from '@api/types/iconTypes'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import Button from '@mui/material/Button'
 import { useLayoutEffect, useState } from 'react'
+
+import { useGetFavoriteIconsQuery } from '@/api/favoriteIconsApi'
+import { useAddFavoriteIconSet } from '@/api/hooks/useAddFavoriteIconSet'
+import { useRemoveFavoriteIconSet } from '@/api/hooks/useRemoveFavoriteIconSet'
+import type { IconCollection } from '@/api/types/iconTypes'
 
 type Props = {
 	collection: IconCollection

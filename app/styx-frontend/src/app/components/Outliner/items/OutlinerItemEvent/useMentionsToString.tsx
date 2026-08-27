@@ -1,7 +1,7 @@
-import { Actor, MentionDetails } from '@api/types/worldTypes'
 import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
+import { Actor, MentionDetails } from '@/api/types/worldTypes'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 export const useMentionsToString = () => {

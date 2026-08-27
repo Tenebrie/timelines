@@ -1,10 +1,10 @@
-import { GetTagDetailsApiResponse } from '@api/worldTagApi'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useSelector } from 'react-redux'
 
+import { GetTagDetailsApiResponse } from '@/api/worldTagApi'
 import { ActorMentionChip } from '@/app/features/richTextEditor/components/chips/ActorMentionChip'
 import { ArticleMentionChip } from '@/app/features/richTextEditor/components/chips/ArticleMentionChip'
 import { EventMentionChip } from '@/app/features/richTextEditor/components/chips/EventMentionChip'

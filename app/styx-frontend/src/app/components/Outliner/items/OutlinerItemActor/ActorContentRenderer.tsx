@@ -1,8 +1,8 @@
-import { ActorDetails } from '@api/types/worldTypes'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 
+import { ActorDetails } from '@/api/types/worldTypes'
 import { StyledListItemButton, ZebraWrapper } from '@/app/components/Outliner/items/OutlinerItemActor/styles'
 import { TruncatedTypography } from '@/app/components/TruncatedTypography'
 import { RichTextEditorReadonly } from '@/app/features/richTextEditor/RichTextEditorReadonly'
