@@ -4,10 +4,14 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
+import { MentionedEntity } from '@/api/types/worldTypes'
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
-import { useDisplayedMentions } from '../../features/richTextEditor/extensions/mentions/hooks/useDisplayedMentions'
+import {
+	Mention,
+	useDisplayedMentions,
+} from '../../features/richTextEditor/extensions/mentions/hooks/useDisplayedMentions'
 import { QuickSelectListProps } from './QuickSelectList'
 import { getQuickCreateTypes, QuickSelectListCreate } from './QuickSelectListCreate'
 import { QuickSelectListItem } from './QuickSelectListItem'
@@ -41,21 +45,17 @@ export function QuickSelectListContent({
 	const welcomeVisible = !!inputProps && !quickCreateVisible && mentions.length === 0
 
 	const selectEntity = useCallback(
-		(index: number) => {
-			const selectedMention = mentions[index]
-			if (!selectedMention) {
-				return
-			}
+		(mention: Mention) => {
 			onSelect({
 				query,
 				entity: {
-					id: selectedMention.id,
-					type: selectedMention.type,
-					name: selectedMention.name,
+					id: mention.id,
+					type: mention.type,
+					name: mention.name,
 				},
 			})
 		},
-		[mentions, onSelect, query],
+		[onSelect, query],
 	)
 
 	const handleKeyPress = useCallback(
@@ -129,10 +129,26 @@ export function QuickSelectListContent({
 	const mentionTypes = useMemo(() => {
 		let indexStart = 0
 		return [
-			{ label: 'Actors', type: 'Actor', totalCount: actorCount },
-			{ label: 'Events', type: 'Event', totalCount: eventCount },
-			{ label: 'Articles', type: 'Article', totalCount: articleCount },
-			{ label: 'Tags', type: 'Tag', totalCount: tagCount },
+			{
+				label: 'Actors',
+				type: 'Actor' satisfies MentionedEntity,
+				totalCount: actorCount,
+			},
+			{
+				label: 'Events',
+				type: 'Event' satisfies MentionedEntity,
+				totalCount: eventCount,
+			},
+			{
+				label: 'Articles',
+				type: 'Article' satisfies MentionedEntity,
+				totalCount: articleCount,
+			},
+			{
+				label: 'Tags',
+				type: 'Tag' satisfies MentionedEntity,
+				totalCount: tagCount,
+			},
 		].map(({ label, type, totalCount }) => {
 			const typeMentions = mentions.filter((m) => m.type === type)
 			const section = { label, mentions: typeMentions, indexStart, totalCount }
@@ -197,7 +213,7 @@ export function QuickSelectListContent({
 								mention={mention}
 								query={query}
 								selected={selectedIndex === index + type.indexStart}
-								onClick={() => selectEntity(index + type.indexStart)}
+								onClick={() => selectEntity(mention)}
 							/>
 						))}
 					</Stack>

@@ -18,7 +18,7 @@ type Props = {
 }
 
 export function QuickSelectListItem({ mention, query, selected, onClick }: Props) {
-	useShortcut(Shortcut.Enter, onClick, selected && ShortcutPriorities.Mentions)
+	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], onClick, selected && ShortcutPriorities.Mentions)
 
 	const entityColor = (() => {
 		if (mention.type === 'Actor') {

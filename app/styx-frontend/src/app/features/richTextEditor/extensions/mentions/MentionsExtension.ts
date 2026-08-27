@@ -34,18 +34,21 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 				})
 			},
 
-			onKeyDown(props) {
+			onKeyDown({ event }) {
 				if (!state.isOpen || !state.editor) {
 					return false
 				}
-				if (props.event.key === 'Escape') {
+				if (event.key === 'Escape') {
 					state.isOpen = false
 					return true
 				}
-				if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'PageUp', 'PageDown'].includes(props.event.key)) {
+				if (event.key === 'Enter' && event.shiftKey) {
+					return false
+				}
+				if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'PageUp', 'PageDown'].includes(event.key)) {
 					dispatchGlobalEvent['quickSelect/onKeyDown']({
-						key: props.event.key,
-						shiftKey: props.event.shiftKey,
+						key: event.key,
+						shiftKey: event.shiftKey,
 					})
 					return true
 				}

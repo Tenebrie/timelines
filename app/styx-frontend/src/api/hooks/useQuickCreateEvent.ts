@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { CreateWorldEventApiArg } from '@/api/worldEventApi'
 import { useCreateEvent } from '@/app/views/world/api/useCreateEvent'
 
-export const useQuickCreateEvent = () => {
+export function useQuickCreateEvent() {
 	const [createEvent] = useCreateEvent()
 
 	return useCallback(
@@ -11,10 +11,12 @@ export const useQuickCreateEvent = () => {
 			query,
 			...body
 		}: { query: string } & Omit<CreateWorldEventApiArg['body'], 'name' | 'contentRich' | 'timestamp'>) => {
-			if (query.length === 0) {
-				return
-			}
-			return (await createEvent({ ...body, name: query, contentRich: '', timestamp: '0' })) ?? null
+			return await createEvent({
+				...body,
+				name: query || 'Unnamed Event',
+				contentRich: '',
+				timestamp: '0',
+			})
 		},
 		[createEvent],
 	)

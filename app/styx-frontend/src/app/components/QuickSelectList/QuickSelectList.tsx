@@ -40,7 +40,7 @@ export function QuickSelectListComponent(props: Props) {
 		() => {
 			close()
 		},
-		visible && ShortcutPriorities.Mentions,
+		visible && props.isFocused && ShortcutPriorities.Mentions,
 	)
 
 	useEventBusSubscribe['quickSelect/requestOpen']({

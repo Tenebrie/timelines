@@ -2,10 +2,10 @@ import Divider from '@mui/material/Divider'
 import { useCallback } from 'react'
 
 import { useQuickCreateActor } from '@/api/hooks/useQuickCreateActor'
+import { useQuickCreateArticle } from '@/api/hooks/useQuickCreateArticle'
 import { useQuickCreateEvent } from '@/api/hooks/useQuickCreateEvent'
 import { useQuickCreateTag } from '@/api/hooks/useQuickCreateTag'
 import { MentionedEntity } from '@/api/types/worldTypes'
-import { useCreateArticle } from '@/app/views/world/api/useCreateArticle'
 
 import { QuickSelectListCreateItem } from './QuickSelectListCreateItem'
 import { QuickSelectListSectionHeader } from './QuickSelectListSectionHeader'
@@ -35,7 +35,7 @@ export function QuickSelectListCreate({
 }: Props) {
 	const createActor = useQuickCreateActor()
 	const createEvent = useQuickCreateEvent()
-	const [createArticle] = useCreateArticle()
+	const createArticle = useQuickCreateArticle()
 	const createTag = useQuickCreateTag()
 
 	const selectCreated = useCallback(
@@ -60,7 +60,7 @@ export function QuickSelectListCreate({
 			}
 		},
 		Article: async () => {
-			const article = await createArticle({ name: query })
+			const article = await createArticle({ query })
 			if (article) {
 				selectCreated('Article', article.id)
 			}

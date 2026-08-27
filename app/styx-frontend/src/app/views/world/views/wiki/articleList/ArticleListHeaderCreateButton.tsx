@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
 
 import { useQuickCreateActor } from '@/api/hooks/useQuickCreateActor'
+import { useQuickCreateArticle } from '@/api/hooks/useQuickCreateArticle'
 import { useQuickCreateEvent } from '@/api/hooks/useQuickCreateEvent'
 import { useQuickCreateTag } from '@/api/hooks/useQuickCreateTag'
 import {
@@ -13,7 +14,6 @@ import {
 } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
-import { useCreateArticle } from '../../../api/useCreateArticle'
 import { useCreateFolder } from '../../../api/useCreateFolder'
 import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
 
@@ -26,7 +26,7 @@ export function ArticleListHeaderCreateButton({ folderId, slotProps, ...props }:
 
 	const createActor = useQuickCreateActor()
 	const createEvent = useQuickCreateEvent()
-	const [createArticle] = useCreateArticle()
+	const createArticle = useQuickCreateArticle()
 	const [createFolder] = useCreateFolder()
 	const createTag = useQuickCreateTag()
 
@@ -47,7 +47,7 @@ export function ArticleListHeaderCreateButton({ folderId, slotProps, ...props }:
 		if (selectedType === 'folder') {
 			await createFolder({ name: newEntityName, parentFolderId: folderId })
 		} else if (selectedType === 'article') {
-			await createArticle({ name: newEntityName, parentFolderId: folderId })
+			await createArticle({ query: newEntityName, parentFolderId: folderId })
 		} else if (selectedType === 'actor') {
 			await createActor({ query: newEntityName, parentFolderId: folderId })
 		} else if (selectedType === 'event') {

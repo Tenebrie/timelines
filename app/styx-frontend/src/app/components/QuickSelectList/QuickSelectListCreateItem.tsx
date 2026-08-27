@@ -14,7 +14,7 @@ type Props = {
 }
 
 export function QuickSelectListCreateItem({ type, selected, onClick, query }: Props) {
-	useShortcut(Shortcut.Enter, onClick, selected && ShortcutPriorities.Mentions)
+	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], onClick, selected && ShortcutPriorities.Mentions)
 
 	return (
 		<MenuItem
