@@ -4,7 +4,7 @@ type SetterArgs = {
 	cleanSet?: boolean
 }
 
-const areEqual = <T,>(a: T, b: T): boolean => {
+const areEqual = <T>(a: T, b: T): boolean => {
 	if (a === b) {
 		return true
 	}
@@ -17,7 +17,7 @@ const areEqual = <T,>(a: T, b: T): boolean => {
 	return false
 }
 
-export const generateSetter = <T,>(setter: Dispatch<React.SetStateAction<T>>, makeDirty: () => void) => {
+export const generateSetter = <T>(setter: Dispatch<React.SetStateAction<T>>, makeDirty: () => void) => {
 	return (val: T, args?: SetterArgs) => {
 		setter((oldVal) => {
 			if (args?.cleanSet) {
