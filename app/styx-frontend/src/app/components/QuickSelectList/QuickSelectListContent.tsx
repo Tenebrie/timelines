@@ -1,0 +1,244 @@
+import Divider from '@mui/material/Divider'
+import Input from '@mui/material/Input'
+import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+
+import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+
+import {
+	Mention,
+	useDisplayedMentions,
+} from '../../features/richTextEditor/extensions/mentions/hooks/useDisplayedMentions'
+import { QuickSelectListProps } from './QuickSelectList'
+import { getQuickCreateTypes, QuickSelectListCreate } from './QuickSelectListCreate'
+import { QuickSelectListItem } from './QuickSelectListItem'
+import { QuickSelectListSectionHeader } from './QuickSelectListSectionHeader'
+import { QuickSelectListWelcomeState } from './QuickSelectListWelcomeState'
+import { QuickSelectRect } from './types'
+
+type ContentProps = Omit<QuickSelectListProps, 'isFocused'> & {
+	pos: QuickSelectRect
+	query: string
+	onClose: () => void
+}
+
+export function QuickSelectListContent({
+	pos,
+	query,
+	onSelect,
+	onClose,
+	inputProps,
+	forceDirection,
+	onCreatePlainNode,
+}: ContentProps) {
+	const [selectedIndex, setSelectedIndex] = useState(0)
+
+	const { mentions, actorCount, eventCount, articleCount, tagCount } = useDisplayedMentions({ query })
+
+	const quickCreateVisible = query.trim().length > 0
+
+	const lastItemIndex = quickCreateVisible
+		? mentions.length + getQuickCreateTypes(!!onCreatePlainNode).length - 1
+		: mentions.length - 1
+
+	const showWelcomeState = !!inputProps
+	const welcomeVisible = !!showWelcomeState && !quickCreateVisible && mentions.length === 0
+
+	useShortcut(
+		Shortcut.Escape,
+		() => {
+			onClose()
+			setSelectedIndex(0)
+		},
+		ShortcutPriorities.Mentions,
+	)
+
+	const selectEntity = useCallback(
+		(index: number) => {
+			const selectedMention = mentions[index]
+			if (!selectedMention) {
+				return
+			}
+			onSelect({
+				query,
+				entity: {
+					id: selectedMention.id,
+					type: selectedMention.type,
+					name: selectedMention.name,
+				},
+			})
+		},
+		[mentions, onSelect, query],
+	)
+
+	const handleKeyPress = useCallback(
+		(key: string, shiftKey: boolean) => {
+			if (key === 'ArrowUp' || (key === 'Tab' && shiftKey)) {
+				setSelectedIndex((prev) => {
+					return prev > 0 ? prev - 1 : lastItemIndex
+				})
+			} else if (key === 'ArrowDown' || key === 'Tab') {
+				setSelectedIndex((prev) => {
+					const targetIndex = prev + 1 > lastItemIndex ? 0 : prev + 1
+					return targetIndex
+				})
+			} else if (key === 'PageUp') {
+				setSelectedIndex(0)
+			} else if (key === 'PageDown') {
+				setSelectedIndex(lastItemIndex)
+			}
+		},
+		[lastItemIndex],
+	)
+
+	useEventBusSubscribe['quickSelect/onKeyDown']({
+		callback: ({ key, shiftKey }) => {
+			handleKeyPress(key, shiftKey)
+		},
+	})
+
+	const oldMentions = useRef(mentions)
+	useEffect(() => {
+		if (oldMentions.current.length !== mentions.length) {
+			setSelectedIndex(0)
+		}
+		oldMentions.current = mentions
+	}, [mentions])
+
+	const [adjustedTop, setAdjustedTop] = useState(pos.top)
+	const [adjustedLeft, setAdjustedLeft] = useState(pos.left)
+	const [maxHeight, setMaxHeight] = useState<number | undefined>(undefined)
+	const paperRef = useRef<HTMLDivElement>(null)
+
+	const recalculatePosition = useCallback(() => {
+		const el = paperRef.current
+		if (!el) {
+			return
+		}
+
+		const viewportWidth = document.documentElement.clientWidth
+		const viewportHeight = document.documentElement.clientHeight
+		const elWidth = el.offsetWidth
+		const elHeight = el.scrollHeight
+
+		setAdjustedLeft(Math.max(0, Math.min(pos.left, viewportWidth - elWidth)))
+
+		const spaceBelow = viewportHeight - pos.bottom
+		const spaceAbove = pos.top
+
+		if (forceDirection === 'bottom' || elHeight <= spaceBelow || spaceBelow >= spaceAbove) {
+			setAdjustedTop(pos.bottom)
+			setMaxHeight(spaceBelow)
+		} else {
+			setAdjustedTop(Math.max(0, pos.top - elHeight))
+			setMaxHeight(spaceAbove)
+		}
+	}, [forceDirection, pos.bottom, pos.left, pos.top])
+
+	useLayoutEffect(() => {
+		recalculatePosition()
+	}, [recalculatePosition, mentions.length, query])
+
+	const mentionTypes = [
+		{
+			label: 'Actors',
+			mentions: mentions.filter((m) => m.type === 'Actor') as Mention[],
+			indexStart: 0,
+			totalCount: actorCount,
+		},
+	]
+	mentionTypes.push({
+		label: 'Events',
+		mentions: mentions.filter((m) => m.type === 'Event'),
+		indexStart: mentionTypes.reduce((acc, type) => acc + type.mentions.length, 0),
+		totalCount: eventCount,
+	})
+	mentionTypes.push({
+		label: 'Articles',
+		mentions: mentions.filter((m) => m.type === 'Article'),
+		indexStart: mentionTypes.reduce((acc, type) => acc + type.mentions.length, 0),
+		totalCount: articleCount,
+	})
+	mentionTypes.push({
+		label: 'Tags',
+		mentions: mentions.filter((m) => m.type === 'Tag'),
+		indexStart: mentionTypes.reduce((acc, type) => acc + type.mentions.length, 0),
+		totalCount: tagCount,
+	})
+	const theme = useCustomTheme()
+
+	return (
+		<Paper
+			ref={paperRef}
+			onMouseDown={(event) => event.preventDefault()}
+			sx={{
+				outline: `1px solid ${theme.material.palette.divider}`,
+				zIndex: 10,
+				position: 'fixed',
+				top: adjustedTop,
+				left: adjustedLeft,
+				minWidth: '350px',
+				maxHeight,
+				overflowY: 'auto',
+			}}
+		>
+			{inputProps && (
+				<Stack gap={1} sx={{ padding: '8px 16px' }}>
+					<Input
+						size="small"
+						value={query}
+						{...inputProps}
+						onChange={(event) => {
+							dispatchGlobalEvent['quickSelect/requestUpdateQuery']({
+								query: event.target.value,
+							})
+						}}
+						onKeyDown={(event) => {
+							const NavigationKeys = ['ArrowUp', 'ArrowDown', 'Tab', 'PageUp', 'PageDown']
+							if (!NavigationKeys.includes(event.key)) {
+								return
+							}
+							event.preventDefault()
+							handleKeyPress(event.key, event.shiftKey)
+						}}
+					/>
+				</Stack>
+			)}
+			{welcomeVisible && <QuickSelectListWelcomeState />}
+			{mentionTypes
+				.filter((type) => type.mentions.length > 0)
+				.map((type) => (
+					<Stack gap={0} key={type.label}>
+						<QuickSelectListSectionHeader
+							label={type.label}
+							key={type.label}
+							mentionCount={type.totalCount}
+							disableGutter={type.indexStart === 0}
+						/>
+						<Divider style={{ marginBottom: 0 }} />
+						{type.mentions.map((mention, index) => (
+							<QuickSelectListItem
+								key={mention.id}
+								mention={mention}
+								query={query}
+								selected={selectedIndex === index + type.indexStart}
+								onClick={() => selectEntity(index + type.indexStart)}
+							/>
+						))}
+					</Stack>
+				))}
+			{quickCreateVisible && (
+				<QuickSelectListCreate
+					query={query}
+					onCreatePlainNode={onCreatePlainNode}
+					onSelect={onSelect}
+					mentionCount={mentions.length}
+					selectedIndex={selectedIndex}
+				/>
+			)}
+		</Paper>
+	)
+}

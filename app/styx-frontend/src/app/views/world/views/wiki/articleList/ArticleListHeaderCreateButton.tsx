@@ -13,8 +13,8 @@ import {
 } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
-import { useCreateArticle } from '../api/useCreateArticle'
-import { useCreateFolder } from '../api/useCreateFolder'
+import { useCreateArticle } from '../../../api/useCreateArticle'
+import { useCreateFolder } from '../../../api/useCreateFolder'
 import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
 
 type Props = Omit<CreatePopoverButtonProps, 'tooltip' | 'popoverBody' | 'onConfirm'> & {

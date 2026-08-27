@@ -7,7 +7,7 @@ import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-export const useCreateEvent = () => {
+export function useCreateEvent() {
 	const worldId = useSelector(getWorldIdState)
 	const [createEvent, state] = useCreateWorldEventMutation()
 

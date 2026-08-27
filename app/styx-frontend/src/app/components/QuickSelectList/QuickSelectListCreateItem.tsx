@@ -3,6 +3,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import MenuItem from '@mui/material/MenuItem'
 
+import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
 type Props = {
@@ -12,7 +13,9 @@ type Props = {
 	query: string
 }
 
-export function QuickSelectListItemQuickCreate({ type, selected, onClick, query }: Props) {
+export function QuickSelectListCreateItem({ type, selected, onClick, query }: Props) {
+	useShortcut(Shortcut.Enter, onClick, selected && ShortcutPriorities.Mentions)
+
 	return (
 		<MenuItem
 			selected={selected}

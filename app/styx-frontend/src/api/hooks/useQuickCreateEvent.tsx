@@ -1,20 +1,12 @@
-import { CreateWorldEventApiArg, useCreateWorldEventMutation } from '@api/worldEventApi'
+import { CreateWorldEventApiArg } from '@api/worldEventApi'
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
-import { ingestEvent } from '@/app/utils/ingestEntity'
-import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { worldSlice } from '@/app/views/world/WorldSlice'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+import { useCreateEvent } from '@/app/views/world/api/useCreateEvent'
 
 export const useQuickCreateEvent = () => {
-	const worldId = useSelector(getWorldIdState)
-	const [createEvent] = useCreateWorldEventMutation()
+	const [createEvent] = useCreateEvent()
 
-	const { addEvent } = worldSlice.actions
-	const dispatch = useDispatch()
-
-	const quickCreateEvent = useCallback(
+	return useCallback(
 		async ({
 			query,
 			...body
@@ -22,26 +14,8 @@ export const useQuickCreateEvent = () => {
 			if (query.length === 0) {
 				return
 			}
-
-			const { response, error } = parseApiResponse(
-				await createEvent({
-					worldId,
-					body: {
-						...body,
-						name: query,
-						contentRich: '',
-						timestamp: '0',
-					},
-				}),
-			)
-			if (error) {
-				return null
-			}
-			dispatch(addEvent(ingestEvent(response)))
-			return response
+			return (await createEvent({ ...body, name: query, contentRich: '', timestamp: '0' })) ?? null
 		},
-		[addEvent, createEvent, dispatch, worldId],
+		[createEvent],
 	)
-
-	return quickCreateEvent
 }

@@ -7,10 +7,10 @@ import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropRe
 import { useDragHoverExpand } from '@/app/features/dragDrop/hooks/useDragHoverExpand'
 import { RootState } from '@/app/store'
 
+import { useBulkWikiMove } from '../../../api/useBulkWikiMove'
+import { useMoveArticle } from '../../../api/useMoveArticle'
 import { NewNodeGhost } from '../../mindmap/components/NewNodeGhost'
 import { getHoveredMindmapClickArea } from '../../mindmap/utils/getHoveredMindmapClickArea'
-import { useBulkWikiMove } from '../api/useBulkWikiMove'
-import { useMoveArticle } from '../api/useMoveArticle'
 import { useArticleCollapseControls } from '../articleList/hooks/useArticleCollapseControls'
 import { ArticleListItemIcon } from '../articleList/icon/ArticleListItemIcon'
 import { getWikiState } from '../WikiSliceSelectors'

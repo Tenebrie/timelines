@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack'
 import useEvent from 'react-use-event-hook'
 
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
-import { useEditArticle } from '@/app/views/world/views/wiki/api/useEditArticle'
+import { useEditArticle } from '@/app/views/world/api/useEditArticle'
 import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 
 import { EntityEditorTabs } from '../../common/EntityEditorTabs'

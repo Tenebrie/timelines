@@ -15,6 +15,7 @@ Hobby project, single developer, no revenue and no dev team. Scope advice accord
 7. **Own the scope, not the codebase.** Follow established patterns, don't start large refactors uninvited. Flag adjacent dead code or latent bugs you notice, then stop.
 8. **Failure is an option.** Admit a path isn't working rather than pushing further down it.
 9. **Target modern browsers.** Use `@property`, container queries, CSS nesting, `:has()` freely. No legacy fallbacks.
+10. **Avoid dangerous operations.** When utilizing features like worktrees, avoid creating dangerous situations or polluting the original repo state or user's drive. The original code must never be in danger when the worktree is removed.
 
 ## Architecture
 

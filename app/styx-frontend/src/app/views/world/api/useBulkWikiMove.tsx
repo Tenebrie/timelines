@@ -7,7 +7,7 @@ import { RootState } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-import { getOrderedWikiEntities } from '../WikiSliceSelectors'
+import { getOrderedWikiEntities } from '../views/wiki/WikiSliceSelectors'
 
 export function useBulkWikiMove() {
 	const worldId = useSelector(getWorldIdState)

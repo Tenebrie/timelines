@@ -1,33 +1,35 @@
-import { useDeleteActorMutation } from '@api/actorListApi'
+import { CreateTagApiArg, useCreateTagMutation } from '@api/worldTagApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { ingestTag } from '@/app/utils/ingestEntity'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-export const useDeleteActor = () => {
+export function useCreateTag() {
 	const worldId = useSelector(getWorldIdState)
-	const [deleteActor, state] = useDeleteActorMutation()
+	const [createTag, state] = useCreateTagMutation()
 
-	const { removeActor } = worldSlice.actions
+	const { addTag } = worldSlice.actions
 	const dispatch = useDispatch()
 
 	const perform = useCallback(
-		async (actorId: string) => {
-			const { error } = parseApiResponse(
-				await deleteActor({
+		async (body: CreateTagApiArg['body']) => {
+			const { response, error } = parseApiResponse(
+				await createTag({
 					worldId,
-					actorId,
+					body,
 				}),
 			)
 			if (error) {
 				return
 			}
-			dispatch(removeActor(actorId))
-			return true
+			const tag = ingestTag(response)
+			dispatch(addTag(tag))
+			return tag
 		},
-		[deleteActor, worldId, dispatch, removeActor],
+		[addTag, createTag, dispatch, worldId],
 	)
 
 	return [perform, state] as const

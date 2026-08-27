@@ -54,6 +54,6 @@ export function boxTag(tag: WorldTag): BoxedWikiEntity {
 		entity: tag,
 		name: tag.name,
 		position: tag.parentFolderPosition,
-		color: '#9f2261',
+		color: tag.color,
 	}
 }
