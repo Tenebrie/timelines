@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material/styles'
+import { MAX_INDENT_LEVEL } from '@neverkin/tiptap-schema'
 import { Editor } from '@tiptap/core'
 import { EditorContent } from '@tiptap/react'
 import { memo } from 'react'
@@ -66,6 +67,18 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly, children
 				'& li > p': {
 					padding: '3px 0',
 				},
+
+				'& span[data-type="tab"]': {
+					display: 'inline-block',
+					width: '2em',
+				},
+
+				...Object.fromEntries(
+					Array.from({ length: MAX_INDENT_LEVEL }, (_, i) => [
+						`& [data-indent="${i + 1}"]`,
+						{ paddingLeft: `${(i + 1) * 2}em` },
+					]),
+				),
 
 				'& code': {
 					padding: '4px 8px',

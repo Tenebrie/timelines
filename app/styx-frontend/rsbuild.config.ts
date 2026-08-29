@@ -28,6 +28,7 @@ export default defineConfig({
 			'prosemirror-model',
 			'prosemirror-transform',
 			'prosemirror-keymap',
+			'prosemirror-gapcursor',
 			'prosemirror-tables',
 			'yjs',
 			'y-protocols',

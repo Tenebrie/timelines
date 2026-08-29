@@ -42,6 +42,7 @@
 		"test:rhea": "cd app/rhea-backend && npm run test",
 		"test:calliope": "cd app/calliope-websockets && npm run test",
 		"test:orpheus": "cd app/orpheus-mcp && npm run test",
+		"test:library": "node scripts/run-all.mjs test library/*",
 		"test:e2e": "cd test/e2e && npm run test",
 		"test:e2e:run": "cd test/e2e && npm run test:local",
 		"build:library": "node library/ci-build.mjs",
@@ -52,7 +53,8 @@
 		"lint:styx": "cd app/styx-frontend && npm run lint",
 		"lint:rhea": "cd app/rhea-backend && npm run lint",
 		"lint:calliope": "cd app/calliope-websockets && npm run lint",
-		"lint:orpheus": "cd app/orpheus-mcp && npm run lint"
+		"lint:orpheus": "cd app/orpheus-mcp && npm run lint",
+		"lint:library": "node scripts/run-all.mjs lint library/*"
 	},
 	"dependencies": {
 		"@typescript-eslint/eslint-plugin": "^8.61.0",
