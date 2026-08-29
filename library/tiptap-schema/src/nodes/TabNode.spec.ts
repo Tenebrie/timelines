@@ -1,6 +1,7 @@
-import { createTiptapExtensionSchema } from '@neverkin/tiptap-schema'
-import { afterEach, beforeEach, describe, expect, it } from '@rstest/core'
 import { Editor, Extensions } from '@tiptap/core'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+
+import { createTiptapExtensionSchema } from '../createTiptapExtensionSchema.js'
 
 describe('TabNode', () => {
 	let editor: Editor
