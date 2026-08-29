@@ -340,6 +340,83 @@ test.describe('Wiki View', () => {
 		})
 	})
 
+	test.describe('indentation', () => {
+		test('tab inserts a tab character then indents, both survive a reload, shift-tab reverses', async ({
+			page,
+		}) => {
+			await navigateToWiki(page, 'createWorld')
+
+			// Create and open an article
+			await createArticleViaUI(page, 'Testing article')
+			await withYjsSocket(page, () => page.getByText('Testing article').click())
+
+			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
+			await expect(textbox).toBeVisible()
+			await textbox.click()
+
+			// First Tab inserts a tab character, second Tab indents the paragraph
+			const tab = textbox.locator('p span[data-type="tab"]')
+			const paragraph = textbox.locator('p').first()
+			await page.keyboard.press('Tab')
+			await expect(tab).toHaveCount(1)
+			await page.keyboard.press('Tab')
+			await expect(paragraph).toHaveAttribute('data-indent', '1')
+			await expect(tab).toHaveCount(1)
+
+			// Shift-Tab removes the adjacent tab character first, then unindents
+			await page.keyboard.press('Shift+Tab')
+			await expect(tab).toHaveCount(0)
+			await expect(paragraph).toHaveAttribute('data-indent', '1')
+			await page.keyboard.press('Shift+Tab')
+			await expect(paragraph).not.toHaveAttribute('data-indent')
+
+			// Write an indented paragraph with both a tab character and block indent
+			await page.keyboard.press('Tab')
+			await page.keyboard.press('Tab')
+			await textbox.pressSequentially('Indented paragraph', { delay: 10 })
+			await expect(tab).toHaveCount(1)
+
+			// Both survive a reload
+			await withYjsSocket(page, () => page.reload())
+			await expect(tab).toHaveCount(1)
+			await expect(textbox.locator('p[data-indent="1"]', { hasText: 'Indented paragraph' })).toBeVisible()
+
+			// Escape then Tab moves focus out instead of editing
+			await textbox.click()
+			await page.keyboard.press('Escape')
+			await page.keyboard.press('Tab')
+			await expect(tab).toHaveCount(1)
+			await expect(textbox).not.toBeFocused()
+		})
+
+		test('tab nests list items instead of inserting a tab character', async ({ page }) => {
+			await navigateToWiki(page, 'createWorld')
+
+			// Create and open an article
+			await createArticleViaUI(page, 'Testing article')
+			await withYjsSocket(page, () => page.getByText('Testing article').click())
+
+			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
+			await expect(textbox).toBeVisible()
+			await textbox.click()
+
+			// Create a two-item bullet list
+			await textbox.pressSequentially('- First item', { delay: 10 })
+			await page.keyboard.press('Enter')
+			await textbox.pressSequentially('Second item', { delay: 10 })
+
+			// Tab on the second item nests it as a sublist rather than inserting a tab character
+			await page.keyboard.press('Tab')
+			await expect(textbox.locator('ul ul li', { hasText: 'Second item' })).toBeVisible()
+			await expect(textbox.locator('span[data-type="tab"]')).toHaveCount(0)
+
+			// Shift-Tab lifts it back to the top level
+			await page.keyboard.press('Shift+Tab')
+			await expect(textbox.locator('ul ul')).not.toBeVisible()
+			await expect(textbox.locator('ul > li', { hasText: 'Second item' })).toBeVisible()
+		})
+	})
+
 	test.describe('shortcuts', () => {
 		test('create article with simple shortcut', async ({ page }) => {
 			await navigateToWiki(page, 'createWorld')

@@ -14,7 +14,9 @@
 	"scripts": {
 		"build": "tsc",
 		"lint": "eslint src/",
-		"lint:fix": "eslint src/ --fix"
+		"lint:fix": "eslint src/ --fix",
+		"test": "vitest --run src/**",
+		"test:watch": "vitest src/**"
 	},
 	"peerDependencies": {
 		"@tiptap/core": "3.23.6",
@@ -39,6 +41,8 @@
 	},
 	"devDependencies": {
 		"@types/node": "^25.6.2",
-		"typescript": "^6.0.3"
+		"jsdom": "^29.1.1",
+		"typescript": "^6.0.3",
+		"vitest": "^4.1.11"
 	}
 }

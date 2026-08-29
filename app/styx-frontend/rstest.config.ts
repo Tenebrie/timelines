@@ -1,8 +1,10 @@
-import { pluginReact } from '@rsbuild/plugin-react'
 import { defineConfig } from '@rstest/core'
 
+import rsbuildConfig from './rsbuild.config'
+
 export default defineConfig({
-	plugins: [pluginReact()],
+	plugins: rsbuildConfig.plugins,
+	resolve: rsbuildConfig.resolve,
 	globals: true,
 	testEnvironment: 'jsdom',
 	setupFiles: ['src/test-utils/setupTests.ts'],

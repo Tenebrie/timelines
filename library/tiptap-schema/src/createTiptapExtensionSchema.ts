@@ -7,8 +7,10 @@ import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table
 import { TextStyle } from '@tiptap/extension-text-style'
 import StarterKit from '@tiptap/starter-kit'
 
+import { IndentExtension } from './extensions/IndentExtension.js'
 import { ExternalImageNode } from './nodes/ExternalImageNode.js'
 import { MentionNode } from './nodes/MentionNode.js'
+import { TabNode } from './nodes/TabNode.js'
 
 export const BaseExtensions = {
 	StarterKit: StarterKit.configure({
@@ -40,6 +42,10 @@ export const BaseExtensions = {
 	TextStyle,
 	Color,
 	FontFamily,
+
+	// Tab characters and block indentation (Tab / Shift+Tab)
+	TabNode,
+	IndentExtension,
 
 	// Tables
 	Table: Table.configure({ resizable: false }),
