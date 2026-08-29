@@ -1,4 +1,3 @@
-import { MentionedEntity } from '@api/types/worldTypes'
 import Article from '@mui/icons-material/ArticleOutlined'
 import Event from '@mui/icons-material/Event'
 import LabelIcon from '@mui/icons-material/LocalOfferOutlined'
@@ -7,6 +6,7 @@ import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import { memo } from 'react'
 
+import { MentionedEntity } from '@/api/types/worldTypes'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { colorStringToHsl } from '@/app/utils/colors/colorStringToHsl'
 import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'

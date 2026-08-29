@@ -1,20 +1,20 @@
-import { useQuickCreateActor } from '@api/hooks/useQuickCreateActor'
-import { useQuickCreateEvent } from '@api/hooks/useQuickCreateEvent'
-import { useQuickCreateTag } from '@api/hooks/useQuickCreateTag'
 import Button from '@mui/material/Button'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
 
+import { useQuickCreateActor } from '@/api/hooks/useQuickCreateActor'
+import { useQuickCreateArticle } from '@/api/hooks/useQuickCreateArticle'
+import { useQuickCreateEvent } from '@/api/hooks/useQuickCreateEvent'
+import { useQuickCreateTag } from '@/api/hooks/useQuickCreateTag'
 import {
 	CreatePopoverButton,
 	CreatePopoverButtonProps,
 } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
-import { useCreateArticle } from '../api/useCreateArticle'
-import { useCreateFolder } from '../api/useCreateFolder'
+import { useCreateFolder } from '../../../api/useCreateFolder'
 import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
 
 type Props = Omit<CreatePopoverButtonProps, 'tooltip' | 'popoverBody' | 'onConfirm'> & {
@@ -26,7 +26,7 @@ export function ArticleListHeaderCreateButton({ folderId, slotProps, ...props }:
 
 	const createActor = useQuickCreateActor()
 	const createEvent = useQuickCreateEvent()
-	const [createArticle] = useCreateArticle()
+	const createArticle = useQuickCreateArticle()
 	const [createFolder] = useCreateFolder()
 	const createTag = useQuickCreateTag()
 
@@ -34,20 +34,13 @@ export function ArticleListHeaderCreateButton({ folderId, slotProps, ...props }:
 
 	const types = ['folder', 'article', 'actor', 'event', 'tag'] as const
 	type Type = (typeof types)[number]
-	const typeLabels: Record<Type, string> = {
-		folder: 'Folder',
-		article: 'Article',
-		actor: 'Actor',
-		event: 'Event',
-		tag: 'Tag',
-	}
 	const [selectedType, setSelectedType] = useState<Type>('folder')
 
 	const handleCreate = useCallback(async () => {
 		if (selectedType === 'folder') {
 			await createFolder({ name: newEntityName, parentFolderId: folderId })
 		} else if (selectedType === 'article') {
-			await createArticle({ name: newEntityName, parentFolderId: folderId })
+			await createArticle({ query: newEntityName, parentFolderId: folderId })
 		} else if (selectedType === 'actor') {
 			await createActor({ query: newEntityName, parentFolderId: folderId })
 		} else if (selectedType === 'event') {
@@ -102,7 +95,7 @@ export function ArticleListHeaderCreateButton({ folderId, slotProps, ...props }:
 								startIcon={<EntityIcon variant={type} />}
 								color="secondary"
 							>
-								{typeLabels[type]}
+								{type.charAt(0).toUpperCase() + type.slice(1)}
 							</Button>
 						))}
 					</ButtonGroup>

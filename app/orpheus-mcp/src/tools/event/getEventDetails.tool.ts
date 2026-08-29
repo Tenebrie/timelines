@@ -39,9 +39,10 @@ export function registerGetEventDetailsTool(server: McpServer) {
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })
 				const event = findByName({ name: eventName, entities: worldData.events })
 
-				const rawContent = await RheaService.getEventContent({
+				const rawContent = await RheaService.getEntityContent({
+					entityType: 'event',
 					worldId,
-					eventId: event.id,
+					entityId: event.id,
 					userId,
 				})
 

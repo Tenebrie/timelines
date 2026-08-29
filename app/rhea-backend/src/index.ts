@@ -3,7 +3,6 @@ import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'moonflower'
 
-import { ActorContentRouter } from './routers/ActorContentRouter.js'
 import { ActorRouter } from './routers/ActorRouter.js'
 import { AdminFeatureFlagRouter } from './routers/AdminFeatureFlagRouter.js'
 import { AdminRouter } from './routers/AdminRouter.js'
@@ -14,6 +13,7 @@ import { CalendarPresentationRouter } from './routers/CalendarPresentationRouter
 import { CalendarRouter } from './routers/CalendarRouter.js'
 import { ConstantsRouter } from './routers/ConstantsRouter.js'
 import { ContactFormRouter } from './routers/ContactFormRouter.js'
+import { ContentRouter } from './routers/ContentRouter.js'
 import { DataMigrationRouter } from './routers/DataMigrationRouter.js'
 import { HealthRouter, HealthStatus } from './routers/HealthRouter.js'
 import { IconsRouter } from './routers/IconsRouter.js'
@@ -24,10 +24,8 @@ import { MindmapRouter } from './routers/MindmapRouter.js'
 import { NotificationRouter } from './routers/NotificationRouter.js'
 import { ProfileRouter } from './routers/ProfileRouter.js'
 import { TagRouter } from './routers/TagRouter.js'
-import { WikiArticleContentRouter } from './routers/WikiArticleContentRouter.js'
 import { WorldBulkRouter } from './routers/WorldBulkActionRouter.js'
 import { WorldColorRouter } from './routers/WorldColorRouter.js'
-import { WorldEventContentRouter } from './routers/WorldEventContentRouter.js'
 import { WorldEventRouter } from './routers/WorldEventRouter.js'
 import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter.js'
 import { WorldRouter } from './routers/WorldRouter.js'
@@ -71,8 +69,6 @@ app
 		}),
 	)
 	// Public routers
-	.use(ActorContentRouter.routes())
-	.use(ActorContentRouter.allowedMethods())
 	.use(ActorRouter.routes())
 	.use(ActorRouter.allowedMethods())
 	.use(AdminFeatureFlagRouter.routes())
@@ -93,6 +89,8 @@ app
 	.use(ConstantsRouter.allowedMethods())
 	.use(ContactFormRouter.routes())
 	.use(ContactFormRouter.allowedMethods())
+	.use(ContentRouter.routes())
+	.use(ContentRouter.allowedMethods())
 	.use(DataMigrationRouter.routes())
 	.use(DataMigrationRouter.allowedMethods())
 	.use(HealthRouter.routes())
@@ -111,10 +109,6 @@ app
 	.use(ProfileRouter.allowedMethods())
 	.use(TagRouter.routes())
 	.use(TagRouter.allowedMethods())
-	.use(WikiArticleContentRouter.routes())
-	.use(WikiArticleContentRouter.allowedMethods())
-	.use(WorldEventContentRouter.routes())
-	.use(WorldEventContentRouter.allowedMethods())
 	.use(WorldEventRouter.routes())
 	.use(WorldEventRouter.allowedMethods())
 	.use(WorldEventTrackRouter.routes())

@@ -1,9 +1,9 @@
-import { Actor, WorldEvent, WorldTag } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { memo } from 'react'
 import { useSelector } from 'react-redux'
 import { Virtuoso } from 'react-virtuoso'
 
+import { Actor, WorldEvent, WorldTag } from '@/api/types/worldTypes'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { useOutlinerTabs } from '@/app/components/Outliner/hooks/useOutlinerTabs'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
@@ -15,7 +15,6 @@ import { OutlinerEmptyState } from './components/OutlinerEmptyState'
 import { useVisibleActors } from './hooks/useVisibleActors'
 import { useVisibleEvents } from './hooks/useVisibleEvents'
 import { useVisibleTags } from './hooks/useVisibleTags'
-import { OutlinerItemActor } from './items/OutlinerItemActor'
 import { OutlinerItemEvent } from './items/OutlinerItemEvent'
 import { OutlinerItemHeader } from './items/OutlinerItemHeader'
 import { OutlinerItemTag } from './items/OutlinerItemTag'
@@ -118,8 +117,6 @@ export function OutlinerContentComponent() {
 
 						const row = resolveRow(rawIndex)
 						switch (row.kind) {
-							case 'actor':
-								return <OutlinerItemActor actor={row.actor} />
 							case 'event':
 								return <OutlinerItemEvent event={row.event} />
 							case 'tag':

@@ -5,6 +5,7 @@
  * after OpenAPI code generation.
  */
 module.exports = [
+	'createNode',
 	'updateNode',
 	'moveMindmapNodes',
 	'createMindmapWires',

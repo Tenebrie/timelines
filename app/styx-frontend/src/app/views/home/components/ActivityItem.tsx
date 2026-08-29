@@ -16,7 +16,7 @@ type ActivityItemProps = {
 export function ActivityItem({ activity }: ActivityItemProps) {
 	const linkProps =
 		activity.type === 'world'
-			? ({ to: '/world/$worldId/timeline', params: { worldId: activity.id } } as const)
+			? ({ to: '/world/$worldId/wiki', params: { worldId: activity.id } } as const)
 			: ({ to: '/calendar/$calendarId', params: { calendarId: activity.id } } as const)
 
 	return (

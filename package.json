@@ -34,7 +34,7 @@
 		"docker:prod:push": "./scripts/docker-prod-push.sh",
 		"docker:stop": "docker stop $(docker ps -a -q)",
 		"redis:clear": "docker exec -it timelines-redis-1 redis-cli FLUSHALL",
-		"tsc": "node scripts/run-all.mjs tsc app/* library/*",
+		"tsc": "node scripts/run-all.mjs tsc app/* library/* test/*",
 		"lint": "node scripts/run-all.mjs lint app/* library/*",
 		"test": "node scripts/run-all.mjs test app/* library/*",
 		"prisma": "cd app/rhea-backend && npx prisma",

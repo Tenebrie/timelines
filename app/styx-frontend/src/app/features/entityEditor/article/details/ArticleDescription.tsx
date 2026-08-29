@@ -1,9 +1,9 @@
-import { useWikiApiCache } from '@api/hooks/useWikiApiCache'
-import { WikiArticle } from '@api/types/worldWikiTypes'
 import Box from '@mui/material/Box'
 import debounce from 'lodash.debounce'
 import { useCallback, useRef } from 'react'
 
+import { useWikiApiCache } from '@/api/hooks/useWikiApiCache'
+import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 

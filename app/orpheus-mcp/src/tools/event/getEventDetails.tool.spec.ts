@@ -19,7 +19,7 @@ const worldDetailsResponse = {
 		{
 			id: 'e1',
 			name: 'Dragon Attack',
-			descriptionRich: 'Some description',
+			contentRich: 'Some description',
 			timestamp: '1440',
 			mentions: [{ targetId: 'a1' }],
 			mentionedIn: [],
@@ -27,13 +27,13 @@ const worldDetailsResponse = {
 		{
 			id: 'e2',
 			name: 'Peace Treaty',
-			descriptionRich: 'Some description',
+			contentRich: 'Some description',
 			timestamp: '10000',
 			mentions: [],
 			mentionedIn: [{ sourceId: 'e1' }],
 		},
 	],
-	actors: [{ id: 'a1', name: 'Red Dragon', title: 'Ancient Beast', descriptionRich: 'Some description' }],
+	actors: [{ id: 'a1', name: 'Red Dragon', title: 'Ancient Beast', contentRich: 'Some description' }],
 	tags: [],
 }
 

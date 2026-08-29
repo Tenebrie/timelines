@@ -9,7 +9,7 @@ import { memo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { NavigationLink } from '@/app/components/NavigationLink'
-import { TrunkatedSpan } from '@/app/components/TrunkatedTypography'
+import { TruncatedSpan } from '@/app/components/TruncatedTypography'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 import { useWorldListData } from '@/app/views/worldManagement/hooks/useWorldListData'
 
@@ -81,7 +81,7 @@ function WorldSelectorButtonComponent() {
 						{ownedWorlds.map((world) => (
 							<NavigationLink to="/world/$worldId/timeline" params={{ worldId: world.id }} key={world.id}>
 								<MenuItem onClick={handleWorldSelect} selected={currentWorldId === world.id}>
-									<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
+									<TruncatedSpan $lines={1}>{world.name}</TruncatedSpan>
 								</MenuItem>
 							</NavigationLink>
 						))}
@@ -97,7 +97,7 @@ function WorldSelectorButtonComponent() {
 						{contributableWorlds.map((world) => (
 							<NavigationLink to="/world/$worldId/timeline" params={{ worldId: world.id }} key={world.id}>
 								<MenuItem onClick={handleWorldSelect} selected={currentWorldId === world.id} data-hj-suppress>
-									<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
+									<TruncatedSpan $lines={1}>{world.name}</TruncatedSpan>
 								</MenuItem>
 							</NavigationLink>
 						))}
@@ -113,7 +113,7 @@ function WorldSelectorButtonComponent() {
 						{visibleWorlds.map((world) => (
 							<NavigationLink to="/world/$worldId/timeline" params={{ worldId: world.id }} key={world.id}>
 								<MenuItem onClick={handleWorldSelect} selected={currentWorldId === world.id} data-hj-suppress>
-									<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
+									<TruncatedSpan $lines={1}>{world.name}</TruncatedSpan>
 								</MenuItem>
 							</NavigationLink>
 						))}

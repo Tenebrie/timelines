@@ -1,7 +1,6 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"declaration": true,
 		"removeComments": true,
 		"strict": true,
 		"emitDecoratorMetadata": true,
@@ -18,7 +17,9 @@
 		"types": ["node"],
 		"paths": {
 			"@fixtures/*": ["./fixtures/*"],
-			"@tests/*": ["./tests/*"]
-		}
+			"@tests/*": ["./tests/*"],
+			"@/*": ["../../app/styx-frontend/src/*"]
+		},
+		"jsx": "react-jsx"
 	}
 }

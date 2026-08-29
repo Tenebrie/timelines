@@ -1,10 +1,10 @@
-import { AdminGetUsersApiResponse } from '@api/adminUsersApi'
 import EditIcon from '@mui/icons-material/Edit'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 
+import { AdminGetUsersApiResponse } from '@/api/adminUsersApi'
 import { useAdminUpdateUser } from '@/app/views/admin/api/useAdminUpdateUser'
 import { PopoverButton } from '@/ui-lib/components/PopoverButton/PopoverButton'
 

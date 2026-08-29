@@ -1,4 +1,3 @@
-import { GetWorldCollaboratorsApiResponse, useUnshareWorldMutation } from '@api/worldCollaboratorsApi'
 import Cancel from '@mui/icons-material/Cancel'
 import Delete from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
@@ -8,6 +7,8 @@ import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
+
+import { GetWorldCollaboratorsApiResponse, useUnshareWorldMutation } from '@/api/worldCollaboratorsApi'
 
 type Props = {
 	worldId: string

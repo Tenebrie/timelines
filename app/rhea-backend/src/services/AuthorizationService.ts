@@ -2,6 +2,7 @@ import { User, World } from '@prisma/client'
 import { UnauthorizedError } from 'moonflower/errors/UserFacingErrors'
 
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { WorldEntityType } from './types.js'
 import { WorldService } from './WorldService.js'
 
 export const AuthorizationService = {
@@ -212,5 +213,69 @@ export const AuthorizationService = {
 		}
 
 		throw new UnauthorizedError('No access to this asset')
+	},
+
+	checkEntityWorldOwnership: async ({
+		worldId,
+		entityId,
+		entityType,
+	}: {
+		worldId: string
+		entityId: string
+		entityType: WorldEntityType
+	}) => {
+		if (entityType === 'actor') {
+			const count = await getPrismaClient().actor.count({
+				where: {
+					id: entityId,
+					worldId,
+				},
+			})
+			if (!count) {
+				throw new UnauthorizedError('No access to this actor')
+			}
+		} else if (entityType === 'article') {
+			const count = await getPrismaClient().wikiArticle.count({
+				where: {
+					id: entityId,
+					worldId,
+				},
+			})
+			if (!count) {
+				throw new UnauthorizedError('No access to this article')
+			}
+		} else if (entityType === 'event') {
+			const count = await getPrismaClient().worldEvent.count({
+				where: {
+					id: entityId,
+					worldId,
+				},
+			})
+			if (!count) {
+				throw new UnauthorizedError('No access to this event')
+			}
+		} else if (entityType === 'folder') {
+			const count = await getPrismaClient().wikiFolder.count({
+				where: {
+					id: entityId,
+					worldId,
+				},
+			})
+			if (!count) {
+				throw new UnauthorizedError('No access to this folder')
+			}
+		} else if (entityType === 'tag') {
+			const count = await getPrismaClient().tag.count({
+				where: {
+					id: entityId,
+					worldId,
+				},
+			})
+			if (!count) {
+				throw new UnauthorizedError('No access to this tag')
+			}
+		} else {
+			throw new UnauthorizedError('No access to this entity')
+		}
 	},
 }

@@ -101,8 +101,8 @@ async function seedWorld(page: Page, name: string) {
 	const hero = await createActor(page, world.id, { name: `${name} Hero`, title: 'Hero' })
 	const villain = await createActor(page, world.id, { name: `${name} Villain`, title: 'Villain' })
 
-	await createEvent(page, world.id, { name: `${name} Founding`, descriptionRich: '{}', timestamp: '0' })
-	await createEvent(page, world.id, { name: `${name} Battle`, descriptionRich: '{}', timestamp: '1000' })
+	await createEvent(page, world.id, { name: `${name} Founding`, contentRich: '{}', timestamp: '0' })
+	await createEvent(page, world.id, { name: `${name} Battle`, contentRich: '{}', timestamp: '1000' })
 
 	await createArticle(page, world.id, { name: `${name} Lore` })
 	await createArticle(page, world.id, { name: `${name} History` })

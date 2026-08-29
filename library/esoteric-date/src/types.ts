@@ -1,4 +1,4 @@
-import { CalendarDraftUnit, CalendarUnit } from '@api/types/calendarTypes'
+import { CalendarDraftUnit, CalendarUnit } from '@/api/types/calendarTypes'
 
 export type ParsedTimestamp = Map<string, ParsedTimestampEntry>
 export type ParsedTimestampEntry = {

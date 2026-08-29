@@ -1,4 +1,3 @@
-import { useGetCommonWorldEventIconsQuery } from '@api/worldDetailsApi'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import debounce from 'lodash.debounce'
@@ -6,6 +5,7 @@ import { memo, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { useGetCommonWorldEventIconsQuery } from '@/api/worldDetailsApi'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 

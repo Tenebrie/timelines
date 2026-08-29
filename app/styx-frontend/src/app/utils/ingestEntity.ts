@@ -1,4 +1,4 @@
-import { GetWorldInfoApiResponse } from '@api/worldDetailsApi'
+import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 
 import {
 	ActorDetails,

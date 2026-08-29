@@ -7,6 +7,7 @@ import { alpha } from '@mui/material/styles'
 import { useMatches } from '@tanstack/react-router'
 import { memo, MouseEvent, useCallback, useMemo } from 'react'
 
+import { DragDropState } from '@/app/features/dragDrop/DragDropState'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
@@ -73,6 +74,9 @@ function ArticleListItemInnerComponent({
 
 	const onNavigate = useCallback(
 		(event: MouseEvent) => {
+			if (DragDropState.current) {
+				return
+			}
 			if (isBulkSelecting) {
 				onRowToggle(event)
 				return
@@ -159,7 +163,7 @@ function ArticleListItemInnerComponent({
 									sx={{ p: 0, pointerEvents: 'none' }}
 								/>
 							)}
-							<ArticleListItemIcon article={article} highlighted={renderHighlighted} />
+							<ArticleListItemIcon article={article} highlighted={renderHighlighted} folderCollapseIcon />
 						</Stack>
 					}
 					variant={renderHighlighted ? 'contained' : 'text'}

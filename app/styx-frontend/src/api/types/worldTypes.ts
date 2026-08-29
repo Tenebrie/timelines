@@ -1,8 +1,7 @@
-import { ListCalendarTemplatesApiResponse } from '@api/otherApi'
-import { GetWorldsApiResponse } from '@api/worldListApi'
-import { MoveWikiEntityApiResponse } from '@api/worldWikiApi'
-
+import { ListCalendarTemplatesApiResponse } from '@/api/otherApi'
 import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
+import { GetWorldsApiResponse } from '@/api/worldListApi'
+import { MoveWikiEntityApiResponse } from '@/api/worldWikiApi'
 
 export type WikiEntityType = MoveWikiEntityApiResponse['updates'][number]['entityType']
 export type FullMentionDetails = GetWorldInfoApiResponse['actors'][number]['mentions'][number]

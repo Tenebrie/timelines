@@ -1,9 +1,9 @@
-import { ActorDetails, WorldEvent, WorldEventDelta, WorldTag } from '@api/types/worldTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { ActorDetails, WorldEvent, WorldEventDelta, WorldTag } from '@/api/types/worldTypes'
 import { isEventObject } from '@/app/utils/isEventObject'
 
 import { User } from '../auth/AuthSlice'
@@ -90,7 +90,7 @@ const modals = {
 	},
 
 	/* WorldWiki */
-	deleteArticleModal: {
+	bulkDeleteEntitiesModal: {
 		isOpen: false as boolean,
 		articles: [] as string[],
 	},
@@ -146,15 +146,17 @@ export const useModal = <T extends ValidModals>(id: T) => {
 	const open = useCallback(
 		(data: Omit<(typeof modals)[T], 'isOpen'>) => {
 			const modalData = isEventObject(data) ? {} : data
-			dispatch(
-				modalsSlice.actions.updateModal({
-					id,
-					data: {
-						...modalData,
-						isOpen: true,
-					},
-				}),
-			)
+			requestAnimationFrame(() => {
+				dispatch(
+					modalsSlice.actions.updateModal({
+						id,
+						data: {
+							...modalData,
+							isOpen: true,
+						},
+					}),
+				)
+			})
 		},
 		[dispatch, id],
 	)

@@ -1,148 +1,159 @@
-import { MindmapNode } from '@api/types/mindmapTypes'
-import { ActorDetails } from '@api/types/worldTypes'
-import { Icon } from '@iconify/react'
+import { alpha } from '@mui/material'
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 
-import { ActorAvatar } from '@/app/components/ActorAvatar/ActorAvatar'
+import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
+import { ArticleListItemIcon } from '../../wiki/articleList/icon/ArticleListItemIcon'
+import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
+import { ActorNodeContentMeta } from './ActorNodeContentMeta'
 import { MindmapNodePort } from './MindmapNodePort'
+import { NODE_W } from './mindmapWireUtils'
 
 type Props = {
 	node?: MindmapNode
-	actor: ActorDetails
-	onHeaderClick: (e: React.MouseEvent) => void
-	onContentClick: () => void
+	parent: BoxedMindmapParent
+	onHeaderClick?: (e: React.MouseEvent) => void
+	onContentClick?: () => void
 }
 
-export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }: Props) {
+export const ActorNodeContent = memo(ActorNodeContentComponent)
+
+function ActorNodeContentComponent({ node, parent, onHeaderClick }: Props) {
 	const theme = useCustomTheme()
 
 	const description = useMemo(() => {
-		const firstParagraph = actor.description.split('\n')[0]
-		if (firstParagraph.length < actor.description.length - 1) {
+		const content = (() => {
+			if ('content' in parent.entity) {
+				return parent.entity.content
+			}
+			return ''
+		})()
+		const firstParagraph = content.split('\n')[0]
+		if (firstParagraph.length < content.length - 1) {
 			return {
 				content: firstParagraph,
 				more: true,
 			}
 		}
 		return { content: firstParagraph }
-	}, [actor.description])
+	}, [parent.entity])
 
 	return (
 		<Box
 			sx={{
 				userSelect: 'none',
-				width: '250px',
-				borderRadius: 2,
+				width: `${NODE_W}px`,
+				borderRadius: '14px',
 				overflow: 'hidden',
 				position: 'relative',
+				background: theme.custom.palette.background.soft,
+				boxShadow:
+					theme.mode === 'light' ? '0 1px 4px rgba(20, 10, 50, 0.18)' : '0 1px 4px rgba(0, 0, 0, 0.4)',
 				transition: 'box-shadow 0.2s ease-out, transform 0.2s ease-out',
-				'&:has([data-mindmap-header]:hover):not(:has([data-mindmap-port]:hover)):not(:has(body.cursor-grabbing))':
-					{
-						boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
-					},
+				// border: (theme) => `1px solid ${theme.palette.divider}`,
+				'&:has(:hover):not(:has([data-mindmap-port]:hover)):not(:has(body.cursor-grabbing))': {
+					boxShadow: '0 6px 10px rgba(0,0,0,0.2)',
+				},
 			}}
 		>
-			{/* Header */}
 			<Stack
-				data-mindmap-header
-				onClick={onHeaderClick}
+				direction="row"
+				gap={1}
 				sx={{
-					background: theme.custom.palette.background.soft,
-					padding: '8px 0 8px 12px',
-					borderBottom: `1px solid ${theme.custom.palette.background.softer}`,
-					flexDirection: 'row',
-					userSelect: 'none',
-					gap: 1,
-					cursor: 'grab',
-					'&:active': {
-						cursor: 'grabbing',
-					},
+					padding: '12px',
 				}}
+				onClick={onHeaderClick}
 			>
-				<Stack
-					sx={{
-						flexDirection: 'row',
-						width: '100%',
-						alignItems: 'center',
-						justifyContent: 'space-between',
-						gap: 1,
-					}}
-				>
+				<Box sx={{ width: 24, height: 24 }}>
+					{parent.type === 'node' ? (
+						<EntityIcon variant="node" height={24} color={parent.color} />
+					) : (
+						<ArticleListItemIcon article={parent} highlighted={false} />
+					)}
+				</Box>
+
+				<Box sx={{ width: 1 }}>
+					{/* Header */}
 					<Stack
+						data-mindmap-header
 						sx={{
 							flexDirection: 'row',
-							alignItems: 'center',
+							userSelect: 'none',
 							gap: 1,
+							alignItems: 'flex-start',
 						}}
 					>
-						<ActorAvatar actor={actor} sx={{ width: 24, height: 24, fontSize: '0.7rem' }} />
-						<Box
+						<Stack
 							sx={{
-								fontWeight: 'bold',
-								fontSize: '0.9rem',
-								color: theme.material.palette.text.primary,
+								flexDirection: 'row',
+								width: '100%',
+								gap: 1.25,
 							}}
 						>
-							{actor.name}
+							<Stack gap={0.5}>
+								<Box
+									sx={{
+										fontWeight: 'bold',
+										fontSize: '0.7rem',
+										color: parent.color,
+										textTransform: 'uppercase',
+										letterSpacing: 0.75,
+									}}
+								>
+									{parent.type}
+								</Box>
+								<Box
+									sx={{
+										fontWeight: 'bold',
+										fontSize: '0.9rem',
+										color: theme.material.palette.text.primary,
+										display: '-webkit-box',
+										WebkitLineClamp: 2,
+										WebkitBoxOrient: 'vertical',
+										overflow: 'hidden',
+										textOverflow: 'ellipsis',
+									}}
+								>
+									{parent.name}
+								</Box>
+							</Stack>
+						</Stack>
+						<Box sx={{ marginTop: '-12px', marginRight: '-12px' }}>
+							<MindmapNodePort node={node} parent={parent} />
 						</Box>
+					</Stack>
 
-						<Icon
-							icon={actor.icon === 'default' ? 'mdi:person' : actor.icon}
-							color={'#0a0908'}
-							style={{
-								opacity: theme.mode === 'dark' ? 0.5 : 0.25,
-								zIndex: -1,
-								position: 'absolute',
-								top: '0px',
-								right: '36px',
-								width: '100%',
-								height: '100%',
-								maxHeight: '75px',
-								maxWidth: '75px',
-								pointerEvents: 'none',
+					{/* Content */}
+					{parent.type !== 'folder' && description.content.length > 0 && (
+						<Box
+							data-mindmap-content
+							sx={{
+								fontSize: '0.8rem',
+								lineHeight: 1.4,
+								marginTop: 2,
+								display: '-webkit-box',
+								WebkitLineClamp: 3,
+								WebkitBoxOrient: 'vertical',
+								overflow: 'hidden',
+								textOverflow: 'ellipsis',
 							}}
-						/>
-					</Stack>
-				</Stack>
-				{node && (
-					<Stack sx={{ marginTop: '-8px', marginBottom: '-9px' }} flexShrink={0}>
-						<MindmapNodePort node={node} actor={actor} />
-					</Stack>
-				)}
-			</Stack>
-
-			{/* Content */}
-			<Box
-				data-mindmap-content
-				onClick={(e) => {
-					e.stopPropagation()
-					onContentClick()
-				}}
-				sx={{
-					fontSize: '0.8rem',
-					lineHeight: 1.4,
-					padding: '12px',
-					background: theme.custom.palette.background.softest,
-					cursor: 'pointer',
-					transition: 'background 0.2s ease-out',
-					'&:hover': {
-						background: theme.custom.palette.background.softer,
-					},
-				}}
-			>
-				<Box>
-					<div>{description.content}</div>
+						>
+							{description.content.slice(0, 150)}
+						</Box>
+					)}
 				</Box>
-				{description.more && (
-					<Box sx={{ marginTop: 1, width: '100%', textAlign: 'center', fontWeight: 600 }}>
-						Click to see more
-					</Box>
-				)}
-			</Box>
+			</Stack>
+			<Divider
+				sx={{
+					borderColor: (theme) => alpha(theme.palette.divider, 0.05),
+				}}
+			/>
+			<ActorNodeContentMeta parent={parent} />
 		</Box>
 	)
 }

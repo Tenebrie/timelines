@@ -63,7 +63,7 @@ export function registerCreateActorTool(server: McpServer) {
 					name,
 					title,
 					color: normalizeColor(color),
-					descriptionRich: parsedDescription,
+					contentRich: parsedDescription,
 				})
 
 				Logger.toolSuccess(TOOL_NAME, `Created actor: ${actor.name} (${actor.id})`)

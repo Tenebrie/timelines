@@ -1,5 +1,4 @@
-import { CalendarDraftUnitChildRelation } from '@api/types/calendarTypes'
-
+import { CalendarDraftUnitChildRelation } from '@/api/types/calendarTypes'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 

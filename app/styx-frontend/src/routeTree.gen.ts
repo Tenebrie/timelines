@@ -9,48 +9,43 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as CreateAccountRouteImport } from './routes/create-account'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WorldIndexRouteImport } from './routes/world/index'
-import { Route as ToolsIndexRouteImport } from './routes/tools/index'
-import { Route as ProfileIndexRouteImport } from './routes/profile/index'
-import { Route as CalendarIndexRouteImport } from './routes/calendar/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as CreateAccountRouteImport } from './routes/create-account'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as ToolsToolsRouteImport } from './routes/tools/_tools'
-import { Route as ShareShareLinkSlugRouteImport } from './routes/share/$shareLinkSlug'
-import { Route as SecretMusicRouteImport } from './routes/secret/music'
-import { Route as ProfileProfileRouteImport } from './routes/profile/_profile'
-import { Route as CalendarCalendarIdRouteImport } from './routes/calendar/$calendarId'
-import { Route as AdminUsersRouteImport } from './routes/admin/users'
-import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
-import { Route as WorldWorldIdWorldRouteImport } from './routes/world/$worldId/_world'
-import { Route as ToolsToolsQrGeneratorRouteImport } from './routes/tools/_tools.qr-generator'
-import { Route as ToolsToolsImageGeneratorRouteImport } from './routes/tools/_tools.image-generator'
-import { Route as ToolsToolsImageConverterRouteImport } from './routes/tools/_tools.image-converter'
-import { Route as ProfileProfileStorageRouteImport } from './routes/profile/_profile.storage'
-import { Route as ProfileProfileSecurityRouteImport } from './routes/profile/_profile.security'
-import { Route as ProfileProfilePublicRouteImport } from './routes/profile/_profile.public'
-import { Route as ProfileProfilePreferencesRouteImport } from './routes/profile/_profile.preferences'
-import { Route as ProfileProfileMigrationRouteImport } from './routes/profile/_profile.migration'
+import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as CalendarIndexRouteImport } from './routes/calendar/index'
+import { Route as CalendarCalendarIdRouteImport } from './routes/calendar/$calendarId'
+import { Route as ProfileIndexRouteImport } from './routes/profile/index'
+import { Route as ProfileProfileRouteImport } from './routes/profile/_profile'
+import { Route as SecretMusicRouteImport } from './routes/secret/music'
+import { Route as ShareShareLinkSlugRouteImport } from './routes/share/$shareLinkSlug'
+import { Route as ToolsIndexRouteImport } from './routes/tools/index'
+import { Route as ToolsToolsRouteImport } from './routes/tools/_tools'
+import { Route as WorldIndexRouteImport } from './routes/world/index'
 import { Route as ProfileProfileFeedbackRouteImport } from './routes/profile/_profile.feedback'
-import { Route as WorldWorldIdWorldTimelineRouteImport } from './routes/world/$worldId/_world.timeline'
-import { Route as WorldWorldIdWorldSettingsRouteImport } from './routes/world/$worldId/_world.settings'
+import { Route as ProfileProfileMigrationRouteImport } from './routes/profile/_profile.migration'
+import { Route as ProfileProfilePreferencesRouteImport } from './routes/profile/_profile.preferences'
+import { Route as ProfileProfilePublicRouteImport } from './routes/profile/_profile.public'
+import { Route as ProfileProfileSecurityRouteImport } from './routes/profile/_profile.security'
+import { Route as ProfileProfileStorageRouteImport } from './routes/profile/_profile.storage'
+import { Route as ToolsToolsImageConverterRouteImport } from './routes/tools/_tools.image-converter'
+import { Route as ToolsToolsImageGeneratorRouteImport } from './routes/tools/_tools.image-generator'
+import { Route as ToolsToolsQrGeneratorRouteImport } from './routes/tools/_tools.qr-generator'
+import { Route as WorldWorldIdWorldRouteImport } from './routes/world/$worldId/_world'
 import { Route as WorldWorldIdWorldMindmapRouteImport } from './routes/world/$worldId/_world.mindmap'
+import { Route as WorldWorldIdWorldSettingsRouteImport } from './routes/world/$worldId/_world.settings'
+import { Route as WorldWorldIdWorldTimelineRouteImport } from './routes/world/$worldId/_world.timeline'
 import { Route as WorldWorldIdWorldWikiWikiRouteImport } from './routes/world/$worldId/_world.wiki/_wiki'
 import { Route as WorldWorldIdWorldWikiWikiIndexRouteImport } from './routes/world/$worldId/_world.wiki/_wiki.index'
 import { Route as WorldWorldIdWorldWikiWikiArticleIdRouteImport } from './routes/world/$worldId/_world.wiki/_wiki.$articleId'
 
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CreateAccountRoute = CreateAccountRouteImport.update({
-  id: '/create-account',
-  path: '/create-account',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -58,29 +53,14 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CreateAccountRoute = CreateAccountRouteImport.update({
+  id: '/create-account',
+  path: '/create-account',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorldIndexRoute = WorldIndexRouteImport.update({
-  id: '/world/',
-  path: '/world/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ToolsIndexRoute = ToolsIndexRouteImport.update({
-  id: '/tools/',
-  path: '/tools/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileIndexRoute = ProfileIndexRouteImport.update({
-  id: '/profile/',
-  path: '/profile/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CalendarIndexRoute = CalendarIndexRouteImport.update({
-  id: '/calendar/',
-  path: '/calendar/',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -88,34 +68,9 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
-const ToolsToolsRoute = ToolsToolsRouteImport.update({
-  id: '/tools/_tools',
-  path: '/tools',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ShareShareLinkSlugRoute = ShareShareLinkSlugRouteImport.update({
-  id: '/share/$shareLinkSlug',
-  path: '/share/$shareLinkSlug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SecretMusicRoute = SecretMusicRouteImport.update({
-  id: '/secret/music',
-  path: '/secret/music',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileProfileRoute = ProfileProfileRouteImport.update({
-  id: '/profile/_profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CalendarCalendarIdRoute = CalendarCalendarIdRouteImport.update({
-  id: '/calendar/$calendarId',
-  path: '/calendar/$calendarId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
@@ -123,46 +78,64 @@ const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
   path: '/notifications',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminAuditRoute = AdminAuditRouteImport.update({
-  id: '/audit',
-  path: '/audit',
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
-const WorldWorldIdWorldRoute = WorldWorldIdWorldRouteImport.update({
-  id: '/world/$worldId/_world',
-  path: '/world/$worldId',
+const CalendarIndexRoute = CalendarIndexRouteImport.update({
+  id: '/calendar/',
+  path: '/calendar/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ToolsToolsQrGeneratorRoute = ToolsToolsQrGeneratorRouteImport.update({
-  id: '/qr-generator',
-  path: '/qr-generator',
-  getParentRoute: () => ToolsToolsRoute,
+const CalendarCalendarIdRoute = CalendarCalendarIdRouteImport.update({
+  id: '/calendar/$calendarId',
+  path: '/calendar/$calendarId',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const ToolsToolsImageGeneratorRoute =
-  ToolsToolsImageGeneratorRouteImport.update({
-    id: '/image-generator',
-    path: '/image-generator',
-    getParentRoute: () => ToolsToolsRoute,
-  } as any)
-const ToolsToolsImageConverterRoute =
-  ToolsToolsImageConverterRouteImport.update({
-    id: '/image-converter',
-    path: '/image-converter',
-    getParentRoute: () => ToolsToolsRoute,
-  } as any)
-const ProfileProfileStorageRoute = ProfileProfileStorageRouteImport.update({
-  id: '/storage',
-  path: '/storage',
+const ProfileIndexRoute = ProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileProfileRoute = ProfileProfileRouteImport.update({
+  id: '/profile/_profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SecretMusicRoute = SecretMusicRouteImport.update({
+  id: '/secret/music',
+  path: '/secret/music',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShareShareLinkSlugRoute = ShareShareLinkSlugRouteImport.update({
+  id: '/share/$shareLinkSlug',
+  path: '/share/$shareLinkSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsIndexRoute = ToolsIndexRouteImport.update({
+  id: '/tools/',
+  path: '/tools/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsToolsRoute = ToolsToolsRouteImport.update({
+  id: '/tools/_tools',
+  path: '/tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorldIndexRoute = WorldIndexRouteImport.update({
+  id: '/world/',
+  path: '/world/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileProfileFeedbackRoute = ProfileProfileFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
   getParentRoute: () => ProfileProfileRoute,
 } as any)
-const ProfileProfileSecurityRoute = ProfileProfileSecurityRouteImport.update({
-  id: '/security',
-  path: '/security',
-  getParentRoute: () => ProfileProfileRoute,
-} as any)
-const ProfileProfilePublicRoute = ProfileProfilePublicRouteImport.update({
-  id: '/public',
-  path: '/public',
+const ProfileProfileMigrationRoute = ProfileProfileMigrationRouteImport.update({
+  id: '/migration',
+  path: '/migration',
   getParentRoute: () => ProfileProfileRoute,
 } as any)
 const ProfileProfilePreferencesRoute =
@@ -171,20 +144,47 @@ const ProfileProfilePreferencesRoute =
     path: '/preferences',
     getParentRoute: () => ProfileProfileRoute,
   } as any)
-const ProfileProfileMigrationRoute = ProfileProfileMigrationRouteImport.update({
-  id: '/migration',
-  path: '/migration',
+const ProfileProfilePublicRoute = ProfileProfilePublicRouteImport.update({
+  id: '/public',
+  path: '/public',
   getParentRoute: () => ProfileProfileRoute,
 } as any)
-const ProfileProfileFeedbackRoute = ProfileProfileFeedbackRouteImport.update({
-  id: '/feedback',
-  path: '/feedback',
+const ProfileProfileSecurityRoute = ProfileProfileSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
   getParentRoute: () => ProfileProfileRoute,
 } as any)
-const WorldWorldIdWorldTimelineRoute =
-  WorldWorldIdWorldTimelineRouteImport.update({
-    id: '/timeline',
-    path: '/timeline',
+const ProfileProfileStorageRoute = ProfileProfileStorageRouteImport.update({
+  id: '/storage',
+  path: '/storage',
+  getParentRoute: () => ProfileProfileRoute,
+} as any)
+const ToolsToolsImageConverterRoute =
+  ToolsToolsImageConverterRouteImport.update({
+    id: '/image-converter',
+    path: '/image-converter',
+    getParentRoute: () => ToolsToolsRoute,
+  } as any)
+const ToolsToolsImageGeneratorRoute =
+  ToolsToolsImageGeneratorRouteImport.update({
+    id: '/image-generator',
+    path: '/image-generator',
+    getParentRoute: () => ToolsToolsRoute,
+  } as any)
+const ToolsToolsQrGeneratorRoute = ToolsToolsQrGeneratorRouteImport.update({
+  id: '/qr-generator',
+  path: '/qr-generator',
+  getParentRoute: () => ToolsToolsRoute,
+} as any)
+const WorldWorldIdWorldRoute = WorldWorldIdWorldRouteImport.update({
+  id: '/world/$worldId/_world',
+  path: '/world/$worldId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorldWorldIdWorldMindmapRoute =
+  WorldWorldIdWorldMindmapRouteImport.update({
+    id: '/mindmap',
+    path: '/mindmap',
     getParentRoute: () => WorldWorldIdWorldRoute,
   } as any)
 const WorldWorldIdWorldSettingsRoute =
@@ -193,10 +193,10 @@ const WorldWorldIdWorldSettingsRoute =
     path: '/settings',
     getParentRoute: () => WorldWorldIdWorldRoute,
   } as any)
-const WorldWorldIdWorldMindmapRoute =
-  WorldWorldIdWorldMindmapRouteImport.update({
-    id: '/mindmap',
-    path: '/mindmap',
+const WorldWorldIdWorldTimelineRoute =
+  WorldWorldIdWorldTimelineRouteImport.update({
+    id: '/timeline',
+    path: '/timeline',
     getParentRoute: () => WorldWorldIdWorldRoute,
   } as any)
 const WorldWorldIdWorldWikiWikiRoute =
@@ -443,18 +443,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/create-account': {
-      id: '/create-account'
-      path: '/create-account'
-      fullPath: '/create-account'
-      preLoaderRoute: typeof CreateAccountRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -464,39 +457,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/create-account': {
+      id: '/create-account'
+      path: '/create-account'
+      fullPath: '/create-account'
+      preLoaderRoute: typeof CreateAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/world/': {
-      id: '/world/'
-      path: '/world'
-      fullPath: '/world/'
-      preLoaderRoute: typeof WorldIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tools/': {
-      id: '/tools/'
-      path: '/tools'
-      fullPath: '/tools/'
-      preLoaderRoute: typeof ToolsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/': {
-      id: '/profile/'
-      path: '/profile'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof ProfileIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/calendar/': {
-      id: '/calendar/'
-      path: '/calendar'
-      fullPath: '/calendar/'
-      preLoaderRoute: typeof CalendarIndexRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/': {
@@ -506,46 +478,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/tools/_tools': {
-      id: '/tools/_tools'
-      path: '/tools'
-      fullPath: '/tools'
-      preLoaderRoute: typeof ToolsToolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/share/$shareLinkSlug': {
-      id: '/share/$shareLinkSlug'
-      path: '/share/$shareLinkSlug'
-      fullPath: '/share/$shareLinkSlug'
-      preLoaderRoute: typeof ShareShareLinkSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/secret/music': {
-      id: '/secret/music'
-      path: '/secret/music'
-      fullPath: '/secret/music'
-      preLoaderRoute: typeof SecretMusicRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile/_profile': {
-      id: '/profile/_profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/calendar/$calendarId': {
-      id: '/calendar/$calendarId'
-      path: '/calendar/$calendarId'
-      fullPath: '/calendar/$calendarId'
-      preLoaderRoute: typeof CalendarCalendarIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/users': {
-      id: '/admin/users'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AdminUsersRouteImport
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/notifications': {
@@ -555,67 +492,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminNotificationsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/audit': {
-      id: '/admin/audit'
-      path: '/audit'
-      fullPath: '/admin/audit'
-      preLoaderRoute: typeof AdminAuditRouteImport
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/world/$worldId/_world': {
-      id: '/world/$worldId/_world'
-      path: '/world/$worldId'
-      fullPath: '/world/$worldId'
-      preLoaderRoute: typeof WorldWorldIdWorldRouteImport
+    '/calendar/': {
+      id: '/calendar/'
+      path: '/calendar'
+      fullPath: '/calendar/'
+      preLoaderRoute: typeof CalendarIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/tools/_tools/qr-generator': {
-      id: '/tools/_tools/qr-generator'
-      path: '/qr-generator'
-      fullPath: '/tools/qr-generator'
-      preLoaderRoute: typeof ToolsToolsQrGeneratorRouteImport
-      parentRoute: typeof ToolsToolsRoute
+    '/calendar/$calendarId': {
+      id: '/calendar/$calendarId'
+      path: '/calendar/$calendarId'
+      fullPath: '/calendar/$calendarId'
+      preLoaderRoute: typeof CalendarCalendarIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/tools/_tools/image-generator': {
-      id: '/tools/_tools/image-generator'
-      path: '/image-generator'
-      fullPath: '/tools/image-generator'
-      preLoaderRoute: typeof ToolsToolsImageGeneratorRouteImport
-      parentRoute: typeof ToolsToolsRoute
+    '/profile/': {
+      id: '/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProfileIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/tools/_tools/image-converter': {
-      id: '/tools/_tools/image-converter'
-      path: '/image-converter'
-      fullPath: '/tools/image-converter'
-      preLoaderRoute: typeof ToolsToolsImageConverterRouteImport
-      parentRoute: typeof ToolsToolsRoute
+    '/profile/_profile': {
+      id: '/profile/_profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileProfileRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/profile/_profile/storage': {
-      id: '/profile/_profile/storage'
-      path: '/storage'
-      fullPath: '/profile/storage'
-      preLoaderRoute: typeof ProfileProfileStorageRouteImport
-      parentRoute: typeof ProfileProfileRoute
+    '/secret/music': {
+      id: '/secret/music'
+      path: '/secret/music'
+      fullPath: '/secret/music'
+      preLoaderRoute: typeof SecretMusicRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/profile/_profile/security': {
-      id: '/profile/_profile/security'
-      path: '/security'
-      fullPath: '/profile/security'
-      preLoaderRoute: typeof ProfileProfileSecurityRouteImport
-      parentRoute: typeof ProfileProfileRoute
+    '/share/$shareLinkSlug': {
+      id: '/share/$shareLinkSlug'
+      path: '/share/$shareLinkSlug'
+      fullPath: '/share/$shareLinkSlug'
+      preLoaderRoute: typeof ShareShareLinkSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/profile/_profile/public': {
-      id: '/profile/_profile/public'
-      path: '/public'
-      fullPath: '/profile/public'
-      preLoaderRoute: typeof ProfileProfilePublicRouteImport
-      parentRoute: typeof ProfileProfileRoute
+    '/tools/': {
+      id: '/tools/'
+      path: '/tools'
+      fullPath: '/tools/'
+      preLoaderRoute: typeof ToolsIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/profile/_profile/preferences': {
-      id: '/profile/_profile/preferences'
-      path: '/preferences'
-      fullPath: '/profile/preferences'
-      preLoaderRoute: typeof ProfileProfilePreferencesRouteImport
+    '/tools/_tools': {
+      id: '/tools/_tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof ToolsToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/world/': {
+      id: '/world/'
+      path: '/world'
+      fullPath: '/world/'
+      preLoaderRoute: typeof WorldIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/_profile/feedback': {
+      id: '/profile/_profile/feedback'
+      path: '/feedback'
+      fullPath: '/profile/feedback'
+      preLoaderRoute: typeof ProfileProfileFeedbackRouteImport
       parentRoute: typeof ProfileProfileRoute
     }
     '/profile/_profile/migration': {
@@ -625,18 +576,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileMigrationRouteImport
       parentRoute: typeof ProfileProfileRoute
     }
-    '/profile/_profile/feedback': {
-      id: '/profile/_profile/feedback'
-      path: '/feedback'
-      fullPath: '/profile/feedback'
-      preLoaderRoute: typeof ProfileProfileFeedbackRouteImport
+    '/profile/_profile/preferences': {
+      id: '/profile/_profile/preferences'
+      path: '/preferences'
+      fullPath: '/profile/preferences'
+      preLoaderRoute: typeof ProfileProfilePreferencesRouteImport
       parentRoute: typeof ProfileProfileRoute
     }
-    '/world/$worldId/_world/timeline': {
-      id: '/world/$worldId/_world/timeline'
-      path: '/timeline'
-      fullPath: '/world/$worldId/timeline'
-      preLoaderRoute: typeof WorldWorldIdWorldTimelineRouteImport
+    '/profile/_profile/public': {
+      id: '/profile/_profile/public'
+      path: '/public'
+      fullPath: '/profile/public'
+      preLoaderRoute: typeof ProfileProfilePublicRouteImport
+      parentRoute: typeof ProfileProfileRoute
+    }
+    '/profile/_profile/security': {
+      id: '/profile/_profile/security'
+      path: '/security'
+      fullPath: '/profile/security'
+      preLoaderRoute: typeof ProfileProfileSecurityRouteImport
+      parentRoute: typeof ProfileProfileRoute
+    }
+    '/profile/_profile/storage': {
+      id: '/profile/_profile/storage'
+      path: '/storage'
+      fullPath: '/profile/storage'
+      preLoaderRoute: typeof ProfileProfileStorageRouteImport
+      parentRoute: typeof ProfileProfileRoute
+    }
+    '/tools/_tools/image-converter': {
+      id: '/tools/_tools/image-converter'
+      path: '/image-converter'
+      fullPath: '/tools/image-converter'
+      preLoaderRoute: typeof ToolsToolsImageConverterRouteImport
+      parentRoute: typeof ToolsToolsRoute
+    }
+    '/tools/_tools/image-generator': {
+      id: '/tools/_tools/image-generator'
+      path: '/image-generator'
+      fullPath: '/tools/image-generator'
+      preLoaderRoute: typeof ToolsToolsImageGeneratorRouteImport
+      parentRoute: typeof ToolsToolsRoute
+    }
+    '/tools/_tools/qr-generator': {
+      id: '/tools/_tools/qr-generator'
+      path: '/qr-generator'
+      fullPath: '/tools/qr-generator'
+      preLoaderRoute: typeof ToolsToolsQrGeneratorRouteImport
+      parentRoute: typeof ToolsToolsRoute
+    }
+    '/world/$worldId/_world': {
+      id: '/world/$worldId/_world'
+      path: '/world/$worldId'
+      fullPath: '/world/$worldId'
+      preLoaderRoute: typeof WorldWorldIdWorldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/world/$worldId/_world/mindmap': {
+      id: '/world/$worldId/_world/mindmap'
+      path: '/mindmap'
+      fullPath: '/world/$worldId/mindmap'
+      preLoaderRoute: typeof WorldWorldIdWorldMindmapRouteImport
       parentRoute: typeof WorldWorldIdWorldRoute
     }
     '/world/$worldId/_world/settings': {
@@ -646,11 +646,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorldWorldIdWorldSettingsRouteImport
       parentRoute: typeof WorldWorldIdWorldRoute
     }
-    '/world/$worldId/_world/mindmap': {
-      id: '/world/$worldId/_world/mindmap'
-      path: '/mindmap'
-      fullPath: '/world/$worldId/mindmap'
-      preLoaderRoute: typeof WorldWorldIdWorldMindmapRouteImport
+    '/world/$worldId/_world/timeline': {
+      id: '/world/$worldId/_world/timeline'
+      path: '/timeline'
+      fullPath: '/world/$worldId/timeline'
+      preLoaderRoute: typeof WorldWorldIdWorldTimelineRouteImport
       parentRoute: typeof WorldWorldIdWorldRoute
     }
     '/world/$worldId/_world/wiki/_wiki': {

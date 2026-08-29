@@ -1,6 +1,6 @@
-import { useDeleteCalendarMutation } from '@api/calendarApi'
 import { usePopupState } from 'material-ui-popup-state/hooks'
 
+import { useDeleteCalendarMutation } from '@/api/calendarApi'
 import { ConfirmPopoverButton } from '@/ui-lib/components/PopoverButton/ConfirmPopoverButton'
 
 type Props = {

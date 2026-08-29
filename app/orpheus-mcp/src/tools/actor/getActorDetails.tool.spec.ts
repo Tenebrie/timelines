@@ -16,14 +16,14 @@ const worldDetailsResponse = mockWorldDetails({
 			id: 'e1',
 			name: 'Battle',
 			timestamp: '100',
-			descriptionRich: 'Some description',
+			contentRich: 'Some description',
 		}),
 	],
 	actors: [
 		mockWorldActor({
 			id: 'a1',
 			name: 'Gandalf',
-			descriptionRich: 'Some description',
+			contentRich: 'Some description',
 			title: 'The Grey',
 			pages: [
 				{ id: 'p1', name: 'Knowledge' },
@@ -34,7 +34,7 @@ const worldDetailsResponse = mockWorldDetails({
 		mockWorldActor({
 			id: 'a2',
 			name: 'Frodo',
-			descriptionRich: 'Some description',
+			contentRich: 'Some description',
 			title: 'Ring Bearer',
 			mentionedIn: [{ sourceId: 'a1', sourceType: 'Actor' }],
 		}),

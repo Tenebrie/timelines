@@ -106,18 +106,26 @@ jobs:
             --title "Release ${{ needs.check-commits.outputs.version }}" \
             --prerelease --generate-notes
 
-  build-desktop:
-    name: Echo Build (${{ matrix.platform }})
+  build-echo:
+    name: Build Echo (${{ matrix.name }})
     needs: [check-commits, create-release]
     if: ${{ github.ref_name == 'dev' }}
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - name: Linux
+            os: ubuntu-latest
             platform: linux
-          - os: windows-latest
+            arch: x64
+          - name: MacOS
+            os: macos-latest
+            platform: darwin
+            arch: arm64
+          - name: Windows
+            os: windows-latest
             platform: win32
+            arch: x64
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -131,6 +139,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
+          cache: 'npm'
 
       # Run through git bash to avoid messing with cmd.exe
       - name: Use bash for npm scripts
@@ -154,9 +163,9 @@ jobs:
             app/echo-desktop/dist/package/*.tar.gz
           if-no-files-found: error
 
-  publish-desktop:
-    name: Echo Publish
-    needs: [check-commits, build-desktop]
+  publish-echo:
+    name: Publish Echo Builds
+    needs: [check-commits, build-echo]
     if: ${{ github.ref_name == 'dev' }}
     runs-on: ubuntu-latest
     permissions:
@@ -164,7 +173,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           path: artifacts
           pattern: neverkin-desktop-*-artifact

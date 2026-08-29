@@ -1,4 +1,3 @@
-import { CalendarUnit } from '@api/types/calendarTypes'
 import { describe, expect, it } from 'vitest'
 
 import {
@@ -6,6 +5,7 @@ import {
 	mockCalendarUnitChildRelation,
 	mockCalendarUnitParentRelation,
 } from '@/api/mock/rheaModels.mock'
+import { CalendarUnit } from '@/api/types/calendarTypes'
 
 import { parseTimestampMultiRoot } from './parseTimestampMultiRoot'
 

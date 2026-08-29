@@ -1,25 +1,24 @@
-import { useGetMindmapQuery } from '@api/mindmapApi'
-import { MindmapNode } from '@api/types/mindmapTypes'
-import { Actor } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { Fragment, memo, useCallback, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { dispatchGlobalEvent } from '@/app/features/eventBus'
+import { RootState } from '@/app/store'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
-import { getWorldState } from '../../../WorldSliceSelectors'
+import { BoxedMindmapWire } from '../hooks/useBoxedMindmapContent'
 import { MindmapWireGhost } from './MindmapWireGhost'
 import { MindmapWireLine } from './MindmapWireLine'
 import { MindmapWirePopover, MindmapWireState } from './MindmapWirePopover'
 
 type Props = {
-	actorsWithNodes: { id: string; actor: Actor; node: MindmapNode }[]
+	nodeLinks: BoxedMindmapWire[]
+	existingWires: Set<string>
 }
 
-export function MindmapWireLayer({ actorsWithNodes }: Props) {
-	const { id: worldId } = useSelector(getWorldState, (a, b) => a.id === b.id && a.actors === b.actors)
-	const { data } = useGetMindmapQuery({ worldId }, { skip: !worldId })
+export const MindmapWireLayer = memo(MindmapWireLayerComponent)
 
+function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 	const svgDefsRef = useRef<SVGDefsElement>(null)
 	const svgGroupRef = useRef<SVGGElement>(null)
 	const [refsReady, setRefsReady] = useState(false)
@@ -34,43 +33,23 @@ export function MindmapWireLayer({ actorsWithNodes }: Props) {
 		mode: 'doubleClick',
 	})
 
+	const isBulkSelectContext = useSelector((state: RootState) => {
+		const thingsSelected = state.mindmap.selectedNodes.length + state.mindmap.selectedWires.length
+		return thingsSelected > 1
+	})
+
 	const onOpenPopover = useCallback(
-		(wireId: string, position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => {
-			setPopoverState({ open: true, position, mode })
-		},
-		[],
-	)
-
-	const { nodeLinks, existingWires } = useMemo(() => {
-		if (!data) {
-			return {
-				nodeLinks: [],
-				existingWires: new Set<string>(),
+		(position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => {
+			if (isBulkSelectContext) {
+				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
+					position,
+				})
+			} else {
+				setPopoverState({ open: true, position, mode })
 			}
-		}
-
-		const nodeLinks = data.wires
-			.map((link) => {
-				const sourceNode = actorsWithNodes.find((node) => node.id === link.sourceNodeId)
-				const targetNode = actorsWithNodes.find((node) => node.id === link.targetNodeId)
-				if (!sourceNode || !targetNode) {
-					return null
-				}
-				return {
-					...link,
-					sourceNode,
-					targetNode,
-				}
-			})
-			.filter((link): link is NonNullable<typeof link> => link !== null)
-
-		const existingWires = new Set<string>()
-		nodeLinks.forEach((link) => {
-			existingWires.add(`${link.sourceNode.id}->${link.targetNode.id}`)
-		})
-
-		return { nodeLinks, existingWires }
-	}, [data, actorsWithNodes])
+		},
+		[isBulkSelectContext],
+	)
 
 	return (
 		<Box
@@ -89,21 +68,22 @@ export function MindmapWireLayer({ actorsWithNodes }: Props) {
 						willChange: 'transform',
 						transform: 'translate(var(--grid-offset-x), var(--grid-offset-y)) scale(var(--grid-scale))',
 						transformOrigin: '0 0',
-						transition: 'transform var(--transition-duration) ease-out',
+						// transition: 'transform var(--transition-duration) ease-out',
 					}}
 				></g>
 			</svg>
 			{refsReady &&
 				nodeLinks.map((link) => (
-					<MindmapWireLine
-						key={link.id}
-						wire={link}
-						source={link.sourceNode}
-						target={link.targetNode}
-						svgDefsPortal={svgDefsRef.current!}
-						svgGroupPortal={svgGroupRef.current!}
-						onOpenPopover={(position, mode) => onOpenPopover(link.id, position, mode)}
-					/>
+					<Fragment key={link.id}>
+						<MindmapWireLine
+							wire={link}
+							source={link.sourceNode}
+							target={link.targetNode}
+							svgDefsPortal={svgDefsRef.current!}
+							svgGroupPortal={svgGroupRef.current!}
+							onOpenPopover={onOpenPopover}
+						/>
+					</Fragment>
 				))}
 			<MindmapWireGhost existingWires={existingWires} />
 			<MindmapWirePopover

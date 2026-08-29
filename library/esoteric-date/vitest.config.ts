@@ -6,7 +6,6 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
 	resolve: {
 		alias: {
-			'@api': path.resolve('src/api'),
 			'@': path.resolve('src'),
 		},
 	},

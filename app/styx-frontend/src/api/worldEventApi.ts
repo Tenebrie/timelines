@@ -6,18 +6,6 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
-			getWorldEventContent: build.query<GetWorldEventContentApiResponse, GetWorldEventContentApiArg>({
-				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/content` }),
-				providesTags: ['worldEvent'],
-			}),
-			putWorldEventContent: build.mutation<PutWorldEventContentApiResponse, PutWorldEventContentApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/content`,
-					method: 'PUT',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['worldEvent'],
-			}),
 			createWorldEvent: build.mutation<CreateWorldEventApiResponse, CreateWorldEventApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/event`,
@@ -64,26 +52,6 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as worldEventApi }
-export type GetWorldEventContentApiResponse = /** status 200  */ {
-	contentHtml: string
-}
-export type GetWorldEventContentApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	eventId: string
-}
-export type PutWorldEventContentApiResponse = unknown
-export type PutWorldEventContentApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	eventId: string
-	body: {
-		content: string
-		reloadClients?: boolean
-	}
-}
 export type CreateWorldEventApiResponse = /** status 200  */ {
 	pages: {
 		id: string
@@ -91,11 +59,11 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 	}[]
 	mentions: {
 		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	mentionedIn: {
 		sourceId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	deltaStates: {
 		description?: null | string
@@ -103,11 +71,10 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name?: null | string
-		descriptionRich?: null | string
 		timestamp: string
+		descriptionRich?: null | string
 		worldEventId: string
 	}[]
-	description: string
 	worldId: string
 	id: string
 	createdAt: string
@@ -115,7 +82,8 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	descriptionRich: string
+	content: string
+	contentRich: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 	timestamp: string
@@ -130,7 +98,7 @@ export type CreateWorldEventApiArg = {
 		name: string
 		icon?: string
 		color?: string
-		descriptionRich: string
+		contentRich: string
 		timestamp: string
 		revokedAt?: null | string
 		customName?: boolean
@@ -146,11 +114,11 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	}[]
 	mentions: {
 		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	mentionedIn: {
 		sourceId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
 	deltaStates: {
 		description?: null | string
@@ -158,11 +126,10 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name?: null | string
-		descriptionRich?: null | string
 		timestamp: string
+		descriptionRich?: null | string
 		worldEventId: string
 	}[]
-	description: string
 	worldId: string
 	id: string
 	createdAt: string
@@ -170,7 +137,8 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	descriptionRich: string
+	content: string
+	contentRich: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 	timestamp: string
@@ -202,7 +170,6 @@ export type DeleteWorldEventApiArg = {
 	eventId: string
 }
 export type RevokeWorldEventApiResponse = /** status 200  */ {
-	description: string
 	worldId: string
 	id: string
 	createdAt: string
@@ -210,7 +177,8 @@ export type RevokeWorldEventApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	descriptionRich: string
+	content: string
+	contentRich: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 	timestamp: string
@@ -227,7 +195,6 @@ export type RevokeWorldEventApiArg = {
 	}
 }
 export type UnrevokeWorldEventApiResponse = /** status 200  */ {
-	description: string
 	worldId: string
 	id: string
 	createdAt: string
@@ -235,7 +202,8 @@ export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	descriptionRich: string
+	content: string
+	contentRich: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
 	timestamp: string
@@ -249,7 +217,7 @@ export type UnrevokeWorldEventApiArg = {
 	eventId: string
 }
 export type GetWorldEventBacklinksApiResponse = /** status 200  */ {
-	type: 'Actor' | 'Event' | 'Article' | 'Tag'
+	type: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	id: string
 	name: string
 }[]
@@ -260,9 +228,6 @@ export type GetWorldEventBacklinksApiArg = {
 	eventId: string
 }
 export const {
-	useGetWorldEventContentQuery,
-	useLazyGetWorldEventContentQuery,
-	usePutWorldEventContentMutation,
 	useCreateWorldEventMutation,
 	useUpdateWorldEventMutation,
 	useDeleteWorldEventMutation,

@@ -67,7 +67,7 @@ describe('get_article_details tool', () => {
 				name: 'Test World',
 				isReadOnly: false,
 				events: [],
-				actors: [{ id: 'a1', name: 'Wizard', descriptionRich: 'Some description', title: '' }],
+				actors: [{ id: 'a1', name: 'Wizard', contentRich: 'Some description', title: '' }],
 				tags: [],
 			},
 		})

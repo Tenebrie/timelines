@@ -5,6 +5,7 @@
 	"description": "",
 	"private": true,
 	"scripts": {
+		"tsc": "tsc --noEmit",
 		"lint": "eslint ./",
 		"build": "docker compose build playwright",
 		"test": "npm run build && npm run test:local",

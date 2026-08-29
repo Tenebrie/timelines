@@ -1,11 +1,11 @@
-import { Actor, WorldEvent } from '@api/types/worldTypes'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import { useCallback } from 'react'
 
+import { Actor, WorldEvent } from '@/api/types/worldTypes'
 import { StyledListItemButton, ZebraWrapper } from '@/app/components/Outliner/items/OutlinerItemActor/styles'
-import { TrunkatedTypography } from '@/app/components/TrunkatedTypography'
+import { TruncatedTypography } from '@/app/components/TruncatedTypography'
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { RichTextEditorReadonly } from '@/app/features/richTextEditor/RichTextEditorReadonly'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
@@ -32,8 +32,8 @@ export const EventContentRenderer = ({ event, active }: Props) => {
 		}
 	}, [event.revokedAt, event.timestamp, scrollTimelineTo])
 
-	// const paragraphs = event.description.split('\n').filter((p) => p.trim().length > 0)
-	const paragraphs = [event.descriptionRich]
+	// const paragraphs = event.content.split('\n').filter((p) => p.trim().length > 0)
+	const paragraphs = [event.contentRich]
 
 	const revokedAtTimestamp = isNotNull(event.revokedAt) ? (
 		<>
@@ -69,7 +69,7 @@ export const EventContentRenderer = ({ event, active }: Props) => {
 								<ListItemText
 									data-hj-suppress
 									primary={
-										<TrunkatedTypography
+										<TruncatedTypography
 											$lines={10}
 											sx={{ fontSize: '16px' }}
 											style={{ whiteSpace: 'break-spaces' }}
@@ -77,7 +77,7 @@ export const EventContentRenderer = ({ event, active }: Props) => {
 										>
 											<b>Content:</b>
 											<RichTextEditorReadonly value={p} />
-										</TrunkatedTypography>
+										</TruncatedTypography>
 									}
 									style={{ color: active ? 'inherit' : 'gray' }}
 								></ListItemText>

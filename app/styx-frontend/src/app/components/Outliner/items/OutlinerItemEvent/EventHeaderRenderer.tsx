@@ -1,8 +1,8 @@
-import { Actor, WorldEvent } from '@api/types/worldTypes'
 import Link from '@mui/icons-material/Link'
 import { useTheme } from '@mui/material'
 import ListItemIcon from '@mui/material/ListItemIcon'
 
+import { Actor, WorldEvent } from '@/api/types/worldTypes'
 import { EventIcon } from '@/app/features/icons/components/EventIcon'
 import { StatementActorsText, StyledListItemText } from '@/app/views/world/views/timeline/shelf/styles'
 

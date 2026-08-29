@@ -25,7 +25,9 @@ const repoRoot = join(desktopDir, '..', '..')
 const target = `neverkin-desktop-${process.platform}-${process.arch}`
 const outRoot = join(desktopDir, 'dist/package')
 const stage = join(outRoot, target)
-const resources = join(stage, 'resources')
+const macBundle = join(stage, 'Neverkin.app')
+const resources =
+	process.platform === 'darwin' ? join(macBundle, 'Contents', 'Resources') : join(stage, 'resources')
 
 function run(command, cwd) {
 	console.info(`[package] ${command}`)
@@ -74,11 +76,6 @@ rmSync(stage, { recursive: true, force: true })
 mkdirSync(resources, { recursive: true })
 
 // 1. Electron runtime, trimmed to the English locale
-if (process.platform === 'darwin') {
-	throw new Error(
-		'[package] macOS packaging is not implemented — the Electron.app bundle needs renaming and Info.plist edits (electron-builder territory)',
-	)
-}
 const electronDist = join(desktopDir, 'node_modules', 'electron', 'dist')
 if (!existsSync(electronDist)) {
 	// npm tree rewrites and CI caches restore the electron package without
@@ -90,16 +87,36 @@ if (!existsSync(electronDist)) {
 	console.info('[package] electron binary missing, downloading...')
 	run(`node ${installScript}`, desktopDir)
 }
-copy(electronDist, stage)
-rmSync(join(resources, 'default_app.asar'), { force: true })
-const exeSuffix = process.platform === 'win32' ? '.exe' : ''
-renameSync(join(stage, `electron${exeSuffix}`), join(stage, `neverkin${exeSuffix}`))
-const localesDir = join(stage, 'locales')
-if (existsSync(localesDir)) {
-	for (const locale of readdirSync(localesDir)) {
-		if (locale !== 'en-US.pak') rmSync(join(localesDir, locale), { force: true })
+if (process.platform === 'darwin') {
+	// Electron ships as an .app bundle: rebrand executable + Info.plist in place.
+	// Symlinks must survive the copy — Frameworks rely on Versions/Current links.
+	cpSync(join(electronDist, 'Electron.app'), macBundle, { recursive: true, verbatimSymlinks: true })
+	renameSync(
+		join(macBundle, 'Contents', 'MacOS', 'Electron'),
+		join(macBundle, 'Contents', 'MacOS', 'Neverkin'),
+	)
+	const plist = join(macBundle, 'Contents', 'Info.plist')
+	for (const [key, value] of [
+		['CFBundleExecutable', 'Neverkin'],
+		['CFBundleName', 'Neverkin'],
+		['CFBundleDisplayName', 'Neverkin'],
+		['CFBundleIdentifier', 'com.neverkin.desktop'],
+	]) {
+		run(`/usr/libexec/PlistBuddy -c 'Set :${key} ${value}' '${plist}'`)
+	}
+	// no locale trim: macOS locales live inside Electron Framework.framework
+} else {
+	copy(electronDist, stage)
+	const exeSuffix = process.platform === 'win32' ? '.exe' : ''
+	renameSync(join(stage, `electron${exeSuffix}`), join(stage, `neverkin${exeSuffix}`))
+	const localesDir = join(stage, 'locales')
+	if (existsSync(localesDir)) {
+		for (const locale of readdirSync(localesDir)) {
+			if (locale !== 'en-US.pak') rmSync(join(localesDir, locale), { force: true })
+		}
 	}
 }
+rmSync(join(resources, 'default_app.asar'), { force: true })
 
 // 2. The desktop package (resources/app is what Electron boots)
 const appDir = join(resources, 'app')
@@ -134,9 +151,24 @@ copy(join(rheaSource, 'prisma'), join(rheaStage, 'prisma'))
 // 5. Styx static build
 copy(join(repoRoot, 'app', 'styx-frontend', 'build'), join(resources, 'styx-frontend', 'build'))
 
-// 6. User-facing readme + archive
-const runCommand = process.platform === 'win32' ? 'neverkin.exe' : './neverkin'
-const dataLocation = process.platform === 'win32' ? '%LOCALAPPDATA%\\Neverkin' : '~/.local/share/neverkin'
+// 6. Signature, user-facing readme + archive
+if (process.platform === 'darwin') {
+	// The bundle was modified after Electron's ad-hoc signature was made, which
+	// breaks the seal — Apple Silicon refuses to launch it. Re-sign ad-hoc.
+	run(`codesign --force --deep --sign - '${macBundle}'`)
+}
+const runCommand =
+	process.platform === 'win32'
+		? 'neverkin.exe'
+		: process.platform === 'darwin'
+			? 'Neverkin.app'
+			: './neverkin'
+const dataLocation =
+	process.platform === 'win32'
+		? '%LOCALAPPDATA%\\Neverkin'
+		: process.platform === 'darwin'
+			? '~/Library/Application Support/Neverkin'
+			: '~/.local/share/neverkin'
 writeFileSync(
 	join(stage, 'README.txt'),
 	[
@@ -150,6 +182,14 @@ writeFileSync(
 					'  ./neverkin --no-sandbox',
 				]
 			: []),
+		...(process.platform === 'darwin'
+			? [
+					'',
+					'The app is ad-hoc signed. On another Mac, macOS will refuse to open it',
+					'directly — right-click > Open once, or clear quarantine with:',
+					'  xattr -dr com.apple.quarantine Neverkin.app',
+				]
+			: []),
 		'',
 	].join('\n'),
 )
@@ -159,8 +199,8 @@ writeFileSync(
 rmSync(join(outRoot, `${target}.zip`), { force: true })
 rmSync(join(outRoot, `${target}.tar.gz`), { force: true })
 if (process.platform === 'win32') {
-	// bsdtar ships with Windows 10+; -a picks the zip format from the extension.
-	run(`tar --options zip:compression=deflate -a -c -f ${target}.zip ${target}`, outRoot)
+	const bsdtar = join(process.env.SystemRoot ?? 'C:\\Windows', 'System32', 'tar.exe')
+	run(`"${bsdtar}" --options zip:compression=deflate -a -c -f ${target}.zip ${target}`, outRoot)
 } else {
 	run(`tar -czf ${target}.tar.gz ${target}`, outRoot)
 	run(`du -sh ${target} ${target}.tar.gz`, outRoot)

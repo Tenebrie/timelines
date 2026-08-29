@@ -63,9 +63,10 @@ export function registerUpdateActorContentTool(server: McpServer) {
 						name: pageName,
 						entities: actor.pages,
 						onCreate: async () => {
-							const newPage = await RheaService.createActorContentPage({
+							const newPage = await RheaService.createEntityContentPage({
+								entityType: 'actor',
 								worldId,
-								actorId: actor.id,
+								entityId: actor.id,
 								userId,
 								pageName,
 							})
@@ -74,18 +75,20 @@ export function registerUpdateActorContentTool(server: McpServer) {
 						},
 					})
 					const pageId = page.id
-					await RheaService.updateActorContentPage({
+					await RheaService.updateEntityContentPage({
+						entityType: 'actor',
 						worldId,
-						actorId: actor.id,
+						entityId: actor.id,
 						userId,
 						content: parsedContent,
 						pageId,
 					})
 					result.push(`Page "${pageName}" has been updated.`)
 				} else {
-					await RheaService.updateActorContent({
+					await RheaService.updateEntityContent({
+						entityType: 'actor',
 						worldId,
-						actorId: actor.id,
+						entityId: actor.id,
 						userId,
 						content: parsedContent,
 					})

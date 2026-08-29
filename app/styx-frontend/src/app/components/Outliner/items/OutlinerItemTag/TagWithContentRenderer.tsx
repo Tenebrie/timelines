@@ -1,4 +1,3 @@
-import { WorldTag } from '@api/types/worldTypes'
 import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
 import List from '@mui/material/List'
@@ -6,6 +5,7 @@ import ListItemText from '@mui/material/ListItemText'
 import { memo } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
+import { WorldTag } from '@/api/types/worldTypes'
 import { TagMentionedBy } from '@/app/features/entityEditor/tag/details/components/TagMentionedBy'
 
 import { StyledListItemButton } from '../OutlinerItemActor/styles'

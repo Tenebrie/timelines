@@ -1,6 +1,6 @@
-import { useGetTagDetailsQuery } from '@api/worldTagApi'
 import { useSelector } from 'react-redux'
 
+import { useGetTagDetailsQuery } from '@/api/worldTagApi'
 import { EntityBacklinks } from '@/app/features/entityEditor/common/EntityBacklinks'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 

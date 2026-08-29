@@ -1,0 +1,80 @@
+import { useCallback, useEffect, useRef } from 'react'
+
+import { WorldDetails } from '@/api/types/worldTypes'
+import { UpdateWorldApiArg, useUpdateWorldMutation } from '@/api/worldDetailsApi'
+import { useAutosave } from '@/app/utils/autosave/useAutosave'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { useSettingsDraft } from '@/app/views/world/views/settings/hooks/useSettingsDraft'
+
+type Props = {
+	world: WorldDetails
+	state: ReturnType<typeof useSettingsDraft>
+}
+
+export const useEditWorld = ({ world, state }: Props) => {
+	const { name, description, calendars, isDirty, setName, setDescription, setCalendars, setDirty } = state
+
+	const lastSavedAt = useRef(new Date(world.updatedAt))
+
+	useEffect(() => {
+		if (new Date(world.updatedAt) > lastSavedAt.current) {
+			setName(world.name, { cleanSet: true })
+			setDescription(world.description, { cleanSet: true })
+			setCalendars(
+				world.calendars.map((c) => c.id),
+				{ cleanSet: true },
+			)
+
+			setDirty(false)
+			lastSavedAt.current = new Date(world.updatedAt)
+		}
+	}, [world, setName, setDescription, setCalendars, setDirty])
+
+	const [updateWorld, { isLoading: isSaving, isError }] = useUpdateWorldMutation()
+
+	const sendUpdate = useCallback(
+		async (delta: UpdateWorldApiArg['body']) => {
+			setDirty(false)
+			const { error } = parseApiResponse(
+				await updateWorld({
+					worldId: world.id,
+					body: delta,
+				}),
+			)
+			if (error) {
+				return
+			}
+			lastSavedAt.current = new Date()
+		},
+		[world, setDirty, updateWorld],
+	)
+
+	const {
+		icon: autosaveIcon,
+		color: autosaveColor,
+		autosave,
+		manualSave,
+	} = useAutosave({
+		onSave: () =>
+			sendUpdate({
+				name,
+				description,
+				calendars,
+			}),
+		isSaving,
+		isError,
+	})
+
+	useEffect(() => {
+		if (isDirty) {
+			autosave()
+		}
+	}, [autosave, isDirty, state])
+
+	return {
+		isSaving,
+		manualSave,
+		autosaveIcon,
+		autosaveColor,
+	}
+}

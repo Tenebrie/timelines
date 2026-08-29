@@ -1,8 +1,8 @@
-import { ActorDetails } from '@api/types/worldTypes'
 import debounce from 'lodash.debounce'
 import { useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { ActorDetails } from '@/api/types/worldTypes'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 
@@ -20,8 +20,8 @@ export const ActorDescription = ({ actor, surface }: Props) => {
 			dispatch(
 				updateActor({
 					id: actorId,
-					description: plainText,
-					descriptionRich: richText,
+					content: plainText,
+					contentRich: richText,
 				}),
 			)
 		}, 500),
@@ -29,7 +29,7 @@ export const ActorDescription = ({ actor, surface }: Props) => {
 
 	return (
 		<RichTextEditorSummoner
-			value={actor.descriptionRich}
+			value={actor.contentRich}
 			onChange={({ plainText, richText }) => {
 				debouncedUpdate.current(actor.id, plainText, richText)
 			}}

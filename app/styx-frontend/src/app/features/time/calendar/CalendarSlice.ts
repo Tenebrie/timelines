@@ -1,11 +1,12 @@
+import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
+
 import {
 	CalendarDraft,
 	CalendarDraftPresentation,
 	CalendarDraftUnit,
 	CalendarDraftUnitChildRelation,
-} from '@api/types/calendarTypes'
-import type { PayloadAction } from '@reduxjs/toolkit'
-import { createSlice } from '@reduxjs/toolkit'
+} from '@/api/types/calendarTypes'
 
 export const initialState = {
 	calendar: null as CalendarDraft | null,

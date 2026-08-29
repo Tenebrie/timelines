@@ -3,10 +3,23 @@ import Event from '@mui/icons-material/Event'
 import Folder from '@mui/icons-material/Folder'
 import LabelIcon from '@mui/icons-material/LocalOfferOutlined'
 import Person from '@mui/icons-material/Person'
+import StickyNote2 from '@mui/icons-material/StickyNote2Outlined'
 import { SxProps } from '@mui/material'
 
 type Props = {
-	variant: 'actor' | 'event' | 'article' | 'tag' | 'folder' | 'Actor' | 'Event' | 'Article' | 'Tag' | 'Folder'
+	variant:
+		| 'actor'
+		| 'event'
+		| 'article'
+		| 'tag'
+		| 'folder'
+		| 'node'
+		| 'Actor'
+		| 'Event'
+		| 'Article'
+		| 'Tag'
+		| 'Folder'
+		| 'Node'
 	height?: number
 	color?: string
 }
@@ -33,6 +46,9 @@ export function EntityIcon({ variant, height, color }: Props) {
 		case 'folder':
 		case 'Folder':
 			return <Folder sx={overrides} />
+		case 'node':
+		case 'Node':
+			return <StickyNote2 sx={overrides} />
 		default:
 			return null
 	}

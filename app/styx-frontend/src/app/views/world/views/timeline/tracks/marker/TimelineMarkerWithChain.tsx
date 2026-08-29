@@ -1,7 +1,7 @@
-import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { memo } from 'react'
 
+import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 
 import { useHoveredTimelineMarker } from '../components/HoveredTimelineEvents'

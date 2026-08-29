@@ -1,7 +1,10 @@
-import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import type { NavigateOptions } from '@tanstack/react-router'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
+import { MindmapNode } from '@/api/types/mindmapTypes'
+import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
+import { BoxedMindmapParent } from '@/app/views/world/views/mindmap/hooks/useBoxedMindmapContent'
+import { Position } from '@/app/views/world/views/timeline/utils/Position'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
 type ScrollTimelineToParams =
@@ -53,9 +56,24 @@ export type EventParams = {
 	'mindmap/node/onGroupDragEnd': {
 		sourceNodeId: string
 	}
+	'mindmap/node/requestOpenContextMenu': {
+		position: Position
+		node: MindmapNode
+		parent: BoxedMindmapParent
+	}
+	'mindmap/bulk/requestOpenContextMenu': {
+		position: Position
+	}
+	'mindmap/wire/requestNodeTarget': {
+		sourceNodeIds: string[]
+	}
 	'mindmap/selection/changed': {
 		selectedNodeIds: Set<string>
 		selectedWireIds: Set<string>
+	}
+	'mindmap/hover/changed': {
+		hoveredNodeIds: Set<string>
+		hoveredWireIds: Set<string>
 	}
 	'world/requestNavigation': NavigateOptions
 	'calliope/onReconnected': void
@@ -65,10 +83,7 @@ export type EventParams = {
 	'announcements/requestOpen': void
 	'quickSelect/onKeyDown': {
 		key: string
-		ctrlKey: boolean
 		shiftKey: boolean
-		altKey: boolean
-		metaKey: boolean
 	}
 	'quickSelect/requestOpen': {
 		query: string
@@ -82,7 +97,11 @@ export type EventParams = {
 		screenPosBottom: number
 		screenPosLeft: number
 	}
+	'quickSelect/requestUpdateQuery': {
+		query: string
+	}
 	'quickSelect/requestClose': void
+	'quickSelect/onClosed': void
 	'richEditor/mentionRender/onStart': { node: ProseMirrorNode }
 	'richEditor/mentionRender/onEnd': { node: ProseMirrorNode }
 	'richEditor/requestFocus': void

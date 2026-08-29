@@ -1,11 +1,11 @@
-import { useDeleteCalendarPresentationMutation } from '@api/calendarApi'
-import { CalendarDraftPresentation } from '@api/types/calendarTypes'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useSelector } from 'react-redux'
 
+import { useDeleteCalendarPresentationMutation } from '@/api/calendarApi'
+import { CalendarDraftPresentation } from '@/api/types/calendarTypes'
 import { ConfirmPopoverButton } from '@/ui-lib/components/PopoverButton/ConfirmPopoverButton'
 
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'
