@@ -1,4 +1,6 @@
 export { createTiptapExtensionSchema } from './createTiptapExtensionSchema.js'
+export { IndentExtension, MAX_INDENT_LEVEL } from './extensions/IndentExtension.js'
 export { ExternalImageNode } from './nodes/ExternalImageNode.js'
 export type { MentionPropsType } from './nodes/MentionNode.js'
 export { MentionNode, MentionNodeName } from './nodes/MentionNode.js'
+export { TabNode } from './nodes/TabNode.js'
