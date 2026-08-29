@@ -9,6 +9,9 @@ fi
 STACK_VERSION=13
 STACK_VERSION_FILE="/var/lib/timelines/stack-version"
 
+GATEKEEPER_VERSION=1
+GATEKEEPER_VERSION_FILE="/var/lib/timelines/gatekeeper-version"
+
 # Check if we need to do a full deploy instead of update
 NEEDS_DEPLOY=false
 if [[ ! -f "$STACK_VERSION_FILE" ]]; then
@@ -28,6 +31,7 @@ if $NEEDS_DEPLOY; then
   mkdir -p "$(dirname "$STACK_VERSION_FILE")"
   echo "$STACK_VERSION" > "$STACK_VERSION_FILE"
   echo "Stack version saved: $STACK_VERSION"
+  echo "$GATEKEEPER_VERSION" > "$GATEKEEPER_VERSION_FILE"
 
   exit 0
 fi
@@ -84,7 +88,12 @@ if $FAILED; then
   exit 1
 fi
 
-docker service update --image "tenebrie/timelines-gatekeeper:${VERSION}" "timelines_gatekeeper"
+if [[ ! -f "$GATEKEEPER_VERSION_FILE" || "$(cat "$GATEKEEPER_VERSION_FILE")" != "$GATEKEEPER_VERSION" ]]; then
+  docker service update --image "tenebrie/timelines-gatekeeper:${VERSION}" "timelines_gatekeeper"
+  echo "$GATEKEEPER_VERSION" > "$GATEKEEPER_VERSION_FILE"
+else
+  echo "Gatekeeper version unchanged ($GATEKEEPER_VERSION), skipping update"
+fi
 
 echo "All services updated successfully"
 docker system prune -f
