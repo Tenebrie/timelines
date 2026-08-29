@@ -11,7 +11,9 @@ Direct download link (Apple Silicon): [neverkin-desktop-darwin-arm64.tar.gz](htt
 
 ## Known Issues
 
-The application binary is "ad-hoc" signed, without a [$99 per-year Apple Developer Program membership](https://developer.apple.com/programs/enroll/). You can still run it through the included `Launch Neverkin.command` script, unlock it through the macOS security settings after a failed launch, or through a terminal command:
+The application binary is "ad-hoc" signed, without a [$99 per-year Apple Developer Program membership](https://developer.apple.com/programs/enroll/). This means that Mac will prevent the application from being launched.
+
+To run it, you can either use the included `Launch Neverkin.command` script, unlock it through the macOS security settings after a failed launch, or use a terminal command:
 ```sh
 xattr -dr com.apple.quarantine Neverkin.app
 ```
