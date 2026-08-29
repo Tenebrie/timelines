@@ -1,4 +1,3 @@
-import { MindmapNode } from '@api/types/mindmapTypes'
 import Delete from '@mui/icons-material/Delete'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
@@ -6,6 +5,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
 
+import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 

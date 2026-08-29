@@ -1,10 +1,10 @@
-import { MindmapNode } from '@api/types/mindmapTypes'
 import { alpha } from '@mui/material'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { memo, useMemo } from 'react'
 
+import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 

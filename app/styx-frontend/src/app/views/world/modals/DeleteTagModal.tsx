@@ -1,10 +1,10 @@
-import { useDeleteTagMutation } from '@api/worldTagApi'
 import Delete from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import { useState } from 'react'
 
+import { useDeleteTagMutation } from '@/api/worldTagApi'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'

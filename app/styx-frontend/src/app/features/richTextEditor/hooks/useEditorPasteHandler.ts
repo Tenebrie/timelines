@@ -1,9 +1,10 @@
-import { base64ToFile } from '@api/hooks/fileUpload/base64ToFile'
-import { useFileUpload } from '@api/hooks/fileUpload/useFileUpload'
 import { Fragment, Node, Slice } from '@tiptap/pm/model'
 import { EditorView } from '@tiptap/pm/view'
 import { useCallback } from 'react'
 import { v4 as getRandomId } from 'uuid'
+
+import { base64ToFile } from '@/api/hooks/fileUpload/base64ToFile'
+import { useFileUpload } from '@/api/hooks/fileUpload/useFileUpload'
 
 import { mapProseMirrorSlice } from '../utils/mapProseMirrorSlice'
 

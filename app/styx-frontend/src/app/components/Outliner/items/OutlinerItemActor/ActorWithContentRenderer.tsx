@@ -1,7 +1,8 @@
-import { ActorDetails } from '@api/types/worldTypes'
 import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
 import { memo } from 'react'
+
+import { ActorDetails } from '@/api/types/worldTypes'
 
 import { ActorContentRenderer } from './ActorContentRenderer'
 import { ActorHeaderRenderer } from './ActorHeaderRenderer'

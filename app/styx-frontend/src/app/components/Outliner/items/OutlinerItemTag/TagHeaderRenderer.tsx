@@ -1,7 +1,7 @@
-import { WorldTag } from '@api/types/worldTypes'
 import { useTheme } from '@mui/material'
 import ListItemIcon from '@mui/material/ListItemIcon'
 
+import { WorldTag } from '@/api/types/worldTypes'
 import { EventIcon } from '@/app/features/icons/components/EventIcon'
 import { StyledListItemText } from '@/app/views/world/views/timeline/shelf/styles'
 

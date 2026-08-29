@@ -1,9 +1,9 @@
-import { MindmapNode } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import useEvent from 'react-use-event-hook'
 
+import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useUpdateMindmapNode } from '@/app/views/world/views/mindmap/api/useUpdateMindmapNode'
 import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'

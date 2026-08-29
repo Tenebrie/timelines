@@ -1,6 +1,6 @@
-import { WikiEntityType } from '@api/types/worldTypes'
 import { createSelector } from '@reduxjs/toolkit'
 
+import { WikiEntityType } from '@/api/types/worldTypes'
 import { getWikiPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { RootState } from '@/app/store'
 

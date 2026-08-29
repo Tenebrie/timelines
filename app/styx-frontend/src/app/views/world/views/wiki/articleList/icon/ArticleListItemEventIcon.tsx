@@ -1,5 +1,4 @@
-import { WorldEvent } from '@api/types/worldTypes'
-
+import { WorldEvent } from '@/api/types/worldTypes'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 import { CustomEntityIcon } from '@/ui-lib/icons/CustomEntityIcon'

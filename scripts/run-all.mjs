@@ -1,7 +1,9 @@
-import { readFileSync } from 'node:fs'
 import { spawn } from 'node:child_process'
+import { readFileSync } from 'node:fs'
 
-const [script, ...selectors] = process.argv.slice(2)
+const [script, ...args] = process.argv.slice(2)
+const selectors = args.filter((arg) => !arg.startsWith('-'))
+const passthroughArgs = args.filter((arg) => arg.startsWith('-'))
 const { subPackages } = JSON.parse(readFileSync('package.json', 'utf8'))
 
 function matches(pkg, selector) {
@@ -16,7 +18,7 @@ const targets = selectors.length
 function run(pkg) {
 	return new Promise((resolve) => {
 		const chunks = []
-		const child = spawn('npm', ['run', script, '--if-present'], {
+		const child = spawn('npm', ['run', script, '--if-present', '--', ...passthroughArgs], {
 			cwd: pkg,
 			env: { ...process.env, FORCE_COLOR: '1' },
 		})

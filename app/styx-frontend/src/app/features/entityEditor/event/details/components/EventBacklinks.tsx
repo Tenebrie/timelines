@@ -1,6 +1,6 @@
-import { useGetWorldEventBacklinksQuery } from '@api/worldEventApi'
 import { useSelector } from 'react-redux'
 
+import { useGetWorldEventBacklinksQuery } from '@/api/worldEventApi'
 import { EntityBacklinks } from '@/app/features/entityEditor/common/EntityBacklinks'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 

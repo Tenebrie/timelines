@@ -1,8 +1,8 @@
-import { Actor } from '@api/types/worldTypes'
 import { SxProps } from '@mui/material'
 import Avatar from '@mui/material/Avatar'
 import { useMemo } from 'react'
 
+import { Actor } from '@/api/types/worldTypes'
 import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 

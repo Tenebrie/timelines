@@ -1,7 +1,7 @@
-import { mockActorModel } from '@api/mock/rheaModels.mock'
 import { describe, expect, it } from '@rstest/core'
 import { screen } from '@testing-library/react'
 
+import { mockActorModel } from '@/api/mock/rheaModels.mock'
 import { renderWithProviders } from '@/test-utils/renderWithProviders'
 
 import { ActorAvatar } from './ActorAvatar'

@@ -1,5 +1,6 @@
-import { iconifyApi, IconifyApiReducer } from '@api/iconify/iconifyApi'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
+
+import { iconifyApi, IconifyApiReducer } from '@/api/iconify/iconifyApi'
 
 import { baseApi, BaseApiReducer } from '../api/base/baseApi'
 import { AuthReducer } from './features/auth/AuthSlice'

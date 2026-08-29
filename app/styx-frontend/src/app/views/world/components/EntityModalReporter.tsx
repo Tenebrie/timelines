@@ -1,9 +1,9 @@
-import { useGetMindmapQuery } from '@api/mindmapApi'
-import { useGetArticlesQuery } from '@api/worldWikiApi'
 import { useSearch } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useGetMindmapQuery } from '@/api/mindmapApi'
+import { useGetArticlesQuery } from '@/api/worldWikiApi'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 
 import { getTimelineState, getWorldState } from '../WorldSliceSelectors'

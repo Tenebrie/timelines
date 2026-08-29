@@ -1,4 +1,3 @@
-import { MindmapWireDirection } from '@api/types/mindmapTypes'
 import Delete from '@mui/icons-material/Delete'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -8,6 +7,8 @@ import MenuList from '@mui/material/MenuList'
 import Popover from '@mui/material/Popover'
 import { useCallback, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
+
+import { MindmapWireDirection } from '@/api/types/mindmapTypes'
 
 import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
 import { useMindmapData } from '../api/useMindmapData'

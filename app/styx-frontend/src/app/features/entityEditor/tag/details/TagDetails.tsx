@@ -1,7 +1,7 @@
-import { WorldTag } from '@api/types/worldTypes'
 import Stack from '@mui/material/Stack'
 import { memo } from 'react'
 
+import { WorldTag } from '@/api/types/worldTypes'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 

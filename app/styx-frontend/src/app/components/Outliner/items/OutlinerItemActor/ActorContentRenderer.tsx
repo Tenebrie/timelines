@@ -1,10 +1,10 @@
-import { ActorDetails } from '@api/types/worldTypes'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 
+import { ActorDetails } from '@/api/types/worldTypes'
 import { StyledListItemButton, ZebraWrapper } from '@/app/components/Outliner/items/OutlinerItemActor/styles'
-import { TrunkatedTypography } from '@/app/components/TrunkatedTypography'
+import { TruncatedTypography } from '@/app/components/TruncatedTypography'
 import { RichTextEditorReadonly } from '@/app/features/richTextEditor/RichTextEditorReadonly'
 
 type Props = {
@@ -25,7 +25,7 @@ export const ActorContentRenderer = ({ actor, active }: Props) => {
 								<ListItemText
 									data-hj-suppress
 									primary={
-										<TrunkatedTypography
+										<TruncatedTypography
 											$lines={10}
 											sx={{ fontSize: '16px' }}
 											style={{ whiteSpace: 'break-spaces' }}
@@ -33,7 +33,7 @@ export const ActorContentRenderer = ({ actor, active }: Props) => {
 										>
 											<b>Content:</b>
 											<RichTextEditorReadonly value={p} />
-										</TrunkatedTypography>
+										</TruncatedTypography>
 									}
 									style={{ color: active ? 'inherit' : 'gray' }}
 								></ListItemText>

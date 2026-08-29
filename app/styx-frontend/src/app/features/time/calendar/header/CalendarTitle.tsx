@@ -1,4 +1,3 @@
-import { useUpdateCalendarMutation } from '@api/calendarApi'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
@@ -7,6 +6,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { useUpdateCalendarMutation } from '@/api/calendarApi'
 import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 
 import { getCalendarEditorState } from '../CalendarSliceSelectors'

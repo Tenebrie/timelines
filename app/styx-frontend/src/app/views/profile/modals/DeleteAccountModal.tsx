@@ -1,4 +1,3 @@
-import { useDeleteAccountMutation } from '@api/authApi'
 import Delete from '@mui/icons-material/Delete'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -8,6 +7,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { useDeleteAccountMutation } from '@/api/authApi'
 import { authSlice } from '@/app/features/auth/AuthSlice'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'

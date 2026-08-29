@@ -1,4 +1,5 @@
-import Notifications from '@mui/icons-material/Notifications'
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined'
 import Badge from '@mui/material/Badge'
 import IconButton from '@mui/material/IconButton'
 import Popover from '@mui/material/Popover'
@@ -29,7 +30,8 @@ export const AnnouncementView = () => {
 		<>
 			<IconButton {...bindTrigger(popupState)} ref={buttonRef} disabled={!user}>
 				<Badge badgeContent={data?.length ?? 0} color="primary" variant="dot">
-					<Notifications />
+					{data && data.length > 0 && <NotificationsIcon />}
+					{(!data || !data.length) && <NotificationsOutlinedIcon />}
 				</Badge>
 			</IconButton>
 			<Popover

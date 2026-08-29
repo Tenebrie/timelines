@@ -1,6 +1,6 @@
-import { WikiEntityType } from '@api/types/worldTypes'
 import { shallowEqual, useSelector } from 'react-redux'
 
+import { WikiEntityType } from '@/api/types/worldTypes'
 import { getWikiPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { RootState } from '@/app/store'
 

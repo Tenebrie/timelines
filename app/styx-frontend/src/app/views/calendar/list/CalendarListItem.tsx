@@ -1,8 +1,8 @@
-import { CalendarBrief } from '@api/types/calendarTypes'
 import ButtonBase from '@mui/material/ButtonBase'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
+import { CalendarBrief } from '@/api/types/calendarTypes'
 import { NavigationLink } from '@/app/components/NavigationLink'
 import { DeleteCalendarButton } from '@/app/views/calendar/list/components/DeleteCalendarButton'
 

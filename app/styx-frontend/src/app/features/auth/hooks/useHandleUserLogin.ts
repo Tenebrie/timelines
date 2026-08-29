@@ -1,7 +1,7 @@
-import { CreateAccountApiResponse } from '@api/authApi'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { CreateAccountApiResponse } from '@/api/authApi'
 import { getSessionStorageItem, removeSessionStorageItem } from '@/app/utils/sessionStorage'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 

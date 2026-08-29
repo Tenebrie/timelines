@@ -1,9 +1,9 @@
-import { MindmapWire } from '@api/types/mindmapTypes'
 import Box from '@mui/material/Box'
 import { darken, lighten } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { useRef } from 'react'
 
+import { MindmapWire } from '@/api/types/mindmapTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 

@@ -1,9 +1,9 @@
-import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { memo } from 'react'
 
+import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'

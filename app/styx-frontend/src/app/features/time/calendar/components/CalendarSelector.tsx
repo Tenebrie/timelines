@@ -1,5 +1,3 @@
-import { useListCalendarsQuery, useListWorldCalendarsQuery } from '@api/calendarApi'
-import { useListCalendarTemplatesQuery } from '@api/otherApi'
 import Divider from '@mui/material/Divider'
 import ListItemText from '@mui/material/ListItemText'
 import ListSubheader from '@mui/material/ListSubheader'
@@ -7,6 +5,8 @@ import MenuItem from '@mui/material/MenuItem'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 
+import { useListCalendarsQuery, useListWorldCalendarsQuery } from '@/api/calendarApi'
+import { useListCalendarTemplatesQuery } from '@/api/otherApi'
 import { LoadingSelect } from '@/ui-lib/components/LoadingSelect/LoadingSelect'
 
 type Props = {
