@@ -5,19 +5,10 @@ import Button from '~/components/ui/Button.astro'
 
 const metadata = {
 	title: 'Download Neverkin Desktop',
-	description: 'Download Neverkin Desktop for Linux and Windows.',
+	description: 'Download Neverkin Desktop for Linux, Windows and macOS.',
 }
 
 const platforms = [
-	{
-		key: 'linux',
-		name: 'Linux',
-		icon: 'tabler:brand-ubuntu',
-		arch: 'x64',
-		format: '.tar.gz',
-		asset: 'neverkin-desktop-linux-x64.tar.gz',
-		available: true,
-	},
 	{
 		key: 'windows',
 		name: 'Windows',
@@ -28,20 +19,29 @@ const platforms = [
 		available: true,
 	},
 	{
+		key: 'linux',
+		name: 'Linux',
+		icon: 'tabler:brand-ubuntu',
+		arch: 'x64',
+		format: '.tar.gz',
+		asset: 'neverkin-desktop-linux-x64.tar.gz',
+		available: true,
+	},
+	{
 		key: 'mac',
 		name: 'macOS',
 		icon: 'tabler:brand-apple',
 		arch: 'arm64',
 		format: '.zip',
-		asset: '',
-		available: false,
+		asset: 'neverkin-desktop-darwin-arm64.tar.gz',
+		available: true,
 	},
 ]
 ---
 
 <Layout metadata={metadata}>
 	<section class="relative">
-		<div class="max-w-5xl mx-auto px-4 sm:px-6 py-16 md:py-20">
+		<div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
 			<!-- Headline -->
 			<div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
 				<p class="text-brand-gradient font-bold uppercase tracking-widest text-sm mb-2">Downloads</p>
@@ -61,7 +61,7 @@ const platforms = [
 						.map((platform) => (
 							<div
 								data-platform={platform.key}
-								class="group relative flex flex-col items-center text-center rounded-xl border border-gray-200 dark:border-slate-700/40 bg-gray-50/50 dark:bg-slate-800/30 p-8 transition-all duration-200 hover:border-primary/40 hover:shadow-lg hover:shadow-purple-900/10"
+								class="group relative flex flex-col items-start sm:first:col-span-2 sm:first:items-center rounded-xl border border-gray-200 dark:border-slate-700/40 bg-gray-50/50 dark:bg-slate-800/30 p-6 transition-all duration-200 hover:border-primary/40 hover:shadow-lg hover:shadow-purple-900/10"
 							>
 								<span
 									data-recommended-badge
@@ -69,20 +69,24 @@ const platforms = [
 								>
 									For your system
 								</span>
-								<div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-									<Icon name={platform.icon} class="w-9 h-9 text-primary" />
+								<div class="flex items-center gap-4 mb-5">
+									<div class="w-14 h-14 shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center">
+										<Icon name={platform.icon} class="w-8 h-8 text-primary" />
+									</div>
+									<div class="text-left">
+										<h2 class="text-2xl font-bold dark:text-white">{platform.name}</h2>
+										<p class="text-sm text-gray-500 dark:text-slate-400">
+											{platform.arch} &middot; {platform.format}
+											<span data-version />
+										</p>
+									</div>
 								</div>
-								<h2 class="text-2xl font-bold dark:text-white mb-1">{platform.name}</h2>
-								<p class="text-sm text-gray-500 dark:text-slate-400 mb-6">
-									{platform.arch} &middot; {platform.format}
-									<span data-version />
-								</p>
 								<Button
 									variant="primary"
 									text={`Download for ${platform.name}`}
 									href={`https://github.com/Tenebrie/timelines/releases/latest/download/${platform.asset}`}
 									icon="tabler:download"
-									class="w-full"
+									class="w-full max-w-xs"
 								/>
 							</div>
 						))
@@ -118,6 +122,7 @@ const platforms = [
 					: null
 		const card = detected && document.querySelector(`[data-platform="${detected}"]`)
 		if (card) {
+			card.parentElement.prepend(card)
 			card.classList.add('border-primary/50', 'dark:border-primary/50')
 			card.querySelector('[data-recommended-badge]')?.classList.remove('hidden')
 		}

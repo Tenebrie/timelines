@@ -46,8 +46,12 @@ export default defineConfig({
 						{ label: 'Getting started', autogenerate: { directory: 'docs/Onboarding' } },
 						{ label: 'Features', autogenerate: { directory: 'docs/Features' } },
 						{
-							label: 'Private instances',
-							autogenerate: { directory: 'docs/Private instances' },
+							label: 'Neverkin Desktop',
+							autogenerate: { directory: 'docs/Neverkin Desktop' },
+						},
+						{
+							label: 'Self-hosting',
+							autogenerate: { directory: 'docs/Self-hosting' },
 						},
 					],
 				},

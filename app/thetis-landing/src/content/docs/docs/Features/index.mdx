@@ -1,6 +1,35 @@
 ---
-title: Feature overview
+title: Core concepts
 description: Documentation for Neverkin - the open-source worldbuilding platform.
 ---
 
-Test
+At the top level, you will quickly encounter two main concepts: **Worlds** and **Calendars**.
+
+**Worlds** are the primary containers for your content. Think of them as projects. You will probably want to create a world for each of your settings, but not necessarily one for every single story. In other words, *Middle-earth* is a world, but *The Hobbit* and *The Lord of the Rings* are just subfolders as they have a lot in common.
+
+Two worlds are fully independent from each other and can't communicate. When you delete a world, all entities inside of it are deleted as well.
+
+**Calendars** are used to define the time structure of your world. Some common calendars are defined for you, but you may also create your own. You can read more about calendars in the [Calendars](./features/calendars) section.
+
+## World entities
+
+For a lack of a better term, a whole bunch of things living inside the world are collectively referred to as "entities". These include all the moving pieces inside your world or story.
+
+**Actors** are characters, artifacts or deities. They have a physical location and have an individual impact on your story in one way or another. You may want to create a separate actor for each named character who is relevant in your story.
+
+**Articles** are abstract concepts and pieces of lore, or maybe chapters of your book. They do not exist in the world, but that's the most convenient place to just do some writing.
+
+**Events** are scenes or notable moments in time. Events are visible on the timeline, allowing you to see on a glance when things happen. You may want to create an event for something you will explicitly mention in prose.
+
+**Tags** are keywords, labels or groups you can use to categorize other entities. You may want to create a tag for a specific ancestry (say, `@Elves`), certain knowledge (e.g., `@Magic User`) or other relevant themes.
+
+## Mentions
+
+> Explain cross-mentions of everything
+
+## Common concepts
+
+Without a specific theme, here are a few other concepts that may help to keep in mind:
+
+- In most cases, your content is automatically saved. You are free to open and close your documents without worrying about saving. If you don't see a save button - it's handled for you.
+- Everything inside a world is considered live data. Any other user (or yourself in a different tab!) gets all updates instantly synchronized, allowing you to work on the same document in real time.

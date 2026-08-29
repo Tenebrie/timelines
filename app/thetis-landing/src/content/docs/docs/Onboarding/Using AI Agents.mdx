@@ -1,6 +1,21 @@
 ---
 title: Using AI Agents
 description: Documentation for Neverkin - the open-source worldbuilding platform.
+sidebar:
+  order: 0
 ---
+import { Aside } from '@astrojs/starlight/components'
 
-MCP server documentation goes here.
+Core Neverkin features are exposed via an MCP server at https://app.neverkin.com/mcp. Choose your favorite agent and try using it!
+
+The MCP server supports full OAuth authentication.
+
+<Aside type="tip" title="Fun fact">
+Neverkin MCP server is internally named Orpheus!
+</Aside>
+
+## Using agents responsibly
+
+I recommend sandboxing the agent in their own account, granting them access either to their own worlds, or to shared worlds they have read and/or write access to.
+
+Editing the same world that an agent is working in is safe, but the MCP server does not operate on a live collaboration layer. An agent may read a slightly out of date document (typically up to a few seconds), and it may override your changes.

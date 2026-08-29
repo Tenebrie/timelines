@@ -1,12 +1,9 @@
 ---
-title: Getting started
+title: Running locally
 description: Documentation for Neverkin - the open-source worldbuilding platform.
+sidebar:
+  order: 0
 ---
-
-Neverkin is built from the ground up as a scalable multi-tenant web application.
-While this makes it possible to provide a hosted version for everyone, it also means that running your own local instance is more complicated than a simple desktop app.
-
-## Running locally
 
 One of the core tenants of Neverkin is to be developer-friendly. As such, running the application locally should be simple, assuming you have the correct setup.
 
@@ -53,13 +50,3 @@ In either mode, the setup will automatically go through the following steps (inc
 Unless something goes wrong, you should have a fully working instance of Neverkin running locally. Your data will survive application restarts, and it's stored locally on your machine.
 
 In case you encounter any issues, please reach out through the [Discord server](https://discord.gg/rD3KdXmqDP) or the [Contact form](https://neverkin.com/contact).
-
-## Full cloud-based deployment
-
-It is, of course, possible to run Neverkin fully in the cloud just like the main hosted version! The architecture is based on Docker Swarm, which is a popular orchestration tool for containerized applications.
-
-:::note
-This path requires more technical knowledge, but you retain full control over your data while having the same experience a hosted version has.
-:::
-
-Refer to [Cloud deployment](./private-instances/cloud-deployment) for more details.

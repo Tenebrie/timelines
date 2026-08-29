@@ -1,0 +1,38 @@
+---
+title: Importing Worlds
+description: Documentation for Neverkin - the open-source worldbuilding platform.
+sidebar:
+  order: 2
+---
+
+import { Aside } from '@astrojs/starlight/components'
+import { Image } from 'astro:assets'
+import dataExport01 from '~/assets/docs/data-export-01.png'
+import dataExport02 from '~/assets/docs/data-export-02.png'
+import dataExport03 from '~/assets/docs/data-export-03.png'
+
+After you have exported your world data as a JSON file, you can then easily import it back on the same page in your user preferences:
+
+<Image src={dataExport01} alt="Data import/export page" />
+
+To import your data, click "Select JSON file" and then "Upload and Validate". At this point, no data is imported. Your data file is uploaded to the server and validated. You should see the "Data validated successfully" message:
+
+<Image src={dataExport02} alt="Data import/export page, ready to import" />
+
+At this point, pressing "Import" will import the data from the provided JSON, **overriding any worlds with the same ID**. This allows you to replace your current data with the imported worlds and calendars. Any other worlds or calendars not present in the imported JSON will remain unchanged.
+
+## Import Errors
+
+<Aside type="caution">
+This is a known issue that will be addressed in a future update.
+</Aside>
+
+You may encounter an error while importing your data.
+
+<Image src={dataExport03} alt="Data import error" />
+
+Unless you have tampered with the JSON in some way, this most likely indicates that you're importing an older data version. Currently, it's only possible to import the JSON of the same version as was used to export it. The JSON format doesn't change often, but this problem will be solved soon.
+
+<Aside type="tip">
+One temporary workaround is to import your JSON into an older version of Neverkin Desktop, update it to a newest version - which migrates and updates your data - and then export it again in the current format.
+</Aside>
