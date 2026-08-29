@@ -5,6 +5,9 @@ import { Icon } from 'astro-icon/components'
 import devPhoto from '~/assets/images/dev-photo.jpg'
 import appHero from '~/assets/app-hero.png'
 import appHeroLight from '~/assets/app-hero-light.png'
+import showcaseDashboard from '~/assets/showcase/app-showcase-01.png'
+import showcaseMindmap from '~/assets/showcase/app-showcase-02.png'
+import showcaseEditor from '~/assets/showcase/app-showcase-03.png'
 
 import Hero from '~/components/widgets/Hero.astro'
 import Features from '~/components/widgets/Features.astro'
@@ -15,6 +18,7 @@ import FAQs from '~/components/widgets/FAQs.astro'
 import Stats from '~/components/widgets/Stats.astro'
 import CallToAction from '~/components/widgets/CallToAction.astro'
 import Testimonials from '~/components/widgets/Testimonials.astro'
+import ShowcaseCarousel from '~/components/widgets/ShowcaseCarousel.astro'
 
 const metadata = {
 	title: 'Neverkin — Collaborative Writing & Worldbuilding App for Storytellers',
@@ -765,241 +769,31 @@ const metadata = {
 		]}
 	/>
 
-	<!-- ==================== DASHBOARD PREVIEW ==================== -->
-	<Content isReversed id="preview">
-		<Fragment slot="content">
-			<h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-				This is what's waiting for you
-			</h3>
-			No setup wizards. No credit cards. Just open your browser, create an account or login as a guest with one
-			click - your writing companion, ready to work.
-		</Fragment>
-
+	<!-- ==================== APP SHOWCASE ==================== -->
+	<ShowcaseCarousel
+		id="preview"
+		title="Still unconvinced?<br />I have screenshots!"
+		tagline="Showcase"
+		subtitle="...that are probably out of date by now."
+		slides={[
+			{
+				image: showcaseDashboard,
+				alt: 'The Neverkin dashboard, showing your worlds, calendars and recent activity',
+			},
+			{
+				image: showcaseMindmap,
+				alt: 'A mindmap of characters, articles and tags connected with labeled links',
+			},
+			{
+				image: showcaseEditor,
+				alt: "A character's backstory in the rich text editor, with mentions of other entities",
+			},
+		]}
+	>
 		<Fragment slot="bg">
 			<div class="absolute inset-0 bg-purple-950/20 dark:bg-purple-950/30"></div>
 		</Fragment>
-
-		<Fragment slot="image">
-			<div
-				class="rounded-2xl border border-[rgb(180_170_220/18%)] bg-[#0f0e1a] shadow-2xl shadow-purple-900/20 overflow-hidden ring-1 ring-white/[0.03]"
-			>
-				<!-- Top nav bar -->
-				<div
-					class="flex items-center gap-3 px-4 py-2 border-b border-[rgb(180_170_220/12%)] bg-[hsl(252,25%,14%)]"
-				>
-					<span class="text-xs font-semibold text-white bg-purple-500/70 px-2.5 py-0.5 rounded-md">World</span
-					>
-					<span class="text-xs text-slate-400">Home</span>
-					<span class="text-xs text-slate-600">&middot;</span>
-					<span class="text-xs text-slate-500">Tools</span>
-					<div class="flex-1"></div>
-					<div class="w-6 h-6 rounded-full bg-[rgb(180_170_220/10%)] flex items-center justify-center">
-						<svg class="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
-							<path
-								fill-rule="evenodd"
-								d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-								clip-rule="evenodd"></path>
-						</svg>
-					</div>
-				</div>
-
-				<!-- Dashboard body -->
-				<div class="px-5 py-4">
-					<div class="text-base font-bold text-white mb-0.5">Dashboard</div>
-					<div class="text-[11px] text-slate-400 mb-4">
-						Welcome back! Here's an overview of your creative universe.
-					</div>
-
-					<!-- Stat cards row -->
-					<div class="grid grid-cols-2 gap-3 mb-4">
-						<div class="rounded-lg border border-[rgb(180_170_220/14%)] bg-[hsl(252,25%,14%)] p-3">
-							<div class="flex items-center gap-2 mb-2.5">
-								<div class="w-8 h-8 rounded-lg bg-purple-500/80 flex items-center justify-center">
-									<svg
-										class="w-4 h-4 text-white"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="1.5"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M20.893 13.393l-1.135-1.135a2.252 2.252 0 01-.421-.585l-1.08-2.16a.414.414 0 00-.663-.107.827.827 0 01-.812.21l-1.273-.363a.89.89 0 00-.738 1.595l.587.39c.59.395.674 1.23.172 1.732l-.2.2c-.212.212-.33.498-.33.796v.41c0 .409-.11.809-.32 1.158l-1.315 2.191a2.11 2.11 0 01-1.81 1.025 1.055 1.055 0 01-1.055-1.055v-1.172c0-.92-.56-1.747-1.414-2.089l-.655-.261a2.25 2.25 0 01-1.383-2.46l.007-.042a2.25 2.25 0 01.29-.787l.09-.15a2.25 2.25 0 012.37-1.048l1.178.236a1.125 1.125 0 001.302-.795l.208-.73a1.125 1.125 0 00-.578-1.315l-.665-.332-.091.091a2.25 2.25 0 01-1.591.659h-.18c-.249 0-.487.1-.662.274a.931.931 0 01-1.458-1.137l1.411-2.353a2.25 2.25 0 00.286-.76m11.928 9.869A9 9 0 008.965 3.525m11.928 9.868A9 9 0 118.965 3.525"
-										></path>
-									</svg>
-								</div>
-								<div>
-									<div class="text-xl font-bold text-white leading-none">15</div>
-									<div class="text-[11px] text-slate-400">Worlds</div>
-								</div>
-								<div class="flex-1"></div>
-								<svg
-									class="w-4 h-4 text-slate-600"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
-								</svg>
-							</div>
-							<div class="border-t border-[rgb(180_170_220/10%)] pt-2 space-y-1">
-								<div class="flex justify-between text-[11px]">
-									<span class="text-slate-500">Owned</span>
-									<span class="text-slate-300">15</span>
-								</div>
-								<div class="flex justify-between text-[11px]">
-									<span class="text-slate-500">Contributing</span>
-									<span class="text-slate-300">0</span>
-								</div>
-							</div>
-						</div>
-						<div class="rounded-lg border border-[rgb(180_170_220/14%)] bg-[hsl(252,25%,14%)] p-3">
-							<div class="flex items-center gap-2 mb-2.5">
-								<div class="w-8 h-8 rounded-lg bg-blue-500/70 flex items-center justify-center">
-									<svg
-										class="w-4 h-4 text-white"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="1.5"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
-										></path>
-									</svg>
-								</div>
-								<div>
-									<div class="text-xl font-bold text-white leading-none">6</div>
-									<div class="text-[11px] text-slate-400">Calendars</div>
-								</div>
-								<div class="flex-1"></div>
-								<svg
-									class="w-4 h-4 text-slate-600"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
-								</svg>
-							</div>
-							<div class="border-t border-[rgb(180_170_220/10%)] pt-2 space-y-1">
-								<div class="flex justify-between text-[11px]">
-									<span class="text-slate-500">Total</span>
-									<span class="text-slate-300">6</span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Recent Activity -->
-					<div class="rounded-lg border border-[rgb(180_170_220/14%)] bg-[hsl(252,25%,14%)] p-3">
-						<div class="text-sm font-semibold text-white mb-2">Recent Activity</div>
-						<div class="space-y-0">
-							<div class="flex items-center gap-2.5 py-2 border-t border-[rgb(180_170_220/8%)]">
-								<div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
-									<svg
-										class="w-3.5 h-3.5 text-purple-300"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
-										></path>
-									</svg>
-								</div>
-								<div class="flex-1 min-w-0">
-									<div class="text-xs font-medium text-slate-200">The Shattered Isles</div>
-									<div class="text-[10px] text-slate-500">World updated</div>
-								</div>
-								<span class="text-[10px] text-slate-600 shrink-0">21 hours ago</span>
-							</div>
-							<div class="flex items-center gap-2.5 py-2 border-t border-[rgb(180_170_220/8%)]">
-								<div class="w-7 h-7 rounded-lg bg-green-500/20 flex items-center justify-center">
-									<svg
-										class="w-3.5 h-3.5 text-green-300"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
-										></path>
-									</svg>
-								</div>
-								<div class="flex-1 min-w-0">
-									<div class="text-xs font-medium text-slate-200">Age of Storms</div>
-									<div class="text-[10px] text-slate-500">Calendar updated</div>
-								</div>
-								<span class="text-[10px] text-slate-600 shrink-0">2 days ago</span>
-							</div>
-							<div class="flex items-center gap-2.5 py-2 border-t border-[rgb(180_170_220/8%)]">
-								<div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
-									<svg
-										class="w-3.5 h-3.5 text-purple-300"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
-										></path>
-									</svg>
-								</div>
-								<div class="flex-1 min-w-0">
-									<div class="text-xs font-medium text-slate-200">War of Shattered Crowns</div>
-									<div class="text-[10px] text-slate-500">World updated</div>
-								</div>
-								<span class="text-[10px] text-slate-600 shrink-0">3 days ago</span>
-							</div>
-							<div class="flex items-center gap-2.5 py-2 border-t border-[rgb(180_170_220/8%)]">
-								<div class="w-7 h-7 rounded-lg bg-green-500/20 flex items-center justify-center">
-									<svg
-										class="w-3.5 h-3.5 text-green-300"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
-										></path>
-									</svg>
-								</div>
-								<div class="flex-1 min-w-0">
-									<div class="text-xs font-medium text-slate-200">Golarion Standard</div>
-									<div class="text-[10px] text-slate-500">Calendar updated</div>
-								</div>
-								<span class="text-[10px] text-slate-600 shrink-0">5 days ago</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</Fragment>
-	</Content>
+	</ShowcaseCarousel>
 
 	<!-- ==================== FINAL CTA ==================== -->
 	<CallToAction
