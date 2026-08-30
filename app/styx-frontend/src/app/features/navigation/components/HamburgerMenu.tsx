@@ -23,6 +23,7 @@ import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useCheckRouteMatchExact } from '@/router-utils/hooks/useCheckRouteMatchExact'
 
 import { getAuthState } from '../../auth/AuthSliceSelectors'
+import { getDocsUrl } from '../utils/getDocsUrl'
 
 export function HamburgerMenu() {
 	const { user } = useSelector(getAuthState)
@@ -81,7 +82,7 @@ export function HamburgerMenu() {
 				</NavigationLink>
 				<MenuItem
 					component="a"
-					href={`${window.location.origin.replace('//app.', '//')}/docs`}
+					href={getDocsUrl()}
 					target="_blank"
 					rel="noopener noreferrer"
 					onClick={handleClose}

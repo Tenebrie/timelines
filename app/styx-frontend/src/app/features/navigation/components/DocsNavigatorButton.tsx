@@ -5,12 +5,14 @@ import Link from '@mui/material/Link'
 
 import { Tooltip } from '@/ui-lib/components/Tooltip'
 
+import { getDocsUrl } from '../utils/getDocsUrl'
+
 type Props = {
 	iconOnly?: boolean
 }
 
 export function DocsNavigatorButton({ iconOnly }: Props) {
-	const targetUrl = `${window.location.origin.replace('//app.', '//')}/docs`
+	const targetUrl = getDocsUrl()
 
 	return (
 		<Link href={targetUrl} target="_blank" rel="noopener noreferrer">
