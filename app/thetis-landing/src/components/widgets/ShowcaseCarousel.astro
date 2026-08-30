@@ -32,10 +32,7 @@ const bg = await Astro.slots.render('bg')
 		<div
 			class="rounded-2xl bg-slate-900/5 p-1.5 ring-1 ring-slate-900/10 shadow-2xl shadow-purple-900/30 dark:bg-white/6 dark:ring-white/10"
 		>
-			<div
-				class="flex snap-x snap-mandatory overflow-x-auto rounded-xl [scrollbar-width:none]"
-				data-carousel-track
-			>
+			<div class="flex snap-x snap-mandatory overflow-x-auto rounded-xl scrollbar-none" data-carousel-track>
 				{
 					slides.map((slide) => (
 						<Image
@@ -53,7 +50,7 @@ const bg = await Astro.slots.render('bg')
 		<button
 			type="button"
 			aria-label="Previous screenshot"
-			class="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/50 text-white backdrop-blur-sm transition hover:bg-slate-900/70"
+			class="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-slate-900/50 text-white backdrop-blur-sm transition duration-200 ease-in hover:bg-[#c56030]/25 hover:text-[#f8c569] active:bg-[#c56030]/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
 			data-carousel-prev
 		>
 			<Icon name="tabler:chevron-left" class="h-6 w-6" />
@@ -61,7 +58,7 @@ const bg = await Astro.slots.render('bg')
 		<button
 			type="button"
 			aria-label="Next screenshot"
-			class="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/50 text-white backdrop-blur-sm transition hover:bg-slate-900/70"
+			class="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-slate-900/50 text-white backdrop-blur-sm transition duration-200 ease-in hover:bg-[#c56030]/25 hover:text-[#f8c569] active:bg-[#c56030]/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
 			data-carousel-next
 		>
 			<Icon name="tabler:chevron-right" class="h-6 w-6" />
@@ -72,7 +69,7 @@ const bg = await Astro.slots.render('bg')
 					<button
 						type="button"
 						aria-label={`Go to screenshot ${index + 1}`}
-						class="h-2.5 w-2.5 rounded-full bg-slate-400/40 transition-colors hover:bg-slate-400/70"
+						class="h-2.5 w-2.5 cursor-pointer rounded-full bg-slate-400/40 transition duration-200 ease-in hover:scale-125 hover:bg-slate-400/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-90"
 						data-carousel-dot
 					/>
 				))
@@ -82,23 +79,31 @@ const bg = await Astro.slots.render('bg')
 </WidgetWrapper>
 
 <script>
-	for (const root of document.querySelectorAll('[data-carousel]')) {
-		const track = root.querySelector('[data-carousel-track]')
-		if (!(track instanceof HTMLElement)) continue
-		const dots = [...root.querySelectorAll('[data-carousel-dot]')]
-		const count = track.children.length
-		const current = () => Math.round(track.scrollLeft / track.clientWidth)
-		const goTo = (index: number) =>
-			track.scrollTo({ left: ((index + count) % count) * track.clientWidth, behavior: 'smooth' })
-		root.querySelector('[data-carousel-prev]')?.addEventListener('click', () => goTo(current() - 1))
-		root.querySelector('[data-carousel-next]')?.addEventListener('click', () => goTo(current() + 1))
-		dots.forEach((dot, index) => dot.addEventListener('click', () => goTo(index)))
-		const highlight = () =>
-			dots.forEach((dot, index) => {
-				dot.classList.toggle('bg-primary', index === current())
-				dot.classList.toggle('bg-slate-400/40', index !== current())
-			})
-		track.addEventListener('scroll', highlight, { passive: true })
-		highlight()
+	function initCarousels() {
+		for (const root of document.querySelectorAll('[data-carousel]')) {
+			const track = root.querySelector('[data-carousel-track]')
+			if (!(track instanceof HTMLElement)) continue
+			const dots = [...root.querySelectorAll('[data-carousel-dot]')]
+			const count = track.children.length
+			const current = () => Math.round(track.scrollLeft / track.clientWidth)
+			const goTo = (index: number) =>
+				track.scrollTo({ left: ((index + count) % count) * track.clientWidth, behavior: 'smooth' })
+			root.querySelector('[data-carousel-prev]')?.addEventListener('click', () => goTo(current() - 1))
+			root.querySelector('[data-carousel-next]')?.addEventListener('click', () => goTo(current() + 1))
+			dots.forEach((dot, index) => dot.addEventListener('click', () => goTo(index)))
+			const highlight = () =>
+				dots.forEach((dot, index) => {
+					const selected = index === current()
+					dot.classList.toggle('bg-primary', selected)
+					dot.classList.toggle('hover:bg-primary/80', selected)
+					dot.classList.toggle('bg-slate-400/40', !selected)
+					dot.classList.toggle('hover:bg-slate-400/70', !selected)
+				})
+			track.addEventListener('scroll', highlight, { passive: true })
+			highlight()
+		}
 	}
+
+	initCarousels()
+	document.addEventListener('astro:after-swap', initCarousels)
 </script>

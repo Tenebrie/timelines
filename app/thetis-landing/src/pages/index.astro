@@ -12,8 +12,6 @@ import showcaseEditor from '~/assets/showcase/app-showcase-03.png'
 import Hero from '~/components/widgets/Hero.astro'
 import Features from '~/components/widgets/Features.astro'
 import Features2 from '~/components/widgets/Features2.astro'
-import Steps from '~/components/widgets/Steps.astro'
-import Content from '~/components/widgets/Content.astro'
 import FAQs from '~/components/widgets/FAQs.astro'
 import Stats from '~/components/widgets/Stats.astro'
 import CallToAction from '~/components/widgets/CallToAction.astro'
@@ -121,10 +119,8 @@ const metadata = {
 			</div>
 		</Fragment>
 		<Fragment slot="bg">
-			<div class="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-transparent to-transparent"></div>
-			<div
-				class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-purple-600/5 rounded-full blur-3xl"
-			>
+			<div class="absolute inset-0 bg-linear-to-b from-purple-900/20 via-transparent to-transparent"></div>
+			<div class="absolute top-0 left-1/2 -translate-x-1/2 w-200 h-150 bg-purple-600/5 rounded-full blur-3xl">
 			</div>
 		</Fragment>
 	</Hero>
@@ -667,7 +663,7 @@ const metadata = {
 			>
 				<div class="shrink-0">
 					<div
-						class="w-[6.5rem] h-[6.5rem] md:w-[8.5rem] md:h-[8.5rem] rounded-full p-[3px]"
+						class="w-26 h-26 md:w-34 md:h-34 rounded-full p-0.75"
 						style="background: var(--aw-brand-gradient);"
 					>
 						<Image
