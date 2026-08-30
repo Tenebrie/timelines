@@ -1,0 +1,42 @@
+---
+import { Image } from 'astro:assets'
+import logoSvg from '~/assets/images/neverkin-logo-dragon.webp'
+import '@fontsource/cormorant/700.css'
+---
+
+<a href="/" class="site-logo">
+	<Image src={logoSvg} alt="Neverkin logo" />
+	<span>Neverkin</span>
+</a>
+
+<style>
+	.site-logo {
+		/* Docs pages don't load CustomStyles.astro, so the brand gradient is inlined here */
+		--brand-gradient: linear-gradient(135deg, #b8860b 0%, #c56030 33%, #b4574b 66%, #9c3e4e 100%);
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		text-decoration: none;
+	}
+
+	:global([data-theme='dark']) .site-logo {
+		--brand-gradient: linear-gradient(135deg, #f2edb6 0%, #f8c569 33%, #ce7259 66%, #9c3e4e 100%);
+	}
+
+	.site-logo img {
+		height: 2.75rem;
+		width: auto;
+		object-fit: contain;
+	}
+
+	.site-logo span {
+		font-family: 'Cormorant', serif;
+		font-weight: 700;
+		font-size: 26px;
+		white-space: nowrap;
+		background-image: var(--brand-gradient);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+</style>

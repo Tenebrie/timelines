@@ -38,6 +38,10 @@ export default defineConfig({
 			title: 'Neverkin Docs',
 			// AstroWind already provides src/pages/404.astro — let it own the 404 route.
 			disable404Route: true,
+			favicon: '/favicon.ico',
+			components: {
+				SiteTitle: './src/components/starlight/SiteTitle.astro',
+			},
 			sidebar: [
 				{
 					label: 'Neverkin Docs',
