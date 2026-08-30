@@ -13,6 +13,7 @@ import { useRef, useState } from 'react'
 import { NavigationLink } from '@/app/components/NavigationLink'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useCheckRouteMatchExact } from '@/router-utils/hooks/useCheckRouteMatchExact'
+import { Tooltip } from '@/ui-lib/components/Tooltip'
 
 type Props = {
 	disabled?: boolean
@@ -41,16 +42,18 @@ export function HomeNavigatorButton({ disabled, iconOnly }: Props) {
 		<>
 			<ButtonGroup variant={isAnyMatching ? 'contained' : 'text'} disabled={disabled} disableElevation>
 				<NavigationLink to="/">
-					<Button
-						aria-label="Navigate to home"
-						sx={{
-							gap: 0.5,
-							padding: iconOnly ? '6px' : '6px 15px',
-							minWidth: iconOnly ? 'auto' : undefined,
-						}}
-					>
-						<Home /> {!iconOnly && 'Home'}
-					</Button>
+					<Tooltip title={iconOnly ? 'Home' : ''}>
+						<Button
+							aria-label="Navigate to home"
+							sx={{
+								gap: 0.5,
+								padding: iconOnly ? '6px' : '6px 15px',
+								minWidth: iconOnly ? 'auto' : undefined,
+							}}
+						>
+							<Home /> {!iconOnly && 'Home'}
+						</Button>
+					</Tooltip>
 				</NavigationLink>
 
 				<Button

@@ -1,8 +1,10 @@
 import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings'
 import AutoStories from '@mui/icons-material/AutoStories'
 import Construction from '@mui/icons-material/Construction'
+import DescriptionIcon from '@mui/icons-material/Description'
 import HomeIcon from '@mui/icons-material/Home'
 import MenuIcon from '@mui/icons-material/Menu'
+import OpenInNew from '@mui/icons-material/OpenInNew'
 import Person from '@mui/icons-material/Person'
 import Settings from '@mui/icons-material/Settings'
 import Timeline from '@mui/icons-material/Timeline'
@@ -21,6 +23,7 @@ import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useCheckRouteMatchExact } from '@/router-utils/hooks/useCheckRouteMatchExact'
 
 import { getAuthState } from '../../auth/AuthSliceSelectors'
+import { getDocsUrl } from '../utils/getDocsUrl'
 
 export function HamburgerMenu() {
 	const { user } = useSelector(getAuthState)
@@ -77,6 +80,19 @@ export function HamburgerMenu() {
 						<ListItemText>Tools</ListItemText>
 					</MenuItem>
 				</NavigationLink>
+				<MenuItem
+					component="a"
+					href={getDocsUrl()}
+					target="_blank"
+					rel="noopener noreferrer"
+					onClick={handleClose}
+				>
+					<ListItemIcon>
+						<DescriptionIcon />
+					</ListItemIcon>
+					<ListItemText>Docs</ListItemText>
+					<OpenInNew sx={{ fontSize: 14, opacity: 0.6 }} />
+				</MenuItem>
 				{user?.level === 'Admin' && (
 					<NavigationLink to="/admin">
 						<MenuItem onClick={handleClose} selected={isAdminActive}>

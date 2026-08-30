@@ -1,0 +1,21 @@
+---
+title: Neverkin on macOS
+description: Documentation for Neverkin - the open-source worldbuilding platform.
+sidebar:
+  order: 0
+---
+
+Neverkin Desktop for macOS can be downloaded from the [Downloads](https://neverkin.com/download) page.
+
+Direct download link (Apple Silicon): [neverkin-desktop-darwin-arm64.tar.gz](https://github.com/Tenebrie/timelines/releases/latest/download/neverkin-desktop-darwin-arm64.tar.gz)
+
+## Known Issues
+
+The application binary is "ad-hoc" signed, without a [$99 per-year Apple Developer Program membership](https://developer.apple.com/programs/enroll/). This means macOS will refuse to launch the application.
+
+To run it, you can either unlock it through the macOS security settings after a failed launch, or use a terminal command:
+```sh
+xattr -dr com.apple.quarantine Neverkin.app
+```
+
+After doing this once, the application will launch normally until you install an update.

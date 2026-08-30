@@ -48,7 +48,7 @@
 
 @layer components {
   .btn-primary {
-    @apply btn font-semibold bg-primary text-white border-primary hover:bg-secondary hover:border-secondary hover:text-white dark:text-white dark:bg-primary dark:border-primary dark:hover:border-secondary dark:hover:bg-secondary;
+    @apply btn font-semibold bg-(--aw-color-btn-primary) text-(--aw-color-btn-primary-text) border-(--aw-color-btn-primary) hover:bg-(--aw-color-btn-primary-hover) hover:border-(--aw-color-btn-primary-hover) hover:text-(--aw-color-btn-primary-text) dark:bg-(--aw-color-btn-primary) dark:text-(--aw-color-btn-primary-text) dark:border-(--aw-color-btn-primary) dark:hover:bg-(--aw-color-btn-primary-hover) dark:hover:border-(--aw-color-btn-primary-hover) dark:hover:text-(--aw-color-btn-primary-text);
   }
 
   .btn-secondary {

@@ -1,17 +1,22 @@
 ---
 import Layout from '~/layouts/PageLayout.astro'
 import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
 import devPhoto from '~/assets/images/dev-photo.jpg'
+import appHero from '~/assets/app-hero.png'
+import appHeroLight from '~/assets/app-hero-light.png'
+import showcaseDashboard from '~/assets/showcase/app-showcase-01.png'
+import showcaseMindmap from '~/assets/showcase/app-showcase-02.png'
+import showcaseEditor from '~/assets/showcase/app-showcase-03.png'
 
 import Hero from '~/components/widgets/Hero.astro'
 import Features from '~/components/widgets/Features.astro'
 import Features2 from '~/components/widgets/Features2.astro'
-import Steps from '~/components/widgets/Steps.astro'
-import Content from '~/components/widgets/Content.astro'
 import FAQs from '~/components/widgets/FAQs.astro'
 import Stats from '~/components/widgets/Stats.astro'
 import CallToAction from '~/components/widgets/CallToAction.astro'
 import Testimonials from '~/components/widgets/Testimonials.astro'
+import ShowcaseCarousel from '~/components/widgets/ShowcaseCarousel.astro'
 
 const metadata = {
 	title: 'Neverkin — Collaborative Writing & Worldbuilding App for Storytellers',
@@ -51,254 +56,71 @@ const metadata = {
 		actions={[
 			{
 				variant: 'primary',
-				text: 'Start Telling Your Story',
+				text: 'Web Version',
 				href: 'https://app.neverkin.com',
-				icon: 'tabler:sparkles',
+				icon: 'tabler:pencil-heart',
 			},
-			{ text: 'See How It Works', href: '#how-it-works' },
+			{ text: 'Desktop App', href: '/download', icon: 'tabler:download' },
 		]}
 	>
 		<Fragment slot="title">
-			That online writing app<br />
-			<span class="text-brand-gradient">you never knew you needed</span>
+			<span class="text-brand-gradient">Worlds</span> for notes and <span class="text-brand-gradient"
+				>thoughts</span
+			>
 		</Fragment>
 
 		<Fragment slot="subtitle">
 			<span class="hidden sm:inline">
-				<span class="font-semibold text-brand-gradient">Neverkin</span> is the open-source collaborative writing
-				and worldbuilding platform for storytellers, game masters, writers, and creators.</span
+				<span class="font-semibold text-brand-gradient">Neverkin</span> is a worldbuilding platform for people.</span
 			>
-			Manage your timelines, characters, lore, and interconnected stories - all in real-time with your friends.
+			Just write something neat.
 		</Fragment>
 
 		<Fragment slot="content">
+			<p
+				class="mt-6 text-center text-sm text-muted dark:text-slate-400 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+			>
+				<a
+					href="https://github.com/tenebrie/timelines"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex items-center gap-1.5 text-primary hover:underline"
+				>
+					<Icon name="tabler:brand-github" class="w-4 h-4" />
+					Grab sources here
+				</a>
+			</p>
 			<div
 				class="mt-8 flex justify-center intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
 			>
-				<div
-					class="relative w-full max-w-4xl rounded-2xl border border-slate-700/30 bg-[#0c0e18]/90 shadow-2xl shadow-purple-900/20 overflow-hidden ring-1 ring-white/[0.03]"
-				>
-					<!-- App top bar -->
-					<div class="flex items-center gap-3 px-4 py-2 border-b border-slate-700/20 bg-slate-900/30">
-						<span class="text-xs font-semibold text-white bg-purple-600/70 px-3 py-1 rounded-md tracking-wide"
-							>World</span
-						>
-						<span class="text-xs text-slate-700">&middot;</span>
-						<span class="text-xs text-slate-500">Home</span>
-						<span class="text-xs text-slate-700">&middot;</span>
-						<span class="text-xs text-slate-500">Tools</span>
-						<div class="flex-1"></div>
-						<div class="w-7 h-7 rounded-full bg-slate-700/40 flex items-center justify-center">
-							<svg class="w-3.5 h-3.5 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
-								<path
-									fill-rule="evenodd"
-									d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-									clip-rule="evenodd"></path>
-							</svg>
-						</div>
-					</div>
-					<div class="flex">
-						<!-- Left sidebar icons -->
-						<div class="hidden md:flex flex-col items-center gap-2 py-4 px-2.5 border-r border-slate-700/20">
-							<div class="w-10 h-10 rounded-lg bg-purple-500/12 flex items-center justify-center">
-								<svg
-									class="w-[18px] h-[18px] text-purple-400/80"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-									></path>
-								</svg>
-							</div>
-							<div class="w-10 h-10 rounded-lg bg-slate-800/30 flex items-center justify-center">
-								<svg
-									class="w-[18px] h-[18px] text-slate-600"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
-									></path>
-								</svg>
-							</div>
-							<div class="w-10 h-10 rounded-lg bg-slate-800/30 flex items-center justify-center">
-								<svg
-									class="w-[18px] h-[18px] text-slate-600"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-									></path>
-								</svg>
-							</div>
-						</div>
-						<!-- Main timeline area -->
-						<div class="flex-1 px-4 py-4 md:px-5 md:py-5">
-							<div class="text-xs font-medium text-slate-400 mb-4 tracking-wide uppercase">Tracks</div>
-							<!-- Tracks container -->
-							<div class="relative py-2">
-								<!-- Vertical playhead -->
-								<div
-									class="absolute top-0 bottom-0 left-[42%] sm:left-[calc(42%+32px)] w-px bg-slate-500/25 z-10"
-								>
-								</div>
-								<!-- Track rows -->
-								<div class="space-y-4">
-									<!-- Track: Main Plot -->
-									<div class="flex items-center gap-3">
-										<span
-											class="text-[11px] text-slate-600 w-16 text-right shrink-0 hidden sm:block font-medium"
-											>Main Plot</span
-										>
-										<div class="flex-1 relative h-7">
-											<div
-												class="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2 bg-purple-500/50 rounded-full"
-											>
-											</div>
-											<div
-												class="absolute w-6 h-6 rounded bg-purple-600/60 border border-purple-400/30 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-purple-900/30"
-												style="left: 12%"
-											>
-												<span>&#x2694;&#xFE0F;</span>
-											</div>
-											<div
-												class="absolute w-6 h-6 rounded bg-purple-600/60 border border-purple-400/30 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-purple-900/30"
-												style="left: 36%"
-											>
-												<span>&#x1F525;</span>
-											</div>
-											<div
-												class="absolute w-6 h-6 rounded bg-purple-600/60 border border-purple-400/30 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-purple-900/30"
-												style="left: 62%"
-											>
-												<span>&#x1F4DC;</span>
-											</div>
-											<div
-												class="absolute w-6 h-6 rounded bg-purple-600/60 border border-purple-400/30 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-purple-900/30"
-												style="left: 82%"
-											>
-												<span>&#x2694;&#xFE0F;</span>
-											</div>
-										</div>
-									</div>
-									<!-- Track: Kael's Arc -->
-									<div class="flex items-center gap-3">
-										<span
-											class="text-[11px] text-slate-600 w-16 text-right shrink-0 hidden sm:block font-medium"
-											>Kael's Arc</span
-										>
-										<div class="flex-1 relative h-7">
-											<div
-												class="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2 bg-pink-500/40 rounded-full"
-											>
-											</div>
-											<div
-												class="absolute w-6 h-6 rounded bg-pink-600/50 border border-pink-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-pink-900/30"
-												style="left: 24%"
-											>
-												<span>&#x1F5E1;&#xFE0F;</span>
-											</div>
-											<div
-												class="absolute w-6 h-6 rounded bg-pink-600/50 border border-pink-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-pink-900/30"
-												style="left: 48%"
-											>
-												<span>&#x2764;&#xFE0F;</span>
-											</div>
-											<div
-												class="absolute w-6 h-6 rounded bg-pink-600/50 border border-pink-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-pink-900/30"
-												style="left: 70%"
-											>
-												<span>&#x1F49B;</span>
-											</div>
-										</div>
-									</div>
-									<!-- Track: World -->
-									<div class="flex items-center gap-3">
-										<span
-											class="text-[11px] text-slate-600 w-16 text-right shrink-0 hidden sm:block font-medium"
-											>World</span
-										>
-										<div class="flex-1 relative h-7">
-											<div
-												class="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2 bg-teal-500/40 rounded-full"
-											>
-											</div>
-											<div
-												class="absolute w-6 h-6 rounded bg-teal-600/50 border border-teal-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-teal-900/30"
-												style="left: 8%"
-											>
-												<span>&#x1F319;</span>
-											</div>
-											<div
-												class="absolute w-6 h-6 rounded bg-teal-600/50 border border-teal-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-teal-900/30"
-												style="left: 28%"
-											>
-												<span>&#x2699;&#xFE0F;</span>
-											</div>
-											<div
-												class="absolute w-6 h-6 rounded bg-teal-600/50 border border-teal-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-teal-900/30"
-												style="left: 55%"
-											>
-												<span>&#x2620;&#xFE0F;</span>
-											</div>
-											<div
-												class="absolute w-6 h-6 rounded bg-teal-600/50 border border-teal-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-teal-900/30"
-												style="left: 73%"
-											>
-												<span>&#x1F319;</span>
-											</div>
-											<div
-												class="absolute w-6 h-6 rounded bg-teal-600/50 border border-teal-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-teal-900/30"
-												style="left: 92%"
-											>
-												<span>&#x26A1;</span>
-											</div>
-										</div>
-									</div>
-								</div>
-								<!-- Year axis -->
-								<div class="mt-4 pt-2 border-t border-slate-700/15 sm:ml-[76px]">
-									<div class="flex justify-between text-[10px] text-slate-700">
-										<span>Year 800</span>
-										<span>820</span>
-										<span>840</span>
-										<span class="text-purple-400/80 font-semibold">847</span>
-										<span>860</span>
-										<span>880</span>
-										<span>900</span>
-									</div>
-								</div>
-							</div>
-							<!-- Status text -->
-							<div class="text-center mt-3 pb-1">
-								<span class="text-xs text-purple-400/50 tracking-wide"
-									>Year 847, Age of Storms &mdash; The Fall of Everheim</span
-								>
-							</div>
-						</div>
+				<div class="relative w-full max-w-4xl">
+					<div class="absolute -inset-3 rounded-3xl bg-purple-600/15 blur-2xl" aria-hidden="true"></div>
+					<div
+						class="relative rounded-2xl bg-slate-900/5 p-1.5 ring-1 ring-slate-900/10 shadow-2xl shadow-purple-900/30 dark:bg-white/6 dark:ring-white/10"
+					>
+						<Image
+							src={appHero}
+							alt="Screenshot of the Neverkin timeline view"
+							class="hidden w-full rounded-xl dark:block"
+							widths={[640, 1024, 1636, 3272]}
+							sizes="(max-width: 1023px) 100vw, 896px"
+							loading="eager"
+						/>
+						<Image
+							src={appHeroLight}
+							alt="Screenshot of the Neverkin timeline view"
+							class="w-full rounded-xl dark:hidden"
+							widths={[640, 1024, 1636, 3272]}
+							sizes="(max-width: 1023px) 100vw, 896px"
+							loading="eager"
+						/>
 					</div>
 				</div>
 			</div>
 		</Fragment>
 		<Fragment slot="bg">
-			<div class="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-transparent to-transparent"></div>
-			<div
-				class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-purple-600/5 rounded-full blur-3xl"
-			>
+			<div class="absolute inset-0 bg-linear-to-b from-purple-900/20 via-transparent to-transparent"></div>
+			<div class="absolute top-0 left-1/2 -translate-x-1/2 w-200 h-150 bg-purple-600/5 rounded-full blur-3xl">
 			</div>
 		</Fragment>
 	</Hero>
@@ -306,9 +128,8 @@ const metadata = {
 	<!-- ==================== STATS / HIGHLIGHTS ==================== -->
 	<Stats
 		stats={[
-			{ title: 'No Paywalls', amount: '100% Free', icon: 'tabler:heart' },
-			{ title: 'No Artificial Limitations', amount: 'Unlimited', icon: 'tabler:infinity' },
-			{ title: 'Of Active Development', amount: '4+ Years', icon: 'tabler:code' },
+			{ title: 'In Development Since', amount: 'Est. 2022', icon: 'tabler:code' },
+			{ title: 'No Credit Cards Accepted', amount: '0 Paywalls', icon: 'tabler:heart' },
 			{ title: 'Performance Focus', amount: '240+ fps', icon: 'tabler:bolt' },
 		]}
 	/>
@@ -316,57 +137,61 @@ const metadata = {
 	<!-- ==================== KEY FEATURES ==================== -->
 	<Features
 		id="features"
-		tagline="Writing Tools to Build Your Story"
-		title="Everything you need to build living worlds"
-		subtitle="Neverkin brings structure to the creative chaos of storytelling — without getting in the way of your imagination."
+		tagline="Key Features"
+		title="...and some things that are just neat"
+		subtitle="An ever-growing writer's toolkit"
 		items={[
 			{
-				title: 'Interactive Timelines',
+				title: 'Wiki & Characters',
 				description:
-					'Plot events on a visual timeline across billions of years. See how storylines interact, overlap, and evolve across time.',
-				icon: 'tabler:timeline',
-			},
-			// {
-			// 	title: 'Deep Character Management',
-			// 	description:
-			// 		'Create rich character profiles with relationships, arcs, and a visual mindmap showing how everyone connects.',
-			// 	icon: 'tabler:users',
-			// },
-			{
-				title: 'Living Wiki',
-				description:
-					'Build a hierarchical wiki for your lore. Cross-reference characters, events, locations - everything links to everything.',
+					'Define actors, events and articles, group them into folders and link them all through tags and mentions.',
 				icon: 'tabler:book',
 			},
 			{
 				title: 'Real-Time Collaboration',
 				description:
-					'Invite co-authors and collaborators. Edit simultaneously with live sync - perfect for writing groups and TTRPG tables.',
+					'Invite co-authors and collaborators. Your changes sync live over network - perfect for writing groups and TTRPG tables.',
 				icon: 'tabler:arrows-exchange',
+			},
+			{
+				title: 'Map Your Mind',
+				description: 'Plot ideas, relationships or dungeon rooms on a visual mindmap.',
+				icon: 'tabler:timeline',
+			},
+			{
+				title: 'Interactive Timeline',
+				description: 'Plot events on a visual timeline across billions of years.',
+				icon: 'tabler:timeline',
 			},
 			{
 				title: 'Custom Calendars',
 				description:
-					"Earth years too boring? Define your own wild calendar and unprecedented time units. It's not just a reflavor. Esoteric calendars allowed.",
+					'Earth years too boring? Define your own wild calendar and imaginary time units. Esoteric calendars allowed.',
 				icon: 'tabler:calendar',
+			},
+			{
+				title: 'Security & Access Control',
+				description:
+					'Only you can access your data, unless you choose to share it. It is not harvested or sold to anyone.',
+				icon: 'tabler:file-text-shield',
 			},
 			{
 				title: 'AI Integration',
 				description:
-					'Connect your favorite AI assistant via the built-in MCP server. Let AI agents create events and write down your notes - all hands-free.',
+					'Connect your favorite AI assistant via the built-in MCP server. Let the clankers write down your notes.',
 				icon: 'tabler:robot',
 			},
 			{
 				title: 'Free & Open Source',
 				description:
-					"No hidden costs, no feature gates, no vendor lock-in. Self-host or use the hosted version. It's a tool, not a product.",
+					'Developed without a commercial strategy, Neverkin is a tool that was never meant to be a product.',
 				icon: 'tabler:lock-open',
 			},
 		]}
 	/>
 
 	<!-- ==================== SHOWCASE: TIMELINE ==================== -->
-	<Content
+	<!-- <Content
 		isReversed
 		tagline="Showcase"
 		id="showcase"
@@ -457,10 +282,10 @@ const metadata = {
 				</div>
 			</div>
 		</Fragment>
-	</Content>
+	</Content> -->
 
 	<!-- ==================== SHOWCASE: CHARACTERS ==================== -->
-	<Content
+	<!-- <Content
 		isAfterContent
 		items={[
 			{
@@ -553,10 +378,10 @@ const metadata = {
 				</div>
 			</div>
 		</Fragment>
-	</Content>
+	</Content> -->
 
 	<!-- ==================== SHOWCASE: WIKI ==================== -->
-	<Content
+	<!-- <Content
 		isReversed
 		isAfterContent
 		items={[
@@ -625,10 +450,10 @@ const metadata = {
 				</div>
 			</div>
 		</Fragment>
-	</Content>
+	</Content> -->
 
 	<!-- ==================== HOW IT WORKS ==================== -->
-	<Steps
+	<!-- <Steps
 		id="how-it-works"
 		title="Get your story organized in minutes"
 		items={[
@@ -655,7 +480,7 @@ const metadata = {
 				icon: 'tabler:sparkles',
 			},
 		]}
-	/>
+	/> -->
 
 	<!-- ==================== USE CASES ==================== -->
 	<Features2
@@ -672,7 +497,7 @@ const metadata = {
 			{
 				title: 'Game Masters & Dungeon Masters',
 				description:
-					'The DM tools you wish you had. Organize your campaign: NPCs, factions, session events, and lore. Share what players need, keep secrets hidden.',
+					'The DM tools you wish you had. Organize your campaign: NPCs, factions, session events, and lore. Let your players share their notes.',
 				icon: 'tabler:dice',
 			},
 			{
@@ -696,7 +521,7 @@ const metadata = {
 			{
 				title: 'Indie Game Devs',
 				description:
-					"Organize your game's narrative design — quests, characters, lore entries, branching storylines.",
+					"Organize your game's narrative design - quests, characters, lore entries, branching storylines.",
 				icon: 'tabler:device-gamepad-2',
 			},
 		]}
@@ -710,7 +535,7 @@ const metadata = {
 	<Testimonials
 		tagline="Community Voices"
 		title="Creators love building with Neverkin"
-		subtitle="Here's what our community has to say about organizing their fictional universes."
+		subtitle="Here's what the community has to say about us."
 		testimonials={[
 			{
 				testimonial: 'Time to add another feature! In-and-out, 5 minute coding adventure.',
@@ -736,7 +561,7 @@ const metadata = {
 	/>
 
 	<!-- ==================== PRICING COMPARISON ==================== -->
-	<div id="comparison" class="py-16 md:py-20">
+	<!-- <div id="comparison" class="py-16 md:py-20">
 		<div class="max-w-5xl mx-auto px-4 sm:px-6">
 			<div class="text-center mb-12">
 				<p class="text-brand-gradient font-bold uppercase tracking-widest text-sm mb-2">Comparison</p>
@@ -828,7 +653,7 @@ const metadata = {
 				</table>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<!-- ==================== ABOUT THE DEVELOPER ==================== -->
 	<div class="py-16 md:py-20">
@@ -838,7 +663,7 @@ const metadata = {
 			>
 				<div class="shrink-0">
 					<div
-						class="w-[6.5rem] h-[6.5rem] md:w-[8.5rem] md:h-[8.5rem] rounded-full p-[3px]"
+						class="w-26 h-26 md:w-34 md:h-34 rounded-full p-0.75"
 						style="background: var(--aw-brand-gradient);"
 					>
 						<Image
@@ -910,22 +735,7 @@ const metadata = {
 			{
 				title: 'Is Neverkin really free?',
 				description:
-					'Yes! Neverkin is open source under the GPL-3.0 license. You can use the hosted version for free, or self-host it on your own server. There are no premium paywalls or feature gates.',
-			},
-			{
-				title: 'Can I use Neverkin as a DM tool for my TTRPG campaign?',
-				description:
-					'This is what I personally use it for! Session notes, NPC tracking, keeping the session timeline in check. After all, DMs are writers, and Neverkin is a writing tool.',
-			},
-			{
-				title: 'Is Neverkin a good story planner for novelists?',
-				description:
-					'I have interviewed a published German author to help shape this into a powerful tool for writers and novelists. Neverkin is designed with stories in mind, so yes, it strives to be a good tool for novelists.',
-			},
-			{
-				title: 'Can I use custom calendars for my fictional world?',
-				description:
-					'Absolutely. Any calendar system is supported — you define the months, days, hours, and epochs. Neverkin also ships with presets for Earth, Pathfinder 2e, Rimworld, and others as common starting points, but these are not special cases — the system is fully flexible.',
+					"Yes! Neverkin is open-source under the GPL-3.0 license. You can use the hosted version for free, download the desktop version, or self-host it on your own server. You can't pay even if you wanted to. Maybe Patreon at some point in the future.",
 			},
 			{
 				title: 'How does real-time collaboration work?',
@@ -935,12 +745,12 @@ const metadata = {
 			{
 				title: 'Can I keep parts of my world private?',
 				description:
-					'All your data is private by default — nothing is visible to anyone unless you explicitly share it. You can invite collaborators with read-only or editing access, or make a world publicly visible if you choose.',
+					'All your data is private by default - nothing is visible to anyone unless you explicitly share it. You can invite collaborators with read-only or editing access, or make a world publicly visible if you choose. If you self-host, then your creativity never leaves your machine.',
 			},
 			{
-				title: 'Is my data safe? Can I export it?',
+				title: 'Can I export my data from Neverkin?',
 				description:
-					'Your data is stored securely. Since Neverkin is open source, you can also self-host and maintain full control.',
+					'Yes! You can export or import your data as a JSON file to back up your worlds or to move them between environments. Other formats are coming... eventually.',
 			},
 			{
 				title: "I'm a developer. Can I contribute?",
@@ -948,273 +758,55 @@ const metadata = {
 					'I would love that! Neverkin has been built with development experience in mind. Check out the <a href="https://github.com/tenebrie/timelines" class="text-primary hover:underline">GitHub repository</a> to get started.',
 			},
 			{
-				title: "What's the best free writing app for organizing stories?",
+				title: 'I have a question or a suggestion. How do I get in touch?',
 				description:
-					'There are plenty of options around, but none as focused on the user as Neverkin is. I recommend you to give it a go. Mayhaps it will become an important part of your writing toolbelt. And yes, this is SEO bait.',
+					'Either through the <a href="/contact" class="text-primary hover:underline">contact form</a> or on <a href="https://discord.gg/rD3KdXmqDP" class="text-primary hover:underline">Discord</a>. Trust me, I do read them. On most days, you can expect a response within minutes.',
 			},
 		]}
 	/>
 
-	<!-- ==================== DASHBOARD PREVIEW ==================== -->
-	<Content isReversed id="preview">
-		<Fragment slot="content">
-			<h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
-				This is what's waiting for you
-			</h3>
-			No setup wizards. No credit cards. Just open your browser, create an account or login as a guest with one
-			click - your writing companion, ready to work.
-		</Fragment>
-
+	<!-- ==================== APP SHOWCASE ==================== -->
+	<ShowcaseCarousel
+		id="preview"
+		title="Still unconvinced?<br />I have screenshots!"
+		tagline="Showcase"
+		subtitle="...that are probably out of date by now."
+		slides={[
+			{
+				image: showcaseDashboard,
+				alt: 'The Neverkin dashboard, showing your worlds, calendars and recent activity',
+			},
+			{
+				image: showcaseMindmap,
+				alt: 'A mindmap of characters, articles and tags connected with labeled links',
+			},
+			{
+				image: showcaseEditor,
+				alt: "A character's backstory in the rich text editor, with mentions of other entities",
+			},
+		]}
+	>
 		<Fragment slot="bg">
 			<div class="absolute inset-0 bg-purple-950/20 dark:bg-purple-950/30"></div>
 		</Fragment>
-
-		<Fragment slot="image">
-			<div
-				class="rounded-2xl border border-[rgb(180_170_220/18%)] bg-[#0f0e1a] shadow-2xl shadow-purple-900/20 overflow-hidden ring-1 ring-white/[0.03]"
-			>
-				<!-- Top nav bar -->
-				<div
-					class="flex items-center gap-3 px-4 py-2 border-b border-[rgb(180_170_220/12%)] bg-[hsl(252,25%,14%)]"
-				>
-					<span class="text-xs font-semibold text-white bg-purple-500/70 px-2.5 py-0.5 rounded-md">World</span
-					>
-					<span class="text-xs text-slate-400">Home</span>
-					<span class="text-xs text-slate-600">&middot;</span>
-					<span class="text-xs text-slate-500">Tools</span>
-					<div class="flex-1"></div>
-					<div class="w-6 h-6 rounded-full bg-[rgb(180_170_220/10%)] flex items-center justify-center">
-						<svg class="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
-							<path
-								fill-rule="evenodd"
-								d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-								clip-rule="evenodd"></path>
-						</svg>
-					</div>
-				</div>
-
-				<!-- Dashboard body -->
-				<div class="px-5 py-4">
-					<div class="text-base font-bold text-white mb-0.5">Dashboard</div>
-					<div class="text-[11px] text-slate-400 mb-4">
-						Welcome back! Here's an overview of your creative universe.
-					</div>
-
-					<!-- Stat cards row -->
-					<div class="grid grid-cols-2 gap-3 mb-4">
-						<div class="rounded-lg border border-[rgb(180_170_220/14%)] bg-[hsl(252,25%,14%)] p-3">
-							<div class="flex items-center gap-2 mb-2.5">
-								<div class="w-8 h-8 rounded-lg bg-purple-500/80 flex items-center justify-center">
-									<svg
-										class="w-4 h-4 text-white"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="1.5"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M20.893 13.393l-1.135-1.135a2.252 2.252 0 01-.421-.585l-1.08-2.16a.414.414 0 00-.663-.107.827.827 0 01-.812.21l-1.273-.363a.89.89 0 00-.738 1.595l.587.39c.59.395.674 1.23.172 1.732l-.2.2c-.212.212-.33.498-.33.796v.41c0 .409-.11.809-.32 1.158l-1.315 2.191a2.11 2.11 0 01-1.81 1.025 1.055 1.055 0 01-1.055-1.055v-1.172c0-.92-.56-1.747-1.414-2.089l-.655-.261a2.25 2.25 0 01-1.383-2.46l.007-.042a2.25 2.25 0 01.29-.787l.09-.15a2.25 2.25 0 012.37-1.048l1.178.236a1.125 1.125 0 001.302-.795l.208-.73a1.125 1.125 0 00-.578-1.315l-.665-.332-.091.091a2.25 2.25 0 01-1.591.659h-.18c-.249 0-.487.1-.662.274a.931.931 0 01-1.458-1.137l1.411-2.353a2.25 2.25 0 00.286-.76m11.928 9.869A9 9 0 008.965 3.525m11.928 9.868A9 9 0 118.965 3.525"
-										></path>
-									</svg>
-								</div>
-								<div>
-									<div class="text-xl font-bold text-white leading-none">15</div>
-									<div class="text-[11px] text-slate-400">Worlds</div>
-								</div>
-								<div class="flex-1"></div>
-								<svg
-									class="w-4 h-4 text-slate-600"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
-								</svg>
-							</div>
-							<div class="border-t border-[rgb(180_170_220/10%)] pt-2 space-y-1">
-								<div class="flex justify-between text-[11px]">
-									<span class="text-slate-500">Owned</span>
-									<span class="text-slate-300">15</span>
-								</div>
-								<div class="flex justify-between text-[11px]">
-									<span class="text-slate-500">Contributing</span>
-									<span class="text-slate-300">0</span>
-								</div>
-							</div>
-						</div>
-						<div class="rounded-lg border border-[rgb(180_170_220/14%)] bg-[hsl(252,25%,14%)] p-3">
-							<div class="flex items-center gap-2 mb-2.5">
-								<div class="w-8 h-8 rounded-lg bg-blue-500/70 flex items-center justify-center">
-									<svg
-										class="w-4 h-4 text-white"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="1.5"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
-										></path>
-									</svg>
-								</div>
-								<div>
-									<div class="text-xl font-bold text-white leading-none">6</div>
-									<div class="text-[11px] text-slate-400">Calendars</div>
-								</div>
-								<div class="flex-1"></div>
-								<svg
-									class="w-4 h-4 text-slate-600"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="1.5"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
-								</svg>
-							</div>
-							<div class="border-t border-[rgb(180_170_220/10%)] pt-2 space-y-1">
-								<div class="flex justify-between text-[11px]">
-									<span class="text-slate-500">Total</span>
-									<span class="text-slate-300">6</span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Recent Activity -->
-					<div class="rounded-lg border border-[rgb(180_170_220/14%)] bg-[hsl(252,25%,14%)] p-3">
-						<div class="text-sm font-semibold text-white mb-2">Recent Activity</div>
-						<div class="space-y-0">
-							<div class="flex items-center gap-2.5 py-2 border-t border-[rgb(180_170_220/8%)]">
-								<div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
-									<svg
-										class="w-3.5 h-3.5 text-purple-300"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
-										></path>
-									</svg>
-								</div>
-								<div class="flex-1 min-w-0">
-									<div class="text-xs font-medium text-slate-200">The Shattered Isles</div>
-									<div class="text-[10px] text-slate-500">World updated</div>
-								</div>
-								<span class="text-[10px] text-slate-600 shrink-0">21 hours ago</span>
-							</div>
-							<div class="flex items-center gap-2.5 py-2 border-t border-[rgb(180_170_220/8%)]">
-								<div class="w-7 h-7 rounded-lg bg-green-500/20 flex items-center justify-center">
-									<svg
-										class="w-3.5 h-3.5 text-green-300"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
-										></path>
-									</svg>
-								</div>
-								<div class="flex-1 min-w-0">
-									<div class="text-xs font-medium text-slate-200">Age of Storms</div>
-									<div class="text-[10px] text-slate-500">Calendar updated</div>
-								</div>
-								<span class="text-[10px] text-slate-600 shrink-0">2 days ago</span>
-							</div>
-							<div class="flex items-center gap-2.5 py-2 border-t border-[rgb(180_170_220/8%)]">
-								<div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
-									<svg
-										class="w-3.5 h-3.5 text-purple-300"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
-										></path>
-									</svg>
-								</div>
-								<div class="flex-1 min-w-0">
-									<div class="text-xs font-medium text-slate-200">War of Shattered Crowns</div>
-									<div class="text-[10px] text-slate-500">World updated</div>
-								</div>
-								<span class="text-[10px] text-slate-600 shrink-0">3 days ago</span>
-							</div>
-							<div class="flex items-center gap-2.5 py-2 border-t border-[rgb(180_170_220/8%)]">
-								<div class="w-7 h-7 rounded-lg bg-green-500/20 flex items-center justify-center">
-									<svg
-										class="w-3.5 h-3.5 text-green-300"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
-										></path>
-									</svg>
-								</div>
-								<div class="flex-1 min-w-0">
-									<div class="text-xs font-medium text-slate-200">Golarion Standard</div>
-									<div class="text-[10px] text-slate-500">Calendar updated</div>
-								</div>
-								<span class="text-[10px] text-slate-600 shrink-0">5 days ago</span>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</Fragment>
-	</Content>
+	</ShowcaseCarousel>
 
 	<!-- ==================== FINAL CTA ==================== -->
 	<CallToAction
 		actions={[
 			{
 				variant: 'primary',
-				text: 'Start Building',
+				text: 'Web Version',
 				href: 'https://app.neverkin.com',
-				icon: 'tabler:sparkles',
+				icon: 'tabler:pencil-heart',
 			},
-			{
-				variant: 'secondary',
-				text: 'View on GitHub',
-				href: 'https://github.com/tenebrie/timelines',
-				icon: 'tabler:brand-github',
-			},
+			{ text: 'Desktop App', href: '/download', icon: 'tabler:download' },
 		]}
 	>
-		<Fragment slot="title">
-			Ready to give your world<br class="hidden sm:inline" /> the home it deserves?
-		</Fragment>
+		<Fragment slot="title">Want to do some writing?</Fragment>
 
 		<Fragment slot="subtitle">
-			Your story organizer for characters, timelines, and lore.<br class="hidden md:inline" />Built by a
-			mermaid, for humans. Also supports AI, I guess.
+			A nice writing app has been pre-warmed for your convenience. <br />Right this way please!
 		</Fragment>
 	</CallToAction>
 </Layout>
