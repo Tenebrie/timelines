@@ -38,7 +38,7 @@ A year can consist of 12 months, but not of 10 months and 60 bananas. (A year of
 This is a soft requirement — mixed units **are supported**, but they open up corner cases that haven't all been ironed out yet.
 </Aside>
 
-# Calendars and worlds
+## Calendars and worlds
 
 Calendars belong to you, not to your worlds. You create and edit them from the calendar list, independently of any world.
 
@@ -54,11 +54,11 @@ To push changes into a world, assign the calendar again. Reassigning replaces th
 An event's date field is stored as a single integer; the calendar only decides how that integer reads as a date. Reassigning keeps all events, but if the calendar's **structure** changed, the same integers now land on different dates. The events survive — where they fall on the timeline can shift in hard-to-predict ways. Reassign deliberately.
 </Aside>
 
-# Editing existing calendars
+## Editing existing calendars
 
 Selecting a calendar from the list opens the editor. It's split across three tabs — **Calendar**, **Time Units** and **Presentation** — under a header that stays visible whichever tab you're on.
 
-## The header
+### The header
 
 <Image src={calendarEditor01} alt="The calendar editor for a calendar copied from Gregorian, showing the Time Format and Preview timestamp fields above the tabs." />
 
@@ -68,7 +68,7 @@ Characters that aren't a unit shorthand print verbatim — that's how the colon 
 
 **Preview timestamp** (top right) is a scratch dial. Drag it or type a number to see how that integer renders through the current calendar. It only affects the preview — use it to sanity-check your format and structure as you go.
 
-## Origin timestamp
+### Origin timestamp
 
 The **Calendar** tab has one setting: the origin. Under the hood, every event is just an integer. The origin is the offset added to that integer before it becomes a date, so it decides which calendar date your world's time-zero lands on — usually the start of your story.
 
@@ -78,7 +78,7 @@ The field takes a raw number, and the box below shows the date it resolves to. A
 With the origin field focused, arrow keys nudge the value — plain arrows by one, **Shift** by ten, **Ctrl/Cmd** by a thousand, **Alt** by a hundred thousand. Modifiers stack.
 </Aside>
 
-## Time units
+### Time units
 
 <Image src={calendarEditor02} alt="The Time Units tab with the Minute unit selected and its three sections collapsed." />
 
@@ -86,7 +86,7 @@ The **Time Units** tab is where the calendar is actually defined. The left colum
 
 A calendar is a tree of units. The smallest — here **Minute** — contains nothing and is marked **Base unit**; it's the finest granularity the calendar can express. The largest — here the **400-year cycle** — sits at the top and is marked **Root unit**. Everything in between is built up from the bottom: an Hour is 60 Minutes, a Day is 24 Hours, and so on. The caption under each unit summarises what it holds (`60 minutes`, `24 hours`, `3 100-year cycle, 25 4-year cycle`).
 
-## Display names
+### Display names
 
 <Image src={calendarEditor03} alt="The Day unit with its Display names section expanded, showing the Display Name, Plural and Short fields." />
 
@@ -100,7 +100,7 @@ These are display labels only; changing them never affects the structure.
 
 The note under the field — _units with the same display names are counted together_ — matters for calendars like the Gregorian one. The Gregorian calendar defines four separate month units (28-, 29-, 30- and 31-day), but they all share the display name `month`. Because of that, they form one continuous sequence when a date is broken down: first month, second month, through to the twelfth, regardless of which underlying unit each one actually is. Give them distinct display names and they'd be counted separately instead.
 
-## Formatting
+### Formatting
 
 <Image src={calendarEditor04} alt="The Day unit with its Formatting section expanded, showing the Shorthand field and Unit mode dropdown." />
 
@@ -118,7 +118,7 @@ Custom labels set on a unit's parent (see [Custom labels](#custom-labels)) overr
 
 The collapsed section summary previews the result — `Numeric (One Indexed): 739617, 739618, 739619` shows three consecutive days as they'd actually render.
 
-## Structure
+### Structure
 
 <Image src={calendarEditor05} alt="The Day unit with its Structure section expanded, showing a single child: Hour, repeated 24 times." />
 
@@ -126,7 +126,7 @@ Structure is what turns a unit into a container. It lists the child units this o
 
 To compose a unit, pick a child from the dropdown, set how many times it repeats, and add it. A unit can hold several different children in sequence — that's how a year is assembled from months of differing lengths. The two extra fields on the add-child row, **Label** and **Short**, are for custom labels (covered next).
 
-## Custom labels
+### Custom labels
 
 <Image src={calendarEditor06} alt="The Regular year unit, composed of twelve month units carrying custom labels January through December." />
 
@@ -134,19 +134,19 @@ A **Regular year** shows why labels exist. It's built from twelve month units in
 
 The label lives on the relationship between parent and child, not on the unit itself. The same 31-day month unit can be `January` in one slot and `March` in another. When formatting a date, custom labels are used in place of the unit's display name wherever one is set.
 
-## Cycles
+### Cycles
 
 <Image src={calendarEditor07} alt="The 4-year cycle unit, composed of three Regular years and one Leap year." />
 
 The top of the Gregorian tree - or most real-world calendars implemented in Neverkin - is a stack of cycles. A **4-year cycle** is just **Regular year x3** plus **Leap year x1**. The 100-year cycle is twenty-four 4-year cycles plus four lone regular years; the 400-year cycle is three 100-year cycles plus twenty-five 4-year cycles.
 
-There's no intercalation rule here — no "every fourth year, except centuries, except every four-hundredth century". The calendar never _computes_ a leap year. It stacks fixed-length units in a repeating pattern, and that pattern happens to reproduce the Gregorian rules exactly: three 365-day years and one 366-day year per four, with the century corrections folded into the larger cycles (97 leap years every 400). All three cycle units are **Hidden**, so they shape the structure without surfacing in dates.
+There's no intercalation rule here — no "every fourth year, except centuries, except every four-hundredth year". The calendar never _computes_ a leap year. It stacks fixed-length units in a repeating pattern, and that pattern happens to reproduce the Gregorian rules exactly: three 365-day years and one 366-day year per four, with the century corrections folded into the larger cycles (97 leap years every 400). All three cycle units are **Hidden**, so they shape the structure without surfacing in dates.
 
 <Aside type="note">
 Modelling a complex real-world calendar this way is more work up front as you express the rules through nested repeating buckets instead of formulas. The payoff is that the system assumes nothing. There's no built-in notion of months, years, or weeks, so a calendar that has none of those is exactly as valid as the Gregorian one.
 </Aside>
 
-### Cycles of the Gregorian
+#### Cycles of the Gregorian
 
 The Gregorian calendar as implemented in Neverkin looks as follows:
 
@@ -154,9 +154,9 @@ The Gregorian calendar as implemented in Neverkin looks as follows:
 - 100-year cycle (Hidden) -> 4-year cycle x24 + Regular year x4
 - 4-year cycle (Hidden) -> Regular year x3 + Leap year x1
 
-Both regular and leap years are composed of 12 months, but the month definitions are different. February being either defined as "28-day month" or "29-day month". The other months are either 30 or 31 days long.
+Both regular and leap years are composed of 12 months, but the month definitions differ: February is defined as either a "28-day month" or a "29-day month", and the other months are 30 or 31 days long.
 
-A day is defined as 24 hours; an hour is defined as 60 minutes; and a minute isn't defined as anything. Having no subdivisions, a minute becomes the smallest unit of time. You could easily define a minute as having 60 seconds. The default calendar doesn't have it defined for a simple reason that in most stories, per-second precision isn't required.
+A day is defined as 24 hours; an hour is defined as 60 minutes; and a minute isn't defined as anything. Having no subdivisions, a minute becomes the smallest unit of time. You could easily define a minute as having 60 seconds. The default calendar doesn't have it defined for the simple reason that in most stories, per-second precision isn't required.
 
 <Aside type="note">
 Returning to a fun fact from the start of the article, you have about +-16.4 billion years on your calendar. As you add smaller units, the effective time span decreases proportionally.

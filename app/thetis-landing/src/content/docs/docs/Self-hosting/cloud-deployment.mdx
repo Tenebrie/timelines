@@ -21,34 +21,36 @@ For full functionality, you will need the following:
 - A virtual machine (called a droplet, an EC2 instance, etc.) with support for Docker Swarm and Node.js.
 - Two managed storage volumes:
   - A larger one (5+ GB) holds the main database
-  - A smallest possible one holds the secrets and SSL certificates
+  - The smallest one you can provision holds the secrets and SSL certificates
 - (Optional) A domain name
   - Depending on your cloud provider, you may get a working link without a domain name
 - (Optional) An S3 bucket for asset and backup storage
 
 
-### Volumes
+## Volumes
 
-- Create and mount the following volumes into the manager-1 node:
+- Create and mount the following volumes onto the manager-1 node:
   - `/mnt/volume_rhea_postgres`
   - `/mnt/volume_secrets`
     - Mount them under different names and create symlinks to those locations
 
 
-### S3
+## S3
 - Set up a new Spaces bucket through the UI and grab a new access token.
-- Setup CORS policy in the UI.
-- Install AWS CLI in the manager-1 node:
+- Set up the CORS policy in the UI.
+- Install AWS CLI on the manager-1 node:
   - `apt install awscli`
-- Setup credentials:
+- Set up credentials:
   - `aws configure`:
 
-> AWS Access Key ID [None]: [...]
-> AWS Secret Access Key [None]: [...]
-> Default region name [None]: fra1
-> Default output format [None]: json
+```
+AWS Access Key ID [None]: [...]
+AWS Secret Access Key [None]: [...]
+Default region name [None]: fra1
+Default output format [None]: json
+```
 
-### Secrets
+## Secrets
 
 - Specify the environment secret
   - All deployments are considered to be "production"
@@ -71,7 +73,7 @@ For full functionality, you will need the following:
 - (Optional) Create a Gemini image generation API key secret
   - `echo "your-api-key" | docker secret create imagen-google-api-key -`
 
-### Setup the app
+## Set up the app
 
 - Clone the Neverkin repository
   - `cd ~`
@@ -79,7 +81,7 @@ For full functionality, you will need the following:
   - `cd timelines`
 - Switch to desired branch
   - `git checkout dev`
-    - The deployed app version is not dependent on the selected branch, but the migrations are pulled from Git. Attempting to deploy a version with mismatched migrations will probably break.
+    - The deployed app version is not dependent on the selected branch, but the migrations are pulled from Git. Attempting to deploy a version with mismatched migrations will probably break things.
 - Init Swarm cluster
   - `docker swarm init`
 - Deploy the app
@@ -89,10 +91,10 @@ For full functionality, you will need the following:
 - Create Chronos storage folders
   - `mkdir -p /mnt/volume_rhea_postgres/backrest/{data,config,cache}`
 
-### Login to the app
+## Log in to the app
 
 - Open the app in your browser
-- Login as administrator
+- Log in as administrator
   - Username: `admin@localhost`
   - Password: `q`
 - I recommend changing the default password or deleting the default user after giving your own user account admin privileges through the Admin section.

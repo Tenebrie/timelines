@@ -116,29 +116,12 @@ if (process.platform === 'darwin') {
 	// Re-sign the bundle (dev mode, but I am not paying $99 per year)
 	run(`codesign --force --deep --sign - '${macBundle}'`)
 
-	const launcher = join(stage, 'Launch Neverkin.command')
-	writeFileSync(
-		launcher,
-		[
-			'#!/bin/bash',
-			'cd "$(dirname "$0")"',
-			'xattr -dr com.apple.quarantine Neverkin.app',
-			'open Neverkin.app',
-			'',
-		].join('\n'),
-		{ mode: 0o755 },
-	)
-
-	// Hide file extension on launcher script
-	const finderInfo = '0000000000000000001000000000000000000000000000000000000000000000'
-	run(`xattr -wx com.apple.FinderInfo ${finderInfo} '${launcher}'`)
-
 	writeFileSync(
 		join(stage, 'README.txt'),
 		[
 			'Neverkin Desktop',
 			'',
-			'The app is ad-hoc signed. Use launcher for the first start, or clear quarantine with:',
+			'The app is ad-hoc signed. Clear quarantine before the first start:',
 			'  xattr -dr com.apple.quarantine Neverkin.app',
 		].join('\n'),
 	)
