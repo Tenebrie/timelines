@@ -3,43 +3,40 @@ import { getPermalink } from './utils/permalinks'
 export const headerData = {
 	links: [
 		{
-			text: 'Features',
-			href: getPermalink('/#features'),
+			text: 'Documentation',
+			href: getPermalink('/docs'),
 		},
 		{
-			text: 'Showcase',
-			href: getPermalink('/#showcase'),
+			text: 'Downloads',
+			href: getPermalink('/download'),
 		},
 		{
-			text: 'How It Works',
-			href: getPermalink('/#how-it-works'),
+			text: 'Contact',
+			href: getPermalink('/contact'),
 		},
 		{
-			text: 'Comparison',
-			href: getPermalink('/#comparison'),
-		},
-		{
-			text: 'FAQ',
-			href: getPermalink('/#faq'),
+			text: 'Discord',
+			href: 'https://discord.gg/rD3KdXmqDP',
+			icon: 'tabler:brand-discord',
 		},
 	],
 	actions: [
 		{ text: 'Login', href: 'https://app.neverkin.com' },
-		{ text: 'Get Started', href: 'https://app.neverkin.com/create-account' },
+		{ text: 'Create Account', href: 'https://app.neverkin.com/create-account' },
 	],
 }
 
 export const footerData = {
 	links: [
-		{
-			title: 'Product',
-			links: [
-				{ text: 'Features', href: getPermalink('/#features') },
-				{ text: 'Showcase', href: getPermalink('/#showcase') },
-				{ text: 'How It Works', href: getPermalink('/#how-it-works') },
-				{ text: 'FAQ', href: getPermalink('/#faq') },
-			],
-		},
+		// {
+		// 	title: 'Product',
+		// 	links: [
+		// 		{ text: 'Features', href: getPermalink('/#features') },
+		// 		{ text: 'Showcase', href: getPermalink('/#showcase') },
+		// 		{ text: 'How It Works', href: getPermalink('/#how-it-works') },
+		// 		{ text: 'FAQ', href: getPermalink('/#faq') },
+		// 	],
+		// },
 		{
 			title: 'Resources',
 			links: [
@@ -55,16 +52,16 @@ export const footerData = {
 				{ text: 'Discord', href: 'https://discord.gg/rD3KdXmqDP' },
 				// { text: 'Reddit', href: '#' },
 				{ text: 'Contribute', href: 'https://github.com/tenebrie/timelines' },
-				{ text: 'Contact Us', href: getPermalink('/contact') },
+				{ text: 'Contact Form', href: getPermalink('/contact') },
 			],
 		},
-		{
-			title: 'Legal',
-			links: [
-				{ text: 'Privacy Policy', href: getPermalink('/privacy') },
-				{ text: 'Terms of Use', href: getPermalink('/terms') },
-			],
-		},
+		// {
+		// 	title: 'Legal',
+		// 	links: [
+		// 		{ text: 'Privacy Policy', href: getPermalink('/privacy') },
+		// 		{ text: 'Terms of Use', href: getPermalink('/terms') },
+		// 	],
+		// },
 	],
 	secondaryLinks: [
 		{ text: 'Terms', href: getPermalink('/terms') },
@@ -75,6 +72,6 @@ export const footerData = {
 		{ ariaLabel: 'Discord', icon: 'tabler:brand-discord', href: 'https://discord.gg/rD3KdXmqDP' },
 	],
 	footNote: `
-    <span class="text-muted">© 2022–2026 Neverkin. Open source under <a class="text-primary hover:underline" href="https://github.com/tenebrie/timelines">GPL-3.0</a>.</span>
+    <span class="text-muted">© 2022-2026 Neverkin. Open source under <a class="text-primary hover:underline" href="https://github.com/tenebrie/timelines">GPL-3.0</a>.</span>
   `,
 }

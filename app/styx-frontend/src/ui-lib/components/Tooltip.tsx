@@ -4,7 +4,13 @@ export type { TooltipProps }
 
 export function Tooltip({ children, ...props }: TooltipProps) {
 	return (
-		<MuiTooltip describeChild {...props}>
+		<MuiTooltip
+			describeChild
+			disableInteractive
+			enterDelay={500}
+			slotProps={{ popper: { modifiers: [{ name: 'offset', options: { offset: [0, -8] } }] } }}
+			{...props}
+		>
 			<span>{children}</span>
 		</MuiTooltip>
 	)

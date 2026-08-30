@@ -1,0 +1,109 @@
+---
+import type { ImageMetadata } from 'astro'
+import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
+import Headline from '~/components/ui/Headline.astro'
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro'
+
+interface Props {
+	title?: string
+	subtitle?: string
+	tagline?: string
+	slides: { image: ImageMetadata; alt: string }[]
+	id?: string
+}
+
+const { title, subtitle, tagline, slides, id } = Astro.props
+const bg = await Astro.slots.render('bg')
+---
+
+<WidgetWrapper id={id} containerClass="max-w-6xl mx-auto" bg={bg}>
+	<Headline
+		title={title}
+		subtitle={subtitle}
+		tagline={tagline}
+		classes={{
+			container: 'max-w-xl sm:mx-auto lg:max-w-2xl',
+			title: 'text-4xl md:text-5xl font-bold tracking-tighter mb-4 font-heading',
+			subtitle: 'max-w-3xl mx-auto sm:text-center text-xl text-muted dark:text-slate-400',
+		}}
+	/>
+	<div class="relative" data-carousel>
+		<div
+			class="rounded-2xl bg-slate-900/5 p-1.5 ring-1 ring-slate-900/10 shadow-2xl shadow-purple-900/30 dark:bg-white/6 dark:ring-white/10"
+		>
+			<div class="flex snap-x snap-mandatory overflow-x-auto rounded-xl scrollbar-none" data-carousel-track>
+				{
+					slides.map((slide) => (
+						<Image
+							src={slide.image}
+							alt={slide.alt}
+							class="w-full shrink-0 snap-center rounded-xl"
+							widths={[640, 1024, 1722]}
+							sizes="(max-width: 1151px) 100vw, 1104px"
+							loading="lazy"
+						/>
+					))
+				}
+			</div>
+		</div>
+		<button
+			type="button"
+			aria-label="Previous screenshot"
+			class="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-slate-900/50 text-white backdrop-blur-sm transition duration-200 ease-in hover:bg-[#c56030]/25 hover:text-[#f8c569] active:bg-[#c56030]/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+			data-carousel-prev
+		>
+			<Icon name="tabler:chevron-left" class="h-6 w-6" />
+		</button>
+		<button
+			type="button"
+			aria-label="Next screenshot"
+			class="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-slate-900/50 text-white backdrop-blur-sm transition duration-200 ease-in hover:bg-[#c56030]/25 hover:text-[#f8c569] active:bg-[#c56030]/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+			data-carousel-next
+		>
+			<Icon name="tabler:chevron-right" class="h-6 w-6" />
+		</button>
+		<div class="mt-4 flex justify-center gap-2">
+			{
+				slides.map((_, index) => (
+					<button
+						type="button"
+						aria-label={`Go to screenshot ${index + 1}`}
+						class="h-2.5 w-2.5 cursor-pointer rounded-full bg-slate-400/40 transition duration-200 ease-in hover:scale-125 hover:bg-slate-400/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 active:scale-90"
+						data-carousel-dot
+					/>
+				))
+			}
+		</div>
+	</div>
+</WidgetWrapper>
+
+<script>
+	function initCarousels() {
+		for (const root of document.querySelectorAll('[data-carousel]')) {
+			const track = root.querySelector('[data-carousel-track]')
+			if (!(track instanceof HTMLElement)) continue
+			const dots = [...root.querySelectorAll('[data-carousel-dot]')]
+			const count = track.children.length
+			const current = () => Math.round(track.scrollLeft / track.clientWidth)
+			const goTo = (index: number) =>
+				track.scrollTo({ left: ((index + count) % count) * track.clientWidth, behavior: 'smooth' })
+			root.querySelector('[data-carousel-prev]')?.addEventListener('click', () => goTo(current() - 1))
+			root.querySelector('[data-carousel-next]')?.addEventListener('click', () => goTo(current() + 1))
+			dots.forEach((dot, index) => dot.addEventListener('click', () => goTo(index)))
+			const highlight = () =>
+				dots.forEach((dot, index) => {
+					const selected = index === current()
+					dot.classList.toggle('bg-primary', selected)
+					dot.classList.toggle('hover:bg-primary/80', selected)
+					dot.classList.toggle('bg-slate-400/40', !selected)
+					dot.classList.toggle('hover:bg-slate-400/70', !selected)
+				})
+			track.addEventListener('scroll', highlight, { passive: true })
+			highlight()
+		}
+	}
+
+	initCarousels()
+	document.addEventListener('astro:after-swap', initCarousels)
+</script>

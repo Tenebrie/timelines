@@ -18,14 +18,14 @@ const {
 } = Astro.props
 ---
 
-<section class="relative md:-mt-[100px] not-prose" {...id ? { id } : {}}>
+<section class="relative md:-mt-25 not-prose" {...id ? { id } : {}}>
 	<div class="absolute inset-0 pointer-events-none" aria-hidden="true">
 		<slot name="bg">
 			{bg ? <Fragment set:html={bg} /> : null}
 		</slot>
 	</div>
 	<div class="relative max-w-7xl mx-auto px-4 sm:px-6">
-		<div class="pt-0 md:pt-[210px] pointer-events-none"></div>
+		<div class="pt-0 md:pt-52.5 pointer-events-none"></div>
 		<div class="py-12 md:py-20">
 			<div class="text-center pb-10 md:pb-16 max-w-5xl mx-auto">
 				{

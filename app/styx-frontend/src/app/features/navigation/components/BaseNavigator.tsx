@@ -18,6 +18,7 @@ import { getAuthState } from '../../auth/AuthSliceSelectors'
 import { SmallProfile } from '../../auth/smallProfile/SmallProfile'
 import { ThemeModeToggle } from '../../theming/components/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../../theming/hooks/useCustomTheme'
+import { DocsNavigatorButton } from './DocsNavigatorButton'
 import { HamburgerMenu } from './HamburgerMenu'
 import { HomeNavigatorButton } from './HomeNavigatorButton'
 import { LandingPageNavigatorButton } from './LandingPageNavigatorButton'
@@ -42,6 +43,7 @@ export const BaseNavigator = () => {
 	const theme = useCustomTheme()
 	const muiTheme = useTheme()
 	const isNarrow = useMediaQuery(muiTheme.breakpoints.down('md'))
+	const isCompact = useMediaQuery(muiTheme.breakpoints.down('lg'))
 
 	const isShareLinkRoute = useCheckRouteMatch('/share/$shareLinkSlug')
 	if (isShareLinkRoute && !user) {
@@ -56,19 +58,36 @@ export const BaseNavigator = () => {
 						{isNarrow && <HamburgerMenu />}
 						{!isNarrow && (
 							<>
-								<Stack minWidth={173} direction="row" gap={1} sx={{ justifyContent: 'flex-start' }}>
+								<Stack
+									minWidth={isCompact ? undefined : 173}
+									direction="row"
+									gap={1}
+									sx={{ justifyContent: 'flex-start' }}
+								>
 									<WorldSelectorButton />
-									<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
+									<LastWorldNavigatorButton icon={<PublicIcon />} label="World" iconOnly={isCompact} />
 								</Stack>
 								<Divider orientation="vertical" sx={{ height: '20px' }} />
-								<HomeNavigatorButton disabled={!user} />
+								<HomeNavigatorButton disabled={!user} iconOnly={isCompact} />
 							</>
 						)}
 						{!isNarrow && (
-							<NavigatorButton route="/tools" icon={<Construction />} label="Tools" disabled={!user} />
+							<NavigatorButton
+								route="/tools"
+								icon={<Construction />}
+								label="Tools"
+								disabled={!user}
+								iconOnly={isCompact}
+							/>
 						)}
+						{!isNarrow && <DocsNavigatorButton iconOnly={isCompact} />}
 						{!isNarrow && user?.level === 'Admin' && (
-							<NavigatorButton route="/admin" icon={<AdminPanelSettings />} label="Admin" />
+							<NavigatorButton
+								route="/admin"
+								icon={<AdminPanelSettings />}
+								label="Admin"
+								iconOnly={isCompact}
+							/>
 						)}
 					</Stack>
 				)}
