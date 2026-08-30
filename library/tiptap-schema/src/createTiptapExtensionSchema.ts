@@ -16,7 +16,7 @@ export const BaseExtensions = {
 		undoRedo: false,
 	}),
 	CharacterCount: CharacterCount.configure({
-		limit: 32000,
+		limit: 1000000,
 	}),
 
 	// Support for hard breaks (Shift + Enter)
