@@ -7,6 +7,7 @@ sidebar:
 
 import { Image } from 'astro:assets'
 import baseNavigator01 from '~/assets/docs/base-navigator-01.png'
+import worldNavigator01 from '~/assets/docs/world-navigator-01.png'
 
 Basic navigation in Neverkin is handled through two primary components: the **navigator** and the **sidebar**.
 
@@ -22,11 +23,23 @@ Listing the controls from left to right:
 - **World button** - returns you to the last opened world.
 - **Home button** - returns you to the home page. Clicking the arrow gives you more options.
 - **Tools** - a selection of totally random tools that may or may not be useful.
+- **Docs** (not pictured) - these very pages!
 - **Admin** (only for admin users) - administration tools.
 
 On the right side, you can see:
-- **
+- **Dark mode toggle** - switches between light and dark mode.
+- **Notification bell** - that's where you get occasional notifications.
+- **User account dropdown** - clicking here allows you to access your profile and user settings.
 
 ## World sidebar
 
-The **sidebar** is a contextual panel that appears when you select an entity. It provides detailed information about the selected entity and allows you to edit its properties.
+The **sidebar** is a panel visible while inside a world. Here you can switch between different views and main features of the app.
+
+<Image src={worldNavigator01} alt="The world sidebar, showing the main in-world views." />
+
+Listing your options top-to-bottom:
+
+- **Wiki** - where you can do most of your writing
+- **Mindmap** - a place to visualize your ideas (or make some cool charts)
+- **Timeline** - a chronological view of your events
+- **World settings** - a little view to handle world-related stuff, like changing the name or sending out invites.

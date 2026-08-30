@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+import { Tooltip } from '@/ui-lib/components/Tooltip'
 
 import { getAuthState } from '../../auth/AuthSliceSelectors'
 
@@ -23,18 +24,20 @@ export function LastWorldNavigatorButton({ icon, label, iconOnly }: Props) {
 	const canNavigate = isLoaded && !!user && !!id
 
 	const button = (
-		<Button
-			aria-label={label}
-			variant={isMatching ? 'contained' : 'text'}
-			disabled={!canNavigate}
-			sx={{
-				gap: 0.5,
-				padding: '6px 15px',
-				minWidth: iconOnly ? 'auto' : undefined,
-			}}
-		>
-			{icon} {!iconOnly && label}
-		</Button>
+		<Tooltip title={iconOnly ? label : ''}>
+			<Button
+				aria-label={label}
+				variant={isMatching ? 'contained' : 'text'}
+				disabled={!canNavigate}
+				sx={{
+					gap: 0.5,
+					padding: '6px 15px',
+					minWidth: iconOnly ? 'auto' : undefined,
+				}}
+			>
+				{icon} {!iconOnly && label}
+			</Button>
+		</Tooltip>
 	)
 
 	if (!canNavigate) {

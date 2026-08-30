@@ -14,6 +14,7 @@ import styled from 'styled-components'
 import { NavigationLink } from '@/app/components/NavigationLink'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+import { Tooltip } from '@/ui-lib/components/Tooltip'
 
 export const WorldSidebar = () => {
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
@@ -61,13 +62,15 @@ export const WorldSidebar = () => {
 							from="/world/$worldId"
 							data-testid="NavigateToWiki"
 						>
-							<StyledSmallButton variant={getButtonStyle(matchesWiki)}>
-								<WikiIcon
-									sx={{
-										transform: 'scale(1.2)',
-									}}
-								/>
-							</StyledSmallButton>
+							<Tooltip title="Wiki" placement="right">
+								<StyledSmallButton variant={getButtonStyle(matchesWiki)}>
+									<WikiIcon
+										sx={{
+											transform: 'scale(1.2)',
+										}}
+									/>
+								</StyledSmallButton>
+							</Tooltip>
 						</NavigationLink>
 						<NavigationLink
 							to="/world/$worldId/mindmap"
@@ -75,9 +78,11 @@ export const WorldSidebar = () => {
 							from="/world/$worldId"
 							data-testid="NavigateToMindmap"
 						>
-							<StyledSmallButton variant={getButtonStyle(matchesMindmap)}>
-								<AccountTreeIcon />
-							</StyledSmallButton>
+							<Tooltip title="Mindmap" placement="right">
+								<StyledSmallButton variant={getButtonStyle(matchesMindmap)}>
+									<AccountTreeIcon />
+								</StyledSmallButton>
+							</Tooltip>
 						</NavigationLink>
 						<NavigationLink
 							to="/world/$worldId/timeline"
@@ -85,13 +90,15 @@ export const WorldSidebar = () => {
 							from="/world/$worldId"
 							data-testid="NavigateToTimeline"
 						>
-							<StyledSmallButton variant={getButtonStyle(matchesTimeline)}>
-								<TimelineIcon
-									sx={{
-										transform: 'rotate(90deg) scale(1.2)',
-									}}
-								/>
-							</StyledSmallButton>
+							<Tooltip title="Timeline" placement="right">
+								<StyledSmallButton variant={getButtonStyle(matchesTimeline)}>
+									<TimelineIcon
+										sx={{
+											transform: 'rotate(90deg) scale(1.2)',
+										}}
+									/>
+								</StyledSmallButton>
+							</Tooltip>
 						</NavigationLink>
 						{/* <StyledSmallButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}> 
 							<ViewList />
@@ -105,9 +112,11 @@ export const WorldSidebar = () => {
 									from="/world/$worldId"
 									data-testid="NavigateToSettings"
 								>
-									<StyledSmallButton variant={getButtonStyle(matchesSettings)}>
-										<Settings />
-									</StyledSmallButton>
+									<Tooltip title="World settings" placement="right">
+										<StyledSmallButton variant={getButtonStyle(matchesSettings)}>
+											<Settings />
+										</StyledSmallButton>
+									</Tooltip>
 								</NavigationLink>
 							</>
 						)}
