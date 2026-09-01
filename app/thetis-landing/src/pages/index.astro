@@ -24,6 +24,54 @@ const metadata = {
 	description:
 		'Free, open-source collaborative writing and worldbuilding app for storytellers, DMs, writers and novelists. Organize timelines, characters, lore, and interconnected stories online in real-time.',
 }
+
+const faqs = [
+	{
+		title: 'Is Neverkin really free?',
+		description:
+			"Yes! Neverkin is open-source under the GPL-3.0 license. You can use the hosted version for free, download the desktop version, or self-host it on your own server. You can't pay even if you wanted to. Maybe Patreon at some point in the future.",
+	},
+	{
+		title: 'Can I keep parts of my world private?',
+		description:
+			'All your data is private by default - nothing is visible to anyone unless you explicitly share it. You can invite collaborators with read-only or editing access, or make a world publicly visible if you choose. If you self-host, then your creativity never leaves your machine.',
+	},
+	{
+		title: 'How does real-time collaboration work?',
+		description:
+			'When you invite collaborators to your world, they can view or edit based on the permissions you set. All changes sync instantly via WebSockets — every connected user sees updates in real-time.',
+	},
+	{
+		title: 'How does it compare to other worldbuilding apps?',
+		description:
+			'<b>Ambitiously!</b> Neverkin is still young, but it already delivers a solid set of features that set it apart. Take a look at the <a href="/alternatives" class="text-primary hover:underline">full comparison</a> against the giants like World Anvil, Obsidian and Miro for more details.',
+	},
+	{
+		title: 'Can I export my data from Neverkin?',
+		description:
+			'Yes! You can export or import your data as a JSON file to back up your worlds or to move them between environments. Other formats are coming... eventually.',
+	},
+	{
+		title: "I'm a developer. Can I contribute?",
+		description:
+			'I would love that! Neverkin has been built with development experience in mind. Check out the <a href="https://github.com/tenebrie/timelines" class="text-primary hover:underline">GitHub repository</a> to get started.',
+	},
+	{
+		title: 'I have a question or a suggestion. How do I get in touch?',
+		description:
+			'Either through the <a href="/contact" class="text-primary hover:underline">contact form</a> or on <a href="https://discord.gg/rD3KdXmqDP" class="text-primary hover:underline">Discord</a>. Trust me, I do read them. On most days, you can expect a response within minutes.',
+	},
+]
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faqs.map((faq) => ({
+		'@type': 'Question',
+		name: faq.title,
+		acceptedAnswer: { '@type': 'Answer', text: faq.description },
+	})),
+}
 ---
 
 <Layout metadata={metadata}>
@@ -50,6 +98,7 @@ const metadata = {
 			"license": "https://opensource.org/licenses/GPL-3.0"
 		}
 	</script>
+	<script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 
 	<!-- ==================== HERO ==================== -->
 	<Hero
@@ -731,38 +780,7 @@ const metadata = {
 		subtitle="Everything you need to know about Neverkin — no lore check required."
 		tagline="FAQ"
 		classes={{ container: 'max-w-6xl' }}
-		items={[
-			{
-				title: 'Is Neverkin really free?',
-				description:
-					"Yes! Neverkin is open-source under the GPL-3.0 license. You can use the hosted version for free, download the desktop version, or self-host it on your own server. You can't pay even if you wanted to. Maybe Patreon at some point in the future.",
-			},
-			{
-				title: 'How does real-time collaboration work?',
-				description:
-					'When you invite collaborators to your world, they can view or edit based on the permissions you set. All changes sync instantly via WebSockets — every connected user sees updates in real-time.',
-			},
-			{
-				title: 'Can I keep parts of my world private?',
-				description:
-					'All your data is private by default - nothing is visible to anyone unless you explicitly share it. You can invite collaborators with read-only or editing access, or make a world publicly visible if you choose. If you self-host, then your creativity never leaves your machine.',
-			},
-			{
-				title: 'Can I export my data from Neverkin?',
-				description:
-					'Yes! You can export or import your data as a JSON file to back up your worlds or to move them between environments. Other formats are coming... eventually.',
-			},
-			{
-				title: "I'm a developer. Can I contribute?",
-				description:
-					'I would love that! Neverkin has been built with development experience in mind. Check out the <a href="https://github.com/tenebrie/timelines" class="text-primary hover:underline">GitHub repository</a> to get started.',
-			},
-			{
-				title: 'I have a question or a suggestion. How do I get in touch?',
-				description:
-					'Either through the <a href="/contact" class="text-primary hover:underline">contact form</a> or on <a href="https://discord.gg/rD3KdXmqDP" class="text-primary hover:underline">Discord</a>. Trust me, I do read them. On most days, you can expect a response within minutes.',
-			},
-		]}
+		items={faqs}
 	/>
 
 	<!-- ==================== APP SHOWCASE ==================== -->
