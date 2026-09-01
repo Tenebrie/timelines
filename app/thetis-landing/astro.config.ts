@@ -41,6 +41,7 @@ export default defineConfig({
 			disable404Route: true,
 			favicon: '/favicon.ico',
 			components: {
+				Head: './src/components/starlight/Head.astro',
 				SiteTitle: './src/components/starlight/SiteTitle.astro',
 			},
 			sidebar: [
@@ -122,9 +123,6 @@ export default defineConfig({
 
 	image: {
 		domains: ['cdn.pixabay.com'],
-		service: {
-			entrypoint: 'astro/assets/services/noop',
-		},
 	},
 
 	markdown: {

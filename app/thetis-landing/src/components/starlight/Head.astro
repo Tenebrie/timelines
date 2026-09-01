@@ -1,0 +1,19 @@
+---
+import Default from '@astrojs/starlight/components/Head.astro'
+import { METADATA } from 'astrowind:config'
+import { adaptOpenGraphImages } from '~/utils/images'
+
+const image = (await adaptOpenGraphImages(METADATA.openGraph, Astro.site)).images?.[0]
+---
+
+<Default />
+{
+	image && (
+		<>
+			<meta property="og:image" content={image.url} />
+			<meta property="og:image:width" content={String(image.width)} />
+			<meta property="og:image:height" content={String(image.height)} />
+			<meta name="twitter:image" content={image.url} />
+		</>
+	)
+}
