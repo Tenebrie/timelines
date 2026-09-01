@@ -40,6 +40,7 @@ export const footerData = {
 		{
 			title: 'Resources',
 			links: [
+				{ text: 'Comparison', href: getPermalink('/alternatives') },
 				{ text: 'GitHub', href: 'https://github.com/tenebrie/timelines' },
 				{ text: 'Status', href: 'https://status.neverkin.com' },
 				// { text: 'Changelog', href: '#' },

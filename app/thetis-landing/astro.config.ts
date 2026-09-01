@@ -10,6 +10,7 @@ import icon from 'astro-icon'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import llmsTxt from './src/integrations/llmsTxt'
 import {
 	lazyImagesRehypePlugin,
 	readingTimeRemarkPlugin,
@@ -69,6 +70,14 @@ export default defineConfig({
 				'https://status.neverkin.com/',
 			],
 		}),
+		llmsTxt({
+			title: 'Neverkin',
+			sectionTitles: {
+				'docs/neverkin-desktop': 'Neverkin Desktop',
+				'docs/self-hosting': 'Self-hosting',
+			},
+		}),
+
 		mdx(),
 		icon({
 			include: {

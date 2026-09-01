@@ -1,0 +1,145 @@
+---
+import { Icon } from 'astro-icon/components'
+import Layout from '~/layouts/PageLayout.astro'
+import CallToAction from '~/components/widgets/CallToAction.astro'
+
+const metadata = {
+	title: 'Worldbuilding App Alternatives — Neverkin vs World Anvil, Obsidian & Miro',
+	ignoreTitleTemplate: true,
+	description:
+		'How Neverkin compares to World Anvil, Obsidian and Miro. A free, open-source, self-hostable worldbuilding app with timelines, a wiki and a freeform mindmap canvas, for writers, game masters and worldbuilders.',
+}
+
+const comparisons = [
+	{
+		name: 'World Anvil',
+		icon: 'tabler:world',
+		strength:
+			'The largest worldbuilding platform around, with article templates, interactive maps, a public presentation layer for your world, and a massive community behind it.',
+		difference:
+			'Neverkin puts events on multi-track timelines over calendars you define yourself, down to invented time units and billions of years. Collaborators edit the same article at the same time, and there is no paid tier holding anything back.',
+		pickThem: 'your world needs maps, and a SEO-accessible public page.',
+	},
+	{
+		name: 'Obsidian',
+		icon: 'tabler:notes',
+		strength:
+			'The best local-first notes app there is. Plain markdown files on your own disk, an enormous plugin ecosystem, and it keeps working offline forever.',
+		difference:
+			'Neverkin gives you the same bidirectional linking without assembling it out of plugins, and adds a timeline, a shared mindmap canvas and real-time collaboration on top. There is a desktop app if you want it local.',
+		pickThem: 'their plugins do that one specific thing you need.',
+	},
+	{
+		name: 'Miro',
+		icon: 'tabler:layout-board',
+		strength:
+			'An infinite whiteboard built for teams, with freehand drawing, sticky notes, templates and everything else a workshop needs.',
+		difference:
+			'The Neverkin mindmap is a freeform canvas too - drop cards wherever you like, rename them, wire them together with labelled links. The difference is that a card can be an actual character or event, and double-clicking it opens the wiki entry behind it.',
+		pickThem: 'you need freehand drawing and sticky-note templates.',
+	},
+]
+---
+
+<Layout metadata={metadata}>
+	<section class="relative">
+		<div class="max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-20">
+			<!-- Headline -->
+			<div class="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+				<p class="text-brand-gradient font-bold uppercase tracking-widest text-sm mb-2">Comparison</p>
+				<h1
+					class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200"
+				>
+					How <span class="text-brand-gradient">Neverkin</span> compares
+				</h1>
+				<p class="text-xl text-muted dark:text-slate-300">
+					Most worldbuilders arrive here from World Anvil, Obsidian or Miro. Here is what Neverkin does
+					differently and how it compares to the industry giants.
+				</p>
+			</div>
+
+			<!-- Positioning -->
+			<div class="max-w-3xl mx-auto mb-12 md:mb-16 text-lg text-muted dark:text-slate-400 space-y-4">
+				<p>
+					Neverkin is a free, open-source worldbuilding app that keeps a timeline, a wiki and a freeform
+					mindmap canvas in one place. It runs in your browser, as a desktop app, or on your own server.
+					Nothing is behind a paid tier, because there are no tiers.
+				</p>
+			</div>
+
+			<!-- Comparisons -->
+			<div class="space-y-6 max-w-4xl mx-auto">
+				{
+					comparisons.map((comparison) => (
+						<article class="rounded-xl border border-gray-200 dark:border-slate-700/40 bg-gray-50/50 dark:bg-slate-800/30 p-6 md:p-8 transition-all duration-200 hover:border-primary/40 hover:shadow-lg hover:shadow-purple-900/10 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+							<div class="flex items-center gap-3 mb-5">
+								<Icon name={comparison.icon} class="w-8 h-8 text-primary" />
+								<h2 class="text-2xl font-bold tracking-tight dark:text-white">
+									Neverkin vs {comparison.name}
+								</h2>
+							</div>
+
+							<dl class="space-y-4">
+								<div>
+									<dt class="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-500 mb-1">
+										What {comparison.name} does well
+									</dt>
+									<dd class="text-muted dark:text-slate-400">{comparison.strength}</dd>
+								</div>
+								<div>
+									<dt class="text-sm font-semibold uppercase tracking-wider text-gray-500 dark:text-slate-500 mb-1">
+										What Neverkin does differently
+									</dt>
+									<dd class="text-muted dark:text-slate-400">{comparison.difference}</dd>
+								</div>
+							</dl>
+
+							<p class="mt-5 pt-5 border-t border-gray-200 dark:border-slate-700/40 text-muted dark:text-slate-400">
+								<span class="font-semibold text-gray-700 dark:text-slate-300">
+									Stay with {comparison.name} if
+								</span>{' '}
+								{comparison.pickThem}
+							</p>
+						</article>
+					))
+				}
+			</div>
+
+			<!-- Migration honesty -->
+			<div
+				class="max-w-4xl mx-auto mt-10 rounded-xl border border-gray-200 dark:border-slate-700/40 p-6 md:p-8"
+			>
+				<h2 class="text-xl font-bold tracking-tight dark:text-white mb-3">Can I bring my world over?</h2>
+				<p class="text-muted dark:text-slate-400">
+					Not automatically, not yet. Neverkin has no importers for other apps, so moving an existing world
+					means recreating it. However, the built-in <a
+						href="/docs/onboarding/using-ai-agents"
+						class="text-primary hover:underline">MCP server</a
+					> lets an AI assistant do that work for you. Moving worlds between Neverkin environments, or backing them
+					up, is available through a <a
+						href="/docs/onboarding/exporting-worlds"
+						class="text-primary hover:underline">JSON export</a
+					>.<br /><br />
+					Let us know about your desired migration path, and we'll do our best to accommodate!
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<!-- ==================== FINAL CTA ==================== -->
+	<CallToAction
+		actions={[
+			{
+				variant: 'primary',
+				text: 'Web Version',
+				href: 'https://app.neverkin.com',
+				icon: 'tabler:pencil-heart',
+			},
+			{ text: 'Desktop App', href: '/download', icon: 'tabler:download' },
+		]}
+	>
+		<Fragment slot="title">Take a look yourself?</Fragment>
+
+		<Fragment slot="subtitle">Join the community, and soon we'll rival these giants!</Fragment>
+	</CallToAction>
+</Layout>
