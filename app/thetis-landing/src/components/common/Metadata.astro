@@ -39,9 +39,6 @@ const seoProps: AstroSeoProps = merge(
 			locale: I18N?.language || 'en',
 			type: 'website',
 		},
-		twitter: {
-			cardType: openGraph?.images?.length ? 'summary_large_image' : 'summary',
-		},
 	},
 	{
 		title: METADATA?.title?.default,
@@ -63,6 +60,15 @@ const seoProps: AstroSeoProps = merge(
 		twitter: twitter,
 	},
 )
+
+const adaptedOpenGraph = await adaptOpenGraphImages(seoProps.openGraph, Astro.site)
 ---
 
-<AstroSeo {...{ ...seoProps, openGraph: await adaptOpenGraphImages(seoProps?.openGraph, Astro.site) }} />
+<AstroSeo
+	{...seoProps}
+	openGraph={adaptedOpenGraph}
+	twitter={{
+		cardType: adaptedOpenGraph.images?.length ? 'summary_large_image' : 'summary',
+		...seoProps.twitter,
+	}}
+/>
