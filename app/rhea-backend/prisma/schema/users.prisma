@@ -35,6 +35,10 @@ model User {
 
   avatar   Asset?  @relation("UserAvatar", fields: [avatarId], references: [id])
   avatarId String? @unique
+
+  auditLogs AuditLog[]
+
+  @@index([email])
 }
 
 model CollaboratingUser {

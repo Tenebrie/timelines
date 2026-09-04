@@ -48,6 +48,17 @@ router.get('/api/auth/check', async (ctx) => {
 	const avatarUrl = user.avatar ? await CloudStorageService.getPresignedUrl(user.avatar) : undefined
 	const featureFlags = await FeatureFlagService.listUserFeatureFlags(user.id)
 
+	AuditLogService.append(
+		ctx,
+		{
+			action: 'UserAuth',
+			userId: user.id,
+		},
+		{
+			minimalGapSeconds: 3600, // Log once per hour
+		},
+	)
+
 	return {
 		authenticated: true,
 		sessionId,
@@ -97,9 +108,7 @@ router.post('/api/auth', async (ctx) => {
 
 	AuditLogService.append(ctx, {
 		action: 'UserCreateAccount',
-		data: {
-			userId: user.id,
-		},
+		userId: user.id,
 	})
 
 	return {
@@ -135,9 +144,7 @@ router.post('/api/auth/guest', async (ctx) => {
 
 	AuditLogService.append(ctx, {
 		action: 'GuestCreateAccount',
-		data: {
-			userId: user.id,
-		},
+		userId: user.id,
 	})
 
 	return {
@@ -188,9 +195,7 @@ router.post('/api/auth/google', async (ctx) => {
 
 	AuditLogService.append(ctx, {
 		action: 'UserLoginWithGoogle',
-		data: {
-			userId: user.id,
-		},
+		userId: user.id,
 	})
 
 	return {
@@ -239,9 +244,7 @@ router.post('/api/auth/login', async (ctx) => {
 
 	AuditLogService.append(ctx, {
 		action: 'UserLoginWithPassword',
-		data: {
-			userId: user.id,
-		},
+		userId: user.id,
 	})
 
 	const avatarUrl = user.avatar ? await CloudStorageService.getPresignedUrl(user.avatar) : undefined
@@ -319,9 +322,7 @@ router.delete('/api/auth', async (ctx) => {
 
 	AuditLogService.append(ctx, {
 		action: 'UserDeleteAccount',
-		data: {
-			userId: user.id,
-		},
+		userId: user.id,
 	})
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, '', {

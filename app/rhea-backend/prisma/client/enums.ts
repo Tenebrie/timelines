@@ -51,6 +51,7 @@ export type ReferenceHoldingEntity = (typeof ReferenceHoldingEntity)[keyof typeo
 
 
 export const AuditAction = {
+  UserAuth: 'UserAuth',
   UserCreateAccount: 'UserCreateAccount',
   UserLoginWithPassword: 'UserLoginWithPassword',
   UserLoginWithGoogle: 'UserLoginWithGoogle',

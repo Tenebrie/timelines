@@ -39,8 +39,7 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as authApi }
 export type CheckAuthenticationApiResponse =
-	/** status 200  */
-	| {
+	| /** status 200  */ {
 			authenticated: boolean
 			sessionId: string
 	  }
@@ -122,10 +121,10 @@ export type PostLoginApiResponse = /** status 200  */ {
 			id: string
 			createdAt: string
 			updatedAt: string
-			ownerId: string
-			expiresAt?: null | string
-			bucketKey: string
 			size: number
+			expiresAt?: null | string
+			ownerId: string
+			bucketKey: string
 			originalFileName: string
 			originalFileExtension: string
 			contentType:

@@ -139,6 +139,7 @@ export function AdminDashboardView() {
 			</Section>
 
 			<Section icon={<Login color="info" />} title="Login Activity (30 Days)">
+				<StatCard label="Auth" value={auditStats.userAuthEvents} />
 				<StatCard label="Password" value={auditStats.passwordLogins} />
 				<StatCard label="Google" value={auditStats.googleLogins} />
 				<StatCard label="Failed" value={auditStats.failedLogins} />

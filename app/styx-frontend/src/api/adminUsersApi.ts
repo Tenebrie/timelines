@@ -90,6 +90,7 @@ export type AdminSetFeatureFlagApiArg = {
 }
 export type AdminGetDashboardApiResponse = /** status 200  */ {
 	auditStats: {
+		userAuthEvents: number
 		guestAccountsCreated: number
 		userAccountsCreated: number
 		passwordLogins: number
@@ -120,11 +121,17 @@ export type AdminGetDashboardApiArg = void
 export type AdminGetAuditLogsApiResponse = /** status 200  */ {
 	logs: {
 		data: string
+		user: null | {
+			id: string
+			email: string
+			username: string
+		}
 		id: string
 		createdAt: string
 		requestIp: string
-		userEmail?: null | string
+		userId?: null | string
 		action:
+			| 'UserAuth'
 			| 'UserCreateAccount'
 			| 'UserLoginWithPassword'
 			| 'UserLoginWithGoogle'
