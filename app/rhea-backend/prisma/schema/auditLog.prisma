@@ -1,4 +1,6 @@
 enum AuditAction {
+    UserAuth
+
     UserCreateAccount
     UserLoginWithPassword
     UserLoginWithGoogle
@@ -26,9 +28,13 @@ model AuditLog {
     id        String   @id @unique @default(uuid())
     createdAt DateTime @default(now())
 
-    userEmail String?
+    user      User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+    userId    String?
+    
     requestIp String
 
     action AuditAction
     data   Json
+
+    @@index([userId, action, createdAt])
 }

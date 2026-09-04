@@ -4,12 +4,14 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 
-import { AdminGetUsersApiResponse } from '@/api/adminUsersApi'
 import { useAdminUpdateUser } from '@/app/views/admin/api/useAdminUpdateUser'
 import { PopoverButton } from '@/ui-lib/components/PopoverButton/PopoverButton'
 
 type Props = {
-	user: AdminGetUsersApiResponse['users'][number]
+	user: {
+		id: string
+		email: string
+	}
 }
 
 export function UserEmailPopoverButton({ user }: Props) {
