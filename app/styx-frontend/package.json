@@ -26,7 +26,7 @@
 		"@neverkin/tiptap-schema": "file:../../library/tiptap-schema",
 		"@tanstack/react-form": "^1.33.5",
 		"@tanstack/react-router": "^1.170.27",
-		"@tiptap/core": "^3.30.1",
+		"@tiptap/core": "^3.30.4",
 		"@tiptap/extension-character-count": "^3.30.1",
 		"@tiptap/extension-collaboration": "^3.30.1",
 		"@tiptap/extension-color": "^3.30.1",
