@@ -65,14 +65,17 @@ export function MindmapNodePort({ node, parent }: Props) {
 					alignItems: 'center',
 					justifyContent: 'center',
 					cursor: 'pointer',
-					opacity: 0.35,
+					opacity: 0,
 					transition: 'opacity 0.15s ease-out',
 					'--fill-color': theme.custom.palette.background.timeline,
 					'--hover-opacity': 0.0,
 					'--active-opacity': 0.0,
-					'&:hover': {
-						opacity: 1,
-						'--hover-opacity': 1.0,
+					'[data-mindmap-node]:hover &': {
+						opacity: 0.35,
+						'&:hover': {
+							opacity: 1,
+							'--hover-opacity': 1.0,
+						},
 					},
 					'&:active': {
 						'--fill-color': 'rgba(0, 0, 200, 1.0)',

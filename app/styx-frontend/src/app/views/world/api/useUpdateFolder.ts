@@ -4,13 +4,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useWikiApiCache } from '@/api/hooks/useWikiApiCache'
 import { UpdateArticleApiArg } from '@/api/otherApi'
 import { worldDetailsApi } from '@/api/worldDetailsApi'
-import { useGetFoldersQuery, useUpdateFolderMutation } from '@/api/worldWikiFolderApi'
+import { useUpdateFolderMutation } from '@/api/worldWikiFolderApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
+import { useListFolders } from './useListFolders'
+
 export function useUpdateFolder() {
 	const worldId = useSelector(getWorldIdState)
-	const { data: folders = [] } = useGetFoldersQuery({ worldId })
+	const { data: folders = [] } = useListFolders()
 	const [updateFolder, state] = useUpdateFolderMutation()
 	const { updateCachedFolder } = useWikiApiCache()
 

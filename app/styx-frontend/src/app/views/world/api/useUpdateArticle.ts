@@ -4,13 +4,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useWikiApiCache } from '@/api/hooks/useWikiApiCache'
 import { UpdateArticleApiArg, useUpdateArticleMutation } from '@/api/otherApi'
 import { worldDetailsApi } from '@/api/worldDetailsApi'
-import { useGetArticlesQuery } from '@/api/worldWikiApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
+import { useListArticles } from './useListArticles'
+
 export function useUpdateArticle() {
 	const worldId = useSelector(getWorldIdState)
-	const { data: articles = [] } = useGetArticlesQuery({ worldId })
+	const { data: articles = [] } = useListArticles()
 	const [updateArticle, state] = useUpdateArticleMutation()
 	const { updateCachedArticle } = useWikiApiCache()
 
