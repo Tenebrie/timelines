@@ -18,7 +18,7 @@ export type BoxedPlainNode = {
 	id: string
 	name: string
 	position: number
-	color: string | undefined
+	color: string
 }
 
 export type BoxedMindmapParent = BoxedWikiEntity | BoxedPlainNode
