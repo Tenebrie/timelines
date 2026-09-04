@@ -5,45 +5,6 @@ import { UserUncheckedUpdateInput } from '../../prisma/client/models.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const AdminService = {
-	listUserActivityStats: async () => {
-		const dailyActiveUsers = await getPrismaClient().user.aggregate({
-			where: {
-				updatedAt: {
-					gte: new Date(new Date().setDate(new Date().getDate() - 1)),
-				},
-			},
-			_count: {
-				id: true,
-			},
-		})
-
-		const weeklyActiveUsers = await getPrismaClient().user.aggregate({
-			where: {
-				updatedAt: {
-					gte: new Date(new Date().setDate(new Date().getDate() - 7)),
-				},
-			},
-			_count: {
-				id: true,
-			},
-		})
-		const monthlyActiveUsers = await getPrismaClient().user.aggregate({
-			where: {
-				updatedAt: {
-					gte: new Date(new Date().setMonth(new Date().getMonth() - 1)),
-				},
-			},
-			_count: {
-				id: true,
-			},
-		})
-		return {
-			dailyActiveUsers: dailyActiveUsers._count.id,
-			weeklyActiveUsers: weeklyActiveUsers._count.id,
-			monthlyActiveUsers: monthlyActiveUsers._count.id,
-		}
-	},
-
 	listHourlyActivityStats: async ({ hours }: { hours: number }) => {
 		const now = new Date()
 		const start = new Date(now)
@@ -68,6 +29,32 @@ export const AdminService = {
 			}
 		}
 		return buckets.map(({ hour, users, events }) => ({ hour, activeUsers: users.size, events }))
+	},
+
+	listContentStats: async ({ days }: { days: number }) => {
+		const start = new Date()
+		start.setUTCHours(0, 0, 0, 0)
+		start.setUTCDate(start.getUTCDate() - (days - 1))
+		const dayMs = 86_400_000
+
+		const entries = await Promise.all(
+			Object.entries(contentModels()).map(async ([key, model]) => {
+				const [total, recent] = await Promise.all([
+					model.count(),
+					model.findMany({ where: { createdAt: { gte: start } }, select: { createdAt: true } }),
+				])
+				const created = Array.from({ length: days }, () => 0)
+				for (const row of recent) {
+					created[Math.floor((row.createdAt.getTime() - start.getTime()) / dayMs)] += 1
+				}
+				return [key, { total, created }] as const
+			}),
+		)
+
+		return {
+			days: Array.from({ length: days }, (_, i) => new Date(start.getTime() + i * dayMs).toISOString()),
+			entities: Object.fromEntries(entries) as Record<ContentEntity, { total: number; created: number[] }>,
+		}
 	},
 
 	listUsers: async ({ page, size, query }: { page?: number; size?: number; query?: string }) => {
@@ -213,3 +200,33 @@ export const AdminService = {
 		})
 	},
 }
+
+type CreatedAtModel = {
+	count: () => Promise<number>
+	findMany: (args: {
+		where: { createdAt: { gte: Date } }
+		select: { createdAt: true }
+	}) => Promise<{ createdAt: Date }[]>
+}
+
+const asCreatedAtModels = <K extends string>(models: Record<K, CreatedAtModel>) => models
+
+const contentModels = () => {
+	const prisma = getPrismaClient()
+	return asCreatedAtModels({
+		worlds: prisma.world,
+		actors: prisma.actor,
+		events: prisma.worldEvent,
+		eventTracks: prisma.worldEventTrack,
+		articles: prisma.wikiArticle,
+		folders: prisma.wikiFolder,
+		tags: prisma.tag,
+		nodes: prisma.mindmapNode,
+		links: prisma.mindmapLink,
+		calendars: prisma.calendar,
+		contentPages: prisma.contentPage,
+		assets: prisma.asset,
+	})
+}
+
+type ContentEntity = keyof ReturnType<typeof contentModels>

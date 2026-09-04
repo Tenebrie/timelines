@@ -1,3 +1,4 @@
+import Category from '@mui/icons-material/Category'
 import Groups from '@mui/icons-material/Groups'
 import Login from '@mui/icons-material/Login'
 import PersonAdd from '@mui/icons-material/PersonAdd'
@@ -9,9 +10,10 @@ import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { ReactNode } from 'react'
 
-import { useAdminGetDashboardQuery } from '@/api/adminUsersApi'
+import { AdminGetDashboardApiResponse, useAdminGetDashboardQuery } from '@/api/adminUsersApi'
 
-import { AdminDashboardStatCard } from '../components/AdminDashboardStatCard'
+import { AdminDashboardContentCards } from '../components/AdminDashboardContentCards'
+import { AdminDashboardStatCard, StatCardSeries } from '../components/AdminDashboardStatCard'
 import { AdminDashboardStorageCard } from '../components/AdminDashboardStorageCard'
 import { AdminDashboardUserActivityChart } from '../components/AdminDashboardUserActivityChart'
 
@@ -29,6 +31,9 @@ export function AdminDashboardView() {
 	const StatCard = AdminDashboardStatCard
 	const StorageCard = AdminDashboardStorageCard
 
+	const series = (key: DailyStatKey): StatCardSeries =>
+		auditStats.daily.map((day) => ({ label: dayFormat.format(new Date(day.day)), value: day[key] }))
+
 	return (
 		<Stack gap={2.5} width="100%" alignSelf="center">
 			{fulfilledTimeStamp && (
@@ -37,27 +42,64 @@ export function AdminDashboardView() {
 				</Typography>
 			)}
 			<Section icon={<Groups color="primary" />} title="Active Users">
-				<StatCard label="Daily" value={data.dailyActiveUsers} sub="Last 24 hours" />
-				<StatCard label="Weekly" value={data.weeklyActiveUsers} sub="Last 7 days" />
-				<StatCard label="Monthly" value={data.monthlyActiveUsers} sub="Last 30 days" />
+				<StatCard
+					label="Daily"
+					value={auditStats.dailyActiveUsers}
+					sub="Last 24 hours"
+					series={series('dailyActiveUsers')}
+				/>
+				<StatCard
+					label="Weekly"
+					value={auditStats.weeklyActiveUsers}
+					sub="Last 7 days"
+					series={series('weeklyActiveUsers')}
+				/>
+				<StatCard
+					label="Monthly"
+					value={auditStats.monthlyActiveUsers}
+					sub="Last 30 days"
+					series={series('monthlyActiveUsers')}
+				/>
+				<StatCard
+					label="Regulars"
+					value={auditStats.regulars}
+					sub="Last 30 days"
+					series={series('regulars')}
+				/>
 				<AdminDashboardUserActivityChart activity={data.hourlyActivity} />
 			</Section>
 
+			<Section icon={<Category color="primary" />} title="Content">
+				<AdminDashboardContentCards stats={data.contentStats} />
+			</Section>
+
 			<Section icon={<PersonAdd color="success" />} title="Accounts (30 Days)">
-				<StatCard label="Guest Created" value={auditStats.guestAccountsCreated} />
-				<StatCard label="User Created" value={auditStats.userAccountsCreated} />
-				<StatCard label="Deleted" value={auditStats.accountsDeleted} />
+				<StatCard
+					label="Guest Created"
+					value={auditStats.guestAccountsCreated}
+					series={series('guestAccountsCreated')}
+				/>
+				<StatCard
+					label="User Created"
+					value={auditStats.userAccountsCreated}
+					series={series('userAccountsCreated')}
+				/>
+				<StatCard label="Deleted" value={auditStats.accountsDeleted} series={series('accountsDeleted')} />
 			</Section>
 
 			<Section icon={<Login color="info" />} title="Login Activity (30 Days)">
-				<StatCard label="Auth" value={auditStats.userAuthEvents} />
-				<StatCard label="Password" value={auditStats.passwordLogins} />
-				<StatCard label="Google" value={auditStats.googleLogins} />
-				<StatCard label="Failed" value={auditStats.failedLogins} />
+				<StatCard label="Auth" value={auditStats.userAuthEvents} series={series('userAuthEvents')} />
+				<StatCard label="Password" value={auditStats.passwordLogins} series={series('passwordLogins')} />
+				<StatCard label="Google" value={auditStats.googleLogins} series={series('googleLogins')} />
+				<StatCard label="Failed" value={auditStats.failedLogins} series={series('failedLogins')} />
 			</Section>
 
 			<Section icon={<Shield color="warning" />} title="Total Activity (30 Days)">
-				<StatCard label="Total Audited Events" value={auditStats.totalEvents} />
+				<StatCard
+					label="Total Audited Events"
+					value={auditStats.totalEvents}
+					series={series('totalEvents')}
+				/>
 			</Section>
 
 			<Section icon={<Storage color="secondary" />} title="Storage">
@@ -71,6 +113,10 @@ export function AdminDashboardView() {
 		</Stack>
 	)
 }
+
+type DailyStatKey = Exclude<keyof AdminGetDashboardApiResponse['auditStats']['daily'][number], 'day'>
+
+const dayFormat = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' })
 
 function Section({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
 	const theme = useTheme()

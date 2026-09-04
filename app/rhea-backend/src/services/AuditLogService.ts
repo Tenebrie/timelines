@@ -6,39 +6,77 @@ import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const AuditLogService = {
 	getStats: async ({ days }: { days: number }) => {
-		const since = new Date()
-		since.setDate(since.getDate() - days)
+		const now = new Date()
+		const today = new Date(now)
+		today.setUTCHours(0, 0, 0, 0)
+		const historyDays = days * 2
+		const start = new Date(today.getTime() - (historyDays - 1) * DAY_MS)
 
-		const prisma = getPrismaClient()
-
-		const actionCounts = await prisma.auditLog.groupBy({
-			by: ['action'],
-			where: { createdAt: { gte: since } },
-			_count: { id: true },
+		const rows = await getPrismaClient().auditLog.findMany({
+			where: { createdAt: { gte: start } },
+			select: { createdAt: true, action: true, userId: true },
 		})
 
-		const uniqueUserLogins = await prisma.auditLog.groupBy({
-			by: ['userId'],
-			where: {
-				createdAt: { gte: since },
-				action: { in: ['UserLoginWithPassword', 'UserLoginWithGoogle'] },
-				userId: { not: null },
-			},
+		const dayOf = (date: Date) => Math.floor((date.getTime() - start.getTime()) / DAY_MS)
+		const counts = Array.from({ length: historyDays }, () => emptyDailyCounts())
+		const activeDays = new Map<string, Set<number>>()
+		const loginUsers = new Set<string>()
+
+		for (const row of rows) {
+			const day = counts[dayOf(row.createdAt)]
+			day.totalEvents += 1
+			const key = COUNTED_ACTIONS[row.action]
+			if (key) {
+				day[key] += 1
+			}
+			if (row.action === 'UserAuth' && row.userId) {
+				activeDays.set(row.userId, (activeDays.get(row.userId) ?? new Set()).add(dayOf(row.createdAt)))
+			}
+			if ((row.action === 'UserLoginWithPassword' || row.action === 'UserLoginWithGoogle') && row.userId) {
+				loginUsers.add(row.userId)
+			}
+		}
+
+		const usersActiveWithin = (from: number, to: number, minDays = 1) =>
+			[...activeDays.values()].filter(
+				(set) => [...set].filter((day) => day >= from && day <= to).length >= minDays,
+			).length
+
+		const usersActiveSince = (since: Date) =>
+			new Set(
+				rows
+					.filter((row) => row.action === 'UserAuth' && row.userId && row.createdAt >= since)
+					.map((row) => row.userId),
+			).size
+
+		const lastDay = historyDays - 1
+		const daily = counts.slice(days).map((day, i) => {
+			const index = days + i
+			return {
+				day: new Date(start.getTime() + index * DAY_MS).toISOString(),
+				...day,
+				dailyActiveUsers: usersActiveWithin(index, index),
+				weeklyActiveUsers: usersActiveWithin(index - 6, index),
+				monthlyActiveUsers: usersActiveWithin(index - days + 1, index),
+				regulars: usersActiveWithin(index - days + 1, index, REGULAR_ACTIVE_DAYS),
+			}
 		})
 
-		const toCount = (action: AuditAction) => actionCounts.find((a) => a.action === action)?._count.id ?? 0
+		const totals = emptyDailyCounts()
+		for (const day of counts.slice(days)) {
+			for (const key of Object.keys(totals) as (keyof DailyCounts)[]) {
+				totals[key] += day[key]
+			}
+		}
 
 		return {
-			userAuthEvents: toCount('UserAuth'),
-			guestAccountsCreated: toCount('GuestCreateAccount'),
-			userAccountsCreated: toCount('UserCreateAccount'),
-			passwordLogins: toCount('UserLoginWithPassword'),
-			googleLogins: toCount('UserLoginWithGoogle'),
-			failedLogins: toCount('UserLoginFailed'),
-			accountsDeleted: toCount('UserDeleteAccount'),
-			adminImpersonations: toCount('AdminImpersonateUser'),
-			uniqueUserLogins: uniqueUserLogins.length,
-			totalEvents: actionCounts.reduce((sum, a) => sum + a._count.id, 0),
+			...totals,
+			uniqueUserLogins: loginUsers.size,
+			dailyActiveUsers: usersActiveSince(new Date(now.getTime() - DAY_MS)),
+			weeklyActiveUsers: usersActiveSince(new Date(now.getTime() - 7 * DAY_MS)),
+			monthlyActiveUsers: usersActiveSince(new Date(now.getTime() - days * DAY_MS)),
+			regulars: usersActiveWithin(lastDay - days + 1, lastDay, REGULAR_ACTIVE_DAYS),
+			daily,
 		}
 	},
 
@@ -133,3 +171,31 @@ export const AuditLogService = {
 		}
 	},
 }
+
+const DAY_MS = 86_400_000
+const REGULAR_ACTIVE_DAYS = 7
+
+const COUNTED_ACTIONS = {
+	UserAuth: 'userAuthEvents',
+	GuestCreateAccount: 'guestAccountsCreated',
+	UserCreateAccount: 'userAccountsCreated',
+	UserLoginWithPassword: 'passwordLogins',
+	UserLoginWithGoogle: 'googleLogins',
+	UserLoginFailed: 'failedLogins',
+	UserDeleteAccount: 'accountsDeleted',
+	AdminImpersonateUser: 'adminImpersonations',
+} as const satisfies Partial<Record<AuditAction, string>>
+
+type DailyCounts = Record<(typeof COUNTED_ACTIONS)[keyof typeof COUNTED_ACTIONS] | 'totalEvents', number>
+
+const emptyDailyCounts = (): DailyCounts => ({
+	userAuthEvents: 0,
+	guestAccountsCreated: 0,
+	userAccountsCreated: 0,
+	passwordLogins: 0,
+	googleLogins: 0,
+	failedLogins: 0,
+	accountsDeleted: 0,
+	adminImpersonations: 0,
+	totalEvents: 0,
+})

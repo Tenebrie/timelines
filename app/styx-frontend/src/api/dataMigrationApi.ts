@@ -126,10 +126,10 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 			createdAt: string
 			updatedAt: string
 			name: string
-			description: string
 			ownerId?: null | string
 			position: number
 			worldId?: null | string
+			description: string
 			originTime: string
 			dateFormat?: null | string
 		}[]
@@ -208,10 +208,10 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				createdAt: string
 				updatedAt: string
 				name: string
-				description: string
 				ownerId?: null | string
 				position: number
 				worldId?: null | string
+				description: string
 				originTime: string
 				dateFormat?: null | string
 			}[]
@@ -237,8 +237,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				createdAt: string
 				updatedAt: string
 				name: string
-				description: string
 				worldId: string
+				description: string
 				color: string
 				parentFolderId?: null | string
 				parentFolderPosition: number
@@ -438,9 +438,9 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 			createdAt: string
 			updatedAt: string
 			name: string
-			description: string
 			ownerId: string
 			calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+			description: string
 			accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 			timeOrigin: string
 		}[]
