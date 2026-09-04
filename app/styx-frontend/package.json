@@ -19,10 +19,11 @@
 		"prod": "serve -s build -l 8080"
 	},
 	"dependencies": {
+		"@mui/x-charts": "^9.13.0",
 		"@mui/x-data-grid": "^8.0.0",
 		"@mui/x-date-pickers": "^9.11.0",
-		"@neverkin/tiptap-schema": "file:../../library/tiptap-schema",
 		"@neverkin/esoteric-date": "file:../../library/esoteric-date",
+		"@neverkin/tiptap-schema": "file:../../library/tiptap-schema",
 		"@tanstack/react-form": "^1.33.5",
 		"@tanstack/react-router": "^1.170.27",
 		"@tiptap/core": "^3.30.1",

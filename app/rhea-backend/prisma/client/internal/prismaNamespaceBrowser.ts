@@ -173,7 +173,7 @@ export type AssetReferenceScalarFieldEnum = (typeof AssetReferenceScalarFieldEnu
 export const AuditLogScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
-  userEmail: 'userEmail',
+  userId: 'userId',
   requestIp: 'requestIp',
   action: 'action',
   data: 'data'

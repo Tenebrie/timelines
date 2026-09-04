@@ -89,7 +89,34 @@ export type AdminSetFeatureFlagApiArg = {
 	}
 }
 export type AdminGetDashboardApiResponse = /** status 200  */ {
+	hourlyActivity: {
+		hour: string
+		activeUsers: number
+		events: number
+	}[]
 	auditStats: {
+		uniqueUserLogins: number
+		dailyActiveUsers: number
+		weeklyActiveUsers: number
+		monthlyActiveUsers: number
+		regulars: number
+		daily: {
+			dailyActiveUsers: number
+			weeklyActiveUsers: number
+			monthlyActiveUsers: number
+			regulars: number
+			userAuthEvents: number
+			guestAccountsCreated: number
+			userAccountsCreated: number
+			passwordLogins: number
+			googleLogins: number
+			failedLogins: number
+			accountsDeleted: number
+			adminImpersonations: number
+			totalEvents: number
+			day: string
+		}[]
+		userAuthEvents: number
 		guestAccountsCreated: number
 		userAccountsCreated: number
 		passwordLogins: number
@@ -97,8 +124,60 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 		failedLogins: number
 		accountsDeleted: number
 		adminImpersonations: number
-		uniqueUserLogins: number
 		totalEvents: number
+	}
+	contentStats: {
+		days: string[]
+		entities: {
+			worlds: {
+				total: number
+				created: number[]
+			}
+			calendars: {
+				total: number
+				created: number[]
+			}
+			assets: {
+				total: number
+				created: number[]
+			}
+			events: {
+				total: number
+				created: number[]
+			}
+			actors: {
+				total: number
+				created: number[]
+			}
+			eventTracks: {
+				total: number
+				created: number[]
+			}
+			articles: {
+				total: number
+				created: number[]
+			}
+			folders: {
+				total: number
+				created: number[]
+			}
+			tags: {
+				total: number
+				created: number[]
+			}
+			nodes: {
+				total: number
+				created: number[]
+			}
+			links: {
+				total: number
+				created: number[]
+			}
+			contentPages: {
+				total: number
+				created: number[]
+			}
+		}
 	}
 	fileSystemStats: {
 		root: {
@@ -112,19 +191,22 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 			summary: string
 		}
 	}
-	dailyActiveUsers: number
-	weeklyActiveUsers: number
-	monthlyActiveUsers: number
 }
 export type AdminGetDashboardApiArg = void
 export type AdminGetAuditLogsApiResponse = /** status 200  */ {
 	logs: {
 		data: string
+		user: null | {
+			id: string
+			email: string
+			username: string
+		}
 		id: string
 		createdAt: string
 		requestIp: string
-		userEmail?: null | string
+		userId?: null | string
 		action:
+			| 'UserAuth'
 			| 'UserCreateAccount'
 			| 'UserLoginWithPassword'
 			| 'UserLoginWithGoogle'

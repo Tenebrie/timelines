@@ -14,6 +14,7 @@ import { useCallback, useState } from 'react'
 import { AdminGetAuditLogsApiResponse, useAdminGetAuditLogsQuery } from '@/api/adminUsersApi'
 
 import { Pagination } from '../../../../ui-lib/components/Pagination/Pagination'
+import { AdminUserEmail } from '../components/AdminUserEmail'
 import { SearchInput } from '../components/SearchInput'
 
 const pageSize = 20
@@ -21,6 +22,7 @@ const pageSize = 20
 type AuditLogMessage = AdminGetAuditLogsApiResponse['logs'][number]['action']
 
 const actionColors: Record<AuditLogMessage, 'default' | 'success' | 'info' | 'warning' | 'error'> = {
+	UserAuth: 'info',
 	UserCreateAccount: 'success',
 	UserLoginWithPassword: 'info',
 	UserLoginWithGoogle: 'info',
@@ -68,7 +70,10 @@ function AuditLogRow({ log, formatDate }: { log: AuditLog; formatDate: (date: st
 						variant="outlined"
 					/>
 				</TableCell>
-				<TableCell width={220}>{log.userEmail ?? '—'}</TableCell>
+				<TableCell width={220}>
+					{log.user && <AdminUserEmail user={log.user} />}
+					{!log.user && <span>—</span>}
+				</TableCell>
 				<TableCell>
 					<Typography variant="body2" fontFamily="monospace">
 						{log.requestIp}

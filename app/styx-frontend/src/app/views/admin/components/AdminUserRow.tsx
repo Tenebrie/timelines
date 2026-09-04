@@ -3,7 +3,6 @@ import FlagIcon from '@mui/icons-material/Flag'
 import LoginIcon from '@mui/icons-material/Login'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import PasswordIcon from '@mui/icons-material/Password'
-import VisibilityIcon from '@mui/icons-material/Visibility'
 import Badge from '@mui/material/Badge'
 import IconButton from '@mui/material/IconButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -14,7 +13,6 @@ import Stack from '@mui/material/Stack'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import Tooltip from '@mui/material/Tooltip'
-import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { AdminGetUsersApiResponse, useAdminGetFeatureFlagsQuery } from '@/api/adminUsersApi'
@@ -22,14 +20,8 @@ import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Info } from '@/ui-lib/components/Info/Info'
 
 import { useAdminImpersonateUser } from '../api/useAdminImpersonateUser'
+import { AdminUserEmail } from './AdminUserEmail'
 import { UserAccessLevelDropdown } from './UserAccessLevelDropdown'
-import { UserEmailPopoverButton } from './UserEmailPopoverButton'
-
-function censorEmail(email: string): string {
-	const atIndex = email.indexOf('@')
-	if (atIndex === -1) return email.replace(/./g, '•')
-	return email.substring(0, atIndex).replace(/[^.]/g, '•') + email.substring(atIndex)
-}
 
 type Props = {
 	user: AdminGetUsersApiResponse['users'][number]
@@ -38,30 +30,10 @@ type Props = {
 }
 
 export function AdminUserRow({ user, isLoggedInUser, formatDate }: Props) {
-	const [emailRevealed, setEmailRevealed] = useState(false)
-
 	return (
 		<TableRow sx={{ height: '75px' }}>
 			<TableCell>
-				<Stack gap={1} direction="row" alignItems="center">
-					<Link from="/admin" to={`/${user.id}`}>
-						<b style={{ position: 'relative' }}>
-							<span style={{ visibility: emailRevealed ? 'visible' : 'hidden' }}>{user.email}</span>
-							{!emailRevealed && (
-								<span style={{ position: 'absolute', left: 0, top: 0 }}>{censorEmail(user.email)}</span>
-							)}
-						</b>
-					</Link>
-					{emailRevealed ? (
-						<UserEmailPopoverButton user={user} />
-					) : (
-						<Tooltip title="Reveal email">
-							<IconButton size="small" onClick={() => setEmailRevealed(true)}>
-								<VisibilityIcon fontSize="small" />
-							</IconButton>
-						</Tooltip>
-					)}
-				</Stack>
+				<AdminUserEmail user={user} editable />
 			</TableCell>
 			<TableCell>
 				<Stack direction="row" alignItems="center" gap={1}>

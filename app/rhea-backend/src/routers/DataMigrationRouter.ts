@@ -36,7 +36,6 @@ router.post('/api/import/user-data/validate', async (ctx) => {
 		await DataMigrationService.isImportValid(ctx, data)
 		AuditLogService.append(ctx, {
 			action: 'UserValidateImportData',
-			userEmail: ctx.user.email,
 			data: {
 				inputSize: data.length,
 			},
@@ -44,7 +43,6 @@ router.post('/api/import/user-data/validate', async (ctx) => {
 	} catch (error) {
 		AuditLogService.append(ctx, {
 			action: 'UserValidateImportDataFailed',
-			userEmail: ctx.user.email,
 			data: {
 				inputSize: data.length,
 				error: error instanceof Error ? error.message : String(error),
@@ -79,7 +77,6 @@ router.post('/api/import/user-data/commit', async (ctx) => {
 		await DataMigrationService.importUserData(ctx, data, { dryRun: false })
 		AuditLogService.append(ctx, {
 			action: 'UserImportData',
-			userEmail: ctx.user.email,
 			data: {
 				inputSize: data.length,
 			},
@@ -87,7 +84,6 @@ router.post('/api/import/user-data/commit', async (ctx) => {
 	} catch (error) {
 		AuditLogService.append(ctx, {
 			action: 'UserImportDataFailed',
-			userEmail: ctx.user.email,
 			data: {
 				inputSize: data.length,
 				error: error instanceof Error ? error.message : String(error),
@@ -110,7 +106,6 @@ router.post('/api/export/user-data', async (ctx) => {
 		const data = await DataMigrationService.exportUserData(ctx)
 		AuditLogService.append(ctx, {
 			action: 'UserExportData',
-			userEmail: ctx.user.email,
 			data: {},
 		})
 		const asset = await CloudStorageService.uploadAsset({
@@ -128,7 +123,6 @@ router.post('/api/export/user-data', async (ctx) => {
 	} catch (error) {
 		AuditLogService.append(ctx, {
 			action: 'UserExportDataFailed',
-			userEmail: ctx.user.email,
 			data: {
 				error: error instanceof Error ? error.message : String(error),
 			},
@@ -148,14 +142,12 @@ router.post('/api/export/user-data/inline', async (ctx) => {
 		const data = await DataMigrationService.exportUserData(ctx)
 		AuditLogService.append(ctx, {
 			action: 'UserExportData',
-			userEmail: ctx.user.email,
 			data: {},
 		})
 		return data
 	} catch (error) {
 		AuditLogService.append(ctx, {
 			action: 'UserExportDataFailed',
-			userEmail: ctx.user.email,
 			data: {
 				error: error instanceof Error ? error.message : String(error),
 			},
