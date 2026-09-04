@@ -12,6 +12,7 @@ import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { useNodeLinking } from '../hooks/useNodeLinking'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { ActorNodeContent } from './ActorNodeContent'
+import { ActorNodeContentStickyNote } from './ActorNodeContentStickyNote'
 
 type Props = {
 	node: MindmapNode
@@ -26,6 +27,7 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 	const selectedNodeKeys = useSelector(getSelectedNodeKeys)
 
 	const theme = useCustomTheme()
+	const isStickyNote = parent.type === 'node' && parent.entity.content.length === 0
 
 	const { ref } = useDragDropReceiver({
 		type: 'actorNodeLinking',
@@ -86,12 +88,16 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 				},
 			}}
 		>
-			<ActorNodeContent
-				node={node}
-				parent={parent}
-				onHeaderClick={onHeaderClick}
-				onContentClick={onContentClick}
-			/>
+			{isStickyNote ? (
+				<ActorNodeContentStickyNote node={node} parent={parent} onHeaderClick={onHeaderClick} />
+			) : (
+				<ActorNodeContent
+					node={node}
+					parent={parent}
+					onHeaderClick={onHeaderClick}
+					onContentClick={onContentClick}
+				/>
+			)}
 		</Box>
 	)
 }

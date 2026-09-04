@@ -1,6 +1,5 @@
 import AlternateEmail from '@mui/icons-material/AlternateEmail'
 import History from '@mui/icons-material/History'
-import Inventory2 from '@mui/icons-material/Inventory2'
 import Schedule from '@mui/icons-material/Schedule'
 import Stack from '@mui/material/Stack'
 import { useMemo } from 'react'
@@ -26,10 +25,6 @@ export function ActorNodeContentMeta({ parent }: Props) {
 		if (parent.type === 'tag') {
 			const mentionCount = parent.entity.mentionedIn.length
 			return { Icon: AlternateEmail, label: `${mentionCount} mention${mentionCount === 1 ? '' : 's'}` }
-		}
-		if (parent.type === 'folder') {
-			const itemCount = parent.entity.children.length
-			return { Icon: Inventory2, label: `${itemCount} item${itemCount === 1 ? '' : 's'}` }
 		}
 		return { Icon: History, label: `Updated ${formatTimeAgo(new Date(parent.entity.updatedAt))}` }
 	}, [parent, formatTimestamp])

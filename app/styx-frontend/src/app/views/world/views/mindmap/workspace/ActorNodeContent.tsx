@@ -11,6 +11,7 @@ import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 import { ArticleListItemIcon } from '../../wiki/articleList/icon/ArticleListItemIcon'
 import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { ActorNodeContentMeta } from './ActorNodeContentMeta'
+import { ActorNodeContentMetaFolder } from './ActorNodeContentMetaFolder'
 import { MindmapNodePort } from './MindmapNodePort'
 import { NODE_W } from './mindmapWireUtils'
 
@@ -153,7 +154,8 @@ function ActorNodeContentComponent({ node, parent, onHeaderClick }: Props) {
 					borderColor: (theme) => alpha(theme.palette.divider, 0.05),
 				}}
 			/>
-			<ActorNodeContentMeta parent={parent} />
+			{parent.type !== 'folder' && <ActorNodeContentMeta parent={parent} />}
+			{parent.type === 'folder' && <ActorNodeContentMetaFolder parent={parent} />}
 		</Box>
 	)
 }
