@@ -38,11 +38,13 @@ router.get('/api/admin/dashboard', async () => {
 	})
 
 	const userActivityStats = await AdminService.listUserActivityStats()
+	const hourlyActivity = await AdminService.listHourlyActivityStats({ hours: 72 })
 	const auditStats = await AuditLogService.getStats({ days: 30 })
 	const fileSystemStats = await FileSystemService.getStorageStats()
 
 	return {
 		...userActivityStats,
+		hourlyActivity,
 		auditStats,
 		fileSystemStats,
 	}

@@ -89,6 +89,11 @@ export type AdminSetFeatureFlagApiArg = {
 	}
 }
 export type AdminGetDashboardApiResponse = /** status 200  */ {
+	hourlyActivity: {
+		hour: string
+		activeUsers: number
+		events: number
+	}[]
 	auditStats: {
 		userAuthEvents: number
 		guestAccountsCreated: number

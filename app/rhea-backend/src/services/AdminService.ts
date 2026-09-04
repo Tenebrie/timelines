@@ -44,6 +44,32 @@ export const AdminService = {
 		}
 	},
 
+	listHourlyActivityStats: async ({ hours }: { hours: number }) => {
+		const now = new Date()
+		const start = new Date(now)
+		start.setUTCMinutes(0, 0, 0)
+		start.setUTCHours(start.getUTCHours() - (hours - 1))
+
+		const rows = await getPrismaClient().auditLog.findMany({
+			where: { createdAt: { gte: start } },
+			select: { createdAt: true, action: true, userId: true },
+		})
+
+		const buckets = Array.from({ length: hours }, (_, i) => ({
+			hour: new Date(start.getTime() + i * 3_600_000).toISOString(),
+			users: new Set<string>(),
+			events: 0,
+		}))
+		for (const row of rows) {
+			const bucket = buckets[Math.floor((row.createdAt.getTime() - start.getTime()) / 3_600_000)]
+			bucket.events += 1
+			if (row.userId) {
+				bucket.users.add(row.userId)
+			}
+		}
+		return buckets.map(({ hour, users, events }) => ({ hour, activeUsers: users.size, events }))
+	},
+
 	listUsers: async ({ page, size, query }: { page?: number; size?: number; query?: string }) => {
 		const actualPage = page ?? 0
 		const actualSize = Math.min(size ?? 20, 100)

@@ -3,7 +3,6 @@ import Login from '@mui/icons-material/Login'
 import PersonAdd from '@mui/icons-material/PersonAdd'
 import Shield from '@mui/icons-material/Shield'
 import Storage from '@mui/icons-material/Storage'
-import LinearProgress from '@mui/material/LinearProgress'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
@@ -12,101 +11,9 @@ import { ReactNode } from 'react'
 
 import { useAdminGetDashboardQuery } from '@/api/adminUsersApi'
 
-function StatCard({ label, value, sub }: { label: string; value: number | string; sub?: string }) {
-	return (
-		<Paper
-			variant="outlined"
-			sx={{
-				padding: '16px 20px',
-				flex: '1 1 0',
-				minWidth: 120,
-				display: 'flex',
-				flexDirection: 'column',
-				gap: 0.25,
-			}}
-		>
-			<Typography variant="body2" color="text.secondary">
-				{label}
-			</Typography>
-			<Typography variant="h4" fontWeight="bold">
-				{value}
-			</Typography>
-			{sub && (
-				<Typography variant="caption" color="text.secondary">
-					{sub}
-				</Typography>
-			)}
-		</Paper>
-	)
-}
-
-function formatBytes(bytes: number): string {
-	const gb = bytes / (1024 * 1024 * 1024)
-	if (gb >= 1000) return `${(gb / 1024).toFixed(2)} TB`
-	return `${gb.toFixed(2)} GB`
-}
-
-function StorageCard({ label, free, total }: { label: string; free: number; total: number }) {
-	const used = total - free
-	const usedPercent = total > 0 ? (used / total) * 100 : 0
-	const color = usedPercent > 90 ? 'error' : usedPercent > 75 ? 'warning' : 'primary'
-
-	return (
-		<Paper
-			variant="outlined"
-			sx={{
-				padding: '16px 20px',
-				flex: '1 1 0',
-				minWidth: 200,
-				display: 'flex',
-				flexDirection: 'column',
-				gap: 1,
-			}}
-		>
-			<Typography variant="body2" color="text.secondary">
-				{label}
-			</Typography>
-			<LinearProgress
-				variant="determinate"
-				value={usedPercent}
-				color={color}
-				sx={{ height: 8, borderRadius: 4 }}
-			/>
-			<Stack direction="row" justifyContent="space-between">
-				<Typography variant="caption" color="text.secondary">
-					{formatBytes(used)} used of {formatBytes(total)}
-				</Typography>
-				<Typography variant="caption" fontWeight={600} color={`${color}.main`}>
-					{usedPercent.toFixed(1)}%
-				</Typography>
-			</Stack>
-		</Paper>
-	)
-}
-
-function Section({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
-	const theme = useTheme()
-	return (
-		<Paper
-			variant="outlined"
-			sx={{
-				padding: 2.5,
-				borderRadius: 2,
-				background: theme.palette.background.default,
-			}}
-		>
-			<Stack direction="row" alignItems="center" gap={1} marginBottom={2}>
-				{icon}
-				<Typography variant="subtitle1" fontWeight={600}>
-					{title}
-				</Typography>
-			</Stack>
-			<Stack direction="row" gap={2} flexWrap="wrap">
-				{children}
-			</Stack>
-		</Paper>
-	)
-}
+import { AdminDashboardStatCard } from '../components/AdminDashboardStatCard'
+import { AdminDashboardStorageCard } from '../components/AdminDashboardStorageCard'
+import { AdminDashboardUserActivityChart } from '../components/AdminDashboardUserActivityChart'
 
 export function AdminDashboardView() {
 	const { data, fulfilledTimeStamp } = useAdminGetDashboardQuery(undefined, {
@@ -119,6 +26,9 @@ export function AdminDashboardView() {
 
 	const { auditStats, fileSystemStats } = data
 
+	const StatCard = AdminDashboardStatCard
+	const StorageCard = AdminDashboardStorageCard
+
 	return (
 		<Stack gap={2.5} width="100%" alignSelf="center">
 			{fulfilledTimeStamp && (
@@ -130,6 +40,7 @@ export function AdminDashboardView() {
 				<StatCard label="Daily" value={data.dailyActiveUsers} sub="Last 24 hours" />
 				<StatCard label="Weekly" value={data.weeklyActiveUsers} sub="Last 7 days" />
 				<StatCard label="Monthly" value={data.monthlyActiveUsers} sub="Last 30 days" />
+				<AdminDashboardUserActivityChart activity={data.hourlyActivity} />
 			</Section>
 
 			<Section icon={<PersonAdd color="success" />} title="Accounts (30 Days)">
@@ -158,5 +69,29 @@ export function AdminDashboardView() {
 				/>
 			</Section>
 		</Stack>
+	)
+}
+
+function Section({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
+	const theme = useTheme()
+	return (
+		<Paper
+			variant="outlined"
+			sx={{
+				padding: 2.5,
+				borderRadius: 2,
+				background: theme.palette.background.default,
+			}}
+		>
+			<Stack direction="row" alignItems="center" gap={1} marginBottom={2}>
+				{icon}
+				<Typography variant="subtitle1" fontWeight={600}>
+					{title}
+				</Typography>
+			</Stack>
+			<Stack direction="row" gap={2} flexWrap="wrap">
+				{children}
+			</Stack>
+		</Paper>
 	)
 }
