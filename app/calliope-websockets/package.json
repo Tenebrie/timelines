@@ -60,7 +60,7 @@
 		"@types/koa-bodyparser": "^4.3.13",
 		"@types/koa-route": "^3.2.9",
 		"@types/koa-websocket": "^5.0.11",
-		"@types/koa__router": "^12.0.5",
+		"@types/koa__router": "^15.0.0",
 		"@types/mock-knex": "^0.4.8",
 		"@types/node": "^25.6.0",
 		"@types/supertest": "^7.2.1",
