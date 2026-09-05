@@ -19,7 +19,7 @@
 		"test/load"
 	],
 	"scripts": {
-		"postinstall": "NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false subpkg install && husky",
+		"postinstall": "NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false node scripts/run-all.mjs install && husky",
 		"openapi": "./scripts/dev-openapi.sh",
 		"migrate": "./scripts/dev-migrate.sh",
 		"dev": "npm run docker:start",
@@ -70,7 +70,6 @@
 		"lint-staged": "^17.0.7",
 		"nodemon": "^3.1.9",
 		"prettier": "^3.8.4",
-		"subpackage": "^1.1.0",
 		"typescript": "^6.0.2"
 	},
 	"lint-staged": {
