@@ -156,7 +156,6 @@ services:
                     - node.role == manager
         volumes:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached
-            - /mnt/volume_rhea_postgres/backups:/backups:cached
 
     redis:
         deploy:
