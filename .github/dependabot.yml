@@ -163,6 +163,18 @@ updates:
       # Starlight bundles against js-yaml 4; a hoisted v5 breaks `astro build`
       - dependency-name: 'js-yaml'
         update-types: ['version-update:semver-major']
+      # Astro ecosystem stays on the current major
+      - dependency-name: 'astro'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@astrojs/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@astrolib/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'astro-*'
+        update-types: ['version-update:semver-major']
+      # 0.x: minors are its majors, and each tracks an astro major
+      - dependency-name: '@astrojs/starlight'
+        update-types: ['version-update:semver-minor']
     groups:
       thetis-npm-minor-patch:
         patterns: ['*']
