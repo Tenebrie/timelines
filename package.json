@@ -57,18 +57,15 @@
 		"lint:library": "node scripts/run-all.mjs lint library/*"
 	},
 	"dependencies": {
-		"@typescript-eslint/eslint-plugin": "^8.69.0",
 		"@typescript-eslint/parser": "^8.69.0",
 		"cloc": "^2.8.0",
 		"eslint": "^10.9.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-astro": "^1.6.0",
-		"eslint-plugin-node": "^11.1.0",
 		"eslint-plugin-prettier": "^5.5.6",
 		"eslint-plugin-simple-import-sort": "^13.0.0",
 		"eslint-plugin-unused-imports": "^4.1.4",
 		"lint-staged": "^17.4.1",
-		"nodemon": "^3.1.9",
 		"prettier": "^3.9.6",
 		"typescript": "^6.0.2"
 	},

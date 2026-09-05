@@ -12,7 +12,6 @@
 		"lint:fix": "eslint --fix"
 	},
 	"dependencies": {
-		"@astrojs/rss": "^4.0.19",
 		"@astrojs/sitemap": "^3.7.3",
 		"@astrojs/starlight": "^0.37.7",
 		"@astrolib/analytics": "^0.6.1",
@@ -30,7 +29,6 @@
 		"@astrojs/check": "^0.9.10",
 		"@astrojs/mdx": "^4.3.14",
 		"@astrojs/partytown": "^2.1.7",
-		"@eslint/js": "^10.0.1",
 		"@iconify-json/flat-color-icons": "^1.2.1",
 		"@iconify-json/tabler": "^1.2.38",
 		"@tailwindcss/typography": "^0.5.20",
@@ -44,7 +42,6 @@
 		"astro-eslint-parser": "^1.4.0",
 		"eslint": "^10.8.1",
 		"eslint-plugin-astro": "^1.7.0",
-		"globals": "^17.9.0",
 		"js-yaml": "^4.3.2",
 		"mdast-util-to-string": "^4.0.0",
 		"prettier": "^3.9.6",
