@@ -40,7 +40,7 @@
 		"@neverkin/tiptap-schema": "file:../../library/tiptap-schema",
 		"chalk": "^6.0.0",
 		"dotenv": "^17.4.2",
-		"happy-dom": "^20.12.1",
+		"happy-dom": "^20.13.0",
 		"http-status-codes": "^2.3.0",
 		"jsonwebtoken": "^9.0.3",
 		"koa": "^3.2.1",
