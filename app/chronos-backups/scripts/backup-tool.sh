@@ -222,7 +222,7 @@ case "${COMMAND}" in
     list)
         cmd_list
         ;;
-    create)
+    backup|create)
         cmd_backup
         ;;
     restore)
