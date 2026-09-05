@@ -9,7 +9,7 @@ fi
 STACK_VERSION=13
 STACK_VERSION_FILE="/var/lib/timelines/stack-version"
 
-GATEKEEPER_VERSION=1
+GATEKEEPER_VERSION=2
 GATEKEEPER_VERSION_FILE="/var/lib/timelines/gatekeeper-version"
 
 # Check if we need to do a full deploy instead of update
