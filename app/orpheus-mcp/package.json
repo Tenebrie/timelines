@@ -28,7 +28,6 @@
 		"jsonwebtoken": "^9.0.3",
 		"openapi-fetch": "^0.17.0",
 		"redis": "^6.2.1",
-		"vite": "^8.2.2",
 		"zod": "^4.5.4"
 	},
 	"devDependencies": {
@@ -50,6 +49,7 @@
 		"tsc-alias": "^1.9.3",
 		"tsx": "^4.23.13",
 		"typescript": "^5.7.3",
+		"vite": "^8.2.2",
 		"vitest": "^4.1.6"
 	}
 }
