@@ -87,7 +87,7 @@ jobs:
       - name: Build & Publish
         if: steps.check-container.outputs.missing == 'true'
         run: |
-          docker compose -f docker-compose.common.yml -f docker-compose.prod.yml build ${{ matrix.service }}
+          docker compose -f docker-compose.common.yml -f docker-compose.prod.yml -f docker-compose.build.yml build ${{ matrix.service }}
           docker push tenebrie/timelines-${{ matrix.service }}:${{ needs.check-commits.outputs.version }}
         env:
           VERSION: ${{ needs.check-commits.outputs.version }}
