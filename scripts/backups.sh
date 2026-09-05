@@ -18,9 +18,9 @@ case "${COMMAND}" in
     create)
         # Use -t only if we have a TTY (not in CI)
         if [ -t 1 ]; then
-            docker exec -it "${CONTAINER}" /scripts/backup-tool.sh backup
+            docker exec -it "${CONTAINER}" /scripts/backup-tool.sh create
         else
-            docker exec "${CONTAINER}" /scripts/backup-tool.sh backup
+            docker exec "${CONTAINER}" /scripts/backup-tool.sh create
         fi
         ;;
     restore)
