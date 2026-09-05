@@ -6,6 +6,9 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       root-npm-minor-patch:
         patterns: ['*']
@@ -34,6 +37,9 @@ updates:
     directory: '/app/styx-frontend'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       styx-npm-tiptap:
         patterns: ['@tiptap/*']
@@ -63,6 +69,9 @@ updates:
     directory: '/app/rhea-backend'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       rhea-npm-minor-patch:
         patterns: ['*']
@@ -88,6 +97,9 @@ updates:
     directory: '/app/calliope-websockets'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       calliope-npm-tiptap:
         patterns: ['@tiptap/*']
@@ -117,6 +129,9 @@ updates:
     directory: '/app/orpheus-mcp'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       orpheus-npm-minor-patch:
         patterns: ['*']
@@ -143,6 +158,8 @@ updates:
     schedule:
       interval: 'weekly'
     ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
       # Starlight bundles against js-yaml 4; a hoisted v5 breaks `astro build`
       - dependency-name: 'js-yaml'
         update-types: ['version-update:semver-major']
@@ -171,6 +188,9 @@ updates:
     directory: '/app/echo-desktop'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       echo-npm-minor-patch:
         patterns: ['*']
@@ -184,6 +204,9 @@ updates:
     directory: '/app/ts-shared'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       ts-shared-npm-tiptap:
         patterns: ['@tiptap/*']
@@ -204,6 +227,9 @@ updates:
       - '/library/esoteric-date'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       library-npm-tiptap:
         patterns: ['@tiptap/*']
@@ -247,6 +273,9 @@ updates:
     directory: '/test/e2e'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       e2e-npm-minor-patch:
         patterns: ['*']
