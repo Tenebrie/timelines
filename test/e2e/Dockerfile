@@ -8,6 +8,9 @@ COPY package.json package-lock.json* ./
 # Install dependencies (npm will use package-lock.json if present)
 RUN npm install
 
+# Update playwright if Dependabot bumped the one in package.json
+RUN npx playwright install
+
 # Copy the rest of your project (including tests) into the container
 COPY . .
 

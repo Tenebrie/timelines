@@ -14,17 +14,36 @@ updates:
         patterns: ['*']
         update-types: ['major']
 
+  - package-ecosystem: 'docker-compose'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'postgres'
+        update-types: ['version-update:semver-major']
+    groups:
+      root-compose-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      root-compose-major:
+        patterns: ['*']
+        update-types: ['major']
+
   # Styx
   - package-ecosystem: 'npm'
     directory: '/app/styx-frontend'
     schedule:
       interval: 'weekly'
     groups:
+      styx-npm-tiptap:
+        patterns: ['@tiptap/*']
       styx-npm-minor-patch:
         patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
         update-types: ['minor', 'patch']
       styx-npm-major:
         patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
         update-types: ['major']
 
   - package-ecosystem: 'docker'
@@ -70,11 +89,15 @@ updates:
     schedule:
       interval: 'weekly'
     groups:
+      calliope-npm-tiptap:
+        patterns: ['@tiptap/*']
       calliope-npm-minor-patch:
         patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
         update-types: ['minor', 'patch']
       calliope-npm-major:
         patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
         update-types: ['major']
 
   - package-ecosystem: 'docker'
@@ -139,17 +162,54 @@ updates:
         patterns: ['*']
         update-types: ['major']
 
+  # Echo
+  - package-ecosystem: 'npm'
+    directory: '/app/echo-desktop'
+    schedule:
+      interval: 'weekly'
+    groups:
+      echo-npm-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      echo-npm-major:
+        patterns: ['*']
+        update-types: ['major']
+
   # ts-shared
   - package-ecosystem: 'npm'
     directory: '/app/ts-shared'
     schedule:
       interval: 'weekly'
     groups:
+      ts-shared-npm-tiptap:
+        patterns: ['@tiptap/*']
       ts-shared-npm-minor-patch:
         patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
         update-types: ['minor', 'patch']
       ts-shared-npm-major:
         patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
+        update-types: ['major']
+
+  # Libraries
+  - package-ecosystem: 'npm'
+    directories:
+      - '/library/tiptap-schema'
+      - '/library/openapi-fetch'
+      - '/library/esoteric-date'
+    schedule:
+      interval: 'weekly'
+    groups:
+      library-npm-tiptap:
+        patterns: ['@tiptap/*']
+      library-npm-minor-patch:
+        patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
+        update-types: ['minor', 'patch']
+      library-npm-major:
+        patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
         update-types: ['major']
 
   # Gatekeeper
@@ -188,6 +248,18 @@ updates:
         patterns: ['*']
         update-types: ['minor', 'patch']
       e2e-npm-major:
+        patterns: ['*']
+        update-types: ['major']
+
+  - package-ecosystem: 'docker'
+    directory: '/test/e2e'
+    schedule:
+      interval: 'weekly'
+    groups:
+      e2e-docker-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      e2e-docker-major:
         patterns: ['*']
         update-types: ['major']
 
