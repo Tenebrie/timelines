@@ -42,16 +42,14 @@ jobs:
         run: npm run lint:$SCRIPT
 
   run-e2e:
-    name: Playwright (${{ matrix.name }})
+    name: Playwright (${{ matrix.browser }} ${{ matrix.shard }}/${{ matrix.shardTotal }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: Chromium
-            browser: chromium
-          - name: Firefox
-            browser: firefox
+        browser: [chromium, firefox]
+        shard: [1, 2, 3]
+        shardTotal: [3]
     env:
       COMPOSE_BAKE: true
     steps:
@@ -85,13 +83,13 @@ jobs:
             -e TARGET_ENV=ci \
             -v $(pwd)/test-report:/app/test-report \
             playwright-e2e \
-            npx playwright test --config=playwright.ci.config.ts --project=${{ matrix.browser }}
+            npx playwright test --config=playwright.ci.config.ts --project=${{ matrix.browser }} --shard=${{ matrix.shard }}/${{ matrix.shardTotal }}
 
       - name: Upload test report
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report-${{ matrix.browser }}
+          name: playwright-report-${{ matrix.browser }}-${{ matrix.shard }}
           path: test/e2e/test-report/
 
       - name: Stop services
