@@ -35,7 +35,6 @@
 	"engines": {
 		"node": "24.x"
 	},
-	"subPackages": [],
 	"author": "Tenebrie",
 	"bugs": {
 		"url": "https://github.com/tenebrie/timelines/issues"
