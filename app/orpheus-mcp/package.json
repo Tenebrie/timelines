@@ -32,13 +32,13 @@
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {
-		"@modelcontextprotocol/inspector": "^2.3.0",
+		"@modelcontextprotocol/inspector": "^2.4.0",
 		"@neverkin/openapi-fetch": "file:../../library/openapi-fetch",
 		"@types/node": "^25.6.2",
-		"@typescript-eslint/eslint-plugin": "^8.67.0",
+		"@typescript-eslint/eslint-plugin": "^8.68.0",
 		"@typescript-eslint/parser": "^8.59.3",
 		"@vitest/coverage-v8": "^4.1.11",
-		"eslint": "^10.8.1",
+		"eslint": "^10.9.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.6",
 		"eslint-plugin-simple-import-sort": "^14.0.0",
