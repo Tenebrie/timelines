@@ -5,6 +5,8 @@ services:
         build:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile.prod
+            cache_from: ["type=gha,scope=build-gatekeeper"]
+            cache_to: ["type=gha,mode=max,scope=build-gatekeeper"]
         ports:
             - target: 80
               published: 80
@@ -34,6 +36,8 @@ services:
             dockerfile: ./app/styx-frontend/Dockerfile.prod
             args:
                 VERSION: ${VERSION}
+            cache_from: ["type=gha,scope=build-styx"]
+            cache_to: ["type=gha,mode=max,scope=build-styx"]
         deploy:
             replicas: 2
             update_config:
@@ -54,6 +58,8 @@ services:
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile.prod
+            cache_from: ["type=gha,scope=build-rhea"]
+            cache_to: ["type=gha,mode=max,scope=build-rhea"]
         environment:
             NODE_ENV: production # Prod or staging
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
@@ -87,6 +93,8 @@ services:
         build:
             context: ./
             dockerfile: ./app/calliope-websockets/Dockerfile.prod
+            cache_from: ["type=gha,scope=build-calliope"]
+            cache_to: ["type=gha,mode=max,scope=build-calliope"]
         environment:
             NODE_ENV: production # Prod or staging
         command: npm run prod
@@ -105,6 +113,8 @@ services:
         build:
             context: ./
             dockerfile: ./app/orpheus-mcp/Dockerfile.prod
+            cache_from: ["type=gha,scope=build-orpheus"]
+            cache_to: ["type=gha,mode=max,scope=build-orpheus"]
         environment:
             NODE_ENV: production # Prod or staging
             REQUIRE_OAUTH: "true"
@@ -124,6 +134,8 @@ services:
         build:
             context: ./
             dockerfile: ./app/thetis-landing/Dockerfile.prod
+            cache_from: ["type=gha,scope=build-thetis"]
+            cache_to: ["type=gha,mode=max,scope=build-thetis"]
         deploy:
             replicas: 1
             update_config:
@@ -157,6 +169,8 @@ services:
         build:
             context: ./app/chronos-backups
             dockerfile: ./Dockerfile
+            cache_from: ["type=gha,scope=build-chronos"]
+            cache_to: ["type=gha,mode=max,scope=build-chronos"]
         environment:
             BACKREST_DATA: /data
             BACKREST_CONFIG: /config/config.json

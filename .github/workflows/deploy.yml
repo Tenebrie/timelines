@@ -79,6 +79,11 @@ jobs:
             echo "missing=true" >> "$GITHUB_OUTPUT"
           fi
 
+      - uses: docker/setup-buildx-action@v3
+        if: steps.check-container.outputs.missing == 'true'
+      - uses: crazy-max/ghaction-github-runtime@v3
+        if: steps.check-container.outputs.missing == 'true'
+
       - name: Build & Publish
         if: steps.check-container.outputs.missing == 'true'
         run: |
@@ -86,6 +91,7 @@ jobs:
           docker push tenebrie/timelines-${{ matrix.service }}:${{ needs.check-commits.outputs.version }}
         env:
           VERSION: ${{ needs.check-commits.outputs.version }}
+          COMPOSE_BAKE: true
 
   create-release:
     name: Create Release
