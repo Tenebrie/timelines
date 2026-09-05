@@ -142,6 +142,10 @@ updates:
     directory: '/app/thetis-landing'
     schedule:
       interval: 'weekly'
+    ignore:
+      # Starlight bundles against js-yaml 4; a hoisted v5 breaks `astro build`
+      - dependency-name: 'js-yaml'
+        update-types: ['version-update:semver-major']
     groups:
       thetis-npm-minor-patch:
         patterns: ['*']
